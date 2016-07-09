@@ -44,6 +44,7 @@
                 <li ng-class="{'active': selectedView == 'month'}" ng-click="changeView(3)">Month</li>
             </ul>
 
+            <div ng-show="DayView">
             <div class="group marginT30 totalActivity">
                 <div class="col-xs-6">
                     <highchart id="chart1" config="chartConfig"></highchart>
@@ -105,6 +106,88 @@
                         </g>
                     </svg>-->
                 </div>
+            </div>
+            </div>
+
+            <div ng-show="WeekView">
+                <ul class="bar_chart_list">
+                    <li>
+                        <div class="title">
+                            <div class="left_title">
+                                <img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt="" >
+                                <span>13 </span> Exercises
+                            </div>
+                            <div class="right_title">
+                            </div>
+                        </div>
+                        <div class="chart_block">
+                            <highchart id="chart1" config="chartConfigWeekViewExercise"></highchart>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="title">
+                            <div class="left_title">
+                                <img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt="" >
+                                <span class="twolinestitle">
+                                    <span>17,251 </span> Steps <br>
+                                    <small>2,403 steps/day</small>
+                                </span>
+                            </div>
+                            <div class="right_title">
+                                  <span class="twolinestitle">
+                                      <span>5.3</span> Miles<br><small>0.3 mi/day</small>
+                                  </span>
+                                  <img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt="" >
+                            </div>
+                        </div>
+                        <div class="chart_block">
+                            <highchart id="chart1" config="chartConfigWeekViewSteps"></highchart>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="title">
+                            <div class="left_title"><img src="" alt="" ><span>13 </span> Exercises</div>
+                            <div class="right_title"></div>
+                        </div>
+                        <div class="chart_block">
+                            <highchart id="chart1" config="chartConfigWeekViewLow"></highchart>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="title">
+                            <div class="left_title"><img src="" alt="" ><span>13 </span> Exercises</div>
+                            <div class="right_title"></div>
+                        </div>
+                        <div class="chart_block">
+                            <highchart id="chart1" config="chartConfigWeekViewMid"></highchart>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="title">
+                            <div class="left_title"><img src="" alt="" ><span>13 </span> Exercises</div>
+                            <div class="right_title"></div>
+                        </div>
+                        <div class="chart_block">
+                            <highchart id="chart1" config="chartConfigWeekViewHigh"></highchart>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="title">
+                            <div class="left_title"><img src="" alt="" ><span>13 </span> Exercises</div>
+                            <div class="right_title"></div>
+                        </div>
+                        <div class="chart_block">
+                            <highchart id="chart1" config="chartConfigWeekViewComp"></highchart>
+                        </div>
+                    </li>
+
+                </ul>
+          
+               
+            </div>
+
+            <div ng-show="MonthView">
+                Third Div
             </div>
 
         </section>
