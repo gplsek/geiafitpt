@@ -12,12 +12,27 @@
 	      <input type="text" placeholder="Search" ng-model="searchPatient" />
 	      <span class="icon ion-ios-search-strong pull-right"></span>
 	    </div>
-	    <div class="sortedBy text-center">
+		
+		<div class="sortedBy text-center">
+	<p>
+
+<small for="repeatSelect">Sorted By:</small>
+</p>
+	
+		
+
+<select name="repeatSelect" id="repeatSelect" ng-model="data.model">
+<option ng-repeat="option in data.availableOptions" align="center" value="{{option.id}}">{{option.name}}</option>
+</select>
+
+	</div>	
+		
+	   <!-- <div class="sortedBy text-center">
 	      <p><small>Sorted By:</small></p>
 	     
 	      <select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select>
 	       
-	    </div>
+	    </div>-->
 		<ul class="exerciseList">
 			<li ng-repeat="item in exerciseList" class="gieafitListItem group">
 				<span class="pull-left"><span class="marginR5">{{item.id+ 1}}.</span><span>{{item.title}}</span></span>

@@ -9,7 +9,15 @@ angular.module('geiaFitApp')
       template: 'You are not allowed to access this resource.'
     });
   });
- 
+	
+	
+ $scope.logout = function() {
+    AuthService.logout();
+    $state.transitionTo('login',{}, {reload: true});
+  };
+
+	
+	
   $scope.$on(AUTH_EVENTS.notAuthenticated, function(event) {
     AuthService.logout();
     $state.go('login');
@@ -30,6 +38,16 @@ angular.module('geiaFitApp')
     console.log($ionicHistory.viewHistory());
     $ionicHistory.goBack();
   }
+  //abhishek
+  
+  $scope.adds=function(){
+    $state.go('addSnapshot');
+
+    }
+
+  
+  
+  
 })
 
 .controller('LoginCtrl', ['$scope', '$state', '$ionicPopup', 'AuthService','Flash', '$rootScope', function($scope, $state, $ionicPopup, AuthService, Flash, $rootScope) {
@@ -52,6 +70,7 @@ angular.module('geiaFitApp')
   }
 
   function checkEmail (email){
+	  console.log(email);
     var result = false;
     var pattern = $rootScope.Regex.email;
     result = pattern.test(email);
@@ -60,17 +79,22 @@ angular.module('geiaFitApp')
 
   $scope.login = function(data){
 
+	 
+	  
     if( !(Object.keys(data).length === 0 && data.constructor === Object)){
         if(!checkEmptyFields()){
-          
+          // alert(data.email);
           if(checkEmail(data.email)){
               AuthService.login(data.email, data.password,data.checked).then(function(authenticated) {
+				  
+				  //alert(authenticated);
+				  
                 $state.go('main.dash', {}, {reload: true});
                 $scope.setCurrentUsername(data.username);
               }, function(err) {
                 Flash.showFlash({type: 'error', message: "Login Failed !"});
               });
-            // Flash.showFlash({type: 'success', message: "Success !"});
+            Flash.showFlash({type: 'success', message: "Success !"});
           }else{
              Flash.showFlash({type: 'error', message: "Email is not valid !"});
           }
@@ -147,14 +171,7 @@ angular.module('geiaFitApp')
 
   $scope.patientList = patientsData;
   
-  $scope.logout = function() {
-   
-    AuthService.logout();
-
-    $state.transitionTo('login',{}, {reload: true});
-
-  };
-
+  //logout
   function getStateTitle(id){
     var title = '';
     var list = $scope.sortedByList;
@@ -188,13 +205,20 @@ angular.module('geiaFitApp')
   }
  
 })
-.controller('SetExerciseProgramCtrl', function($scope, $state, $stateParams, sortedByList){
+
+.controller('SetExerciseProgramCtrl',['$scope','$state','$stateParams','sortedByList', function($scope, $state, $stateParams, sortedByList){
   $scope.uid = $stateParams.uid;
-  $scope.patientData = patientData;
+  $scope.patientData =$stateParams.name;
   $scope.sortedByList = sortedByList;
   $scope.sortedBy = $scope.sortedByList[2].id;
   console.log(sortedByList);
-})
+    
+    $scope.closePatient=function(){
+        
+        $state.go('exerciseProgram');
+    }
+}])
+
 .controller('SetActivityGoalsCtrl', [ '$scope','$state', 'sortedByList', '$ionicHistory', 'threshold', '$window', '$stateParams', function($scope,$state, sortedByList, $ionicHistory, threshold, $window, $stateParams){
   $scope.setActivityGoals = {};
   $scope.patientData = $stateParams.name;
@@ -208,16 +232,16 @@ angular.module('geiaFitApp')
     min: 40,
     max: 220,
     options: {
-      floor: 0,
-      ceil: 450
+      floor: 40,
+      ceil: 220
     }
   };
   $scope.slider2 = {
     min: 40,
     max: 160,
     options: {
-      floor: 0,
-      ceil: 450
+      floor: 40,
+      ceil: 160
     }
   }
   $scope.$on("slideEnded", function() {
@@ -242,7 +266,13 @@ angular.module('geiaFitApp')
   // $scope.highHeartRateIndicator = Number(threshold.hr_low) + $scope.optimumHeartBarLength - (35/2);
 
 
-  $scope.back = function(){
+/*  $scope.back = function(){
+    $ionicHistory.goBack();
+  }*/
+  
+   $scope.back = function(){
+	
+    console.log($ionicHistory.viewHistory());
     $ionicHistory.goBack();
   }
 
@@ -268,7 +298,7 @@ angular.module('geiaFitApp')
 
   (function mins(){
     for(var i=1; i <= 180; i++){
-      minsArray.push({id: i, title: i + "mins"});
+      minsArray.push({id: i, title: i + " mins"});
     }
   })();
 
@@ -353,6 +383,28 @@ angular.module('geiaFitApp')
   $scope.sortedByList = sortedByList;
   $scope.sortedBy = $scope.sortedByList[0].id;
 
+	
+   $scope.data = {
+model: null,
+availableOptions: [
+	
+      {id: '1', name: 'Exercise Name'},
+      {id: '2', name: 'Category'},
+      {id: '3', name: 'Upper Extremity'},
+         {id: '4', name: 'Shoulder'},
+        {id:'5',name:'Elbow'},
+        {id:'6',name:'Wrist'},
+        {id:'7',name:'Hand'},
+        {id:'8',name:'Lower Extemity'},
+        {id:'9',name:'Hip'},
+        {id:'10',name:'Knee'},
+        {id:'11',name:'Foot'}
+    ]
+   };
+
+
+	
+	
   var exerciseList = [
     {
       id: 0, 
@@ -444,6 +496,10 @@ angular.module('geiaFitApp')
 
 
 }])
+.controller('AddExercisePopupCtrl',  ['$scope','$state', function($scope,$state){
+
+
+}])
 .controller('MyAccountCtrl', ['$scope', '$rootScope', 'Flash', '$ionicHistory', '$state', '$cordovaCamera', 'profile',  function($scope, $rootScope, Flash, $ionicHistory, $state, $cordovaCamera, profile){
     console.log(profile);
     var profileData = {};
@@ -510,10 +566,7 @@ angular.module('geiaFitApp')
 
 
 }])
-.controller('ReviewSnapshotsCtrl', ['$scope', '$rootScope', 'Flash', '$ionicHistory', '$state', '$cordovaCamera',  function($scope, $rootScope, Flash, $ionicHistory, $state, $cordovaCamera){
-    
 
-}])
 .controller('ActivityCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', function($scope, $stateParams, sortedByList, $state){
   console.log($stateParams);
 
@@ -563,6 +616,368 @@ angular.module('geiaFitApp')
     $state.transitionTo(state,{name: $stateParams.name}, {reload: true});
   }
 
-  
+}])
 
+
+.controller('ExerciseProgramCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', function($scope, $stateParams, sortedByList, $state){
+  console.log($stateParams);
+
+  $scope.patientProfile = {
+    name: $stateParams.name,
+    age :  $stateParams.age,
+    gender : $stateParams.gender,
+    email: $stateParams.email,
+    url: $stateParams.profile_url
+  }
+
+  $scope.addss=function(){
+    $state.go('setExerciseProgram');
+
+    }
+  
+ 
+ var pageSize = 10;
+  $scope.sortedByList = sortedByList;
+  $scope.sortedBy = $scope.sortedByList[0].id;
+		
+  var exerciseList = [
+    {
+      id: 0, 
+      title: "Exercise Name"
+    },
+    {
+      id: 1,
+      title: "Exercise Name"
+    },
+    {
+      id: 2,
+      title: "Exercise Name"
+    },
+    {
+      id: 3,
+      title: "Exercise Name"
+    },
+    {
+      id: 4,
+      title: "Exercise Name"
+    },
+    {
+      id: 5,
+      title: "Exercise Name"
+    },
+    {
+      id: 6,
+      title: "Exercise Name"
+    },
+    {
+      id: 7,
+      title: "Exercise Name"
+    },
+    {
+      id: 8,
+      title: "Exercise Name"
+    },
+    {
+      id: 9,
+      title: "Exercise Name"
+    },
+    {
+      id: 10,
+      title: "Exercise Name"
+    }
+
+  ];
+  
+  $scope.pages = [ 
+     {
+      id: 0,
+      title: "Page 1"
+     },
+     {
+      id: 1, 
+      title: "Page 2"
+     },
+     {
+      id: 2, 
+      title: "Page 3"
+     },
+     {
+      id: 3, 
+      title: "Page 4"
+     },
+     {
+      id: 4, 
+      title: "Page 5"
+     }
+   ];
+   
+  $scope.selectedPage = $scope.pages[0].id;
+
+  $scope.showNext = function(pageNo){
+    var list = angular.copy(exerciseList);
+    var offset =  (pageNo - 1) * pageSize ;
+    $scope.exerciseList = list.splice( offset, pageSize);
+     $scope.selectedPage = $scope.pages[pageNo-1].id;
+  }
+
+  $scope.showNext(1);
+
+  $scope.delete = function(index){
+    $scope.exerciseList.splice(index, 1);
+  }
+	
+	
+/*
+ $scope.sortedByList = sortedByList;
+  $scope.sortedBy =  $scope.sortedByList[0].id;
+  function getStateTitle(id){
+    var title = '';
+    var list = $scope.sortedByList;
+    for(var i = 0; i < list.length; i++){
+      if(id == list[i].id){
+        title = list[i].routingStateName;
+        return title;
+      }
+    }
+  }
+
+  $scope.gotoAction= function(id){
+    var state = getStateTitle(id);
+
+    $state.transitionTo(state,{name: $stateParams.name}, {reload: true});
+  }
+*/
+}])
+
+.controller('paymentCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', function($scope, $stateParams, sortedByList, $state){
+  console.log($stateParams);
+
+  $scope.patientProfile = {
+    name: $stateParams.name,
+    age :  $stateParams.age,
+    gender : $stateParams.gender,
+    email: $stateParams.email,
+    url: $stateParams.profile_url
+  }
+ $scope.sortedByList = sortedByList;
+  $scope.sortedBy =  $scope.sortedByList[0].id;
+  function getStateTitle(id){
+    var title = '';
+    var list = $scope.sortedByList;
+    for(var i = 0; i < list.length; i++){
+      if(id == list[i].id){
+        title = list[i].routingStateName;
+        return title;
+      }
+    }
+  }
+  $scope.gotoAction= function(id){
+    var state = getStateTitle(id);
+
+    $state.transitionTo(state,{name: $stateParams.name}, {reload: true});
+  }
+
+
+}])
+
+.controller('ReviewSnapshotsCtrl', ['$scope', '$rootScope', 'Flash', '$ionicHistory', '$state', '$cordovaCamera',  function($scope, $rootScope, Flash, $ionicHistory, $state, $cordovaCamera){
+	
+	
+	
+	
+	
+     var pageSize = 10;
+     var reportsList = [
+    {
+      id: 0, 
+      title: "Report #1"
+    },
+    {
+      id: 1,
+      title: "Report #2"
+    },
+    {
+      id: 2,
+      title: "Report #3"
+    },
+    {
+      id: 3,
+      title: "Report #4"
+    },
+    {
+      id: 4,
+      title: "Report #5"
+    },
+    {
+      id: 5,
+      title: "Report #6"
+    },
+    {
+      id: 6,
+      title: "Report #7"
+    },
+    {
+      id: 7,
+      title: "Report #8"
+    },
+    {
+      id: 8,
+      title: "Report #9"
+    },
+    {
+      id: 9,
+      title: "Report #10"
+    },
+    {
+      id: 10,
+      title: "Report #11"
+    },
+    {
+      id: 11,
+      title: "Report #12"
+    },
+    {
+      id: 12,
+      title: "Report #13"
+    },
+    {
+      id: 13,
+      title: "Report #14"
+    },
+    {
+      id: 14,
+      title: "Report #15"
+    },
+    {
+      id: 15,
+      title: "Report #16"
+    },
+    {
+      id: 16,
+      title: "Report #17"
+    },
+    {
+      id: 17,
+      title: "Report #18"
+    },
+    {
+      id: 18,
+      title: "Report #19"
+    },
+    {
+      id: 19,
+      title: "Report #20"
+    }
+   /* {
+      id: 20,
+      title: "Report #21"
+    }
+*/
+  ];
+  
+  $scope.pages = [ 
+     {
+      id: 0,
+      title: "Page 1"
+     },
+     {
+      id: 1, 
+      title: "Page 2"
+     },
+     {
+      id: 2, 
+      title: "Page 3"
+     },
+     {
+      id: 3, 
+      title: "Page 4"
+     },
+     {
+      id: 4, 
+      title: "Page 5"
+     }
+   ];
+    
+ $scope.selectedPage = $scope.pages[0].id;
+
+  $scope.showNext = function(pageNo){
+
+    var list = angular.copy(reportsList);
+    var offset =  (pageNo - 1) * pageSize ;
+    $scope.reportsList = list.splice( offset, pageSize);
+     $scope.selectedPage = $scope.pages[pageNo-1].id;
+  }
+
+  $scope.showNext(1);
+
+    $scope.showPrevious = function(pageNo){
+		
+    var list = angular.copy(reportsList);
+    var offset =  (pageNo + 1) * pageSize ;
+    $scope.reportsList = list.splice( offset, pageSize);
+     $scope.selectedPage = $scope.pages[pageNo+1].id;
+  }
+
+  $scope.showPrevious(-1);
+
+     $scope.back = function(){
+		 //alert("hiiii");
+		 $ionicHistory.goBack();
+    console.log($ionicHistory.viewHistory());
+    
+  }
+}])
+
+
+.controller('VitalsCtrl',['$scope','$state','$stateParams','sortedByList','$ionicHistory', function($scope, $state, $stateParams, sortedByList,$ionicHistory){
+  $scope.sortedByList = sortedByList;
+  $scope.sortedBy =  $scope.sortedByList[0].id;
+    
+      $scope.patientProfile = {
+    name: $stateParams.name,
+    age :  $stateParams.age,
+    gender : $stateParams.gender,
+    email: $stateParams.email,
+    url: $stateParams.profile_url
+  }
+
+  $scope.selectedView = 'Today';
+
+  $scope.changeView = function(view){
+    switch(view){
+      case 1: 
+        $scope.selectedView = 'Today';
+        break;
+      case 2:
+        $scope.selectedView = 'Week';
+        break;
+      case 3: 
+        $scope.selectedView = 'Month';
+        break;
+      default: 
+         $scope.selectedView = 'Today';
+    }
+
+  } 
+    
+  
+    function getStateTitle(id){
+    var title = '';
+    var list = $scope.sortedByList;
+    for(var i = 0; i < list.length; i++){
+      if(id == list[i].id){
+        title = list[i].routingStateName;
+        return title;
+      }
+    }
+  }
+
+  $scope.gotoAction= function(id){
+    var state = getStateTitle(id);
+
+    $state.transitionTo(state,{name: $stateParams.name}, {reload: true});
+  }
+
+  
+ 
 }]);

@@ -54,7 +54,8 @@ angular.module('geiaFitApp')
 
     form = JSON.stringify(form);
 
-
+//$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+	  
     var promise = $http({
       method: "POST", 
       url: ApiEndpoint.url + '/user/login',
@@ -67,16 +68,16 @@ angular.module('geiaFitApp')
     });
 
     return promise;
-
-    // return $q(function(resolve, reject) {
-    //   if ((name == 'admin' && pw == '1') || (name == 'user' && pw == '1')) {
-    //     // Make a request and receive your auth token from your server
-    //     storeUserCredentials(name + '.myToken', isChecked);
-    //     resolve('Login success.');
-    //   } else {
-    //     reject('Login Failed.');
-    //   }
-    // });
+/*
+     return $q(function(resolve, reject) {
+       if ((name == 'admin' && pw == '1') || (name == 'user' && pw == '1')) {
+         // Make a request and receive your auth token from your server
+         storeUserCredentials(name + '.myToken', isChecked);
+         resolve('Login success.');
+       } else {
+         reject('Login Failed.');
+       }
+     });*/
   };
  
   var logout = function() {

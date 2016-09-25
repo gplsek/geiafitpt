@@ -1,0 +1,1342 @@
+/*
+To customize the look and feel of Ionic, you can override the variables
+in ionic's _variables.scss file.
+
+For example, you might change some of the default colors:
+
+$light:                           #fff !default;
+$stable:                          #f8f8f8 !default;
+$positive:                        #387ef5 !default;
+$calm:                            #11c1f3 !default;
+$balanced:                        #33cd5f !default;
+$energized:                       #ffc900 !default;
+$assertive:                       #ef473a !default;
+$royal:                           #886aea !default;
+$dark:                            #444 !default;
+*/
+
+// The path for our ionicons font files, relative to the built CSS in www/css
+$ionicons-font-path: "../lib/ionic/fonts" !default;
+
+// Include all of Ionic
+@import "www/lib/ionic/scss/ionic";
+
+/* Empty. Add your own CSS if you like */
+
+$font-stack:    'Muli', sans-serif;
+
+//colors
+$primary-color: #fff;
+$sec-color: #000;
+$blue:  #009BD7;
+
+//font sizes
+$primary-font-size: 14px; 
+$font16: 16px;
+$font18: 18px;
+$yellow: #F8A938;
+//placeholders
+
+%paddingL10{
+	padding-left: 10px;
+}
+
+%custom-checkbox {
+	position: relative;
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	cursor: pointer;
+}
+%custom-checkbox-input {
+	position: absolute;
+	width: 20px;
+    height: 20px;
+	opacity: 0;
+	z-index:2;
+}
+
+%vertically-centered{
+	display:table;
+	text-align:center;
+}
+%vertically-centered-item{
+	display: table-cell !important;
+	vertical-align: middle;
+}
+%gieafitIcons{
+	font-size: 14px;
+}
+%gieafitBlue{
+	@extend %gieafitIcons;
+	color:$blue;
+}
+%gieafitWhite{
+	@extend %gieafitIcons;
+	color: #fff;
+}
+//mixins
+@mixin custom-cb-checked ($icon-code, $color, $font-size){
+	opacity: 1;
+	position: absolute;
+	font-family: "Ionicons";
+	content: $icon-code;
+	color: $color;
+	font-size:  $font-size;
+}
+@mixin border-radius($radius){
+	-webkit-border-radius: $radius;
+	  -moz-border-radius: $radius;
+	   -ms-border-radius: $radius;
+	       border-radius: $radius;
+}
+@mixin circle($dimension, $borderColor){
+	width: $dimension;
+	height: $dimension;
+	@include border-radius(50%);
+	border: 1px solid $borderColor;
+	@extend %vertically-centered;
+}
+%circle{
+	@include circle(5px, transparent)
+	span{
+		@extend %vertically-centered-item;
+	}
+}
+%video{
+	position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+%font16White{
+	color: #fff;
+	font-size: 16px;
+	font-weight: 300;
+}
+.formfields{
+	padding: 0 15px !important;
+	height: 44px !important;
+	background: #22282C !important;
+	width: 100% !important;
+	line-height: 44px !important;
+	color: #fff !important;
+}
+
+@mixin truncate-ellipsis($width){
+	width: $width !important;
+	text-overflow: ellipsis !important;
+	white-space: nowrap !important;
+	overflow: hidden !important;
+}
+
+@mixin customSelect($width, $maxHeight, $bgColor){
+	width: $width;
+    color: #fff;
+    margin-top: 0px;
+    border: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: url("../img/arrow_down_white.png") 95% 55% no-repeat $bgColor;
+    background-size: 16px;
+    max-height: $maxHeight;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 5px;
+}
+
+/********************************************* Global Starts ***************************************/
+html, body{
+	font-family: $font-stack;
+	font-size: $primary-font-size;
+	color: $primary-color;
+}
+h1, h2, h3, h4{
+	font-weight: 400;
+	color: $primary-color;
+}
+h3{font-size: $font16;}
+input[type="text"]{
+	font-size: $font18;
+}
+p{
+	font-weight: 300;
+    font-size: 13px;
+}
+a{
+	color: #009BD7;
+}
+a.white{
+	color: #fff;
+	text-decoration: underline;
+}
+.group:after{
+	content:"";
+	display: table;
+	clear: both;
+}
+.pull-left{
+	float: left;
+}
+.pull-right{
+	float: right;
+}
+.custom-checkbox{
+	@extend %custom-checkbox;
+	border: 1px solid #ccc;
+}
+.custom-checkbox input{
+	@extend %custom-checkbox-input
+}
+.custom-checkbox input:checked + span:after{
+	@include custom-cb-checked("\f383", #fff, 21px);
+}
+.col-xs-1{
+	@extend .pull-left;
+	width: 8.33%;
+}
+.col-xs-offset-1{
+	margin-left: 8.33%;
+}
+.col-xs-2{
+	@extend .pull-left;
+	width: 16.66%; 
+}
+.col-xs-3 {
+	@extend .pull-left;
+	width: 25%;
+}
+.col-xs-4{
+	@extend .pull-left;
+	width: 33.33%;
+}
+.col-xs-5{
+	@extend .pull-left;
+	width: 41.66%;
+}
+.col-xs-6{
+	@extend .pull-left;
+	width: 50%;
+}
+.col-xs-7{
+	@extend .pull-left;
+	width: 58.33%;
+}
+
+.pos-rel{
+	position: relative;
+}
+.marginT10{
+	margin-top: 10px;
+}
+input[disabled]{
+	color: #adadad !important;
+}
+input[type=range] {
+  position: absolute;
+  -webkit-appearance: none;
+  width: 100%; /* Specific width is required for Firefox. */
+  background: transparent; /* Otherwise white in Chrome */
+  z-index: 2;
+  top: -2px;
+  max-width: 300px;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+}
+input[type=range]:focus {
+  outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
+}
+input[type=range]::-ms-track {
+  width: 100%; 
+  cursor: pointer;
+
+  /* Hides the slider so custom styles can be added */
+  background: transparent; 
+  border-color: transparent;
+  color: transparent;
+}
+
+/* Special styling for WebKit/Blink */
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: 1px solid #000000;
+  height: 20px;
+  width: 5px;
+  border-radius: 3px;
+  background: #ffffff;
+  cursor: pointer;
+  // margin-top: -14px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+  // box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; /* Add cool effects to your sliders! */
+}
+
+/* All the same stuff for Firefox */
+input[type=range]::-moz-range-thumb {
+  // box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  border: 1px solid #000000;
+  height: 36px;
+  width: 16px;
+  border-radius: 3px;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+/* All the same stuff for IE */
+input[type=range]::-ms-thumb {
+  // box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  border: 1px solid #000000;
+  height: 36px;
+  width: 16px;
+  border-radius: 3px;
+  background: #ffffff;
+  cursor: pointer;
+}
+.popup, .popup-title{
+	color: $sec-color;
+}
+.ion-ios-arrow-back{
+	width: 40px;
+	display: inline-block;
+}
+.full-width{
+	width: 100%;
+}
+
+::-webkit-input-placeholder {
+  	@extend %font16White;
+	color: #575B64;
+	font-size: 16px;
+	font-weight: 400;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+ 	font-size: 16px;
+	font-weight: 400;
+	color: #575B64;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+  	font-size: 16px;
+	font-weight: 400;
+	color: #575B64;
+}
+
+:-ms-input-placeholder {  
+    font-size: 16px;
+	font-weight: 400;
+	color: #575B64;  
+}
+//Steps slider 
+.rz-pointer .rz-pointer-min{
+	background: #CFF3B2 !important;
+}
+.rz-pointer .rz-pointer-max{
+	background: #146BA9 !important;
+}
+
+.rzslider .rz-bar.rz-selection{
+	background: #00B1E1 !important;
+}
+.rzslider .rz-pointer{
+	top: -42px !important;
+    width: 42px  !important;
+    height: 51px  !important;
+    -webkit-border-radius: 0  !important;
+    -moz-border-radius: 0  !important;
+    border-radius: 0 !important;
+    margin-left: -5px  !important;
+	background-color: transparent !important;
+}
+.rzslider .rz-pointer:after{
+	top: 40px !important;
+	left: 20px !important;
+}
+.rzslider .rz-pointer-max:after{
+	left: 21px !important;
+}
+
+.rzslider .rz-pointer.rz-active:after{
+	background: #fff !important;
+}
+
+.rzslider .rz-bubble{
+	color: #fff !important;
+}
+.rzslider .rz-limit{
+	display: none !important;
+}
+.rzslider .rz-bubble:not(.rz-limit){
+	top: -40px;
+    width: 40px;
+    height: 25px;
+    text-align: center;
+    margin-left: -2px;
+}
+.rzslider .rz-bubble:not(.rz-limit):after{
+	content: '';
+	width: 0;
+	height: 0;
+	position: absolute;
+	border-right: 6px solid transparent;
+	border-left: 6px solid transparent;
+	top: 23px;
+    left: 13px;
+}
+.rzslider .labelLeft{
+	border: 1px solid #C5EFA5;
+}
+.rzslider .labelLeft:after{
+	border-top: 6px solid #C5EFA5;
+}
+%before_arrow_black{
+	content: '';
+	width: 0;
+	height: 0;
+	position: absolute;
+	border-right: 6px solid transparent;
+	border-left: 6px solid transparent;
+	border-top: 6px solid #121516;
+	top: 22px;
+    left: 13px;
+    z-index: 2;
+	
+}
+.rzslider .labelLeft:before{
+	@extend %before_arrow_black;
+}
+.rzslider .labelRight{
+	border: 1px solid #00B1E1;
+}
+.rzslider .labelRight:after{
+	border-top: 6px solid #00B1E1;
+}
+.rzslider .labelRight:before{
+	@extend %before_arrow_black;
+}
+ion-content{
+	background: #121516;
+	color: #fff;
+}
+ion-header-bar{
+	padding: 0 10px;
+
+	@extend %gieafitBlue;
+	background: #000000 !important;
+	.title{
+		font-size: 20px !important;
+		font-weight: bold !important;
+		line-height: 47px !important;
+		text-align: center !important;
+		left: 0px !important;
+		right: 0px !important;
+		
+		// @include truncate-ellipsis(225px);
+	}
+	.buttons-left{
+		margin-left: 15px;
+	} 
+	.buttons-right{
+		margin-right: 15px;
+	}
+	.buttons{
+		z-index: 12;
+		span.icon{
+			line-height: 44px !important;
+			display: inline-block !important;
+		}
+
+	}
+	.icon:before{
+		font-size: 26px;
+	}
+	.ion-navicon:before{
+		font-size: 34px;
+	}
+}
+
+.form-group {
+	margin-bottom: 25px;
+	label{
+		@extend %font16White;
+	}
+	input{
+		font-size: $font16;
+	}
+}
+.input-group-btn{
+	background: #F8A938;
+	float: left;
+	width: 13%;
+	height: 44px;
+	text-align: center;
+	line-height: 44px;
+}
+.input-group-btn:after{
+	font-size: 16px;
+	font-weight: 300;
+}
+.input-group-field{
+	float: left !important;
+	width: 87% !important;
+}
+
+.btn-yellow{
+	background: $yellow;
+	width: 100%;
+    margin: 0 auto;
+	border-radius: 22px;
+	margin-top: 80px;
+    height: 50px;
+    border: 0;
+	h1{
+		text-align: center;
+		font-size: 18px;
+		line-height: 50px;
+		font-weight: 500;	
+	}
+}
+
+.flash{
+	color: #fff;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    z-index: 4;
+    font-size: 17px;
+    -webkit-animation: fade 1s linear;
+    animation: fade 1s linear;
+}
+
+@-webkit-keyframes fade{
+	100%{
+		opacity: 0.8;
+	}
+	50%{
+		opacity: 0.6;
+	}
+	0%{
+		opacity: 0;
+	}
+}
+
+
+@keyframes fade{
+	100%{
+		opacity: 0.8;
+	}
+	50%{
+		opacity: 0.6;
+	}
+	0%{
+		opacity: 0;
+	}
+}
+
+.success{
+	background: #5EAE36;
+}
+.error{
+	background: indianred;
+}
+.bar .buttons .hide{
+	display: block !important;
+}
+.comingSoon{
+	background: #000;
+	color:#fff;
+	padding-top: 80px;
+	text-align: center;
+}
+
+.sortedBy{
+	height: 80px;
+	line-height: 20px;
+	background: #121516;
+	color: #fff;
+	position: relative;
+	p{
+		padding-top: 10px;
+	}
+
+	select{
+		@include customSelect(180px, 200px, #121516);
+	}
+			
+}
+.sortedBySmall{
+	height: 45px;
+	line-height: 45px;
+	background: #121516;
+	select{
+		@include customSelect(180px, 200px, #121516);
+	}
+}
+
+.search{
+	background: #2A2C2D;
+	color: #fff;
+	height: 40px;
+	position: relative;
+	input{
+		padding: 5px 20px;
+		width: 100%;
+		height: 100%;
+	    background: transparent;
+	    position: absolute;
+	    left: 0;
+	    top: -2px;
+	    color: #fff;
+	    font-size: 16px;
+	}
+	.ion-ios-search-strong{
+		margin-top: 10px;
+		position: absolute;
+		right: 30px;
+	}
+	.ion-ios-search-strong:before{
+		font-size: 16px;
+	}
+}
+.gieafitListItem{
+	background: #22282C;
+	height: 50px;
+	color: #fff;
+	border-bottom: 1px solid #101010;
+	line-height: 50px;
+
+}
+.marginR5{
+	margin-right: 5px;
+}
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    width: 100%;
+    padding-top: 30px; height: 0; overflow: hidden;
+	iframe {
+	   @extend %video;
+	}
+	object{
+		@extend %video;
+	}
+	embed{
+		@extend %video;
+	}
+}
+
+input, textarea{
+	@extend .formfields;
+	@extend %font16White;
+}
+textarea{
+	height: 76px !important;
+	line-height: 30px !important;
+	padding: 0 10px !important;
+}
+.text-capitalize{
+	text-transform: capitalize;
+}
+.marginT30{
+	margin-top: 30px;
+}
+/********************************************* Global Ends ***************************************/
+
+
+
+.login-view {
+	ion-content{
+		background: #121516;
+		padding: 0;
+	}
+	.banner-wrap{
+		background: #000000;
+		padding-bottom: 25px;
+		.banner{
+			text-align: center;
+			img{
+				display: block;
+    			margin: auto;
+			}
+
+			figcaption{
+				color: #fff;
+				font-size: 16px;
+				font-weight: bold;
+			}
+		}
+	}
+	.main{
+	 	padding: 15px 25px;
+		background: #121516;
+		color: #fff;
+		.header-title{
+			font-size: 20px;
+			font-weight: 300;
+			margin: 15px 0 30px;
+		}
+		.form-wrap{
+		 	.form-group{
+				
+				label{
+					font-size: 16px;
+					font-weight: 300;
+				}
+				
+			}
+			.forgotPassword{
+				@extend %font16White;
+			}
+		}
+		.keepsignedin{
+			@extend %font16White;
+			padding-left: 10px;
+		}
+		
+	}
+}
+
+
+.dashboardView{
+	ion-content{
+		background: #22282C;
+	}
+	ion-header-bar{
+		// padding: 0;
+		.button{
+			@extend %gieafitBlue;
+			background: none;
+			&:hover{
+				@extend %gieafitBlue;
+			}
+		}
+		.circle-add-patient{
+			position: relative;
+			width: 30px;
+    		height: 30px;
+			border-radius: 50%;
+			top: 2px;
+			border: 1px solid $blue;
+			span{
+				position: absolute;
+				top: 0px;
+    			left: -6px;
+			}
+		}
+		.ion-person-add:before{
+			font-size: 22px !important;
+		}
+		.btn-navicon{
+			font-size: 26px;
+		    line-height: 37px;
+		    display: block !important;
+		}
+
+	}
+	
+	.patientList{
+		li{
+			@extend .gieafitListItem;
+			.activityDot{
+				display: inline-block;
+				width: 10px;
+			    height: 10px;
+			    border-radius: 50%;
+			    margin-left: 10px;
+			    margin-top: 20px;
+			    background: $blue;
+			}
+			div[class*='col-']{
+				line-height: 47px;
+			}
+
+			meter{
+				height: 7px;
+				width: 100%;
+				background: #000;
+				margin-bottom: 4px;
+				&::-moz-meter-bar{
+					height: 100%;
+					background: #000;
+				}
+				&:-moz-meter-optimum::-moz-meter-bar {
+				   background: #72CE44;
+				}
+				&:-moz-meter-sub-optimum::-moz-meter-bar {
+				   background: -webkit-linear-gradient(left, #FAFF4B , #FEFFD4); /* For Safari 5.1 to 6.0 */
+				    background: -o-linear-gradient(right, #FAFF4B, #FEFFD4); /* For Opera 11.1 to 12.0 */
+				    background: -moz-linear-gradient(right, #FAFF4B, #FEFFD4); /* For Firefox 3.6 to 15 */
+				    background: linear-gradient(to right, #FAFF4B , #FEFFD4); /* Standard syntax */
+				}
+				&:-moz-meter-sub-sub-optimum::-moz-meter-bar {
+				    background: #EF030C;
+				}
+				&::-webkit-meter-bar{
+					height: 100%;
+					background: #000;
+				}
+				&::-webkit-meter-optimum-value{
+					  background: #72CE44;
+				}
+				&::-webkit-meter-suboptimum-value{
+					background: -webkit-linear-gradient(left, #FAFF4B , #FEFFD4); /* For Safari 5.1 to 6.0 */
+				    background: -o-linear-gradient(right, #FAFF4B, #FEFFD4); /* For Opera 11.1 to 12.0 */
+				    background: -moz-linear-gradient(right, #FAFF4B, #FEFFD4); /* For Firefox 3.6 to 15 */
+				    background: linear-gradient(to right, #FAFF4B , #FEFFD4); /* Standard syntax */
+				}
+				&::-webkit-meter-even-less-good-value{
+					background: #EF030C;
+				}
+			}
+			.unread{
+				.ion-ios-email-outline{
+					left: 10px;
+					top: 7px;
+				}
+				.ion-ios-email-outline:before{
+					font-size: 35px;
+				}
+				.unreadCount{
+					width: 16px;
+				    height: 16px;
+				    display: inline-block;
+				    position: relative;
+				    border-radius: 50%;
+				    background: #F8A938;
+				    left: -3px;
+    				top: -9px;
+				
+					span{
+						position: absolute;
+						top: 50%;
+					    left: 50%;
+					    font-size: 11px;
+					    transform: translate(-50%, -50%);
+
+					}
+				}
+				.shiftLeft{
+					left: 0px;
+				}
+			}
+			.paddedEle{
+				width: 100%;
+				height: 100%;
+				display: inline-block; 
+			}
+		}
+	}
+	.noResult{
+		font-size: 25px;
+		padding: 30px;
+	}
+}
+
+.setExerciseView{
+	span.ion-ios-trash-outline:before{
+		font-size: 34px !important;
+	}
+	.main{
+		padding: 0 20px;
+		.active{
+			font-size: 21px;
+			font-weight: 300;
+			height: 50px;
+			line-height: 50px;
+			// position: relative;
+			.onoff{
+				font-size: 12px;
+			}
+			.on{
+				margin-left: 10px;
+			}
+			.off{
+				float: right;
+				margin-top: 3px;
+			}
+			.switch{
+				float: left;
+				 width: 60px;
+    			 height: 35px;
+    			 margin-top: 8px;
+    			 margin-left: 5px;
+    			 margin-right: 5px;
+				input{
+					position: absolute;
+					opacity: 0;
+				    z-index: 2;	
+				    width: 100%;
+				    height: 35px;
+				}
+				label{
+				  display: block;
+				  position: relative;
+				  cursor: pointer;
+				  outline: none;
+				  user-select: none;
+				  padding: 2px;
+				  width: 60px;
+    			  height: 35px;
+				  background: #009BD7;
+				  border-radius: 20px;
+				  &:after{
+					  display: block;
+					  position: absolute;
+					  top: 2px;
+					  left: 2px;
+					  bottom: 2px;
+					  content: "";	
+					  width: 30px;
+					  background-color: #000;
+					  border-radius: 100%;
+					  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+					  transition: margin 0.4s;
+					}	
+				}
+			    			
+				input:checked + label:after {
+				  margin-left: 26px;
+				}
+				
+			}
+		}
+		
+	} 
+}
+.setActivityGoals{
+	.sortedBy{
+		border-bottom: 1px solid #080808;
+	}
+	ion-content{
+		background: #121516;
+	}
+	.main{
+		padding: 15px;
+		.dailySteps{
+			.customSelect{
+				@include customSelect(138px, 200px, #22282C);
+				    height: 45px;
+				    padding: 7px;
+				    font-size: 16px;
+			}
+		}
+		.rangeBar{
+			.multicolorbar{
+				position: relative;
+				width: 100%;
+				margin: auto;
+				margin-top: 45px;
+				margin-bottom: 30px;
+				.lowThreshBar{
+					position: absolute;
+					background: #C5EFA5;
+					height: 6px;
+					top: 5px;
+				}
+				.optimumBar{
+					position: absolute;
+					background: #00BCE6;
+					height: 6px;
+					top: 5px;
+				}
+				.highThreshBar{
+					position: absolute;
+					background: #1D79B5;
+					height: 6px;
+					top: 5px;
+				}
+			}
+			%valueIndicator{
+				width: 35px;
+				height: 30px;
+				padding: 5px;
+				position: relative;
+				top: -44px;
+				display: inline-table;
+				&:after{
+					position: absolute;
+					content: '';
+					width: 0;
+					height: 0;
+					border-right: 6px solid transparent;
+					border-left: 6px solid transparent;
+					border-top: 6px solid #CFF3B2;
+					top: 28px;
+    				left: 12px;
+				}
+				&:before{
+					position: absolute;
+					content: '';
+					width: 0;
+					height: 0;
+					border-right: 6px solid transparent;
+					border-left: 6px solid transparent;
+					border-top: 6px solid #121516;
+					top: 26px;
+    				left: 12px;
+    				z-index: 1;
+				}
+			}
+			.stepsMinWrap{
+				position: absolute;
+				.stepsMin{
+					@extend %valueIndicator;
+					border: 1px solid #CFF3B2;
+					left: 0;
+					width: 35px;
+	    			display: inline-block;
+	    			text-align: center;
+	    			&:after{
+	    				top: 29px;
+	    			}
+	    			&:before{
+	    				top: 27px;
+	    			}
+				}
+			}
+			.stepsMaxWrap{
+				position: absolute;
+				.stepsMax{
+					@extend %valueIndicator;
+					border: 1px solid #00B1E1;	
+					left: 0;
+					width: 35px;
+					&:after{
+						top: 30px;
+						border-top: 6px solid #00A6DC;
+					}
+					&:before{
+						top: 28px;
+					}
+				}
+			}
+			.stepsValue{
+				display: inline-block;
+				margin: 0px auto;
+				width: 30px;
+				height: 20px;
+				border: 1px solid #F8A938;
+				text-align: center;
+			}
+		}
+		.stepspermin{
+			margin-top: 25px;
+			
+			
+		}
+		.activeMinutes{
+			margin-top: 30px;
+			.col-xs-4{
+				font-weight: 300;
+				span{
+					margin-bottom: 6px;
+    				display: block;
+				}
+			}
+			.customSelect{
+				@include customSelect(90%, 40px, #22282C);
+				font-size: 14px;
+				height: 40px;
+    			padding-left: 7px;
+    			background-position-x: 90%;
+			}
+		}
+		.heartrateperhour{
+			margin-top: 30px;
+			.activityInstructions{
+				margin-top: 10px;
+				textarea{
+					width: 100%;
+					height: 100px;
+					background: #22282C;
+					color: #fff;
+					padding: 10px;
+					font-size: 15px;
+				}
+			}
+		}
+		.btn-yellow{
+			background: #F8A938;
+			color: #fff;
+			width: 90%;
+    		height: 20px;
+    		border-radius: 25px;
+    		margin: 20px auto;
+		    font-size: 20px;
+    		line-height: 20px;
+		}
+	}
+}
+
+.addPatient{
+	.main{
+		padding: 40px 25px;
+	}
+
+}
+
+.menuView{
+	background: #f6f6f6;
+	header{
+		height: 50px;
+	    background: beige;
+	    line-height: 50px;
+	    text-align: center;
+	}
+	.menuTitle{
+	    color: #000;
+	    font-size: 20px;
+	    display: inline;
+	    line-height: 50px;
+	    margin: 0;
+	}
+	.ion-ios-arrow-back{
+		width: 20px;
+	    float: left;
+	    color: #000;
+	    font-size: 35px;
+	    padding-left: 10px;
+	}
+	ul{
+		padding-top: 10px;
+		li{
+			height: 50px;
+			line-height: 50px;
+			border-bottom: 1px solid #e5e5e5;
+			a{
+				font-size: 18px;
+				color: #000;
+				text-decoration: none;
+				width: 100%;
+				padding: 10px;	
+			}
+		}
+		.logout{
+			position: fixed;
+			bottom: 0;
+			right: 0;
+			left: 0;
+			background: #dee4e2;
+			border-top: 1px solid #e5e5e5;
+			span{
+				border-right: 1px solid #ccc;
+			    padding-right: 10px;
+			    height: 100%;
+			    display: inline-block;
+			    padding: 0 10px;
+			    &:before{
+			    	font-size: 21px;
+			    	color: #000;
+			    }
+			}
+		}
+	}
+}
+
+
+.exerciseLibrary{
+	.ion-ios-plus-outline:before{
+		font-size: 34px !important;
+		font-weight: 700;
+	}
+	.exerciseList{
+		li{
+			padding: 0 15px;
+			font-size: $primary-font-size;
+			font-weight: 300;
+			.ion-ios-trash-outline:before{
+				font-size: 34px;
+			}
+			.trash-icon{
+				span{
+					top: 8px;
+				}
+			}
+			// .ion-ios-close-outline{
+			// 	position: absolute;
+			// 	right: 20px;
+			// 	top: 10px;
+			// }
+			// .ion-ios-close-outline:before{
+			// 	font-size: 15px;
+			// }
+		}
+	}
+	.pagination{
+		padding: 30px;
+		text-align: center;
+		select{
+			@include customSelect(100px, 200px, #22282C);
+			height: 45px;
+			background-position-x: 85%;
+			padding: 0 10px;
+		}
+		.next{
+			color: #009BD7;
+			margin-top: 14px;
+    		font-size: 17px;
+
+		}	
+	}
+	
+}
+
+.addExercise{
+	.main{
+		padding: 20px;
+		textarea{
+			height: 150px !important;
+		}
+		.btn-yellow{
+			margin-top: 30px;
+		}
+	}
+}
+.addAccount{
+	section{
+		padding: 20px 30px;
+	}
+	section.main{
+		border-bottom: 1px solid #353535;
+	}
+	section.profile{
+		padding: 10px 30px;
+		border-bottom: 1px solid #615f5f;
+		.circle-profile-image{
+			margin-top: 5px;
+			@include circle(90px, #C1C1C1);
+			span{
+				@extend %vertically-centered-item;
+				font-weight: 300;
+			}
+		}
+
+		.circle-profile-photo{
+			width: 80px;
+			height: 80px;
+			.img-circle{
+				display: block;
+				width: 100%;
+				height: 100%;
+				border-radius: 50%;
+			}
+		}
+		.profilePhoto{
+			margin-bottom: 5px;
+		}
+	}	
+
+	.changePassword{
+		margin-top: 10px;
+		padding: 0px 30px;
+		a{
+			display: block;
+			font-size: 15px;
+	    	font-weight: 300;
+	    	margin-bottom: 20px;
+		}
+		.btn-yellow{
+			margin-top: 40px;
+		}
+	}
+
+}
+
+.activity{
+	h3{
+		padding: 15px;
+	}
+	.patientProfile{
+		height: 100px;
+		background: #22282C;
+		color: #fff;
+		padding: 10px;
+		border-bottom: 1px solid #000;
+		-webkit-box-shadow: 0 -3px 2px -2px #0c0c0c;
+		box-shadow: 0 -3px 2px -2px #0c0c0c;
+		// div[class ^= 'col-xs']{
+		// 	padding: 0 0px;
+		// }
+		img{
+			width: 80px;
+		}
+		svg{
+			position: relative;
+			top: -5px;
+			right: 25px;
+			circle{
+				stroke: #009BD7;
+    			stroke-width: 4px;
+    			fill: #22282C;
+			}
+			text{
+				stroke: #fff;
+				stroke-width: 1.7;
+				font-size: 21px;
+				letter-spacing: 1px;
+				tspan{
+					stroke: #009BD7;
+					stroke-width: 1.3;
+					font-size: 15px;
+				}
+			}
+		}
+	}
+	.sortedBy{
+		background: #2A2C2D;
+		height: 60px;
+		line-height: 60px;
+		select{
+
+		}
+	}
+	.main{
+		.selectionTab{
+			width: 98%;
+		    margin: auto;
+		    height: 45px;
+		    border-radius: 22px;
+		    background: #1D2029;
+		    margin-top: 25px;
+		    position: relative; 
+			li{
+				float: left;
+			    display: inline-block;
+			    width: 33.33%;
+			    text-align: center;
+			    color: #616060;
+			   	margin-top: -42px;
+			    height: 48px;
+			    font-size: 18px;
+			    line-height: 50px;
+			    &.active{
+			    	background: $yellow;
+			    	color: #fff;
+			    	border-radius: 22px;
+			    	// @extend .btn-yellow;
+			    	// height: 44px;
+			    }
+			}
+		}
+		.totalActivity{
+			text-align: center;
+			svg{
+				width: 100%;
+				position: relative;
+    			left: 60px;
+    			circle{
+    				fill:#121516;
+    				stroke: #122331;
+    				stroke-width: 12px; 
+    			}
+    			#green-halo{
+    			 	stroke: aliceblue;
+    			}
+			}
+		}
+	}
+}

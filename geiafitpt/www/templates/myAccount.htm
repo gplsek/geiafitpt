@@ -1,0 +1,64 @@
+<ion-view class="addAccount" view-title="My Account">
+	<ion-nav-bar>
+		<ion-nav-buttons side="left">
+			<span class="cross icon ion-close" ng-click="gotoHome()"></span>	
+		</ion-nav-buttons>
+	</ion-nav-bar>
+	<ion-content>
+		<section class="main">
+			<div class="form-group">
+				<label>Full Name</label>
+				<input type="text" class="form-control" ng-model="profile.name" placeholder="Firstname Lastname" ng-disabled="!editEnabled" />
+			</div>
+			
+            <div class="form-group">
+            	<label>Email Address</label>
+            	<input type="text" ng-model="profile.email" placeholder="Enter Email" ng-disabled="!editEnabled">
+            </div>
+            <div class="form-group">
+            	<label>Phone Number</label>
+            	<input type="tel" ng-model="profile.phone" placeholder="Enter phone" ng-disabled="!editEnabled">
+            </div>
+			
+			
+		</section>
+		<section class="profile">
+			<div class="profilePhoto" ng-hide="showPhoto">
+					<label>Profile Image</label>
+					<div class="circle-profile-image" ng-click="!editEnabled || setProfilePhoto()"><span><i class="icon ion-plus"></i></span></div>
+			</div>
+			<div ng-show="showPhoto" class="circle-profile-photo">
+				<img ng-src="{{src}}" alt="Profile Pic" class="img-circle">
+			</div>
+			<a ng-click="setProfilePhoto()">Change Profile picture</a>
+
+		</section>
+			            
+		<section class="changePassword">
+			<a class="white" ng-click="showCP = !showCP">Change Password</a>
+			<div ng-show="showCP">
+				<div class="form-group">
+					<label>Password</label>
+					<input type="password" ng-model="profile.password" placeholder="Enter Password" />
+				</div>
+				<div class="form-group">
+					<label>New Password</label>
+					<input type="password" ng-model="profile.newPassword" placeholder="Enter Password" />
+				</div>
+	            <div class="form-group">
+	            	<label>Confirm Password</label>
+	            	<input type="text" ng-model="passwordRepeat" placeholder="Confirm Password">
+	            </div>
+	        </div>
+	        <div class="btn-yellow" ng-click="editEnabled=true" ng-hide="editEnabled">
+		  		<h1 class="title">Edit</h1>	  		
+			</div>
+			<div class="btn-yellow" ng-click="save(profile)" ng-show="editEnabled">
+		  		<h1 class="title">Save</h1>	  		
+			</div>
+
+		</section>
+
+		
+	</ion-content>
+</ion-view>

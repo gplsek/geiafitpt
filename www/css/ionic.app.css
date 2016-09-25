@@ -9947,15 +9947,28 @@ input[disabled] {
   color: #adadad !important; }
 
 input[type=range] {
-  position: absolute;
+  position: none;
   -webkit-appearance: none;
   width: 100%;
   /* Specific width is required for Firefox. */
-  background: transparent;
+  background:none !important;
   /* Otherwise white in Chrome */
   z-index: 2;
   top: -2px;
-  max-width: 300px; }
+    max-width:100% !important;
+    margin-left:25px;
+ }
+
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100% !important;
+    height: 7.8px;
+    /*background:#EEE71F;*/
+    background: -webkit-linear-gradient(left, #FAFF4B, #FEFFD4) !important;
+    border: none;
+    border-radius: 3px;
+        max-width:100% !important;
+  
+}
 
 input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none; }
@@ -10868,3 +10881,345 @@ textarea {
       stroke-width: 12px; }
     .activity .main .totalActivity svg #green-halo {
       stroke: aliceblue; }
+
+
+
+
+.vitals h3{
+  padding: 15px;   
+}
+.vitals .sortedBy {
+    height:0px;
+  border-bottom: 1px solid #080808; }
+
+.vitals ion-content {
+  background: #121516; }
+
+
+
+.vitals .main .selectionTab {
+  width: 98%;
+  margin: auto;
+  height: 45px;
+  border-radius: 22px;
+  background: #1D2029;
+  margin-top: 40px;
+  position: relative; }
+  .vitals .main .selectionTab li {
+    float: left;
+    display: inline-block;
+    width: 33.33%;
+    text-align: center;
+    color: #616060;
+    margin-top: -5px;
+    height: 48px;
+    font-size: 18px;
+    line-height: 50px; }
+   .vitals .main .selectionTab li.active {
+    background: #F8A938;
+    color: #fff;
+    border-radius: 22px; }
+
+  .vitals .vitalinfo{
+    display: block;
+    font-size: 15px;
+    font-weight: 300;
+    margin-bottom: 20px; }
+
+.vitals .vitalinfo.tablegroup.icon{
+    font-size: 100px;
+    color: cornflowerblue;
+}
+
+  .vitals .vitalinfo .btn-yellow {
+    background: #F8A938;
+    color: #fff;
+    width: 50%;
+    height: 20px;
+    border-radius: 25px;
+    margin: 20px auto;
+    font-size: 20px;
+    line-height: 20px; }
+
+.vitals .button-block {
+  width: 50%; }
+
+.vitals .vitalinfo .tablegroup{
+    
+    padding: 150px;
+    text-align: center;
+    width: 400px;
+    height: 350px;
+    border-color: aliceblue;
+
+}
+
+
+
+
+.AddExPopup{
+    padding: 0 15px;
+   
+    border-bottom: 1px solid #353535;
+    
+}
+
+.AddExPopup .popup{
+     padding: 20px 25px;
+      margin-top: 40px;
+      margin-left: 20px;
+      margin-right: 20px;
+     text-align: center;
+     border: 1px solid #353535;
+     color:dimgrey;
+     background: #353535;
+
+}
+
+.AddExPopup .popup .btn-yellow {
+    background: #F8A938;
+    color: #fff;
+    width: 80%;
+    height: 20px;
+    border-radius: 25px;
+    margin: 20px auto;
+    font-size: 20px;
+    line-height: 20px; }
+
+
+
+.reviewSnapshots .ion-ios-plus-outline:before {
+  font-size: 34px !important;
+  font-weight: 700; }
+.reviewSnapshots .reportsList li .marginR5.activityDot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-left: 10px;
+  margin-top: 20px;
+  background: #009BD7; }
+
+.reviewSnapshots .reportsList li {
+  padding: 0 15px;
+  font-size: 14px;
+  font-weight: 300; }
+  .reviewSnapshots .reportsList li .ion-ios-trash-outline:before {
+    font-size: 34px; }
+  .reviewSnapshots .reportsList li .trash-icon span {
+    top: 8px; }
+
+.reviewSnapshots .pagination {
+  padding: 30px;
+  text-align: center; }
+  .reviewSnapshots .pagination select {
+    width: 100px;
+    color: #fff;
+    margin-top: 0px;
+    border: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: url("../img/arrow_down_white.png") 95% 55% no-repeat #22282C;
+    background-size: 16px;
+    max-height: 200px;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 5px;
+    height: 45px;
+    background-position-x: 85%;
+    padding: 0 10px; }
+  .reviewSnapshots .pagination .previous {
+    color: #009BD7;
+    margin-top: 14px;
+    font-size: 17px; }
+  .reviewSnapshots .pagination .next {
+    color: #009BD7;
+    margin-top: 14px;
+    font-size: 17px; }
+
+
+
+
+
+//new css
+.balance{
+    font-size: 20px;
+}
+#label1{
+    margin-top: 15%;
+}
+#texting1{
+    width:100%;
+}
+#texting{
+    width:100%;
+    padding-right:20px;
+    padding-left: 20px;
+}
+#zip{
+    padding-right: 20px;
+    padding-left: 20px;
+}
+#div2{
+    width:40%;
+  padding-left:40px;
+}
+
+.p1{
+padding-top:60px;
+
+
+}
+
+.f1{
+width:80%;
+margin-left: auto;
+margin-right: auto;
+}
+.pc{
+
+
+text-align: center;
+
+
+}
+
+#ficon{
+
+padding-top:10%;
+border: 5px;
+border-color: white;
+}
+
+
+
+
+
+
+
+
+
+  table.equalDevide tr td { width:100%;height:50%;border:1px solid gray; }
+    
+}
+
+#col-align{
+    align-content: center;
+}
+
+
+
+
+
+
+input[type=range]::-webkit-slider-runnable-track {
+    width: 300px;
+    height: 7.8px;
+    /*background:#EEE71F;*/
+    background: -webkit-linear-gradient(left, #FAFF4B, #FEFFD4) !important;
+    border: none;
+    border-radius: 3px;
+    margin-right: 10%;
+}
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 62px;
+    width: 62px;
+    border-radius: 127%;
+     /*background: ion-hapy;*/
+    background: url('../img/Happy.png');
+    background-repeat: no-repeat;
+   /* background-size:74px;*/
+    background-size:65px;
+    margin-top: -35px;
+}
+input[type=range]:focus {
+    outline: none;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #ccc;
+}
+
+input[type=range]::-moz-range-track {
+    width: 300px;
+    height: 5px;
+    background: #ddd;
+    border: none;
+    border-radius: 3px;
+}
+input[type=range]::-moz-range-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: goldenrod;
+}
+
+/*hide the outline behind the border*/
+input[type=range]:-moz-focusring{
+    outline: 1px solid white;
+    outline-offset: -1px;
+}
+
+input[type=range]::-ms-track {
+    width: 300px;
+    height: 5px;
+    
+    /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
+    background: transparent;
+    
+    /*leave room for the larger thumb to overflow with a transparent border */
+    border-color: transparent;
+    border-width: 6px 0;
+
+    /*remove default tick marks*/
+    color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+    background: #777;
+    border-radius: 10px;
+}
+input[type=range]::-ms-fill-upper {
+    background: #ddd;
+    border-radius: 10px;
+}
+input[type=range]::-ms-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: goldenrod;
+}
+input[type=range]:focus::-ms-fill-lower {
+    background: #888;
+}
+input[type=range]:focus::-ms-fill-upper {
+    background: #ccc;
+}
+.divr{
+height: 200px;
+    background-color: white;
+    width: 100%;
+    
+    
+}
+.divr1
+{
+height:40px;
+    background-color:black;
+    color: black;
+    width: 100%;
+     border: none;
+    margin-bottom: 15%;
+}
+
+.sliderchng{
+    margin-left: 11%;
+    margin-right: 10%;
+    height:100%;
+    margin-top:130px;
+background-color: black !important;
+}
+

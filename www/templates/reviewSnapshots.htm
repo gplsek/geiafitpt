@@ -4,34 +4,41 @@
 			<span class="icon ion-chevron-left" ng-click="back()"></span>
 		</ion-nav-buttons>
 		<ion-nav-buttons side="right">
-			<span  menu-toggle="right" class="icon ion-ios-plus-outline"></span>
+			<span  menu-toggle="right" class="icon ion-ios-plus-outline" ng-click="adds()"></span>
 		</ion-nav-buttons>
 	</ion-nav-bar>
 	<ion-content>
 	    <div class="sortedBy text-center">
-	     
-	      <select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select>
+	      <p><small>Sorted By:</small></p>
+	      <select  ng-model="sortedByNew">
+          <option value="">New</option>  
+          </select>
 	       
 	    </div>
-		<div class="search">
+		<!--<div class="search">
 	      <input type="text" placeholder="Search" ng-model="searchReports" />
 	      <span class="icon ion-ios-search-strong pull-right"></span>
-	    </div>
-	    <div class="blankDiv">
-	    </div>
+	    </div>-->
+	   <!-- <div class="blankDiv">
+	    </div>-->
 		<ul class="reportsList">
 			<li ng-repeat="item in reportsList" class="gieafitListItem group">
 				<span class="pull-left"><span class="marginR5 activityDot"></span><span>{{item.title}}</span></span>
-				<span class="pull-right trash-icon" ng-click="delete($index)">
+				<!--<span class="pull-right trash-icon" ng-click="delete($index)">
 					<span class="pos-rel">
 						<i class="icon ion-ios-trash-outline" ></i>
-						<!-- <i class="icon ion-ios-close-outline"></i> -->
+						
 					</span>
-				</span>
+				</span>-->
 			</li>
 		</ul>
 
 		<section class="pagination">
+			
+            <span class="pull-left previous" ng-click="showPrevious(selectedPage - 2)"> <i class="icon ion-chevron-left"></i> Previous </span>
+			
+			
+			
 			<select ng-model="selectedPage" ng-options="page.id as page.title for page in pages" class="customSelect" ng-change="showNext(selectedPage + 1)"></select>
 			<span class="pull-right next" ng-click="showNext(selectedPage + 2)">Next <i class="icon ion-chevron-right"></i></span>
 		</section>

@@ -98,7 +98,9 @@ angular.module('geiaFitApp', ['ionic', 'rzModule','ngCordova'])
     templateUrl: "templates/addExercise.htm",
     controller: "AddExerciseCtrl"
   })
-  .state('setExerciseProgram', {
+  //new
+  
+    .state('setExerciseProgram', {
     url: '/setExerciseProgram',
     params: patientParams,
     templateUrl: 'templates/setExerciseProgram.htm',
@@ -109,6 +111,34 @@ angular.module('geiaFitApp', ['ionic', 'rzModule','ngCordova'])
       }
     }
   })
+
+
+
+ .state('AddExcercisePopup', {
+    url: 'AddExcercisePopup', 
+    templateUrl: 'templates/AddExercisePopup.htm',
+    controller: 'AddExercisePopupCtrl'
+  })
+  //
+  
+  .state('vitalSuccess',{
+url:"/vitalSuccess",
+templateUrl:'templates/vitalSuccess.htm'
+})
+
+  
+/*  
+  .state('setExerciseProgram', {
+    url: '/setExerciseProgram',
+    params: patientParams,
+    templateUrl: 'templates/setExerciseProgram.htm',
+    controller: 'SetExerciseProgramCtrl',
+    resolve: {
+      sortedByList: function(AppService){
+        return AppService.sortedByList();
+      }
+    }
+  })*/
   .state('setActivityGoals', {
     url: '/setActivityGoals',
     params: {
@@ -138,31 +168,94 @@ angular.module('geiaFitApp', ['ionic', 'rzModule','ngCordova'])
       }
     }
   })
+  
+  .state('exerciseProgram', {
+    url: '/exerciseProgram', 
+    params: patientParams,
+    templateUrl: 'templates/exerciseProgram.htm',
+    controller: 'ExerciseProgramCtrl',
+     resolve: {
+      sortedByList: function(AppService){
+        return AppService.sortedByList();
+      }
+    }
+  })
+  .state('addSnapshot',{
+url:'/addSnap',
+templateUrl:'templates/addSnapshot.htm'
+
+  })
+
+
   .state('activityLog', {
     url: '/activityLog', 
     template: '<h1 class="comingSoon">Coming soon</h1>'
   })
-  .state('exerciseProgram', {
+  
+  
+  
+ /* .state('exerciseProgram', {
     url: '/exerciseProgram', 
-    template: '<h1 class="comingSoon">Coming soon</h1>'
+	  templateUrl: 'templates/exerciseProgram.htm' 
+   // template: '<h1 class="comingSoon">Coming soon</h1>'
+  })*/
+  
+   .state('reviewSnapshots', {
+    url: '/reviewSnapshots', 
+    templateUrl: 'templates/reviewSnapshots.htm',
+    controller: 'ReviewSnapshotsCtrl',
+    resolve: {
+      sortedByList: function(AppService){
+        return AppService.sortedByList();
+      }
+    }
   })
-  .state('reviewSnapshots', {
+  
+ /* .state('reviewSnapshots', {
     url: '/reviewSnapshots', 
     templateUrl: 'templates/reviewSnapshots.htm',
     controller: 'ReviewSnapshotsCtrl'
-  })
+  })*/
   .state('messages', {
     url: '/messages', 
     template: '<h1 class="comingSoon">Coming soon</h1>'
   })
+  
+   .state('vitals', {
+    url: '/vitals', 
+      templateUrl: 'templates/vitals.htm',
+      controller:'VitalsCtrl',
+       resolve: {
+      sortedByList: function(AppService){
+        return AppService.sortedByList();
+      }
+    }
+  })
+  
+ /* 
   .state('vitals', {
     url: '/vitals', 
     template: '<h1 class="comingSoon">Coming soon</h1>'
-  })
+  })*/
+/*  .state('payments', {
+    url: '/payments', 
+	   templateUrl: 'templates/payment.htm'
+   // template: '<h1 class="comingSoon">Coming soon</h1>'
+  })*/
   .state('payments', {
     url: '/payments', 
-    template: '<h1 class="comingSoon">Coming soon</h1>'
+    params: patientParams,
+    templateUrl: 'templates/payment.htm',
+    controller: 'paymentCtrl',
+     resolve: {
+      sortedByList: function(AppService){
+        return AppService.sortedByList();
+      }
+    }
   })
+  
+  
+  
   .state('addPatient', {
     url: '/addPatient', 
     templateUrl: 'templates/addPatient.htm',

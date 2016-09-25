@@ -1,0 +1,71 @@
+<ion-view class="vitals" view-title="{{patientProfile.name}}">
+  <ion-nav-bar class="group">
+		<ion-nav-buttons side="left">
+			<span class="icon ion-ios-arrow-back" ng-click="back()"></span>
+		</ion-nav-buttons>
+  </ion-nav-bar>
+  
+   <ion-content>
+        <div class="sortedBy text-center">
+		    <select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select> 
+		</div>
+		
+		<section class="main">
+			<ul class="selectionTab">
+				<li ng-class="{'active': selectedView == 'Today'}" ng-click="changeView(1)">Today</li>
+				<li ng-class="{'active': selectedView == 'Week'}" ng-click="changeView(2)">Week</li>
+				<li ng-class="{'active': selectedView == 'Month'}" ng-click="changeView(3)">Month</li>
+			</ul>
+        </section>
+           
+       <center>
+          <h4 style="text-content:center;">Emotion</h4>
+       </center>
+       <br>
+        
+        <div class="row">
+            <input type="range" >
+        </div>
+        
+       <center>
+            <h4>Feeling great</h4>
+       </center>
+       
+       <div class="row" align="center">
+            <div class="col col-50" style="border:1px solid gray;border-style:inset;">
+                Height<br><br><img src="/www/img/Height.png" style="height:80px;"><br><br>
+                <input type="text" editable="false" placeholder="6'2" style="text-align:center;">
+                </div>
+        
+        <div class="col col-50">
+                Weight<br><br><img src="/www/img/Weight.png" style="height:80px;"><br><br>
+                <input type="text" placeholder="154LBS" style="text-align:center;">
+                </div>
+        </div>
+     
+       <div class="row" align="center">
+            <div class="col col-50" style="border:gray;border-bottom:1px solid gray;">
+                BMI<br><br><img src="/www/img/Weight.png" style="height:80px;"><br><br>
+                <input type="text" placeholder="18" style="text-align:center;">
+                </div>
+               
+        <div class="col col-50" style="border:1px solid gray;border-style:outset;">
+                Body Fat %<br><br><img src="/www/img/Body-Fat.png" style="height:80px;"><br><br>
+                <input type="text" placeholder="22%" style="text-align:center;">
+                </div>
+        </div>
+        
+       
+        <div class="row" align="center">
+            <div class="col col-50">
+                Heart Rate<br><br><img src="/www/img/Heart-Rate.png" style="height:80px;"><br><br>
+                <input type="text" placeholder="60BPM" style="text-align:center;">
+                </div>
+        <div class="col col-50"  style="border:1px solid gray;border-style:outset;">
+                Blood Pressure<br><br><img src="/www/img/Blood-Pressure.png" style="height:80px;"><br><br>
+                <input type="text" placeholder="120/80" style="text-align:center;">
+                </div>
+        </div>
+                <button class="button button-block btn-yellow">Submit</button>
+    </ion-content>
+</ion-view>

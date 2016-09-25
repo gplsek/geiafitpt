@@ -1,0 +1,39 @@
+<ion-view view-title="Review Snapshots" class="reviewSnapshots">
+	<ion-nav-bar class="group">
+		<ion-nav-buttons side="left">
+			<span class="icon ion-chevron-left" ng-click="back()"></span>
+		</ion-nav-buttons>
+		<ion-nav-buttons side="right">
+			<span  menu-toggle="right" class="icon ion-ios-plus-outline"></span>
+		</ion-nav-buttons>
+	</ion-nav-bar>
+	<ion-content>
+	    <div class="sortedBy text-center">
+	     
+	      <select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select>
+	       
+	    </div>
+		<div class="search">
+	      <input type="text" placeholder="Search" ng-model="searchReports" />
+	      <span class="icon ion-ios-search-strong pull-right"></span>
+	    </div>
+	    <div class="blankDiv">
+	    </div>
+		<ul class="reportsList">
+			<li ng-repeat="item in reportsList" class="gieafitListItem group">
+				<span class="pull-left"><span class="marginR5 activityDot"></span><span>{{item.title}}</span></span>
+				<span class="pull-right trash-icon" ng-click="delete($index)">
+					<span class="pos-rel">
+						<i class="icon ion-ios-trash-outline" ></i>
+						<!-- <i class="icon ion-ios-close-outline"></i> -->
+					</span>
+				</span>
+			</li>
+		</ul>
+
+		<section class="pagination">
+			<select ng-model="selectedPage" ng-options="page.id as page.title for page in pages" class="customSelect" ng-change="showNext(selectedPage + 1)"></select>
+			<span class="pull-right next" ng-click="showNext(selectedPage + 2)">Next <i class="icon ion-chevron-right"></i></span>
+		</section>
+	</ion-content>
+</ion-view>
