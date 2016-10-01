@@ -10893,19 +10893,15 @@ textarea {
 
 
 
-
+/* Vitals */
 .vitals h3{
   padding: 15px;   
 }
 .vitals .sortedBy {
     height:0px;
   border-bottom: 1px solid #080808; }
-
 .vitals ion-content {
   background: #121516; }
-
-
-
 .vitals .main .selectionTab {
   width: 98%;
   margin: auto;
@@ -10929,40 +10925,54 @@ textarea {
     color: #fff;
     border-radius: 22px; }
 
-  .vitals .vitalinfo{
+.vitals .vitalinfo{
     display: block;
     font-size: 15px;
     font-weight: 300;
     margin-bottom: 20px; }
-
-.vitals .vitalinfo.tablegroup.icon{
+    .vitals .vitalinfo.tablegroup.icon{
     font-size: 100px;
     color: cornflowerblue;
-}
-
-  .vitals .vitalinfo .btn-yellow {
+    }
+    .vitals .vitalinfo .tablegroup{
+      padding: 150px;
+      text-align: center;
+      width: 400px;
+      height: 350px;
+      border-color: aliceblue;}
+.vitals .btn-yellow {
     background: #F8A938;
     color: #fff;
-    width: 50%;
+    width: 95%;
     height: 20px;
     border-radius: 25px;
     margin: 20px auto;
     font-size: 20px;
     line-height: 20px; }
-
-.vitals .button-block {
-  width: 50%; }
-
-.vitals .vitalinfo .tablegroup{
-    
-    padding: 150px;
-    text-align: center;
-    width: 400px;
-    height: 350px;
-    border-color: aliceblue;
-
+.VitalSucess{
+background: white !important;
+color: black !important;
 }
-
+.vitaltext{
+background: white !important;
+color: black !important;
+border:1.5px solid grey !important;
+}
+.vitalBox {
+    border:1px solid #23282C;
+    border-style:inset;
+}
+.vitalBoxAlt {
+    border-bottom:1px solid #23282C;
+}
+.col-50.vitalBox .vitalsBP {
+    text-align:center; 
+    width:45%!important; 
+    display:inline-block;
+}
+.vitals div img {
+    height:80px;
+}
 
 
 

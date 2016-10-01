@@ -22,7 +22,7 @@ angular.module('geiaFitApp')
     AuthService.logout();
     $state.go('login');
     var alertPopup = $ionicPopup.alert({
-      title: 'Session Lost!',
+      title: 'Session Lost! Oops.',
       template: 'Sorry, You have to login again.'
     });
   });

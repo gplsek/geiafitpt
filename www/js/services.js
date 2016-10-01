@@ -59,7 +59,12 @@ angular.module('geiaFitApp')
     var promise = $http({
       method: "POST", 
       url: ApiEndpoint.url + '/user/login',
-      // headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      // headers: {
+      //   'Content-Type': 'application/x-www-form-urlencoded;',
+      //   'Authorization' : 'Basic'+ encodeURIComponent(name + ':' + pw),
+      //   'username':name,
+      //   'password':pw,
+      //   'Access-Control-Allow-Origin': '*'},
       data: form
     }).then(function(response){
        storeUserCredentials(name + response.data.token, isChecked);

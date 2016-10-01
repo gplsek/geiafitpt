@@ -8,18 +8,20 @@
   <!-- Right menu -->
     <ion-side-menu side="right">
         <ion-view class="menuView" view-title="Admin">
-          <header class="group" ui-sref="main.dash" menu-close>
-            <!-- <span class="icon ion-ios-arrow-back"></span> -->
-            <h1 class="menuTitle">Admin</h1>
-          </header>
+          
+            <ion-header-bar align-title="center" class="bar bar-header"><div class="buttons buttons-left header-item"><span class="left-buttons">
+      <span class="cross icon ion-close" ng-click="gotoHome()" menu-close></span>  
+    </span></div></ion-header-bar>
+
           <ul>
-			<li><a ui-sref="main.dash" menu-close>Dashboard</a></li>
 			<li><a  ui-sref="myAccount" menu-close>My Account</a></li>
             <li><a ui-sref="main.exerciseLibrary" menu-close>Exercise Library</a></li>
+      <li><a ui-sref="main.dash" menu-close>Patients</a></li>
+
          <!--   <li><a ui-sref="profile" menu-close>Profile</a></li>--> 
             
-            <li><a ui-sref="AddExcercisePopup" menu-close>Add Exercise</a></li>
-            <li class="logout"><span class="icon ion-log-out"></span><a ng-click="logout()" menu-close>Logout</a></li>
+            <!-- <li><a ui-sref="AddExcercisePopup" menu-close>Add Exercise</a></li> -->
+            <li><a ng-click="logout()" menu-close>Logout</a></li>
           </ul>
         </ion-view>
     </ion-side-menu>

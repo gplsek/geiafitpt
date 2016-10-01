@@ -7,4 +7,7 @@ angular.module('geiaFitApp')
 .constant('USER_ROLES', {
   admin: 'admin_role',
   public: 'public_role'
+})
+.constant('ApiEndpoint', {
+ url: 'https://app.geiafit.com/api'
 });

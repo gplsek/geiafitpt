@@ -59,7 +59,12 @@ angular.module('geiaFitApp')
     var promise = $http({
       method: "POST", 
       url: ApiEndpoint.url + '/user/login',
-      // headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      // headers: {
+      //   'Content-Type': 'application/x-www-form-urlencoded;',
+      //   'Authorization' : 'Basic'+ encodeURIComponent(name + ':' + pw),
+      //   'username':name,
+      //   'password':pw,
+      //   'Access-Control-Allow-Origin': '*'},
       data: form
     }).then(function(response){
        storeUserCredentials(name + response.data.token, isChecked);
@@ -151,18 +156,18 @@ angular.module('geiaFitApp')
           },
           {
             id: 1, 
-            title: "Activity Log",
-            routingStateName: "activityLog" 
-          },
-          {
-            id: 2, 
             title: "Set Activity Goals",
             routingStateName: "setActivityGoals" 
           },
           {
-            id: 3, 
+            id: 2, 
             title: "Exercise Program",
             routingStateName: "exerciseProgram" 
+          },
+          {
+            id: 3, 
+            title: "Add Custom Exercise",
+            routingStateName: "setExerciseProgram" 
           },
           {
             id: 4, 
@@ -178,11 +183,6 @@ angular.module('geiaFitApp')
             id: 6, 
             title: "Messages",
             routingStateName: "messages" 
-          },
-          {
-            id: 7, 
-            title: "Payments",
-            routingStateName: "payments" 
           }
 
         ]);

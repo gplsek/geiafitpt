@@ -52,18 +52,6 @@ padding-top:60px;
 
 
 }
-.VitalSucess{
-background: white !important;
-color: black !important;
-
-
-
-}
-.vitaltext{
-background: white !important;
-color: black !important;
-border:1.5px solid grey !important;
-}
 
 .sildrcg{
 background-color:skyblue!important;
@@ -184,7 +172,7 @@ input[type=range] {
     -webkit-appearance: none;
 
     /*fix for FF unable to apply focus style bug */
-border: 1px solid white;
+/*border: 1px solid white;*/
 
     /*required for proper track sizing in FF*/
 max-width: 100% ;

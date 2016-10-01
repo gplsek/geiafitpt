@@ -8,9 +8,6 @@ angular.module('geiaFitApp', ['ionic', 'rzModule','ngCordova'])
 //   url: 'http://192.168.2.196:8100/api'
 // })
 //For the real endpoint, we'd use this
-.constant('ApiEndpoint', {
- url: 'http://app.geiafit.com/api'
-})
 .run(function($ionicPlatform, $rootScope) {
   $ionicPlatform.ready(function() {
     if(window.cordova && window.cordova.plugins.Keyboard) {

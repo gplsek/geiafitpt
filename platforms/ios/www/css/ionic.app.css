@@ -9842,7 +9842,7 @@ ion-header-bar, .dashboardView ion-header-bar .button, .dashboardView ion-header
   font-size: 14px; }
 
 ion-header-bar, .dashboardView ion-header-bar .button, .dashboardView ion-header-bar .button:hover {
-  color: #009BD7; }
+  color: #009CDB; }
 
 .video-container iframe, .video-container object, .video-container embed {
   position: absolute;
@@ -9885,7 +9885,7 @@ p {
   font-size: 13px; }
 
 a {
-  color: #009BD7; }
+  color: #009CDB; }
 
 a.white {
   color: #fff;
@@ -10153,6 +10153,10 @@ ion-header-bar {
   margin-bottom: 25px; }
   .form-group input {
     font-size: 16px; }
+  .form-group select {
+    border:0;
+    border-radius:0;
+  }
 
 .input-group-btn {
   background: #F8A938;
@@ -10168,7 +10172,8 @@ ion-header-bar {
 
 .input-group-field {
   float: left !important;
-  width: 87% !important; }
+  width: 87% !important;}
+
 
 .btn-yellow {
   background: #F8A938;
@@ -10358,6 +10363,10 @@ textarea {
 
 .dashboardView ion-header-bar .button {
   background: none; }
+.dashboardView ion-header-bar .button.addPatient {
+  margin: -2px 11px;
+  padding:0;
+}  
 
 .dashboardView ion-header-bar .circle-add-patient {
   position: relative;
@@ -10365,7 +10374,7 @@ textarea {
   height: 30px;
   border-radius: 50%;
   top: 2px;
-  border: 1px solid #009BD7; }
+  border: 1px solid #009CDB; }
   .dashboardView ion-header-bar .circle-add-patient span {
     position: absolute;
     top: 0px;
@@ -10386,7 +10395,7 @@ textarea {
   border-radius: 50%;
   margin-left: 10px;
   margin-top: 20px;
-  background: #009BD7; }
+  background: #009CDB; }
 
 .dashboardView .patientList li div[class*='col-'] {
   line-height: 47px; }
@@ -10503,7 +10512,7 @@ textarea {
         padding: 2px;
         width: 60px;
         height: 35px;
-        background: #009BD7;
+        background: #009CDB;
         border-radius: 20px; }
         .setExerciseView .main .active .switch label:after {
           display: block;
@@ -10676,7 +10685,7 @@ textarea {
   padding: 40px 25px; }
 
 .menuView {
-  background: #f6f6f6; }
+  background: #121516; }
   .menuView header {
     height: 50px;
     background: beige;
@@ -10695,14 +10704,14 @@ textarea {
     font-size: 35px;
     padding-left: 10px; }
   .menuView ul {
-    padding-top: 10px; }
+    padding-top: 44px; }
     .menuView ul li {
       height: 50px;
       line-height: 50px;
-      border-bottom: 1px solid #e5e5e5; }
+      border-bottom: 1px solid #000; }
       .menuView ul li a {
         font-size: 18px;
-        color: #000;
+        color: #fff;
         text-decoration: none;
         width: 100%;
         padding: 10px; }
@@ -10757,7 +10766,7 @@ textarea {
     background-position-x: 85%;
     padding: 0 10px; }
   .exerciseLibrary .pagination .next {
-    color: #009BD7;
+    color: #009CDB;
     margin-top: 14px;
     font-size: 17px; }
 
@@ -10828,7 +10837,7 @@ textarea {
     top: -5px;
     right: 25px; }
     .activity .patientProfile svg circle {
-      stroke: #009BD7;
+      stroke: #009CDB;
       stroke-width: 4px;
       fill: #22282C; }
     .activity .patientProfile svg text {
@@ -10837,7 +10846,7 @@ textarea {
       font-size: 21px;
       letter-spacing: 1px; }
       .activity .patientProfile svg text tspan {
-        stroke: #009BD7;
+        stroke: #009CDB;
         stroke-width: 1.3;
         font-size: 15px; }
 
@@ -10884,19 +10893,15 @@ textarea {
 
 
 
-
+/* Vitals */
 .vitals h3{
   padding: 15px;   
 }
 .vitals .sortedBy {
     height:0px;
   border-bottom: 1px solid #080808; }
-
 .vitals ion-content {
   background: #121516; }
-
-
-
 .vitals .main .selectionTab {
   width: 98%;
   margin: auto;
@@ -10920,40 +10925,54 @@ textarea {
     color: #fff;
     border-radius: 22px; }
 
-  .vitals .vitalinfo{
+.vitals .vitalinfo{
     display: block;
     font-size: 15px;
     font-weight: 300;
     margin-bottom: 20px; }
-
-.vitals .vitalinfo.tablegroup.icon{
+    .vitals .vitalinfo.tablegroup.icon{
     font-size: 100px;
     color: cornflowerblue;
-}
-
-  .vitals .vitalinfo .btn-yellow {
+    }
+    .vitals .vitalinfo .tablegroup{
+      padding: 150px;
+      text-align: center;
+      width: 400px;
+      height: 350px;
+      border-color: aliceblue;}
+.vitals .btn-yellow {
     background: #F8A938;
     color: #fff;
-    width: 50%;
+    width: 95%;
     height: 20px;
     border-radius: 25px;
     margin: 20px auto;
     font-size: 20px;
     line-height: 20px; }
-
-.vitals .button-block {
-  width: 50%; }
-
-.vitals .vitalinfo .tablegroup{
-    
-    padding: 150px;
-    text-align: center;
-    width: 400px;
-    height: 350px;
-    border-color: aliceblue;
-
+.VitalSucess{
+background: white !important;
+color: black !important;
 }
-
+.vitaltext{
+background: white !important;
+color: black !important;
+border:1.5px solid grey !important;
+}
+.vitalBox {
+    border:1px solid #23282C;
+    border-style:inset;
+}
+.vitalBoxAlt {
+    border-bottom:1px solid #23282C;
+}
+.col-50.vitalBox .vitalsBP {
+    text-align:center; 
+    width:45%!important; 
+    display:inline-block;
+}
+.vitals div img {
+    height:80px;
+}
 
 
 
@@ -10998,7 +11017,7 @@ textarea {
   border-radius: 50%;
   margin-left: 10px;
   margin-top: 20px;
-  background: #009BD7; }
+  background: #009CDB; }
 
 .reviewSnapshots .reportsList li {
   padding: 0 15px;
@@ -11030,11 +11049,11 @@ textarea {
     background-position-x: 85%;
     padding: 0 10px; }
   .reviewSnapshots .pagination .previous {
-    color: #009BD7;
+    color: #009CDB;
     margin-top: 14px;
     font-size: 17px; }
   .reviewSnapshots .pagination .next {
-    color: #009BD7;
+    color: #009CDB;
     margin-top: 14px;
     font-size: 17px; }
 
