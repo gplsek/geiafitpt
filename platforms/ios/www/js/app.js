@@ -335,3 +335,6 @@ templateUrl:'templates/addSnapshot.htm'
 //     $urlRouterProvider.otherwise('/app/login');
 // });
 
+jQuery(document).ready(function($){
+  $('#multi-select').dropdown({allowAdditions: true});
+})

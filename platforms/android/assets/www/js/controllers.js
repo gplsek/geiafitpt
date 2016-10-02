@@ -159,7 +159,7 @@ angular.module('geiaFitApp')
     },
     {
       id: 2,
-      title: 'Has Messages'
+      title: 'New Messages'
     },
     {
       id: 3,

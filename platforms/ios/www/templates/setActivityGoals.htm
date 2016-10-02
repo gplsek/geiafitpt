@@ -1,7 +1,9 @@
-<ion-view class="setActivityGoals" view-title="{{patientData}}">
+<ion-view class="setActivityGoals">
 	<ion-nav-bar class="group">
 		<ion-nav-buttons side="left">
 			<span class="icon ion-ios-arrow-back" ng-click="back()"></span>
+			<div class="title title-center header-item" ng-click="gotoHome()">{{patientProfile.name}}</div>
+			
 		</ion-nav-buttons>
 		
 	</ion-nav-bar>

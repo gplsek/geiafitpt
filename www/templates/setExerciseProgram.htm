@@ -1,7 +1,8 @@
-<ion-view class="setExerciseView" view-title="{{patientData.first_name + ' ' +  patientData.last_name}}" name="set-exercise-view">
+<ion-view class="setExerciseView" name="set-exercise-view">
   <ion-nav-bar class="group">
     <ion-nav-buttons side="left">
-        <span class="icon ion-close-round closePatient" ng-click="closePatient();"></span>        
+        <span class="icon ion-close-round closePatient" ng-click="closePatient();"></span>  
+      <div class="title title-center header-item" ng-click="gotoHome()">{{patientProfile.name}}</div>       
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
       <span class="icon ion-ios-trash-outline deletePatient" ng-click="deletePatient()"></span>   

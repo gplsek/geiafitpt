@@ -4,25 +4,36 @@ angular.module('geiaFitApp')
    console.log('ApiEndpoint', ApiEndpoint)
   var LOCAL_TOKEN_KEY = 'yourTokenKey';
   var username = '';
-  var isAuthenticated = false;
+  var isAuthenticated = true;
   var role = '';
   var authToken;
  
   function loadUserCredentials() {
     var token = window.localStorage.getItem(LOCAL_TOKEN_KEY);
     if (token) {
+                         console.log("token:");
+                         console.log(token);
       useCredentials(token);
     }
+                         else
+                         {
+                         console.log("Not loading token key");
+                         }
   }
  
   function storeUserCredentials(token, isChecked) {
-    window.localStorage.setItem(LOCAL_TOKEN_KEY, token);
-    window.localStorage.setItem('KEEP_SIGNED_IN', isChecked);
+                         
+   // window.localStorage.setItem('LOCAL_TOKEN_KEY', token);
+   // window.localStorage.setItem('KEEP_SIGNED_IN', isChecked);
     useCredentials(token);
   }
  
   function useCredentials(token) {
+    console.log("useCredentials called");
+
     username = token.split('.')[0];
+                         console.log(username)
+                         console.log("---end");
     isAuthenticated = true;
     authToken = token;
  
@@ -55,18 +66,13 @@ angular.module('geiaFitApp')
     form = JSON.stringify(form);
 
 //$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-	  
+    
     var promise = $http({
       method: "POST", 
       url: ApiEndpoint.url + '/user/login',
-      // headers: {
-      //   'Content-Type': 'application/x-www-form-urlencoded;',
-      //   'Authorization' : 'Basic'+ encodeURIComponent(name + ':' + pw),
-      //   'username':name,
-      //   'password':pw,
-      //   'Access-Control-Allow-Origin': '*'},
       data: form
     }).then(function(response){
+            console.log("Store Use Credentials called");
        storeUserCredentials(name + response.data.token, isChecked);
        console.log(response);
       
@@ -96,8 +102,9 @@ angular.module('geiaFitApp')
     return (isAuthenticated && authorizedRoles.indexOf(role) !== -1);
   };
  
+console.log("---loadUserCredentials");
   loadUserCredentials();
- 
+console.log("--- end loadUserCredentials");
   return {
     login: login,
     logout: logout,

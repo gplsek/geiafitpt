@@ -10271,6 +10271,7 @@ ion-header-bar {
     background: url("../img/arrow_down_white.png") 95% 55% no-repeat #121516;
     background-size: 16px;
     max-height: 200px;
+    height:52px;
     font-size: 15px;
     font-weight: 600;
     padding: 5px; }
@@ -10314,7 +10315,18 @@ ion-header-bar {
   padding-top: 30px;
   height: 0;
   overflow: hidden; }
-
+  .video-container .video-container-inner {
+    border:1px solid #979797;
+    padding:50px;
+    height:200px;
+    width:400px;
+    display: table-cell;
+  }
+  .video-container .video-container-inner .video-container-text {
+    color: #fff;
+    text-align:center;
+    padding-top:40px;
+  }
 textarea {
   height: 76px !important;
   line-height: 30px !important;
@@ -10829,7 +10841,8 @@ textarea {
   padding: 10px;
   border-bottom: 1px solid #000;
   -webkit-box-shadow: 0 -3px 2px -2px #0c0c0c;
-  box-shadow: 0 -3px 2px -2px #0c0c0c; }
+  box-shadow: 0 -3px 2px -2px #0c0c0c;
+  margin-top:10px; }
   .activity .patientProfile img {
     width: 80px; }
   .activity .patientProfile svg {
@@ -10869,10 +10882,10 @@ textarea {
     width: 33.33%;
     text-align: center;
     color: #616060;
-    margin-top: -42px;
-    height: 48px;
+    margin-top: -39px;
+    height: 43px;
     font-size: 18px;
-    line-height: 50px; }
+    line-height: 44px; }
     .activity .main .selectionTab li.active {
       background: #F8A938;
       color: #fff;

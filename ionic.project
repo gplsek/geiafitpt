@@ -4,7 +4,7 @@
    "proxies": [
     {
       "path": "/api",
-      "proxyUrl": "http://app.geiafit.com/api"
+      "proxyUrl": "https://app.geiafit.com/api"
     }
   ],
   "gulpStartupTasks": ["sass", "watch"]
