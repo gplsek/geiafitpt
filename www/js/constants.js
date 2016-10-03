@@ -9,5 +9,5 @@ angular.module('geiaFitApp')
   public: 'public_role'
 })
 .constant('ApiEndpoint', {
- url: 'https://app.geiafit.com/api'
+ url: 'https://api.geiafit.com/api'
 });
