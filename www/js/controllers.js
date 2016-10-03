@@ -568,15 +568,56 @@ availableOptions: [
 }])
 
 .controller('ActivityCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', function($scope, $stateParams, sortedByList, $state){
-  console.log($stateParams);
+  var patientData
 
-  $scope.patientProfile = {
+function getAge(dateString) 
+{
+    var today = new Date();
+    var birthDate = new Date(dateString);
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) 
+    {
+        age--;
+    }
+    return age;
+}
+
+  init = function(){
+   AppService.profile($stateParams.uid).then(function(success){
+     var imageUrl;
+    patientData = success;
+
+    var age =""; 
+    if(!patientData.dob){
+    age = "N/A";
+    }else{
+    var dateOfBirth =new Date(patientData.dob);
+    age = getAge(dateOfBirth)+'  years old'
+    }
+
+
+    if(patientData.image != ""){
+      imageUrl = patientData.image
+    }else{
+      imageUrl = "img/profile_icon.png";
+    }
+
+    $scope.patientProfile = {
     name: $stateParams.name,
-    age :  $stateParams.age,
-    gender : $stateParams.gender,
-    email: $stateParams.email,
-    url: $stateParams.profile_url
+    age : age,
+    gender : patientData.gender,
+    email: patientData.email,
+    url: imageUrl
   }
+   },function(error){
+
+   })
+    
+  }
+  init();
+  
+
 
   $scope.sortedByList = sortedByList;
   $scope.sortedBy =  $scope.sortedByList[0].id;
