@@ -28,6 +28,7 @@
     <ul class="patientList">
       <li ng-repeat="item in filteredList = (patientList | filter: searchPatient | orderBy: sortType:true)" ui-sref="activity(
         {
+          uid: item.uid,
           name: item.fname + ' ' +  item.lname,
           age: 25,
           gender: 'female',
