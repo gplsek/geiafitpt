@@ -48,6 +48,7 @@ angular.module('geiaFitApp', ['ionic', 'rzModule','ngCordova'])
   $ionicConfigProvider.views.maxCache(0);
   // $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
   var patientParams = {
+      uid: null,
       name: null,
       age: null,
       gender: null,
