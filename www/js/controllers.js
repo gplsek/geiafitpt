@@ -131,6 +131,7 @@ angular.module('geiaFitApp')
   $scope.sortType     = 'fname'; // set the default sort type
   $scope.sortReverse  = false;  // set the default sort order
   $scope.searchName  = '';     // set the default search/filter term
+  $scope.sortOrder = false;
   
   $scope.isActiveToday = function(date){
      
@@ -186,14 +187,17 @@ angular.module('geiaFitApp')
     switch (sortType){
       case 0: 
         $scope.sortType = 'fname';
+        $scope.sortOrder = false;
         break;
       case 1:
         $scope.sortType = 'emotion';
+        $scope.sortOrder = true;
         break;
       case 2: 
       case 3: 
       default: 
         $scope.sortType = 'unread_messages';
+        $scope.sortOrder = true;
         break;
     }
   }
