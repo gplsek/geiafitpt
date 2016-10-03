@@ -567,7 +567,7 @@ availableOptions: [
 
 }])
 
-.controller('ActivityCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', function($scope, $stateParams, sortedByList, $state){
+.controller('ActivityCtrl', ['$scope', '$stateParams', 'sortedByList', '$state','AppService' ,function($scope, $stateParams, sortedByList, $state,AppService){
   var patientData
 
 function getAge(dateString) 
