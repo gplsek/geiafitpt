@@ -141,16 +141,16 @@ console.log("--- end loadUserCredentials");
            });
   }              
    
-  var getProfile = function(){
-    var promise = $http({
+  var getProfile = function(uid){
+    var prom = $http({
       method: "GET",
-      url: ApiEndpoint.url + '/profile/1'
+      url: ApiEndpoint.url + '/profile/'+uid
     }).then(function(response){
         return response.data;
     }, function(err){
       console.log(err);
     })
-    return promise;
+    return prom;
   }
 
   var getSortedList = function(){
