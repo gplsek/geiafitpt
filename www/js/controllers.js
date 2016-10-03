@@ -78,17 +78,11 @@ angular.module('geiaFitApp')
   }
 
   $scope.login = function(data){
-
-	 
-	  
     if( !(Object.keys(data).length === 0 && data.constructor === Object)){
         if(!checkEmptyFields()){
           // alert(data.email);
           if(checkEmail(data.email)){
               AuthService.login(data.email, data.password,data.checked).then(function(authenticated) {
-				  
-				  //alert(authenticated);
-				  
                 $state.go('main.dash', {}, {reload: true});
                 $scope.setCurrentUsername(data.username);
               }, function(err) {
@@ -220,7 +214,14 @@ angular.module('geiaFitApp')
 }])
 
 .controller('SetActivityGoalsCtrl', [ '$scope','$state', 'sortedByList', '$ionicHistory', 'threshold', '$window', '$stateParams', function($scope,$state, sortedByList, $ionicHistory, threshold, $window, $stateParams){
-  $scope.setActivityGoals = {};
+   $scope.setActivityGoals = {};
+ /* $scope.activityGoals = {
+    selectedSteps : '',
+    lightMinsSelected:'',
+    moderateMinsSelected:'',
+    vigorousMinsSelected:'',
+    instructions:'',
+  };*/
   $scope.patientData = $stateParams.name;
   $scope.sortedByList = sortedByList;
   $scope.sortedBy = $scope.sortedByList[2].id;
@@ -271,7 +272,6 @@ angular.module('geiaFitApp')
   }*/
   
    $scope.back = function(){
-	
     console.log($ionicHistory.viewHistory());
     $ionicHistory.goBack();
   }
@@ -330,53 +330,81 @@ angular.module('geiaFitApp')
     var state = getStateTitle(id);
     $state.transitionTo(state,{}, {reload: true});
   }
-}])
-.controller('AddPatientCtrl', ['$scope', '$rootScope', 'Flash', '$ionicHistory', '$state',  function($scope, $rootScope, Flash, $ionicHistory, $state){
-  $scope.data = {
-    patientName: "",
-    email: "",
-    subscription: ""
-  };
 
-  function checkEmptyFields(){
-    var isEmpty = false;
-    for (var property in $scope.data) {
-      if ($scope.data.hasOwnProperty(property)) {
-        if(!$scope.data[property]){
-          isEmpty = true;
+  /*$scope.setActivityGoals = function(data){
+      console.log($scope.activityGoals)
+      console.log(data)
+  }  */  
+
+
+}])
+  .controller('AddPatientCtrl', ['$scope', '$rootScope', 'Flash', '$ionicHistory', '$state', 'AppService',
+    function ($scope, $rootScope, Flash, $ionicHistory, $state, AppService) {
+      /*$scope.data = {
+        patientName: "",
+        email: "",
+        subscription: ""
+      };*/
+      $scope.data = {
+        email: "",
+        firstname: "",
+        lastname: "",
+      };
+
+      function checkEmptyFields() {
+        var isEmpty = false;
+        for (var property in $scope.data) {
+          if ($scope.data.hasOwnProperty(property)) {
+            if (!$scope.data[property]) {
+              isEmpty = true;
+            }
+          }
+        }
+        return isEmpty;
+      }
+
+      function checkEmail(email) {
+        var result = false;
+        var pattern = $rootScope.Regex.email;
+        result = pattern.test(email);
+        return result;
+      }
+
+      $scope.addPatient = function (data) {
+
+        if (!(Object.keys(data).length === 0 && data.constructor === Object)) {
+          if (!checkEmptyFields()) {
+            if (checkEmail(data.email)) {
+              console.log($scope.data)
+              AppService.addPatient($scope.data).then(
+                function (success) {
+                  console.log(success)
+                  var successMessage = success.data.message
+                  if (successMessage) {
+                    Flash.showFlash({ type: 'error', message: successMessage });
+                  }
+                  else {
+                    $scope.data = {};
+                    Flash.showFlash({ type: 'success', message: "Success !" });
+                    $state.go('main.dash', {}, {reload: true});
+                  }
+                },
+                function (error) {
+                  console.log(error)
+                });
+            } else {
+              Flash.showFlash({ type: 'error', message: "Email is not valid !" });
+            }
+          }
+          else {
+            Flash.showFlash({ type: 'error', message: "Please fill in all fields !" });
+          }
+        } else {
+          Flash.showFlash({ type: 'error', message: "Please fill in all fields !" });
         }
       }
-    }
-    return isEmpty;
-  }
 
-  function checkEmail (email){
-    var result = false;
-    var pattern = $rootScope.Regex.email;
-    result = pattern.test(email);
-    return result;
-  }
-
-  $scope.addPatient = function(data){
-
-    if( !(Object.keys(data).length === 0 && data.constructor === Object)){
-        if(!checkEmptyFields()){
-          
-          if(checkEmail(data.email)){
-            Flash.showFlash({type: 'success', message: "Success !"});
-          }else{
-             Flash.showFlash({type: 'error', message: "Email is not valid !"});
-          }
-        } 
-        else{
-          Flash.showFlash({type: 'error', message: "Please fill in all fields !"});
-        }
-    } else{ 
-      Flash.showFlash({type: 'error', message: "Please fill in all fields !"});
-    }
-  }
-
-}])
+    }])
 .controller('ExerciseLibraryCtrl',  ['$scope','sortedByList', function($scope, sortedByList){
 
   var pageSize = 10;

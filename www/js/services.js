@@ -1,6 +1,6 @@
 angular.module('geiaFitApp')
  
-.service('AuthService', ['$q', '$http', 'USER_ROLES', 'ApiEndpoint', 'Flash', function($q, $http, USER_ROLES, ApiEndpoint, Flash) {
+.service('AuthService', ['$q', '$http', 'USER_ROLES', 'ApiEndpoint', 'Flash' , '$rootScope' , function($q, $http, USER_ROLES, ApiEndpoint, Flash, $rootScope) {
    console.log('ApiEndpoint', ApiEndpoint)
   var LOCAL_TOKEN_KEY = 'yourTokenKey';
   var username = '';
@@ -32,8 +32,8 @@ angular.module('geiaFitApp')
     console.log("useCredentials called");
 
     username = token.split('.')[0];
-                         console.log(username)
-                         console.log("---end");
+    console.log(username)
+    console.log("---end");
     isAuthenticated = true;
     authToken = token;
  
@@ -56,39 +56,35 @@ angular.module('geiaFitApp')
     window.localStorage.removeItem(LOCAL_TOKEN_KEY);
   }
  
-  var login = function(name, pw, isChecked) {
-  
+  var login = function (name, pw, isChecked) {
     var form = {
       username: name,
       password: pw
     }
-
     form = JSON.stringify(form);
-
-//$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-    
+    //$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
     var promise = $http({
-      method: "POST", 
+      method: "POST",
       url: ApiEndpoint.url + '/user/login',
       data: form
-    }).then(function(response){
-            console.log("Store Use Credentials called");
-       storeUserCredentials(name + response.data.token, isChecked);
-       console.log(response);
-      
+    }).then(function (response) {
+      console.log("Store Use Credentials called");
+      storeUserCredentials(name + response.data.token, isChecked);
+      console.log(response);
+      $rootScope.loggedInUserUid = response.data.user.uid;
+      console.log("UID " + $rootScope.loggedInUserUid);
     });
-
     return promise;
-/*
-     return $q(function(resolve, reject) {
-       if ((name == 'admin' && pw == '1') || (name == 'user' && pw == '1')) {
-         // Make a request and receive your auth token from your server
-         storeUserCredentials(name + '.myToken', isChecked);
-         resolve('Login success.');
-       } else {
-         reject('Login Failed.');
-       }
-     });*/
+    /*
+         return $q(function(resolve, reject) {
+           if ((name == 'admin' && pw == '1') || (name == 'user' && pw == '1')) {
+             // Make a request and receive your auth token from your server
+             storeUserCredentials(name + '.myToken', isChecked);
+             resolve('Login success.');
+           } else {
+             reject('Login Failed.');
+           }
+         });*/
   };
  
   var logout = function() {
@@ -128,18 +124,33 @@ console.log("--- end loadUserCredentials");
 .config(function ($httpProvider) {
   $httpProvider.interceptors.push('AuthInterceptor');
 })
-.service('AppService', ['$http', 'AuthService', '$q', 'ApiEndpoint', function ($http, AuthService, $q, ApiEndpoint) {
+.service('AppService', ['$http', 'AuthService', '$q', 'ApiEndpoint','$rootScope', function ($http, AuthService, $q, ApiEndpoint,$rootScope) {
 
 
   var getPatientsData = function(){
+    console.log("uid "+$rootScope.loggedInUserUid)
+    var uid = $rootScope.loggedInUserUid;
     return $http({
               method: 'POST',
-              url: ApiEndpoint.url + "/profile/mypatients/1"
+              url: ApiEndpoint.url + "/profile/mypatients/"+uid
             }).then(function(response){
                 console.log(response);
                 return response.data.patients;
            });
-  }              
+  }   
+
+  var addPatient = function (request_params) {
+    console.log("uid "+$rootScope.loggedInUserUid)
+    var uid = $rootScope.loggedInUserUid;
+    var createPatientURL = ApiEndpoint.url + "/profile/createpatient/" + uid
+    var req = {
+      method: 'POST',
+      url: createPatientURL,
+      data: request_params
+    };
+    console.log(req)
+    return $http(req);
+  }               
    
   var getProfile = function(uid){
     var prom = $http({
@@ -214,6 +225,7 @@ console.log("--- end loadUserCredentials");
 
   return {
     patientsData: getPatientsData,
+    addPatient : addPatient,
     profile: getProfile,
     sortedByList: getSortedList,
     getThreshold: getThreshold
