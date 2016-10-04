@@ -232,6 +232,29 @@ console.log("--- end loadUserCredentials");
   }
 
 }])
+
+ .service('MyAccount',['$rootScope','$http','ApiEndpoint',function($rootScope,$http,ApiEndpoint){
+
+   var getAdminProfile = function(){
+
+      var profileData = $http({
+        method: "GET", 
+        url: ApiEndpoint.url + "/profile/"+$rootScope.loggedInUserUid // Hardcoded needs to be replaced
+      }).then(function(response){
+         return response.data;
+      }, function(err){
+          console.log(err);
+      });
+      return profileData;
+
+   }
+
+   return{
+     myAccountDetails : getAdminProfile
+   }
+
+ }])
+
 .service('Flash', ['$timeout', '$rootScope', function($timeout, $rootScope){
 
   var showFlash = function(obj){
