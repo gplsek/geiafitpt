@@ -409,7 +409,7 @@ angular.module('geiaFitApp')
       }
 
     }])
-.controller('ExerciseLibraryCtrl',  ['$scope','sortedByList', function($scope, sortedByList){
+.controller('ExerciseLibraryCtrl',  ['$scope','sortedByList','$ionicPopup', function($scope, sortedByList, $ionicPopup){
 
   var pageSize = 10;
   $scope.sortedByList = sortedByList;
@@ -519,8 +519,21 @@ availableOptions: [
 
   $scope.showNext(1);
 
-  $scope.delete = function(index){
-    $scope.exerciseList.splice(index, 1);
+  $scope.delete = function (index) {
+    console.log("Delete called")
+    var confirmPopup = $ionicPopup.confirm({
+      title: 'Delete exercise',
+      template: 'Are you sure you want to delete this exercise ?'
+    });
+
+    confirmPopup.then(function (res) {
+      if (res) {
+        console.log("delete")
+        $scope.exerciseList.splice(index, 1);
+      } else {
+        console.log("cancel")
+      }
+    });
   }
 
 }])
@@ -798,7 +811,7 @@ $scope.chartConfig = {
 }])
 
 
-.controller('ExerciseProgramCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', function($scope, $stateParams, sortedByList, $state){
+.controller('ExerciseProgramCtrl', ['$scope', '$stateParams', 'sortedByList', '$state','$ionicPopup', function($scope, $stateParams, sortedByList, $state, $ionicPopup){
   console.log($stateParams);
 
   $scope.patientProfile = {
@@ -901,8 +914,21 @@ $scope.chartConfig = {
 
   $scope.showNext(1);
 
-  $scope.delete = function(index){
-    $scope.exerciseList.splice(index, 1);
+  $scope.delete = function (index) {
+    console.log("Delete called")
+    var confirmPopup = $ionicPopup.confirm({
+      title: 'Delete exercise',
+      template: 'Are you sure you want to delete this exercise ?'
+    });
+
+    confirmPopup.then(function (res) {
+      if (res) {
+        console.log("delete")
+        $scope.exerciseList.splice(index, 1);
+      } else {
+        console.log("cancel")
+      }
+    });
   }
 	
 	
