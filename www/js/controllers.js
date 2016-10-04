@@ -543,36 +543,36 @@ angular.module('geiaFitApp')
   }])
   .controller('AddExercisePopupCtrl', ['$scope', '$state', function ($scope, $state) {
 
-}])
+  }])
 
 
 
-.controller('MyAccountCtrl', ['$scope', '$rootScope', 'Flash', '$ionicHistory', '$state', '$cordovaCamera', 'MyAccount' ,function($scope, $rootScope, Flash, $ionicHistory, $state, $cordovaCamera,MyAccount){
-    
+  .controller('MyAccountCtrl', ['$scope', '$rootScope', 'Flash', '$ionicHistory', '$state', '$cordovaCamera', 'MyAccount', function ($scope, $rootScope, Flash, $ionicHistory, $state, $cordovaCamera, MyAccount) {
+
     var profileData;
 
     $scope.profile = {
-      name :  "",
-      email : "",
-      phone :  ""
+      name: "",
+      email: "",
+      phone: ""
     }
- init = function(){
-   MyAccount.myAccountDetails().then(function(success){
-    profileData = success;
-    console.log(profileData)
-    $scope.profile.name = profileData.first_name  + ' ' + profileData.last_name;
-    $scope.profile.email = profileData.email;
-    $scope.profile.phone = profileData.phone;
-    $scope.src = profileData.image;
-   },function(error){
+    init = function () {
+      MyAccount.myAccountDetails().then(function (success) {
+        profileData = success;
+        console.log(profileData)
+        $scope.profile.name = profileData.first_name + ' ' + profileData.last_name;
+        $scope.profile.email = profileData.email;
+        $scope.profile.phone = profileData.phone;
+        $scope.src = profileData.image;
+      }, function (error) {
 
-   })
-    
-  }
-  init();
+      })
+
+    }
+    init();
 
     $scope.showCP = false;
-   // $scope.profile = profileData;
+    // $scope.profile = profileData;
     $scope.editEnabled = false;
     $scope.setProfilePhoto = function () {
       var options = {
@@ -637,6 +637,36 @@ angular.module('geiaFitApp')
     var patientData;
     var activityDataForWeek = [];
     var activityDataForMonth = [];
+    var activityDataForYesterday = '';
+
+    getActivityDataForYesterday = function (successData) {
+      var startDate = new Date("Sun Sep 25 2016 17:04:28 GMT+0530 (IST)");
+      console.log(startDate)
+      var date = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() - 1,
+        startDate.getHours(), startDate.getMinutes(), startDate.getSeconds(), startDate.getMilliseconds())
+      console.log(date)
+
+      for (var x in successData) {
+        var unixDate = successData[x].date
+        var newDate = utilityService.unixTimeToDate(unixDate);
+        if (date.getDate() === newDate.getDate() && date.getFullYear() === newDate.getFullYear() && date.getMonth() === newDate.getMonth()) {
+          activityDataForYesterday = successData[x];
+        }
+      }
+      console.log(activityDataForYesterday)
+      var excPer = (activityDataForYesterday.Total_exercise / activityDataForYesterday.Total_exercise_goal) * 100;
+      var stepsPer = (activityDataForYesterday.total_steps / activityDataForYesterday.total_steps_goal) * 100;
+      var lowPer = (activityDataForYesterday.time_active_low / activityDataForYesterday.time_activie_low_goal) * 100;
+      var mediumPer = (activityDataForYesterday.time_active_medium / activityDataForYesterday.time_activie_medium_goal) * 100;
+      var highPer = (activityDataForYesterday.time_active_high / activityDataForYesterday.time_activie_high_goal) * 100;
+
+      $scope.chartConfig = getChartConfig(excPer);
+      $scope.chartConfig1 = getChartConfig(stepsPer);
+      $scope.chartConfig2 = getChartConfig(lowPer);
+      $scope.chartConfig3 = getChartConfig(mediumPer);
+      $scope.chartConfig4 = getChartConfig(highPer);
+      
+    }
 
     getActivityDataForWeek = function (successData) {
       var startDate = new Date();
@@ -658,7 +688,7 @@ angular.module('geiaFitApp')
     getActivityDataForMonth = function (successData) {
       var startDate = new Date();
       console.log(startDate)
-      var endDate = new Date(startDate.getFullYear(), startDate.getMonth()-1, startDate.getDate(),
+      var endDate = new Date(startDate.getFullYear(), startDate.getMonth() - 1, startDate.getDate(),
         startDate.getHours(), startDate.getMinutes(), startDate.getSeconds(), startDate.getMilliseconds())
       console.log(endDate)
 
@@ -706,6 +736,7 @@ angular.module('geiaFitApp')
 
       AppService.getActivity($stateParams.uid).then(function (success) {
         console.log("Success")
+        getActivityDataForYesterday(success);
         getActivityDataForWeek(success);
         getActivityDataForMonth(success);
       }, function (error) {
@@ -734,9 +765,11 @@ angular.module('geiaFitApp')
           break;
         default:
           $scope.selectedView = 'day';
+
       }
 
     }
+
 
     function getChartConfig(data) {
       var chartConfig = {
@@ -803,8 +836,8 @@ angular.module('geiaFitApp')
             }
           },
 
-          setOptions:{
-          colors: ['#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263',      '#6AF9C4']
+          setOptions: {
+            colors: ['#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
           },
 
           series: [{
@@ -850,11 +883,7 @@ angular.module('geiaFitApp')
       return chartConfig;
     }
 
-    $scope.chartConfig = getChartConfig(10);
-    $scope.chartConfig1 = getChartConfig(20);
-    $scope.chartConfig2 = getChartConfig(30);
-    $scope.chartConfig3 = getChartConfig(40);
-    $scope.chartConfig4 = getChartConfig(50);
+
 
 
 
