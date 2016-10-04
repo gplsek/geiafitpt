@@ -31,7 +31,7 @@ angular.module('geiaFitApp', ['ionic', 'rzModule','ngCordova'])
     $rootScope.flash = {
       show: false
     };
-    //$rootScope.loggedInUserUid = '';
+    $rootScope.loggedInUserUid = '';
   });
 })
 // .run(function($httpBackend){
@@ -264,11 +264,11 @@ templateUrl:'templates/addSnapshot.htm'
     url: 'myAccount', 
     templateUrl: "templates/myAccount.htm",
     controller: "MyAccountCtrl",
-    resolve: {
-      profile: ['$stateParams', 'AppService', function($stateParams, AppService){
-        return AppService.profile();
-      }]
-    }
+    // resolve: {
+    //   profile: ['$stateParams', 'AppService', function($stateParams, AppService){
+    //     return AppService.profile($rootScope.loggedInUserUid);
+    //   }]
+    // }
   });
   // .state('main.admin', {
   //   url: 'main/admin',
