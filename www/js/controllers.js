@@ -636,6 +636,43 @@ availableOptions: [
 
   .controller('ActivityCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', 'AppService', 'utilityService', function ($scope, $stateParams, sortedByList, $state, AppService, utilityService) {
     var patientData;
+    var activityDataForWeek = [];
+    var activityDataForMonth = [];
+
+    getActivityDataForWeek = function (successData) {
+      var startDate = new Date();
+      console.log(startDate)
+      var endDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() - 6,
+        startDate.getHours(), startDate.getMinutes(), startDate.getSeconds(), startDate.getMilliseconds())
+      console.log(endDate)
+
+      for (var x in successData) {
+        var unixDate = successData[x].date
+        var date = utilityService.unixTimeToDate(unixDate);
+        if (startDate > date && date > endDate) {
+          activityDataForWeek.push(successData[x]);
+        }
+      }
+      console.log(activityDataForWeek)
+    }
+
+    getActivityDataForMonth = function (successData) {
+      var startDate = new Date();
+      console.log(startDate)
+      var endDate = new Date(startDate.getFullYear(), startDate.getMonth()-1, startDate.getDate(),
+        startDate.getHours(), startDate.getMinutes(), startDate.getSeconds(), startDate.getMilliseconds())
+      console.log(endDate)
+
+      for (var x in successData) {
+        var unixDate = successData[x].date
+        var date = utilityService.unixTimeToDate(unixDate);
+        if (startDate > date && date > endDate) {
+          activityDataForMonth.push(successData[x]);
+        }
+      }
+      console.log(activityDataForMonth)
+    }
+
     init = function () {
       AppService.profile($stateParams.uid).then(function (success) {
         var imageUrl;
@@ -669,8 +706,9 @@ availableOptions: [
       })
 
       AppService.getActivity($stateParams.uid).then(function (success) {
-        console.log(success)
         console.log("Success")
+        getActivityDataForWeek(success);
+        getActivityDataForMonth(success);
       }, function (error) {
         console.log("error")
       })
