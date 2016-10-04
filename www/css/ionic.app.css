@@ -10891,6 +10891,10 @@ textarea {
       color: #fff;
       border-radius: 22px; }
 
+.activity.exerciseLibrary .main .selectionTab li{margin-top: 0; width: 50%;}
+.activity.exerciseLibrary .sortedBy{ height: auto; padding: 15px 0; line-height: 20px; background: #121516 }
+.activity.exerciseLibrary .main .selectionTab{ margin-top: 0}
+
 .activity .main .totalActivity {
   text-align: center; }
   .activity .main .totalActivity svg {
