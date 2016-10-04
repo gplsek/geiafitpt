@@ -409,143 +409,143 @@ angular.module('geiaFitApp')
       }
 
     }])
-.controller('ExerciseLibraryCtrl',  ['$scope','sortedByList','$ionicPopup', function($scope, sortedByList, $ionicPopup){
+  .controller('ExerciseLibraryCtrl', ['$scope', 'sortedByList', '$ionicPopup', function ($scope, sortedByList, $ionicPopup) {
 
-  var pageSize = 10;
-  $scope.sortedByList = sortedByList;
-  $scope.sortedBy = $scope.sortedByList[0].id;
-
-	
-   $scope.data = {
-model: null,
-availableOptions: [
-	
-      {id: '1', name: 'Exercise Name'},
-      {id: '2', name: 'Category'},
-      {id: '3', name: 'Upper Extremity'},
-         {id: '4', name: 'Shoulder'},
-        {id:'5',name:'Elbow'},
-        {id:'6',name:'Wrist'},
-        {id:'7',name:'Hand'},
-        {id:'8',name:'Lower Extemity'},
-        {id:'9',name:'Hip'},
-        {id:'10',name:'Knee'},
-        {id:'11',name:'Foot'}
-    ]
-   };
+    var pageSize = 10;
+    $scope.sortedByList = sortedByList;
+    $scope.sortedBy = $scope.sortedByList[0].id;
 
 
-	
-	
-  var exerciseList = [
-    {
-      id: 0, 
-      title: "Exercise 1"
-    },
-    {
-      id: 1,
-      title: "Exercise 2"
-    },
-    {
-      id: 2,
-      title: "Exercise 3"
-    },
-    {
-      id: 3,
-      title: "Exercise 4"
-    },
-    {
-      id: 4,
-      title: "Exercise 5"
-    },
-    {
-      id: 5,
-      title: "Exercise 6"
-    },
-    {
-      id: 6,
-      title: "Exercise 7"
-    },
-    {
-      id: 7,
-      title: "Exercise 8"
-    },
-    {
-      id: 8,
-      title: "Exercise 9"
-    },
-    {
-      id: 9,
-      title: "Exercise 10"
-    },
-    {
-      id: 10,
-      title: "Exercise 11"
+    $scope.data = {
+      model: null,
+      availableOptions: [
+
+        { id: '1', name: 'Exercise Name' },
+        { id: '2', name: 'Category' },
+        { id: '3', name: 'Upper Extremity' },
+        { id: '4', name: 'Shoulder' },
+        { id: '5', name: 'Elbow' },
+        { id: '6', name: 'Wrist' },
+        { id: '7', name: 'Hand' },
+        { id: '8', name: 'Lower Extemity' },
+        { id: '9', name: 'Hip' },
+        { id: '10', name: 'Knee' },
+        { id: '11', name: 'Foot' }
+      ]
+    };
+
+
+
+
+    var exerciseList = [
+      {
+        id: 0,
+        title: "Exercise 1"
+      },
+      {
+        id: 1,
+        title: "Exercise 2"
+      },
+      {
+        id: 2,
+        title: "Exercise 3"
+      },
+      {
+        id: 3,
+        title: "Exercise 4"
+      },
+      {
+        id: 4,
+        title: "Exercise 5"
+      },
+      {
+        id: 5,
+        title: "Exercise 6"
+      },
+      {
+        id: 6,
+        title: "Exercise 7"
+      },
+      {
+        id: 7,
+        title: "Exercise 8"
+      },
+      {
+        id: 8,
+        title: "Exercise 9"
+      },
+      {
+        id: 9,
+        title: "Exercise 10"
+      },
+      {
+        id: 10,
+        title: "Exercise 11"
+      }
+
+    ];
+
+    $scope.pages = [
+      {
+        id: 0,
+        title: "Page 1"
+      },
+      {
+        id: 1,
+        title: "Page 2"
+      },
+      {
+        id: 2,
+        title: "Page 3"
+      },
+      {
+        id: 3,
+        title: "Page 4"
+      },
+      {
+        id: 4,
+        title: "Page 5"
+      }
+    ];
+
+    $scope.selectedPage = $scope.pages[0].id;
+
+    $scope.showNext = function (pageNo) {
+      var list = angular.copy(exerciseList);
+      var offset = (pageNo - 1) * pageSize;
+      $scope.exerciseList = list.splice(offset, pageSize);
+      $scope.selectedPage = $scope.pages[pageNo - 1].id;
     }
 
-  ];
-  
-  $scope.pages = [ 
-     {
-      id: 0,
-      title: "Page 1"
-     },
-     {
-      id: 1, 
-      title: "Page 2"
-     },
-     {
-      id: 2, 
-      title: "Page 3"
-     },
-     {
-      id: 3, 
-      title: "Page 4"
-     },
-     {
-      id: 4, 
-      title: "Page 5"
-     }
-   ];
-   
-  $scope.selectedPage = $scope.pages[0].id;
+    $scope.showNext(1);
 
-  $scope.showNext = function(pageNo){
-    var list = angular.copy(exerciseList);
-    var offset =  (pageNo - 1) * pageSize ;
-    $scope.exerciseList = list.splice( offset, pageSize);
-     $scope.selectedPage = $scope.pages[pageNo-1].id;
-  }
+    $scope.delete = function (index) {
+      console.log("Delete called")
+      var confirmPopup = $ionicPopup.confirm({
+        title: 'Delete exercise',
+        template: 'Are you sure you want to delete this exercise ?'
+      });
 
-  $scope.showNext(1);
+      confirmPopup.then(function (res) {
+        if (res) {
+          console.log("delete")
+          $scope.exerciseList.splice(index, 1);
+        } else {
+          console.log("cancel")
+        }
+      });
+    }
 
-  $scope.delete = function (index) {
-    console.log("Delete called")
-    var confirmPopup = $ionicPopup.confirm({
-      title: 'Delete exercise',
-      template: 'Are you sure you want to delete this exercise ?'
-    });
-
-    confirmPopup.then(function (res) {
-      if (res) {
-        console.log("delete")
-        $scope.exerciseList.splice(index, 1);
-      } else {
-        console.log("cancel")
-      }
-    });
-  }
-
-}])
-.controller('AddExerciseCtrl',  ['$scope', function($scope){
+  }])
+  .controller('AddExerciseCtrl', ['$scope', function ($scope) {
 
 
-}])
-.controller('AddExercisePopupCtrl',  ['$scope','$state', function($scope,$state){
+  }])
+  .controller('AddExercisePopupCtrl', ['$scope', '$state', function ($scope, $state) {
 
 
-}])
-.controller('MyAccountCtrl', ['$scope', '$rootScope', 'Flash', '$ionicHistory', '$state', '$cordovaCamera', 'profile',  function($scope, $rootScope, Flash, $ionicHistory, $state, $cordovaCamera, profile){
+  }])
+  .controller('MyAccountCtrl', ['$scope', '$rootScope', 'Flash', '$ionicHistory', '$state', '$cordovaCamera', 'profile', function ($scope, $rootScope, Flash, $ionicHistory, $state, $cordovaCamera, profile) {
     console.log(profile);
     var profileData = {};
     profileData.name = profile.first_name + ' ' + profile.last_name;
@@ -690,110 +690,127 @@ availableOptions: [
 
     }
 
-    $scope.chartConfig = {
+    function getChartConfig(data) {
+      var chartConfig = {
 
-      options: {
-        //This is the Main Highcharts chart config. Any Highchart options are valid here.
-        //will be overriden by values specified below.
-        chart: {
-          type: 'solidgauge',
-          margin: 0,
-          backgroundColor: 'transparent',
-        },
-
-        title: {
-          text: null,
-          style: {
-            fontSize: '24px'
-          }
-        },
-
-        tooltip: {
-          borderWidth: 0,
-          backgroundColor: 'none',
-          shadow: false,
-          style: {
-            fontSize: '16px'
+        options: {
+          //This is the Main Highcharts chart config. Any Highchart options are valid here.
+          //will be overriden by values specified below.
+          chart: {
+            type: 'solidgauge',
+            margin: 0,
+            backgroundColor: 'transparent',
           },
-          pointFormat: '{series.name}<br><span style="font-size:2em; color: {point.color}; font-weight: bold">{point.y}%</span>',
-          positioner: function (labelWidth, labelHeight) {
-            return {
-              x: 200 - labelWidth / 2,
-              y: 180
-            };
-          }
-        },
 
-        pane: {
-          startAngle: 0,
-          endAngle: 270,
-          background: [{ // Track for Move
-            outerRadius: '100%',
-            innerRadius: '100%',
-            backgroundColor: Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0.3).get(),
-            borderWidth: 0
-          }
-          ]
-        },
+          title: {
+            text: null,
+            style: {
+              fontSize: '24px'
+            }
+          },
 
-        yAxis: {
-          min: 0,
-          max: 100,
-          lineWidth: 0,
-          tickPositions: []
-        },
-
-        plotOptions: {
-          solidgauge: {
-            borderWidth: '34px',
-            dataLabels: {
-              enabled: false
+          tooltip: {
+            borderWidth: 0,
+            backgroundColor: 'none',
+            shadow: false,
+            style: {
+              fontSize: '16px'
             },
-            linecap: 'round',
-            stickyTracking: false
-          }
-        },
+            pointFormat: '{series.name}<br><span style="font-size:2em; color: {point.color}; font-weight: bold">{point.y}%</span>',
+            positioner: function (labelWidth, labelHeight) {
+              return {
+                x: 200 - labelWidth / 2,
+                y: 180
+              };
+            }
+          },
 
-        series: [{
-          name: 'Move',
-          borderColor: Highcharts.getOptions().colors[0],
-          data: [{
-            color: Highcharts.getOptions().colors[0],
-            radius: '100%',
-            innerRadius: '100%',
-            y: 80
+          pane: {
+            startAngle: 0,
+            endAngle: 360,
+            background: [{ // Track for Move
+              outerRadius: '100%',
+              innerRadius: '100%',
+              backgroundColor: Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0.3).get(),
+              borderWidth: 0
+            }
+            ]
+          },
+
+          yAxis: {
+            min: 0,
+            max: 100,
+            lineWidth: 0,
+            tickPositions: []
+          },
+
+          plotOptions: {
+            solidgauge: {
+              borderWidth: '34px',
+              dataLabels: {
+                enabled: false
+              },
+              linecap: 'round',
+              stickyTracking: false
+            }
+          },
+
+          setOptions:{
+          colors: ['#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263',      '#6AF9C4']
+          },
+
+          series: [{
+            name: 'Move',
+            borderColor: Highcharts.getOptions().colors[0],
+            data: [{
+              color: "#f8f8f8",
+              radius: '100%',
+              innerRadius: '100%',
+              y: 80
+            }]
           }]
-        }]
-      },
-      //The below properties are watched separately for changes.
+        },
+        //The below properties are watched separately for changes.
 
-      //Series object (optional) - a list of series using normal Highcharts series options.
-      series: [{
-        data: [100]
-      }],
+        //Series object (optional) - a list of series using normal Highcharts series options.
+        series: [{
+          data: [data]
+        }],
 
-      //Boolean to control showing loading status on chart (optional)
-      //Could be a string if you want to show specific loading text.
-      loading: false,
-      //Configuration for the xAxis (optional). Currently only one x axis can be dynamically controlled.
-      //properties currentMin and currentMax provided 2-way binding to the chart's maximum and minimum
-      xAxis: {
-        currentMin: 0,
-        currentMax: 20,
-        title: { text: 'values' }
-      },
-      //Whether to use Highstocks instead of Highcharts (optional). Defaults to false.
-      useHighStocks: false,
-      //size (optional) if left out the chart will default to size of the div or something sensible.
-      size: {
-        width: 200,
-        height: 180
-      },
-      //function (optional)
-      func: function (chart) {
-        //setup some logic for the chart
-      }
-    };
+        //Boolean to control showing loading status on chart (optional)
+        //Could be a string if you want to show specific loading text.
+        loading: false,
+        //Configuration for the xAxis (optional). Currently only one x axis can be dynamically controlled.
+        //properties currentMin and currentMax provided 2-way binding to the chart's maximum and minimum
+        xAxis: {
+          currentMin: 0,
+          currentMax: 20,
+          title: { text: 'values' }
+        },
+        //Whether to use Highstocks instead of Highcharts (optional). Defaults to false.
+        useHighStocks: false,
+        //size (optional) if left out the chart will default to size of the div or something sensible.
+        size: {
+          width: 200,
+          height: 180
+        },
+        //function (optional)
+        func: function (chart) {
+          //setup some logic for the chart
+        }
+      };
+      return chartConfig;
+    }
+
+    $scope.chartConfig = getChartConfig(10);
+    $scope.chartConfig1 = getChartConfig(20);
+    $scope.chartConfig2 = getChartConfig(30);
+    $scope.chartConfig3 = getChartConfig(40);
+    $scope.chartConfig4 = getChartConfig(50);
+
+
+
+
 
     function getStateTitle(id) {
       var title = '';
