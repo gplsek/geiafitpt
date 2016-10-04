@@ -409,130 +409,143 @@ angular.module('geiaFitApp')
       }
 
     }])
-  .controller('ExerciseLibraryCtrl', ['$scope', 'sortedByList', function ($scope, sortedByList) {
+.controller('ExerciseLibraryCtrl',  ['$scope','sortedByList','$ionicPopup', function($scope, sortedByList, $ionicPopup){
 
-    var pageSize = 10;
-    $scope.sortedByList = sortedByList;
-    $scope.sortedBy = $scope.sortedByList[0].id;
+  var pageSize = 10;
+  $scope.sortedByList = sortedByList;
+  $scope.sortedBy = $scope.sortedByList[0].id;
 
-
-    $scope.data = {
-      model: null,
-      availableOptions: [
-
-        { id: '1', name: 'Exercise Name' },
-        { id: '2', name: 'Category' },
-        { id: '3', name: 'Upper Extremity' },
-        { id: '4', name: 'Shoulder' },
-        { id: '5', name: 'Elbow' },
-        { id: '6', name: 'Wrist' },
-        { id: '7', name: 'Hand' },
-        { id: '8', name: 'Lower Extemity' },
-        { id: '9', name: 'Hip' },
-        { id: '10', name: 'Knee' },
-        { id: '11', name: 'Foot' }
-      ]
-    };
-
-
+	
+   $scope.data = {
+model: null,
+availableOptions: [
+	
+      {id: '1', name: 'Exercise Name'},
+      {id: '2', name: 'Category'},
+      {id: '3', name: 'Upper Extremity'},
+         {id: '4', name: 'Shoulder'},
+        {id:'5',name:'Elbow'},
+        {id:'6',name:'Wrist'},
+        {id:'7',name:'Hand'},
+        {id:'8',name:'Lower Extemity'},
+        {id:'9',name:'Hip'},
+        {id:'10',name:'Knee'},
+        {id:'11',name:'Foot'}
+    ]
+   };
 
 
-    var exerciseList = [
-      {
-        id: 0,
-        title: "Exercise 1"
-      },
-      {
-        id: 1,
-        title: "Exercise 2"
-      },
-      {
-        id: 2,
-        title: "Exercise 3"
-      },
-      {
-        id: 3,
-        title: "Exercise 4"
-      },
-      {
-        id: 4,
-        title: "Exercise 5"
-      },
-      {
-        id: 5,
-        title: "Exercise 6"
-      },
-      {
-        id: 6,
-        title: "Exercise 7"
-      },
-      {
-        id: 7,
-        title: "Exercise 8"
-      },
-      {
-        id: 8,
-        title: "Exercise 9"
-      },
-      {
-        id: 9,
-        title: "Exercise 10"
-      },
-      {
-        id: 10,
-        title: "Exercise 11"
-      }
-
-    ];
-
-    $scope.pages = [
-      {
-        id: 0,
-        title: "Page 1"
-      },
-      {
-        id: 1,
-        title: "Page 2"
-      },
-      {
-        id: 2,
-        title: "Page 3"
-      },
-      {
-        id: 3,
-        title: "Page 4"
-      },
-      {
-        id: 4,
-        title: "Page 5"
-      }
-    ];
-
-    $scope.selectedPage = $scope.pages[0].id;
-
-    $scope.showNext = function (pageNo) {
-      var list = angular.copy(exerciseList);
-      var offset = (pageNo - 1) * pageSize;
-      $scope.exerciseList = list.splice(offset, pageSize);
-      $scope.selectedPage = $scope.pages[pageNo - 1].id;
+	
+	
+  var exerciseList = [
+    {
+      id: 0, 
+      title: "Exercise 1"
+    },
+    {
+      id: 1,
+      title: "Exercise 2"
+    },
+    {
+      id: 2,
+      title: "Exercise 3"
+    },
+    {
+      id: 3,
+      title: "Exercise 4"
+    },
+    {
+      id: 4,
+      title: "Exercise 5"
+    },
+    {
+      id: 5,
+      title: "Exercise 6"
+    },
+    {
+      id: 6,
+      title: "Exercise 7"
+    },
+    {
+      id: 7,
+      title: "Exercise 8"
+    },
+    {
+      id: 8,
+      title: "Exercise 9"
+    },
+    {
+      id: 9,
+      title: "Exercise 10"
+    },
+    {
+      id: 10,
+      title: "Exercise 11"
     }
 
-    $scope.showNext(1);
+  ];
+  
+  $scope.pages = [ 
+     {
+      id: 0,
+      title: "Page 1"
+     },
+     {
+      id: 1, 
+      title: "Page 2"
+     },
+     {
+      id: 2, 
+      title: "Page 3"
+     },
+     {
+      id: 3, 
+      title: "Page 4"
+     },
+     {
+      id: 4, 
+      title: "Page 5"
+     }
+   ];
+   
+  $scope.selectedPage = $scope.pages[0].id;
 
-    $scope.delete = function (index) {
-      $scope.exerciseList.splice(index, 1);
-    }
+  $scope.showNext = function(pageNo){
+    var list = angular.copy(exerciseList);
+    var offset =  (pageNo - 1) * pageSize ;
+    $scope.exerciseList = list.splice( offset, pageSize);
+     $scope.selectedPage = $scope.pages[pageNo-1].id;
+  }
 
-  }])
-  .controller('AddExerciseCtrl', ['$scope', function ($scope) {
+  $scope.showNext(1);
+
+  $scope.delete = function (index) {
+    console.log("Delete called")
+    var confirmPopup = $ionicPopup.confirm({
+      title: 'Delete exercise',
+      template: 'Are you sure you want to delete this exercise ?'
+    });
+
+    confirmPopup.then(function (res) {
+      if (res) {
+        console.log("delete")
+        $scope.exerciseList.splice(index, 1);
+      } else {
+        console.log("cancel")
+      }
+    });
+  }
+
+}])
+.controller('AddExerciseCtrl',  ['$scope', function($scope){
 
 
-  }])
-  .controller('AddExercisePopupCtrl', ['$scope', '$state', function ($scope, $state) {
+}])
+.controller('AddExercisePopupCtrl',  ['$scope','$state', function($scope,$state){
 
 
-  }])
-  .controller('MyAccountCtrl', ['$scope', '$rootScope', 'Flash', '$ionicHistory', '$state', '$cordovaCamera', 'profile', function ($scope, $rootScope, Flash, $ionicHistory, $state, $cordovaCamera, profile) {
+}])
+.controller('MyAccountCtrl', ['$scope', '$rootScope', 'Flash', '$ionicHistory', '$state', '$cordovaCamera', 'profile',  function($scope, $rootScope, Flash, $ionicHistory, $state, $cordovaCamera, profile){
     console.log(profile);
     var profileData = {};
     profileData.name = profile.first_name + ' ' + profile.last_name;
@@ -802,7 +815,8 @@ angular.module('geiaFitApp')
   }])
 
 
-  .controller('ExerciseProgramCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', function ($scope, $stateParams, sortedByList, $state) {
+
+  .controller('ExerciseProgramCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', '$ionicPopup', function ($scope, $stateParams, sortedByList, $state, $ionicPopup) {
     console.log($stateParams);
 
     $scope.patientProfile = {
@@ -903,10 +917,57 @@ angular.module('geiaFitApp')
       $scope.selectedPage = $scope.pages[pageNo - 1].id;
     }
 
+    //];
+
+    $scope.pages = [
+      {
+        id: 0,
+        title: "Page 1"
+      },
+      {
+        id: 1,
+        title: "Page 2"
+      },
+      {
+        id: 2,
+        title: "Page 3"
+      },
+      {
+        id: 3,
+        title: "Page 4"
+      },
+      {
+        id: 4,
+        title: "Page 5"
+      }
+    ];
+
+    $scope.selectedPage = $scope.pages[0].id;
+
+    $scope.showNext = function (pageNo) {
+      var list = angular.copy(exerciseList);
+      var offset = (pageNo - 1) * pageSize;
+      $scope.exerciseList = list.splice(offset, pageSize);
+      $scope.selectedPage = $scope.pages[pageNo - 1].id;
+    }
+
     $scope.showNext(1);
 
     $scope.delete = function (index) {
-      $scope.exerciseList.splice(index, 1);
+      console.log("Delete called")
+      var confirmPopup = $ionicPopup.confirm({
+        title: 'Delete exercise',
+        template: 'Are you sure you want to delete this exercise ?'
+      });
+
+      confirmPopup.then(function (res) {
+        if (res) {
+          console.log("delete")
+          $scope.exerciseList.splice(index, 1);
+        } else {
+          console.log("cancel")
+        }
+      });
     }
 
 
@@ -921,15 +982,13 @@ angular.module('geiaFitApp')
             title = list[i].routingStateName;
             return title;
           }
-        }
-      }
-    
-      $scope.gotoAction= function(id){
-        var state = getStateTitle(id);
-    
-        $state.transitionTo(state,{name: $stateParams.name}, {reload: true});
-      }
-    */
+        
+          $scope.gotoAction= function(id){
+            var state = getStateTitle(id);
+        
+            $state.transitionTo(state,{name: $stateParams.name}, {reload: true});
+          }
+        */
   }])
 
   .controller('paymentCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', function ($scope, $stateParams, sortedByList, $state) {
