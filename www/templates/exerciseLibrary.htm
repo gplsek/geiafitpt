@@ -1,4 +1,4 @@
-<ion-view view-title="Exercise Library" class="exerciseLibrary">
+<ion-view view-title="Exercise Library" class="exerciseLibrary activity">
 	<ion-nav-bar class="group">
 		<ion-nav-buttons side="left">
 			<span class="icon ion-ios-plus-outline" ui-sref="addExercise"></span>
@@ -14,6 +14,13 @@
 	    </div>
 		
 		<div class="sortedBy text-center">
+<div class="main">
+<ul class="selectionTab group">
+	<li ng-class="{'active': selectedView == 'My Exercises'}" ng-click="changeView(1)">My Exercises</li>
+	<li ng-class="{'active': selectedView == 'WebEx Exercises'}" ng-click="changeView(2)">WebEx Exercises</li>
+</ul>
+</div>
+
 	<p>
 
 <small for="repeatSelect">Sorted By:</small>
