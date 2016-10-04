@@ -543,16 +543,36 @@ angular.module('geiaFitApp')
   }])
   .controller('AddExercisePopupCtrl', ['$scope', '$state', function ($scope, $state) {
 
+}])
 
-  }])
-  .controller('MyAccountCtrl', ['$scope', '$rootScope', 'Flash', '$ionicHistory', '$state', '$cordovaCamera', 'profile', function ($scope, $rootScope, Flash, $ionicHistory, $state, $cordovaCamera, profile) {
-    console.log(profile);
-    var profileData = {};
-    profileData.name = profile.first_name + ' ' + profile.last_name;
-    profileData.email = profile.email;
-    profileData.phone = "8939379307"
+
+
+.controller('MyAccountCtrl', ['$scope', '$rootScope', 'Flash', '$ionicHistory', '$state', '$cordovaCamera', 'MyAccount' ,function($scope, $rootScope, Flash, $ionicHistory, $state, $cordovaCamera,MyAccount){
+    
+    var profileData;
+
+    $scope.profile = {
+      name :  "",
+      email : "",
+      phone :  ""
+    }
+ init = function(){
+   MyAccount.myAccountDetails().then(function(success){
+    profileData = success;
+    console.log(profileData)
+    $scope.profile.name = profileData.first_name  + ' ' + profileData.last_name;
+    $scope.profile.email = profileData.email;
+    $scope.profile.phone = profileData.phone;
+    $scope.src = profileData.image;
+   },function(error){
+
+   })
+    
+  }
+  init();
+
     $scope.showCP = false;
-    $scope.profile = profileData;
+   // $scope.profile = profileData;
     $scope.editEnabled = false;
     $scope.setProfilePhoto = function () {
       var options = {
@@ -612,18 +632,44 @@ angular.module('geiaFitApp')
 
   }])
 
-  .controller('ActivityCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', 'AppService', function ($scope, $stateParams, sortedByList, $state, AppService) {
-    var patientData
 
-    function getAge(dateString) {
-      var today = new Date();
-      var birthDate = new Date(dateString);
-      var age = today.getFullYear() - birthDate.getFullYear();
-      var m = today.getMonth() - birthDate.getMonth();
-      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
+  .controller('ActivityCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', 'AppService', 'utilityService', function ($scope, $stateParams, sortedByList, $state, AppService, utilityService) {
+    var patientData;
+    var activityDataForWeek = [];
+    var activityDataForMonth = [];
+
+    getActivityDataForWeek = function (successData) {
+      var startDate = new Date();
+      console.log(startDate)
+      var endDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() - 6,
+        startDate.getHours(), startDate.getMinutes(), startDate.getSeconds(), startDate.getMilliseconds())
+      console.log(endDate)
+
+      for (var x in successData) {
+        var unixDate = successData[x].date
+        var date = utilityService.unixTimeToDate(unixDate);
+        if (startDate > date && date > endDate) {
+          activityDataForWeek.push(successData[x]);
+        }
       }
-      return age;
+      console.log(activityDataForWeek)
+    }
+
+    getActivityDataForMonth = function (successData) {
+      var startDate = new Date();
+      console.log(startDate)
+      var endDate = new Date(startDate.getFullYear(), startDate.getMonth()-1, startDate.getDate(),
+        startDate.getHours(), startDate.getMinutes(), startDate.getSeconds(), startDate.getMilliseconds())
+      console.log(endDate)
+
+      for (var x in successData) {
+        var unixDate = successData[x].date
+        var date = utilityService.unixTimeToDate(unixDate);
+        if (startDate > date && date > endDate) {
+          activityDataForMonth.push(successData[x]);
+        }
+      }
+      console.log(activityDataForMonth)
     }
 
     init = function () {
@@ -636,7 +682,8 @@ angular.module('geiaFitApp')
           age = "N/A";
         } else {
           var dateOfBirth = new Date(patientData.dob);
-          age = getAge(dateOfBirth) + '  years old'
+          age = utilityService.calculcateAge(dateOfBirth) + '  years old';
+
         }
 
 
@@ -658,8 +705,9 @@ angular.module('geiaFitApp')
       })
 
       AppService.getActivity($stateParams.uid).then(function (success) {
-        console.log(success)
         console.log("Success")
+        getActivityDataForWeek(success);
+        getActivityDataForMonth(success);
       }, function (error) {
         console.log("error")
       })
