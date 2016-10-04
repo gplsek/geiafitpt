@@ -10416,7 +10416,11 @@ textarea {
   height: 7px;
   width: 100%;
   background: #000;
-  margin-bottom: 4px; }
+  /*margin-bottom: 4px; */
+  margin-bottom: 4px; 
+  display:inline-block;
+
+  }
   .dashboardView .patientList li meter::-moz-meter-bar {
     height: 100%;
     background: #000; }
@@ -10896,7 +10900,8 @@ textarea {
   .activity .main .totalActivity svg {
     width: 100%;
     position: relative;
-    left: 60px; }
+    /*left: 60px; */
+    }
     .activity .main .totalActivity svg circle {
       fill: #121516;
       stroke: #122331;
