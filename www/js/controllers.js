@@ -672,6 +672,112 @@ function getAge(dateString)
     }
 
   }
+
+$scope.chartConfig = {
+
+      options: {
+        //This is the Main Highcharts chart config. Any Highchart options are valid here.
+        //will be overriden by values specified below.
+        chart: {
+          type: 'solidgauge',
+          margin: 0,
+          backgroundColor:'transparent',
+        },
+        
+        title: {
+          text: null,
+          style: {
+            fontSize: '24px'
+          }
+        },
+
+        tooltip: {
+          borderWidth: 0,
+          backgroundColor: 'none',
+          shadow: false,
+          style: {
+            fontSize: '16px'
+          },
+          pointFormat: '{series.name}<br><span style="font-size:2em; color: {point.color}; font-weight: bold">{point.y}%</span>',
+          positioner: function (labelWidth, labelHeight) {
+            return {
+              x: 200 - labelWidth / 2,
+              y: 180
+            };
+          }
+        },
+
+        pane: {
+          startAngle: 0,
+          endAngle: 270,
+          background: [{ // Track for Move
+            outerRadius: '100%',
+            innerRadius: '100%',
+            backgroundColor: Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0.3).get(),
+            borderWidth: 0
+          }
+          ]
+        },
+
+        yAxis: {
+          min: 0,
+          max: 100,
+          lineWidth: 0,
+          tickPositions: []
+        },
+
+        plotOptions: {
+          solidgauge: {
+            borderWidth: '34px',
+            dataLabels: {
+              enabled: false
+            },
+            linecap: 'round',
+            stickyTracking: false
+          }
+        },
+
+        series: [{
+          name: 'Move',
+          borderColor: Highcharts.getOptions().colors[0],
+          data: [{
+            color: Highcharts.getOptions().colors[0],
+            radius: '100%',
+            innerRadius: '100%',
+            y: 80
+          }]
+        }]
+      },
+      //The below properties are watched separately for changes.
+
+      //Series object (optional) - a list of series using normal Highcharts series options.
+      series: [{
+        data: [100]
+      }],
+      
+      //Boolean to control showing loading status on chart (optional)
+      //Could be a string if you want to show specific loading text.
+      loading: false,
+      //Configuration for the xAxis (optional). Currently only one x axis can be dynamically controlled.
+      //properties currentMin and currentMax provided 2-way binding to the chart's maximum and minimum
+      xAxis: {
+        currentMin: 0,
+        currentMax: 20,
+        title: { text: 'values' }
+      },
+      //Whether to use Highstocks instead of Highcharts (optional). Defaults to false.
+      useHighStocks: false,
+      //size (optional) if left out the chart will default to size of the div or something sensible.
+      size: {
+        width: 200,
+        height:180
+      },
+      //function (optional)
+      func: function (chart) {
+        //setup some logic for the chart
+      }
+    };
+
   function getStateTitle(id){
     var title = '';
     var list = $scope.sortedByList;
