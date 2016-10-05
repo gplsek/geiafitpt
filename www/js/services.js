@@ -71,6 +71,7 @@ angular.module('geiaFitApp')
       console.log("Store Use Credentials called");
       storeUserCredentials(name + response.data.token, isChecked);
       console.log(response);
+      $rootScope.token = response.data.token;
       $rootScope.loggedInUserUid = response.data.user.uid;
       console.log("UID " + $rootScope.loggedInUserUid);
     });
@@ -253,7 +254,7 @@ console.log("--- end loadUserCredentials");
 
       var profileData = $http({
         method: "GET", 
-        url: ApiEndpoint.url + "/profile/"+$rootScope.loggedInUserUid // Hardcoded needs to be replaced
+        url: ApiEndpoint.url + "/profile/"+$rootScope.loggedInUserUid
       }).then(function(response){
          return response.data;
       }, function(err){
@@ -265,6 +266,27 @@ console.log("--- end loadUserCredentials");
 
    return{
      myAccountDetails : getAdminProfile
+   }
+
+ }])
+
+ .service('ExerciseLibraryService',['$rootScope','$http','ApiEndpoint',function($rootScope,$http,ApiEndpoint){
+
+   var getExerciseList = function(){
+
+     var exerciseData = $http({
+        method: "GET", 
+        url: ApiEndpoint.url + "/ptexlib/"+$rootScope.loggedInUserUid
+      }).then(function(response){
+         return response.data;
+      }, function(err){
+          console.log(err);
+      });
+      return exerciseData;       
+     }
+
+   return{
+     exerciseData : getExerciseList
    }
 
  }])

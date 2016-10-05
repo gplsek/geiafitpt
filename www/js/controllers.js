@@ -52,10 +52,10 @@ angular.module('geiaFitApp')
 
   .controller('LoginCtrl', ['$scope', '$state', '$ionicPopup', 'AuthService', 'Flash', '$rootScope', function ($scope, $state, $ionicPopup, AuthService, Flash, $rootScope) {
 
-    $scope.data = {
-      email: "",
-      password: ""
-    };
+  $scope.data = {
+    email: "admin@geiafit.com",
+    password: "FitGeia1!"
+  };
 
     function checkEmptyFields() {
       var isEmpty = false;
@@ -409,11 +409,51 @@ angular.module('geiaFitApp')
       }
 
     }])
-.controller('ExerciseLibraryCtrl',  ['$scope','sortedByList','$ionicPopup', function($scope, sortedByList, $ionicPopup){
+.controller('ExerciseLibraryCtrl',  ['$scope','sortedByList','$ionicPopup','ExerciseLibraryService', function($scope, sortedByList, $ionicPopup,ExerciseLibraryService){
 
   var pageSize = 10;
-  $scope.sortedByList = sortedByList;
-  $scope.sortedBy = $scope.sortedByList[0].id;
+
+    init = function(){
+      $scope.sortedByList = sortedByList;
+      $scope.sortedBy = $scope.sortedByList[0].id;
+      $scope.selectedTab = 'My Exercises';
+      var myExerciseList = [];
+      var webExerciseList = [];
+      var exerciseList = ExerciseLibraryService.exerciseData().then(function(success){
+        var exerciseData = success;
+        for(i in exerciseData.exercises){
+          if(exerciseData.exercises[i].webex == '1'){
+            webExerciseList.push(exerciseData.exercises[i]);
+          }
+          else{
+            myExerciseList.push(exerciseData.exercises[i]);
+          }
+        }
+        console.log("=======================")
+        console.log(myExerciseList)
+        console.log("=======================")
+        console.log(webExerciseList)
+        console.log("=======================")
+      },function(error){
+
+      })
+
+    }
+    init();
+
+    $scope.changeView = function (view) {
+      switch (view) {
+        case 1:
+          $scope.selectedTab = 'My Exercises';
+          break;
+        case 2:
+          $scope.selectedTab = 'WebEx Exercises';
+          break;
+        default:
+          $scope.selectedTab = 'My Exercises';
+      }
+
+    }
 
 	
    $scope.data = {
@@ -830,18 +870,6 @@ availableOptions: [
   .controller('ExerciseProgramCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', '$ionicPopup', function ($scope, $stateParams, sortedByList, $state, $ionicPopup) {
     console.log($stateParams);
 
-    $scope.patientProfile = {
-      name: $stateParams.name,
-      age: $stateParams.age,
-      gender: $stateParams.gender,
-      email: $stateParams.email,
-      url: $stateParams.profile_url
-    }
-
-    $scope.addss = function () {
-      $state.go('setExerciseProgram');
-
-    }
 
 
     var pageSize = 10;
