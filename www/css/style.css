@@ -1,3 +1,8 @@
+.mainLogo 
+{
+    max-width:80%;
+    padding:40px 0;
+}
 .balance{
     font-size: 20px;
 }
