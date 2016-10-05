@@ -1268,7 +1268,106 @@ availableOptions: [
     }
   }])
 
+.controller('MessageCtrl', function($scope, $state, $http, $ionicPopup, ChatApp,$timeout,$stateParams,$rootScope,AppService) {
+  
+  var uid = $rootScope.loggedInUserUid;
+   $scope.userImage="img/profile_icon.png";
+   $scope.toUserImage="img/profile_icon.png";
 
+   $scope.patientProfile = {
+      name: $stateParams.name,
+    }
+
+    $scope.doctorProfile = {
+          url: ''
+        }
+  
+   init = function () {
+
+      AppService.profile($stateParams.uid).then(function (success) {
+        patientData = success;
+        if (patientData.image != "") {
+          $scope.userImage = patientData.image;
+          $scope.toUserImage= patientData.therapist_image;
+        }
+
+      //patient
+      $scope.toUser = {
+      _id:  $stateParams.uid,
+       pic: $scope.toUserImage,
+      username: patientData.therapist_first_name
+    };
+
+     // this could be on $rootScope rather than in $stateParams
+     //doctor
+    $scope.user = {
+      _id: uid,
+      pic:$scope.userImage,
+      username: patientData.first_name
+
+    };
+
+
+      }, function (error) {
+
+      })
+    
+    }
+    init();
+    getMessages();
+
+      //patient id
+  //  $scope.toUser = {
+  //     _id:  $stateParams.uid,
+  //      pic: $scope.toUserImage,
+  //     username: $stateParams.name
+  //   };
+
+  //    // this could be on $rootScope rather than in $stateParams
+  //    //doctor
+  //   $scope.user = {
+  //     _id: uid,
+  //     pic:$scope.userImage,
+  //     username: 'Marty'
+  //   };
+ 
+
+   $scope.sendMessage = function() {
+    
+   // alert("Sendmessage"+$scope.input.message);
+    var data ={ 
+    "message": $scope.input.message,
+    "ptid":"1"
+    };
+  
+  ChatApp.sendPatientMessage(data,$stateParams.uid).then(function(success){
+         alert("success"+JSON.stringify(success));
+   },function(error){
+
+   })
+
+
+    };
+
+     function getMessages() {
+      // the service is mock but you would probably pass the toUser's GUID here
+      ChatApp.getUserMessages($stateParams.uid).then(function(data) {
+        $scope.doneLoading = true;
+        $scope.messages = data;
+     //   alert(JSON.stringify(data));
+
+        $timeout(function() {
+        //  viewScroll.scrollBottom();
+        }, 0);
+      });
+    }
+
+    $scope.back = function () {
+      console.log($ionicHistory.viewHistory());
+      $ionicHistory.goBack();
+    }
+
+})
   .controller('VitalsCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', '$ionicHistory', function ($scope, $state, $stateParams, sortedByList, $ionicHistory) {
     $scope.sortedByList = sortedByList;
     $scope.sortedBy = $scope.sortedByList[0].id;
