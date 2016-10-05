@@ -217,7 +217,10 @@ templateUrl:'templates/addSnapshot.htm'
   })*/
   .state('messages', {
     url: '/messages', 
-    template: '<h1 class="comingSoon">Coming soon</h1>'
+    params: patientParams,
+    templateUrl: 'templates/message.htm',
+    controller: 'MessageCtrl'
+   
   })
   
    .state('vitals', {
