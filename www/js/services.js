@@ -71,7 +71,9 @@ angular.module('geiaFitApp')
       console.log("Store Use Credentials called");
       storeUserCredentials(name + response.data.token, isChecked);
       console.log(response);
-      $rootScope.token = response.data.token;
+      var token = response.data.token
+      console.log(token);
+      $rootScope.token = token;
       $rootScope.loggedInUserUid = response.data.user.uid;
       console.log("UID " + $rootScope.loggedInUserUid);
     });
@@ -132,6 +134,10 @@ console.log("--- end loadUserCredentials");
     console.log("uid "+$rootScope.loggedInUserUid)
     var uid = $rootScope.loggedInUserUid;
     return $http({
+              headers: {
+                'X-CSRF-Token': $rootScope.token,
+                'Access-Control-Allow-Origin': '*'
+              },
               method: 'POST',
               url: ApiEndpoint.url + "/profile/mypatients/"+uid
             }).then(function(response){

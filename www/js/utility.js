@@ -12,6 +12,10 @@ angular.module('geiaFitApp').service('utilityService', ['$log',function ($log) {
                     age--;
                 }
                 return age;
+        },
+
+        unixTimeToDate : function(timeStamp){
+            return new Date(timeStamp*1000);
         }
 
     };
