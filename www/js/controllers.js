@@ -414,13 +414,20 @@ angular.module('geiaFitApp')
 
   var pageSize = 10;
   $scope.pages = [];
-
+  $scope.webExPages = [];
+ // $scope.filterPatient = 'yes';
+ 
     init = function(){
+      
       $scope.sortedByList = sortedByList;
       $scope.sortedBy = $scope.sortedByList[0].id;
       $scope.selectedTab = 'My Exercises';
       $scope.exerciseView = true;
       $scope.webExView = false;
+      $scope.tempWebExList = "";
+
+      
+
       var myExerciseList = [];
       var webExerciseList = [];
       var exerciseList = ExerciseLibraryService.exerciseData().then(function(success){
@@ -434,9 +441,16 @@ angular.module('geiaFitApp')
           }
         }
         $scope.exerciseList = myExerciseList
-
+        
+        $scope.webExercise = webExerciseList
+        $scope.tempWebExList = webExerciseList;
+        console.log(webExerciseList)
+        
         var myExercisePages = Math.ceil(myExerciseList.length / pageSize);
         var webExercisePages = Math.ceil(webExerciseList.length  / pageSize);
+
+        console.log(myExerciseList.length +""+ myExercisePages);
+        console.log(webExerciseList.length +""+ webExercisePages);
 
         for(i=0;i<myExercisePages;i++){
             var page = {
@@ -445,6 +459,16 @@ angular.module('geiaFitApp')
               }
               $scope.pages.push(page);
         }
+
+        for(i=0;i<webExercisePages;i++){
+            var page = {
+                id : i+1,
+                title : "page "+(i+1)
+              }
+              $scope.webExPages.push(page);
+        }
+
+
         $scope.selectedPage = $scope.pages[0].id;
         $scope.showNext(1);
       },function(error){
@@ -454,21 +478,30 @@ angular.module('geiaFitApp')
     }
     init();
 
+    $scope.getFilteredData = function(){
+      
+    }
+
+    // function to tab between MyExercise and Web Exercise.
     $scope.changeView = function (view) {
+      this.filterPatient = '';
       switch (view) {
         case 1:
           $scope.selectedTab = 'My Exercises';
           $scope.webExView = false;
           $scope.exerciseView = true;
+          
           break;
         case 2:
           $scope.selectedTab = 'WebEx Exercises';
           $scope.webExView = true;
           $scope.exerciseView = false;
+          
           break;
         default:
           $scope.selectedTab = 'My Exercises';
           $scope.exerciseView = true;
+          
       }
 
     }
@@ -478,9 +511,9 @@ angular.module('geiaFitApp')
 model: null,
 availableOptions: [
 	
-      {id: '1', name: 'Exercise Name'},
-      {id: '2', name: 'Category'},
-      {id: '3', name: 'Upper Extremity'},
+          {id: '1', name: 'Exercise Name'},
+          {id: '2', name: 'Category'},
+          {id: '3', name: 'Upper Extremity'},
          {id: '4', name: 'Shoulder'},
         {id:'5',name:'Elbow'},
         {id:'6',name:'Wrist'},
@@ -494,10 +527,10 @@ availableOptions: [
 
 
     $scope.showNext = function (pageNo) {
-      var list = angular.copy($scope.exerciseList);
+      var list = angular.copy($scope.tempWebExList);
       var offset = (pageNo - 1) * pageSize;
-      $scope.exerciseList = list.splice(offset, pageSize);
-      $scope.selectedPage = $scope.pages[pageNo - 1].id;
+      $scope.webExercise = list.splice(offset, pageSize);
+      $scope.selectedPage = $scope.webExPages[pageNo - 1].id;
     }
     
 
