@@ -413,11 +413,14 @@ angular.module('geiaFitApp')
 .controller('ExerciseLibraryCtrl',  ['$scope','sortedByList','$ionicPopup','ExerciseLibraryService', function($scope, sortedByList, $ionicPopup,ExerciseLibraryService){
 
   var pageSize = 10;
+  $scope.pages = [];
 
     init = function(){
       $scope.sortedByList = sortedByList;
       $scope.sortedBy = $scope.sortedByList[0].id;
       $scope.selectedTab = 'My Exercises';
+      $scope.exerciseView = true;
+      $scope.webExView = false;
       var myExerciseList = [];
       var webExerciseList = [];
       var exerciseList = ExerciseLibraryService.exerciseData().then(function(success){
@@ -430,7 +433,20 @@ angular.module('geiaFitApp')
             myExerciseList.push(exerciseData.exercises[i]);
           }
         }
+        $scope.exerciseList = myExerciseList
 
+        var myExercisePages = Math.ceil(myExerciseList.length / pageSize);
+        var webExercisePages = Math.ceil(webExerciseList.length  / pageSize);
+
+        for(i=0;i<myExercisePages;i++){
+            var page = {
+                id : i+1,
+                title : "page "+(i+1)
+              }
+              $scope.pages.push(page);
+        }
+        $scope.selectedPage = $scope.pages[0].id;
+        $scope.showNext(1);
       },function(error){
 
       })
@@ -442,12 +458,17 @@ angular.module('geiaFitApp')
       switch (view) {
         case 1:
           $scope.selectedTab = 'My Exercises';
+          $scope.webExView = false;
+          $scope.exerciseView = true;
           break;
         case 2:
           $scope.selectedTab = 'WebEx Exercises';
+          $scope.webExView = true;
+          $scope.exerciseView = false;
           break;
         default:
           $scope.selectedTab = 'My Exercises';
+          $scope.exerciseView = true;
       }
 
     }
@@ -472,89 +493,13 @@ availableOptions: [
    };
 
 
-	
-	
-  var exerciseList = [
-    {
-      id: 0, 
-      title: "Exercise 1"
-    },
-    {
-      id: 1,
-      title: "Exercise 2"
-    },
-    {
-      id: 2,
-      title: "Exercise 3"
-    },
-    {
-      id: 3,
-      title: "Exercise 4"
-    },
-    {
-      id: 4,
-      title: "Exercise 5"
-    },
-    {
-      id: 5,
-      title: "Exercise 6"
-    },
-    {
-      id: 6,
-      title: "Exercise 7"
-    },
-    {
-      id: 7,
-      title: "Exercise 8"
-    },
-    {
-      id: 8,
-      title: "Exercise 9"
-    },
-    {
-      id: 9,
-      title: "Exercise 10"
-    },
-    {
-      id: 10,
-      title: "Exercise 11"
-    }
-  ];
-
-   
-    $scope.pages = [
-      {
-        id: 0,
-        title: "Page 1"
-      },
-      {
-        id: 1,
-        title: "Page 2"
-      },
-      {
-        id: 2,
-        title: "Page 3"
-      },
-      {
-        id: 3,
-        title: "Page 4"
-      },
-      {
-        id: 4,
-        title: "Page 5"
-      }
-    ];
-
-    $scope.selectedPage = $scope.pages[0].id;
-
     $scope.showNext = function (pageNo) {
-      var list = angular.copy(exerciseList);
+      var list = angular.copy($scope.exerciseList);
       var offset = (pageNo - 1) * pageSize;
       $scope.exerciseList = list.splice(offset, pageSize);
       $scope.selectedPage = $scope.pages[pageNo - 1].id;
     }
-
-    $scope.showNext(1);
+    
 
     $scope.delete = function (index) {
       console.log("Delete called")
@@ -571,7 +516,7 @@ availableOptions: [
           console.log("cancel")
         }
       });
-    }
+   }
 
   }])
   .controller('AddExerciseCtrl', ['$scope', function ($scope) {
@@ -600,6 +545,7 @@ availableOptions: [
         $scope.profile.name = profileData.first_name + ' ' + profileData.last_name;
         $scope.profile.email = profileData.email;
         $scope.profile.phone = profileData.phone;
+        $scope.showPhoto = true
         $scope.src = profileData.image;
       }, function (error) {
 
