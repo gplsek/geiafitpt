@@ -1301,7 +1301,7 @@ availableOptions: [
 
    $scope.sendMessage = function() {
     
-    alert("Sendmessage"+$scope.input.message);
+   // alert("Sendmessage"+$scope.input.message);
     var data ={ 
     "message": $scope.input.message,
     "ptid":"1"
@@ -1321,7 +1321,7 @@ availableOptions: [
       ChatApp.getUserMessages($stateParams.uid).then(function(data) {
         $scope.doneLoading = true;
         $scope.messages = data;
-        alert(JSON.stringify(data));
+     //   alert(JSON.stringify(data));
 
         $timeout(function() {
         //  viewScroll.scrollBottom();
