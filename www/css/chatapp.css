@@ -218,14 +218,14 @@ a.autolinker {
 .username_right
 {position: absolute;top: 80px;right: 0px;text-align: center;width: 120px;}
 
-.chat-btn
+.chat-btn 
 {
   
 background: #F8A938;
   
 width: 20%;
   
-margin: 0 auto;
+margin: 0 auto !important ;
   
 border-radius: 22px;
   
@@ -235,15 +235,15 @@ height: 35px;
   
 border: 0;
   
-font-size: 16px;
+font-size: 16px !important ;
   
 color: #fff;
   
-font-weight: 600;
+font-weight: 600 !important ;
   
 text-align: center;
   
-line-height: 35px;
+line-height: 35px !important ;
 }
 .dateposted{
     line-height: 20px;

@@ -1701,8 +1701,9 @@ angular.module('geiaFitApp')
   }])
 
 .controller('MessageCtrl', function($scope, $state, $http, $ionicPopup, ChatApp,$timeout,$stateParams,$rootScope,
-AppService,$ionicScrollDelegate) {
-   var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
+AppService,$ionicScrollDelegate)
+ {
+  var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
   var uid = $rootScope.loggedInUserUid;
    $scope.userImage="img/profile_icon.png";
    $scope.toUserImage="img/profile_icon.png";
