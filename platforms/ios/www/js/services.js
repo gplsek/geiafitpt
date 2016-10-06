@@ -45,14 +45,14 @@ angular.module('geiaFitApp')
     }
  
     // Set the token as header for your requests!
-    //$http.defaults.headers.common['X-Auth-Token'] = token;
+    $http.defaults.headers.common['X-Auth-Token'] = token;
   }
  
   function destroyUserCredentials() {
     authToken = undefined;
     username = '';
     isAuthenticated = false;
-    //$http.defaults.headers.common['X-Auth-Token'] = undefined;
+    $http.defaults.headers.common['X-Auth-Token'] = undefined;
     window.localStorage.removeItem(LOCAL_TOKEN_KEY);
   }
  
