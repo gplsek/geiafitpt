@@ -287,7 +287,7 @@ templateUrl:'templates/addSnapshot.htm'
   
   $urlRouterProvider.otherwise(function ($injector, $location) {
     var $state = $injector.get("$state");
-    $state.go("main.dash");
+    $state.go("login");
   });
 })
 .run(function ($rootScope, $state, AuthService, AUTH_EVENTS) {
