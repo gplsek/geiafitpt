@@ -565,6 +565,8 @@ availableOptions: [
   .controller('MyAccountCtrl', ['$scope', '$rootScope', 'Flash', '$ionicHistory', '$state', '$cordovaCamera', 'MyAccount', function ($scope, $rootScope, Flash, $ionicHistory, $state, $cordovaCamera, MyAccount) {
 
     var profileData;
+    $scope.picFile = "";
+    $scope.profilePic = "";
 
     $scope.profile = {
       name: "",
@@ -590,6 +592,31 @@ availableOptions: [
     $scope.showCP = false;
     // $scope.profile = profileData;
     $scope.editEnabled = false;
+
+    $scope.testFunction= function(file){
+      console.log(file)
+      var fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+      fileReader.onload = function (e) {
+      var dataUrl = e.target.result;
+      var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
+
+      var data = {
+        image_name : file.$ngfName, 
+        image : base64Data
+      }
+
+        MyAccount.uploadImage(data).then(function(success){
+          console.log(success)
+        },function(error){
+          console.log(error)
+        })
+
+    };
+
+//     //  $scope.src = "https://trip101.com/assets/default_profile_pic-9c5d869a996318867438aa3ccf9a9607daee021047c1088645fbdfbbed0e2aec.jpg"
+    }
+
     $scope.setProfilePhoto = function () {
       var options = {
         quality: 50,
