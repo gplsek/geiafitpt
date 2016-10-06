@@ -53,8 +53,8 @@ angular.module('geiaFitApp')
   .controller('LoginCtrl', ['$scope', '$state', '$ionicPopup', 'AuthService', 'Flash', '$rootScope', function ($scope, $state, $ionicPopup, AuthService, Flash, $rootScope) {
 
   $scope.data = {
-    email: "admin@geiafit.com",
-    password: "FitGeia1!"
+    email: "",
+    password: ""
   };
 
     function checkEmptyFields() {
@@ -641,6 +641,8 @@ angular.module('geiaFitApp')
   .controller('MyAccountCtrl', ['$scope', '$rootScope', 'Flash', '$ionicHistory', '$state', '$cordovaCamera', 'MyAccount', function ($scope, $rootScope, Flash, $ionicHistory, $state, $cordovaCamera, MyAccount) {
 
     var profileData;
+    $scope.picFile = "";
+    $scope.profilePic = "";
 
     $scope.profile = {
       name: "",
@@ -666,6 +668,31 @@ angular.module('geiaFitApp')
     $scope.showCP = false;
     // $scope.profile = profileData;
     $scope.editEnabled = false;
+
+    $scope.testFunction= function(file){
+      console.log(file)
+      var fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+      fileReader.onload = function (e) {
+      var dataUrl = e.target.result;
+      var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
+
+      var data = {
+        image_name : file.$ngfName, 
+        image : base64Data
+      }
+
+        MyAccount.uploadImage(data).then(function(success){
+          console.log(success)
+        },function(error){
+          console.log(error)
+        })
+
+    };
+
+//     //  $scope.src = "https://trip101.com/assets/default_profile_pic-9c5d869a996318867438aa3ccf9a9607daee021047c1088645fbdfbbed0e2aec.jpg"
+    }
+
     $scope.setProfilePhoto = function () {
       var options = {
         quality: 50,
@@ -743,25 +770,43 @@ angular.module('geiaFitApp')
           activityDataForYesterday = successData[x];
         }
       }
-      console.log(activityDataForYesterday)
-      var excPer = (activityDataForYesterday.total_exercise / activityDataForYesterday.total_exercise_goal) * 100;
-      var stepsPer = (activityDataForYesterday.total_steps / activityDataForYesterday.total_steps_goal) * 100;
-      var lowPer = (activityDataForYesterday.time_active_low / activityDataForYesterday.time_active_low_goal) * 100;
-      var mediumPer = (activityDataForYesterday.time_active_medium / activityDataForYesterday.time_active_medium_goal) * 100;
-      var highPer = (activityDataForYesterday.time_active_high / activityDataForYesterday.time_active_high_goal) * 100;
-
-      console.log('exc' + excPer);
-      console.log('exc' + stepsPer);
-      console.log('exc' + lowPer);
-      console.log('exc' + mediumPer);
-      console.log('exc' + highPer);
-      $scope.chartConfig = getChartConfig(excPer);
-      $scope.chartConfig1 = getChartConfig(stepsPer);
-      $scope.chartConfig2 = getChartConfig(lowPer);
-      $scope.chartConfig3 = getChartConfig(mediumPer);
-      $scope.chartConfig4 = getChartConfig(highPer);
-
+      chartConfigForDay();
     }
+
+    chartConfigForDay = function () {
+      var excPer = 0;
+      var stepsPer = 0;
+      var lowPer = 0;
+      var mediumPer = 0;
+      var highPer = 0;
+      if (activityDataForYesterday.total_exercise != null && activityDataForYesterday.total_exercise_goal != null) {
+        excPer = (activityDataForYesterday.total_exercise / activityDataForYesterday.total_exercise_goal) * 100;
+      }
+      if (activityDataForYesterday.total_steps != null && activityDataForYesterday.total_steps_goal != null) {
+        stepsPer = (activityDataForYesterday.total_steps / activityDataForYesterday.total_steps_goal) * 100;
+      }
+      if (activityDataForYesterday.time_active_low != null && activityDataForYesterday.time_active_low_goal != null) {
+        lowPer = (activityDataForYesterday.time_active_low / activityDataForYesterday.time_active_low_goal) * 100;
+      }
+      if (activityDataForYesterday.time_active_medium != null && activityDataForYesterday.time_active_medium_goal != null) {
+        mediumPer = (activityDataForYesterday.time_active_medium / activityDataForYesterday.time_active_medium_goal) * 100;
+      }
+      if (activityDataForYesterday.time_active_high != null && activityDataForYesterday.time_active_high_goal != null) {
+        highPer = (activityDataForYesterday.time_active_high / activityDataForYesterday.time_active_high_goal) * 100;
+      }
+
+      console.log('excPer ' + excPer);
+      console.log('stepsPer ' + stepsPer);
+      console.log('lowPer ' + lowPer);
+      console.log('mediumPer ' + mediumPer);
+      console.log('highPer ' + highPer);
+      $scope.chartConfig = getChartConfigForDay(excPer);
+      $scope.chartConfig1 = getChartConfigForDay(stepsPer);
+      $scope.chartConfig2 = getChartConfigForDay(lowPer);
+      $scope.chartConfig3 = getChartConfigForDay(mediumPer);
+      $scope.chartConfig4 = getChartConfigForDay(highPer);
+    }
+
 
     getActivityDataForWeek = function (successData) {
       
@@ -823,14 +868,12 @@ angular.module('geiaFitApp')
         var time_active_high = 0
         var total_compliance_goal = 0 //TO DO
         var total_compliance = 0 //TO DO 
+
         for (var x in activityDataForWeek) {
           var tempDate = utilityService.unixTimeToDate(activityDataForWeek[x].date);
-
-          //console.log(tempDate)
-          //console.log(dates[d])
-          if (tempDate.getFullYear() === dates[d].getFullYear() && 
-              tempDate.getMonth() === dates[d].getMonth() &&
-              tempDate.getDate() === dates[d].getDate()) {
+          if (tempDate.getFullYear() === dates[d].getFullYear() &&
+            tempDate.getMonth() === dates[d].getMonth() &&
+            tempDate.getDate() === dates[d].getDate()) {
             var temp = activityDataForWeek[x];
 
             total_exercise_goal = parseInt(temp.total_exercise_goal)
@@ -853,8 +896,6 @@ angular.module('geiaFitApp')
 
             break;
           }
-
-
         }
         dataWeekExerciseGoal.push(total_exercise_goal);
         dataWeekStepsGoal.push(total_steps_goal);
@@ -940,14 +981,12 @@ angular.module('geiaFitApp')
         var time_active_high = 0
         var total_compliance_goal = 0 //TO DO
         var total_compliance = 0 //TO DO 
+
         for (var x in activityDataForMonth) {
           var tempDate = utilityService.unixTimeToDate(activityDataForMonth[x].date);
-
-          //console.log(tempDate)
-          //console.log(dates[d])
-          if (tempDate.getFullYear() === dates[d].getFullYear() && 
-              tempDate.getMonth() === dates[d].getMonth() &&
-              tempDate.getDate() === dates[d].getDate()) {
+          if (tempDate.getFullYear() === dates[d].getFullYear() &&
+            tempDate.getMonth() === dates[d].getMonth() &&
+            tempDate.getDate() === dates[d].getDate()) {
             var temp = activityDataForMonth[x];
 
             total_exercise_goal = parseInt(temp.total_exercise_goal)
@@ -970,9 +1009,8 @@ angular.module('geiaFitApp')
 
             break;
           }
-
-
         }
+
         dataMonthExerciseGoal.push(total_exercise_goal);
         dataMonthStepsGoal.push(total_steps_goal);
         dataMonthLightGoal.push(time_active_low_goal);
@@ -1011,7 +1049,6 @@ angular.module('geiaFitApp')
 
         }
 
-
         if (patientData.image != "") {
           imageUrl = patientData.image
         } else {
@@ -1044,9 +1081,9 @@ angular.module('geiaFitApp')
 
     $scope.sortedByList = sortedByList;
     $scope.sortedBy = $scope.sortedByList[0].id;
-
     $scope.selectedView = 'day';
     $scope.DayView = true;
+
     $scope.changeView = function (view) {
       switch (view) {
         case 1:
@@ -1054,6 +1091,7 @@ angular.module('geiaFitApp')
           $scope.DayView = true;
           $scope.WeekView = false;
           $scope.MonthView = false;
+          chartConfigForDay();
           break;
         case 2:
           $scope.selectedView = 'week';
@@ -1074,119 +1112,82 @@ angular.module('geiaFitApp')
           $scope.DayView = true;
           $scope.WeekView = false;
           $scope.MonthView = false;
+          chartConfigForDay();
 
       }
 
     }
 
 
-    function getChartConfig(data) {
+    function getChartConfigForDay(data) {
       var chartConfig = {
-
         options: {
-          //This is the Main Highcharts chart config. Any Highchart options are valid here.
-          //will be overriden by values specified below.
           chart: {
             type: 'solidgauge',
-            margin: 0,
             backgroundColor: 'transparent',
+            height: 150,
+            margin: [0, 0, 0, 0],
+            spacingTop: 0,
+            spacingBottom: 0,
+            spacingLeft: 0,
+            spacingRight: 0
           },
-
-          title: {
-            text: null,
-            style: {
-              fontSize: '24px'
-            }
+          title: null,
+          //Hide highcharts link from bottom
+          credits: {
+            enabled: false
           },
-
-          tooltip: {
-            borderWidth: 0,
-            backgroundColor: 'none',
-            shadow: false,
-            style: {
-              fontSize: '16px'
-            },
-            pointFormat: '{series.name}<br><span style="font-size:2em; color: {point.color}; font-weight: bold">{point.y}%</span>',
-            positioner: function (labelWidth, labelHeight) {
-              return {
-                x: 200 - labelWidth / 2,
-                y: 180
-              };
-            }
-          },
-
           pane: {
             startAngle: 0,
             endAngle: 360,
+            size: '70%',
             background: [{ // Track for Move
-              outerRadius: '100%',
-              innerRadius: '100%',
-              backgroundColor: Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0.3).get(),
+              outerRadius: '112%',
+              innerRadius: '88%',
+              backgroundColor: "yellow",
               borderWidth: 0
-            }
-            ]
+            }]
           },
-
-          yAxis: {
-            min: 0,
-            max: 100,
-            lineWidth: 0,
-            tickPositions: []
-          },
-
           plotOptions: {
             solidgauge: {
-              borderWidth: '34px',
+              borderWidth: '7%',
               dataLabels: {
-                enabled: false
+                enabled: true,
+                y: -20,
+                borderWidth: 0,
+                useHTML: true
               },
               linecap: 'round',
               stickyTracking: false
             }
           },
-
-          setOptions: {
-            colors: ['#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
+        },
+        yAxis: {
+            min: 0,
+            max: 100,
+            lineWidth: 0,
+            tickPositions: []
           },
-
-          series: [{
+        series: [{
             name: 'Move',
-            borderColor: Highcharts.getOptions().colors[0],
+            borderColor: "green",
             data: [{
-              color: "#f8f8f8",
+              color: "green",
               radius: '100%',
               innerRadius: '100%',
-              y: 80
-            }]
-          }]
-        },
-        //The below properties are watched separately for changes.
-
-        //Series object (optional) - a list of series using normal Highcharts series options.
-        series: [{
-          data: [data]
-        }],
-
-        //Boolean to control showing loading status on chart (optional)
-        //Could be a string if you want to show specific loading text.
-        loading: false,
-        //Configuration for the xAxis (optional). Currently only one x axis can be dynamically controlled.
-        //properties currentMin and currentMax provided 2-way binding to the chart's maximum and minimum
-        xAxis: {
-          currentMin: 0,
-          currentMax: 20,
-          title: { text: 'values' }
-        },
-        //Whether to use Highstocks instead of Highcharts (optional). Defaults to false.
-        useHighStocks: false,
-        //size (optional) if left out the chart will default to size of the div or something sensible.
-        size: {
+              y: data
+            }],
+             dataLabels: {
+                format: '<div style="text-align:center"><span style="font-size:25px;color:' +
+                    ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'red') + '">{y}</span>' +
+                       '<span style="font-size:25px;color:red">%</span></div>'
+            }
+          }],
+        /*size: {
           width: 200,
           height: 180
-        },
-        //function (optional)
+        },*/
         func: function (chart) {
-          //setup some logic for the chart
         }
       };
       return chartConfig;
@@ -1222,6 +1223,10 @@ angular.module('geiaFitApp')
           chart: {
             type: 'column',
             backgroundColor: 'transparent',
+            spacingLeft: 5,
+            // Explicitly tell the width and height of a chart
+            width: null,
+            height: null
           },
           title: {
             text: '',
@@ -1230,7 +1235,7 @@ angular.module('geiaFitApp')
             column: {
               stacking: 'normal',
               dataLabels: {
-                enabled: true,
+                enabled: false,
                 color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
               }
             }
@@ -1288,6 +1293,10 @@ angular.module('geiaFitApp')
           chart: {
             type: 'column',
             backgroundColor: 'transparent',
+            spacingLeft: 5,
+            // Explicitly tell the width and height of a chart
+            width: null,
+            height: null
           },
           title: {
             text: '',
@@ -1296,7 +1305,7 @@ angular.module('geiaFitApp')
             column: {
               stacking: 'normal',
               dataLabels: {
-                enabled: true,
+                enabled: false,
                 color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
               }
             }
@@ -1701,8 +1710,9 @@ angular.module('geiaFitApp')
   }])
 
 .controller('MessageCtrl', function($scope, $state, $http, $ionicPopup, ChatApp,$timeout,$stateParams,$rootScope,
-AppService,$ionicScrollDelegate) {
-   var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
+AppService,$ionicScrollDelegate)
+ {
+  var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
   var uid = $rootScope.loggedInUserUid;
    $scope.userImage="img/profile_icon.png";
    $scope.toUserImage="img/profile_icon.png";

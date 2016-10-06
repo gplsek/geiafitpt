@@ -16,6 +16,9 @@
 		302D95F114D2391D003F00A1 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 302D95EF14D2391D003F00A1 /* MainViewController.m */; };
 		302D95F214D2391D003F00A1 /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 302D95F014D2391D003F00A1 /* MainViewController.xib */; };
 		4423A69EB98747059BD4949E /* CDVSplashScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F451E5DD2CA47A6B17ADF57 /* CDVSplashScreen.m */; };
+		4B7FE40D1DA67F5B003AC931 /* iTunesArtwork@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4B7FE40A1DA67F5B003AC931 /* iTunesArtwork@1x.png */; };
+		4B7FE40E1DA67F5B003AC931 /* iTunesArtwork@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4B7FE40B1DA67F5B003AC931 /* iTunesArtwork@2x.png */; };
+		4B7FE40F1DA67F5B003AC931 /* iTunesArtwork@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4B7FE40C1DA67F5B003AC931 /* iTunesArtwork@3x.png */; };
 		8DB35856B382466AB3FD02FA /* CDVStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A4266934A3C418295E20BB7 /* CDVStatusBar.m */; };
 		D1AE42A37EF84C2C9831D8D0 /* CDVViewController+SplashScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E4852B859814EA7AB1B349D /* CDVViewController+SplashScreen.m */; };
 		DA9134065EB44FBFA206FEF0 /* IonicKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D8345D49234DF3BF548ABD /* IonicKeyboard.m */; };
@@ -56,6 +59,9 @@
 		3047A5111AB8059700498E2A /* build.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = build.xcconfig; path = cordova/build.xcconfig; sourceTree = SOURCE_ROOT; };
 		32CA4F630368D1EE00C91783 /* geiafit-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "geiafit-Prefix.pch"; sourceTree = "<group>"; };
 		3E4852B859814EA7AB1B349D /* CDVViewController+SplashScreen.m */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.objc; name = "CDVViewController+SplashScreen.m"; path = "cordova-plugin-splashscreen/CDVViewController+SplashScreen.m"; sourceTree = "<group>"; };
+		4B7FE40A1DA67F5B003AC931 /* iTunesArtwork@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iTunesArtwork@1x.png"; path = "geiafit/Images.xcassets/iTunesArtwork@1x.png"; sourceTree = SOURCE_ROOT; };
+		4B7FE40B1DA67F5B003AC931 /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iTunesArtwork@2x.png"; path = "geiafit/Images.xcassets/iTunesArtwork@2x.png"; sourceTree = SOURCE_ROOT; };
+		4B7FE40C1DA67F5B003AC931 /* iTunesArtwork@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iTunesArtwork@3x.png"; path = "geiafit/Images.xcassets/iTunesArtwork@3x.png"; sourceTree = SOURCE_ROOT; };
 		6770B3086872423F9457AE60 /* CDVStatusBar.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = CDVStatusBar.h; path = "cordova-plugin-statusbar/CDVStatusBar.h"; sourceTree = "<group>"; };
 		86CB19C02A1C4A279DB89D19 /* CDVDevice.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = CDVDevice.h; path = "cordova-plugin-device/CDVDevice.h"; sourceTree = "<group>"; };
 		8A4266934A3C418295E20BB7 /* CDVStatusBar.m */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.objc; name = CDVStatusBar.m; path = "cordova-plugin-statusbar/CDVStatusBar.m"; sourceTree = "<group>"; };
@@ -136,6 +142,9 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4B7FE40A1DA67F5B003AC931 /* iTunesArtwork@1x.png */,
+				4B7FE40B1DA67F5B003AC931 /* iTunesArtwork@2x.png */,
+				4B7FE40C1DA67F5B003AC931 /* iTunesArtwork@3x.png */,
 				0207DA571B56EA530066E2B4 /* Images.xcassets */,
 				3047A50E1AB8057F00498E2A /* config */,
 				8D1107310486CEB800E47090 /* geiafit-Info.plist */,
@@ -271,7 +280,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				302D95F214D2391D003F00A1 /* MainViewController.xib in Resources */,
+				4B7FE40F1DA67F5B003AC931 /* iTunesArtwork@3x.png in Resources */,
+				4B7FE40D1DA67F5B003AC931 /* iTunesArtwork@1x.png in Resources */,
 				0207DA581B56EA530066E2B4 /* Images.xcassets in Resources */,
+				4B7FE40E1DA67F5B003AC931 /* iTunesArtwork@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,9 +353,11 @@
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "geiafit/geiafit-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = biz.wellnesslink.GeiaFitPtApp;
 				PRODUCT_NAME = geiafit;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -363,8 +377,10 @@
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "geiafit/geiafit-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				PRODUCT_BUNDLE_IDENTIFIER = biz.wellnesslink.GeiaFitPtApp;
 				PRODUCT_NAME = geiafit;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

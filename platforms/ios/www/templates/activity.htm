@@ -47,8 +47,8 @@
             <div ng-show="DayView">
                 <div class="group marginT30 totalActivity">
                     <div class="col-xs-6">
-                        <highchart id="chart1" config="chartConfig"></highchart>
-
+                        <highchart id="container1" config="chartConfig"></highchart>
+                        <div class="text-center chartbottomtitle">Total Exercise<br>16/20</div>
                         <!--<svg style="margin-left: 22.33%;">
 						<g>
 							
@@ -60,8 +60,8 @@
 					</svg>-->
                     </div>
                     <div class="col-xs-6">
-                        <highchart id="chart2" config="chartConfig1"></highchart>
-
+                        <highchart id="container1" config="chartConfig1"></highchart>
+                        <div class="text-center chartbottomtitle">Total Exercise<br>16/20</div>
                         <!--<svg style="margin-left: 5.33%;">
                         <g>
                             <circle class="circle-bg" cx="80" cy="80" r="60"></circle>
@@ -72,9 +72,21 @@
 
                 </div>
                 <br>
-                <div class="group marginT30 totalActivity">
+                <div class="group  totalActivity">
                     <div class="col-xs-4">
-                        <highchart id="chart3" config="chartConfig2"></highchart>
+                        <highchart id="container1" config="chartConfig2"></highchart>
+                        <div class="text-center chartbottomtitle small">Light<br><b>16/20 min</b></div>
+                        <!--<svg>
+                        <g>
+                            <circle class="circle-bg" cx="75" cy="75" r="60"></circle>
+                            <circle cx="75" cy="75" r="50"></circle>
+
+                        </g>
+                    </svg>-->
+                    </div>
+                    <div class="col-xs-4">
+                        <highchart id="container1" config="chartConfig3"></highchart>
+                         <div class="text-center chartbottomtitle small">Moderate<br><b>16/20 min</b></div>
 
                         <!--<svg>
                         <g>
@@ -85,19 +97,8 @@
                     </svg>-->
                     </div>
                     <div class="col-xs-4">
-                        <highchart id="chart4" config="chartConfig3"></highchart>
-
-                        <!--<svg>
-                        <g>
-                            <circle class="circle-bg" cx="75" cy="75" r="60"></circle>
-                            <circle cx="75" cy="75" r="50"></circle>
-
-                        </g>
-                    </svg>-->
-                    </div>
-                    <div class="col-xs-4">
-                        <highchart id="chart5" config="chartConfig4"></highchart>
-
+                        <highchart id="container1" config="chartConfig4"></highchart>
+                         <div class="text-center chartbottomtitle small">Vigorous<br><b>16/20 min</b></div>
                         <!--<svg>
                         <g>
                             <circle class="circle-bg" cx="75" cy="75" r="60"></circle>
@@ -121,7 +122,7 @@
                             </div>
                         </div>
                         <div class="chart_block">
-                            <highchart id="chart1" config="chartConfigWeekViewExercise"></highchart>
+                            <highchart id="container" config="chartConfigWeekViewExercise"></highchart>
                         </div>
                     </li>
                     <li>
@@ -141,51 +142,51 @@
                             </div>
                         </div>
                         <div class="chart_block">
-                            <highchart id="chart1" config="chartConfigWeekViewSteps"></highchart>
+                            <highchart id="container" config="chartConfigWeekViewSteps"></highchart>
                         </div>
                     </li>
                     <li>
                         <div class="title">
                             <div class="left_title">
-                                <img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt="">
+                                <div><img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt=""></div>
                                 <span> LIGHT </span> ACTIVITY </div>
                             <div class="right_title"></div>
                         </div>
                         <div class="chart_block">
-                            <highchart id="chart1" config="chartConfigWeekViewLow"></highchart>
+                            <highchart id="container" config="chartConfigWeekViewLow"></highchart>
                         </div>
                     </li>
                     <li>
                         <div class="title">
                             <div class="left_title">
-                                <img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt="">
+                                <div><img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt=""></div>
                                 <span> MODERATE </span> ACTIVITY</div>
                             <div class="right_title"></div>
                         </div>
                         <div class="chart_block">
-                            <highchart id="chart1" config="chartConfigWeekViewMid"></highchart>
+                            <highchart id="container" config="chartConfigWeekViewMid"></highchart>
                         </div>
                     </li>
                     <li>
                         <div class="title">
                             <div class="left_title">
-                                <img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt="">
+                               <div><img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt=""></div>
                                 <span> VIGOROUS </span> ACTIVITY</div>
                             <div class="right_title"></div>
                         </div>
                         <div class="chart_block">
-                            <highchart id="chart1" config="chartConfigWeekViewHigh"></highchart>
+                            <highchart id="container" config="chartConfigWeekViewHigh"></highchart>
                         </div>
                     </li>
                     <li>
                         <div class="title">
                             <div class="left_title">
-                                <img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt="">
+                                <div><img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt=""></div>
                                 <span> COMPLIANCE </span> SCORE</div>
                             <div class="right_title"></div>
                         </div>
                         <div class="chart_block">
-                            <highchart id="chart1" config="chartConfigWeekViewComp"></highchart>
+                            <highchart id="container" config="chartConfigWeekViewComp"></highchart>
                         </div>
                     </li>
 
@@ -206,7 +207,7 @@
                             </div>
                         </div>
                         <div class="chart_block">
-                            <highchart id="chart1" config="chartConfigMonthViewExercise"></highchart>
+                            <highchart id="container" config="chartConfigMonthViewExercise"></highchart>
                         </div>
                     </li>
                     <li>
@@ -226,51 +227,51 @@
                             </div>
                         </div>
                         <div class="chart_block">
-                            <highchart id="chart1" config="chartConfigMonthViewSteps"></highchart>
+                            <highchart id="container" config="chartConfigMonthViewSteps"></highchart>
                         </div>
                     </li>
                     <li>
                         <div class="title">
                             <div class="left_title">
-                                <img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt="">
+                                <div><img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt=""></div>
                                 <span> LIGHT </span> ACTIVITY </div>
                             <div class="right_title"></div>
                         </div>
                         <div class="chart_block">
-                            <highchart id="chart1" config="chartConfigMonthViewLow"></highchart>
+                            <highchart id="container" config="chartConfigMonthViewLow"></highchart>
                         </div>
                     </li>
                     <li>
                         <div class="title">
                             <div class="left_title">
-                                <img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt="">
+                                <div><img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt=""></div>
                                 <span> MODERATE </span> ACTIVITY</div>
                             <div class="right_title"></div>
                         </div>
                         <div class="chart_block">
-                            <highchart id="chart1" config="chartConfigMonthViewMid"></highchart>
+                            <highchart id="container" config="chartConfigMonthViewMid"></highchart>
                         </div>
                     </li>
                     <li>
                         <div class="title">
                             <div class="left_title">
-                                <img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt="">
+                               <div><img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt=""></div>
                                 <span> VIGOROUS </span> ACTIVITY</div>
                             <div class="right_title"></div>
                         </div>
                         <div class="chart_block">
-                            <highchart id="chart1" config="chartConfigMonthViewHigh"></highchart>
+                            <highchart id="container" config="chartConfigMonthViewHigh"></highchart>
                         </div>
                     </li>
                     <li>
                         <div class="title">
                             <div class="left_title">
-                                <img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt="">
+                                <div><img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt=""></div>
                                 <span> COMPLIANCE </span> SCORE</div>
                             <div class="right_title"></div>
                         </div>
                         <div class="chart_block">
-                            <highchart id="chart1" config="chartConfigMonthViewComp"></highchart>
+                            <highchart id="container" config="chartConfigMonthViewComp"></highchart>
                         </div>
                     </li>
 
