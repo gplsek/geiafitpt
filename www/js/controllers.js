@@ -1538,8 +1538,9 @@ angular.module('geiaFitApp')
     }
   }])
 
-.controller('MessageCtrl', function($scope, $state, $http, $ionicPopup, ChatApp,$timeout,$stateParams,$rootScope,AppService) {
-  
+.controller('MessageCtrl', function($scope, $state, $http, $ionicPopup, ChatApp,$timeout,$stateParams,$rootScope,
+AppService,$ionicScrollDelegate) {
+   var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
   var uid = $rootScope.loggedInUserUid;
    $scope.userImage="img/profile_icon.png";
    $scope.toUserImage="img/profile_icon.png";
@@ -1607,11 +1608,35 @@ angular.module('geiaFitApp')
    // alert("Sendmessage"+$scope.input.message);
     var data ={ 
     "message": $scope.input.message,
-    "ptid":"1"
+    "ptid":"1" //$stateParams.uid
     };
   
   ChatApp.sendPatientMessage(data,$stateParams.uid).then(function(success){
-         alert("success"+JSON.stringify(success));
+       //  alert("success"+JSON.stringify(success));
+var message ={
+"message_id": success.message_id,
+"uid1": $stateParams.uid,
+"uid2": uid,
+"message":  $scope.input.message,
+"timestamp": success.timestamp
+
+};
+ keepKeyboardOpen();
+$scope.input.message = '';
+$scope.messages.push(message);
+
+ $timeout(function() {
+        keepKeyboardOpen();
+        viewScroll.scrollBottom(true);
+      }, 0);
+
+  $timeout(function() {
+     //   $scope.messages.push(MockService.getMockMessage());
+        keepKeyboardOpen();
+        viewScroll.scrollBottom(true);
+      }, 2000);
+
+
    },function(error){
 
    })
@@ -1627,7 +1652,7 @@ angular.module('geiaFitApp')
      //   alert(JSON.stringify(data));
 
         $timeout(function() {
-        //  viewScroll.scrollBottom();
+          viewScroll.scrollBottom();
         }, 0);
       });
     }
@@ -1637,7 +1662,27 @@ angular.module('geiaFitApp')
       $ionicHistory.goBack();
     }
 
+      
+  function keepKeyboardOpen() {
+      console.log('keepKeyboardOpen');
+      // txtInput.one('blur', function() {
+      //   console.log('textarea blur, focus back on it');
+      //   txtInput[0].focus();
+      // });
+    }
+
 })
+
+// fitlers
+.filter('nl2br', ['$filter',
+  function($filter) {
+    return function(data) {
+      if (!data) return data;
+      return data.replace(/\n\r?/g, '<br />');
+    };
+  }
+])
+
   .controller('VitalsCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', '$ionicHistory', function ($scope, $state, $stateParams, sortedByList, $ionicHistory) {
     $scope.sortedByList = sortedByList;
     $scope.sortedBy = $scope.sortedByList[0].id;

@@ -8,30 +8,31 @@
         </ion-nav-buttons>
     </ion-nav-bar>
  
-    <!--<div class="loader-center" ng-if="!doneLoading">
+    <div class="loader-center" ng-if="!doneLoading">
             <div class="loader">
               <i class="icon ion-loading-c"></i>
             </div>
-    </div>-->
+    </div>
       
     <!--<ion-content has-bouncing="true" class="has-header has-footer" delegate-handle="userMessageScroll">-->
   
-    <ion-content>
+    <ion-content  delegate-handle="userMessageScroll">
               <div ng-repeat="message in messages" class="message-wrapper"
                   on-hold="onMessageHold($event, $index, message)">
       
                   <div ng-if="user._id !== message.uid2">
                       
+                     <!--<span align="center">{{message.timestamp |  date:'MMM d, y h:mm:ss a'}}</span>-->
                      
                         <div>
                              <img ng-click="viewProfile(message)" class="profile-pic left" 
-                          ng-src="{{toUser.pic}}" onerror="onProfilePicError(this)" />
-                            <span class="username">{{toUser.username}}</span> 
+                          ng-src="{{user.pic}}" onerror="onProfilePicError(this)" />
+                            <span class="username">{{user.username}}</span> 
                         </div>
       
                       <div class="chat-bubble left">
       
-                          <div class="message" ng-bind-html="message.message " autolinker>
+                          <div class="message" ng-bind-html="message.message | nl2br" autolinker>
                           </div>
       
                           <div class="message-detail">
@@ -45,17 +46,16 @@
       
                   <div ng-if="user._id === message.uid2">
                     
-                     
-
+                     <!--<span align="center">{{message.timestamp |  date:'MMM d, y h:mm:ss a'}}</span>-->
                          <div>
                              <img ng-click="viewProfile(message)" class="profile-pic right" 
-                          ng-src="{{user.pic}}" onerror="onProfilePicError(this)" />
-                            <span class="username right">{{user.username}}</span> 
+                          ng-src="{{toUser.pic}}" onerror="onProfilePicError(this)" />
+                            <span class="username_right">{{toUser.username}}</span> 
                         </div>
       
                     
                       <div class="chat-bubble right">
-                          <div class="message" ng-bind-html="message.message " autolinker>
+                          <div class="message" ng-bind-html="message.message | nl2br " autolinker>
                           </div>
       
                           <div class="message-detail">

@@ -202,11 +202,14 @@ a.autolinker {
 {
 position: absolute;
 top: 50px;
+left: 20px
 
 }
 
-.username.right
+.username_right
 {
+position: absolute;
+top: 50px;
 right: 10px;
 }
 

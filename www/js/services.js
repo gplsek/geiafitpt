@@ -294,7 +294,7 @@ console.log("--- end loadUserCredentials");
    }
 
    var sendPatientMessage = function(message,userId){
-     alert("sendPatientMessage");
+   //  alert("sendPatientMessage");
 
     var messageData = $http({
       headers: {
@@ -305,7 +305,7 @@ console.log("--- end loadUserCredentials");
         url: ApiEndpoint.url + "/messages/"+userId,
         data: message,
       }).then(function(response){
-        alert("SERVICE SUCCESS"+JSON.stringify(response.data));
+    //    alert("SERVICE SUCCESS"+JSON.stringify(response.data));
          return response.data;
       }, function(err){
           alert("SERVICE ERROR"+JSON.stringify(err.data));
