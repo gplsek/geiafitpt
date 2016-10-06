@@ -258,7 +258,7 @@ console.log("--- end loadUserCredentials");
  .service('MyAccount',['$rootScope','$http','ApiEndpoint',function($rootScope,$http,ApiEndpoint){
 
    var getAdminProfile = function(){
-
+ 
       var profileData = $http({
         method: "GET", 
         url: ApiEndpoint.url + "/profile/"+$rootScope.loggedInUserUid
@@ -268,11 +268,24 @@ console.log("--- end loadUserCredentials");
           console.log(err);
       });
       return profileData;
+   }
 
+ var uploadProfileImage = function(params){
+   var ProfileImage = $http({
+        method: "POST", 
+        url: ApiEndpoint.url + "/profile/profileimage/"+$rootScope.loggedInUserUid,
+        data:imageData
+      }).then(function(response){
+         return response.data;
+      }, function(err){
+          console.log(err);
+      });
+      return ProfileImage;
    }
 
    return{
-     myAccountDetails : getAdminProfile
+     myAccountDetails : getAdminProfile,
+     uploadImage : uploadProfileImage
    }
 
  }])
