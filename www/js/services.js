@@ -271,10 +271,11 @@ console.log("--- end loadUserCredentials");
    }
 
  var uploadProfileImage = function(params){
+   console.log(params)
    var ProfileImage = $http({
         method: "POST", 
         url: ApiEndpoint.url + "/profile/profileimage/"+$rootScope.loggedInUserUid,
-        data:imageData
+        data:params
       }).then(function(response){
          return response.data;
       }, function(err){
@@ -307,6 +308,7 @@ console.log("--- end loadUserCredentials");
    }
 
    var sendPatientMessage = function(message,userId){
+     alert("sendPatientMessage");
 
     var messageData = $http({
       headers: {
@@ -317,6 +319,7 @@ console.log("--- end loadUserCredentials");
         url: ApiEndpoint.url + "/messages/"+userId,
         data: message,
       }).then(function(response){
+        alert("SERVICE SUCCESS"+JSON.stringify(response.data));
          return response.data;
       }, function(err){
           alert("SERVICE ERROR"+JSON.stringify(err.data));
