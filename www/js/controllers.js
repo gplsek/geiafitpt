@@ -53,8 +53,8 @@ angular.module('geiaFitApp')
   .controller('LoginCtrl', ['$scope', '$state', '$ionicPopup', 'AuthService', 'Flash', '$rootScope', function ($scope, $state, $ionicPopup, AuthService, Flash, $rootScope) {
 
   $scope.data = {
-    email: "admin@geiafit.com",
-    password: "FitGeia1!"
+    email: "",
+    password: ""
   };
 
     function checkEmptyFields() {
