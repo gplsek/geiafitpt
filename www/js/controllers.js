@@ -895,6 +895,108 @@ angular.module('geiaFitApp')
       }
     }
 
+    getMonthDates = function () {
+      var endDate = new Date();
+      var startDate = new Date(endDate.getFullYear(), endDate.getMonth()-1, endDate.getDate(),
+        endDate.getHours(), endDate.getMinutes(), endDate.getSeconds(), endDate.getMilliseconds())
+      var dateList = [];
+      var date = startDate;
+      while (date < endDate) {
+        dateList.push(date)
+        var tempDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1,
+          date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds())
+        date = tempDate;
+      }
+      return dateList;
+    }
+
+    chartConfigForMonth = function () {
+      var dataMonthExerciseGoal = [];
+      var dataMonthStepsGoal = [];
+      var dataMonthLightGoal = [];
+      var dataMonthModerateGoal = [];
+      var dataMonthVigorousGoal = [];
+      var dataMonthComplianceGoal = [];
+
+      var dataMonthExercise = [];
+      var dataMonthSteps = [];
+      var dataMonthLight = [];
+      var dataMonthModerate = [];
+      var dataMonthVigorous = [];
+      var dataMonthCompliance = [];
+
+      var dates = getMonthDates();
+
+      for (var d in dates) {
+        var total_exercise_goal = 0
+        var total_exercise = 0
+        var total_steps_goal = 0
+        var total_steps = 0
+        var time_active_low_goal = 0
+        var time_active_low = 0
+        var time_active_medium_goal = 0
+        var time_active_medium = 0
+        var time_active_high_goal = 0
+        var time_active_high = 0
+        var total_compliance_goal = 0 //TO DO
+        var total_compliance = 0 //TO DO 
+        for (var x in activityDataForMonth) {
+          var tempDate = utilityService.unixTimeToDate(activityDataForMonth[x].date);
+
+          //console.log(tempDate)
+          //console.log(dates[d])
+          if (tempDate.getFullYear() === dates[d].getFullYear() && 
+              tempDate.getMonth() === dates[d].getMonth() &&
+              tempDate.getDate() === dates[d].getDate()) {
+            var temp = activityDataForMonth[x];
+
+            total_exercise_goal = parseInt(temp.total_exercise_goal)
+            total_exercise = parseInt(temp.total_exercise)
+
+            total_steps_goal = parseInt(temp.total_steps_goal)
+            total_steps = parseInt(temp.total_steps)
+
+            time_active_low_goal = parseInt(temp.time_active_low_goal)
+            time_active_low = parseInt(temp.time_active_low)
+
+            time_active_medium_goal = parseInt(temp.time_active_medium_goal)
+            time_active_medium = parseInt(temp.time_active_medium)
+
+            time_active_high_goal = parseInt(temp.time_active_high_goal)
+            time_active_high = parseInt(temp.time_active_high)
+
+            total_compliance_goal = parseInt(temp.total_exercise_goal) //TO DO
+            total_compliance = parseInt(temp.total_exercise)  //TO DO
+
+            break;
+          }
+
+
+        }
+        dataMonthExerciseGoal.push(total_exercise_goal);
+        dataMonthStepsGoal.push(total_steps_goal);
+        dataMonthLightGoal.push(time_active_low_goal);
+        dataMonthModerateGoal.push(time_active_medium_goal);
+        dataMonthVigorousGoal.push(time_active_high_goal);
+        dataMonthComplianceGoal.push(total_compliance_goal);
+
+        dataMonthExercise.push(total_exercise);
+        dataMonthSteps.push(total_steps);
+        dataMonthLight.push(time_active_low);
+        dataMonthModerate.push(time_active_medium);
+        dataMonthVigorous.push(time_active_high);
+        dataMonthCompliance.push(total_compliance);
+      }
+
+      $scope.chartConfigMonthViewExercise = getChartConfigForMonth(dataMonthExerciseGoal, dataMonthExercise)
+      $scope.chartConfigMonthViewSteps = getChartConfigForMonth(dataMonthStepsGoal, dataMonthSteps)
+      $scope.chartConfigMonthViewLow = getChartConfigForMonth(dataMonthLightGoal, dataMonthLight)
+      $scope.chartConfigMonthViewMid = getChartConfigForMonth(dataMonthModerateGoal, dataMonthModerate)
+      $scope.chartConfigMonthViewHigh = getChartConfigForMonth(dataMonthVigorousGoal, dataMonthVigorous)
+      $scope.chartConfigMonthViewComp = getChartConfigForMonth(dataMonthComplianceGoal, dataMonthCompliance)
+
+    }
+
     init = function () {
       AppService.profile($stateParams.uid).then(function (success) {
         var imageUrl;
@@ -965,6 +1067,7 @@ angular.module('geiaFitApp')
           $scope.MonthView = true;
           $scope.DayView = false;
           $scope.WeekView = false;
+          chartConfigForMonth();
           break;
         default:
           $scope.selectedView = 'day';
@@ -1091,22 +1194,28 @@ angular.module('geiaFitApp')
 
 
     function getChartConfigForWeek(dataGoal, dataAchived) {
+      var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+      ];
+
       var endDate = new Date();
       var startDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() - 7,
         endDate.getHours(), endDate.getMinutes(), endDate.getSeconds(), endDate.getMilliseconds())
       var dateList = [];
       var date = startDate;
+      var i = 0;
       while (date < endDate) {
-        dateList.push(date.getDate())
+        if(i == 0){
+          dateList.push(monthNames[date.getMonth()]+" "+date.getDate())
+          i++;
+        }
+        else{
+          dateList.push(date.getDate())
+        }
         var tempDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1,
           date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds())
         date = tempDate;
       }
-      //console.log(endDate)
-      //console.log(startDate)
-      //console.log(dateList)
-      //console.log(dataGoal)
-      //console.log(dataAchived)
 
       var chartConfig = {
         options: {
@@ -1115,7 +1224,7 @@ angular.module('geiaFitApp')
             backgroundColor: 'transparent',
           },
           title: {
-            text: 'Week view',
+            text: '',
           },
           plotOptions: {
             column: {
@@ -1126,44 +1235,32 @@ angular.module('geiaFitApp')
               }
             }
           },
+          //Hide highcharts link from bottom
+          credits: {
+            enabled: false
+          },
+          //Make the legend invisible.[footer series labels]
+          legend: {
+            x: 9999, 
+            y: 9999
+          },
         },
+        //X axis data
         xAxis: {
-          categories: [dateList[0], dateList[1], dateList[2], dateList[3], dateList[4], dateList[5], dateList[6]],
+          categories: dateList,
         },
         yAxis: {
           min: 0,
           title: {
-            text: 'Total '
+            text: ''
           },
-          /*stackLabels: {
-              enabled: true,
-              style: {
-                  fontWeight: 'bold',
-                  color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-              }
-          }*/
         },
-        /* legend: {
-             align: 'right',
-             x: -30,
-             verticalAlign: 'top',
-             y: 25,
-             floating: true,
-             backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
-             borderColor: '#CCC',
-             borderWidth: 1,
-             shadow: false
-         },*/
-        /* tooltip: {
-             headerFormat: '<b>{point.x}</b><br/>',
-             pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
-         },*/
         series: [{
-          data: [dataGoal[0], dataGoal[1], dataGoal[2], dataGoal[3],dataGoal[4],dataGoal[5],dataGoal[6]]
-          //data: [2,3,4,5]
+          data: dataGoal,
+          color: "yellow",
         }, {
-            data: [dataAchived[0], dataAchived[1], dataAchived[2], dataAchived[3],dataAchived[4],dataAchived[5],dataAchived[6]]
-            //data :[4,7,2,4]
+            data: dataAchived,
+            color: "blue",
           }],
         func: function (chart) {
         }
@@ -1172,6 +1269,71 @@ angular.module('geiaFitApp')
       return chartConfig;
     }
 
+
+    function getChartConfigForMonth(dataGoal, dataAchived) {
+      var endDate = new Date();
+      var startDate = new Date(endDate.getFullYear(), endDate.getMonth()-1, endDate.getDate(),
+        endDate.getHours(), endDate.getMinutes(), endDate.getSeconds(), endDate.getMilliseconds())
+      var dateList = [];
+      var date = startDate;
+      while (date <= endDate) {
+        dateList.push(date.getDate())
+        var tempDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1,
+          date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds())
+        date = tempDate;
+      }
+
+      var chartConfig = {
+        options: {
+          chart: {
+            type: 'column',
+            backgroundColor: 'transparent',
+          },
+          title: {
+            text: '',
+          },
+          plotOptions: {
+            column: {
+              stacking: 'normal',
+              dataLabels: {
+                enabled: true,
+                color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+              }
+            }
+          },
+          //Hide highcharts link from bottom
+          credits: {
+            enabled: false
+          },
+          //Make the legend invisible.[footer series labels]
+          legend: {
+            x: 9999,
+            y: 9999
+          },
+        },
+        //X axis data
+        xAxis: {
+          categories: dateList,
+        },
+        yAxis: {
+          min: 0,
+          title: {
+            text: ''
+          },
+        },
+        series: [{
+          data: dataGoal,
+          color: "yellow",
+        }, {
+            data: dataAchived,
+            color: "blue",
+          }],
+        func: function (chart) {
+        }
+
+      };
+      return chartConfig;
+    }
 
 
 
