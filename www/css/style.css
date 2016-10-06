@@ -280,3 +280,12 @@ background: #ccc;
 .bar_chart_list li .title .left_title .twolinestitle { float: left; line-height: 18px; padding: 2px 0}
 .bar_chart_list li .title .right_title img{ float: right; max-width: 40px; margin-right: 5px;}
 .bar_chart_list li .title .right_title .twolinestitle { float: right; line-height: 18px; padding: 2px 0}
+
+.chartbottomtitle{}
+.chartbottomtitle.small{ color: #999999}
+.chartbottomtitle.small b{ font-weight: 600; color: #ffffff}
+
+/*size of chart*/
+#container {
+    width:100%;
+}
