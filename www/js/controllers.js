@@ -447,10 +447,10 @@ angular.module('geiaFitApp')
         console.log(webExerciseList)
         
         var myExercisePages = Math.ceil(myExerciseList.length / pageSize);
-        var webExercisePages = Math.ceil(webExerciseList.length  / pageSize);
+        $scope.webExercisePages = Math.ceil(webExerciseList.length  / pageSize);
 
         console.log(myExerciseList.length +""+ myExercisePages);
-        console.log(webExerciseList.length +""+ webExercisePages);
+        console.log(webExerciseList.length +""+ $scope.webExercisePages);
 
         for(i=0;i<myExercisePages;i++){
             var page = {
@@ -460,7 +460,7 @@ angular.module('geiaFitApp')
               $scope.pages.push(page);
         }
 
-        for(i=0;i<webExercisePages;i++){
+        for(i=0;i<$scope.webExercisePages;i++){
             var page = {
                 id : i+1,
                 title : "page "+(i+1)
@@ -602,11 +602,18 @@ angular.module('geiaFitApp')
 
     $scope.selectedPage = $scope.pages[0].id;
 
-    $scope.showNext = function (pageNo) {
+    $scope.showNext = function (pageNo,flag) {
       var list = angular.copy($scope.tempWebExList);
       var offset = (pageNo - 1) * pageSize;
       $scope.webExercise = list.splice(offset, pageSize);
-      $scope.selectedPage = $scope.webExPages[pageNo - 1].id;
+      if(flag==1){
+        $scope.selectedPage = $scope.webExPages[pageNo - 1].id;
+      }else{
+        $scope.selectedPage = $scope.selectedPage + 1; 
+      }
+      
+      console.log($scope.selectedPage)
+      console.log($scope.webExercisePages)
     }
     
 
@@ -1027,6 +1034,7 @@ angular.module('geiaFitApp')
     init = function () {
       AppService.profile($stateParams.uid).then(function (success) {
         var imageUrl;
+        var gender;
         patientData = success;
 
         var age = "";
@@ -1045,10 +1053,19 @@ angular.module('geiaFitApp')
           imageUrl = "img/profile_icon.png";
         }
 
+        if (patientData.gender == '2'){
+          gender = "male";
+        }else
+        if(patientData.gender == '1'){
+          gender = "female";
+        }else{
+          gender = "N/A";
+        }
+
         $scope.patientProfile = {
           name: $stateParams.name,
           age: age,
-          gender: patientData.gender,
+          gender: gender,
           email: patientData.email,
           url: imageUrl
         }
