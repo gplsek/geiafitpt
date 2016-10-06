@@ -26,28 +26,41 @@
        
     </div>
     <ul class="patientList">
-      <li ng-repeat="item in filteredList = (patientList | filter: searchPatient | orderBy: sortType:true)" ui-sref="activity(
-        {
-          name: item.fname + ' ' +  item.lname,
-          age: 25,
-          gender: 'female',
-          email: 'lisawashington@gmail.com',
-          profile_url: item.image_uri,
-          low: item.low,
-          medium: item.medium,
-          high: item.high
-        }
-        )">
+      <li ng-repeat="item in filteredList = (patientList | filter: searchPatient | orderBy: sortType : sortOrder)" >
         <div class="group">
           <div class="col-xs-1">
             <span class="activityDot" ng-show="isActiveToday(item.vitals_entered) || item.unread_messages > 0"></span>
             <span class="paddedEle" ng-hide="isActiveToday(item.vitals_entered) || item.unread_messages > 0"></span>
           </div>
-          <div class="col-xs-5">{{item.fname + ' ' +  item.lname}}</div>
+          <div class="col-xs-5" ui-sref="activity(
+        {
+          uid: item.uid,
+          name: item.fname + ' ' +  item.lname,
+          age: '',
+          gender: '',
+          email: '',
+          profile_url: '',
+          low: item.low,
+          medium: item.medium,
+          high: item.high
+        }
+        )">{{item.fname + ' ' +  item.lname}}</div>
           <div class="col-xs-4">
             <meter value="{{item.emotion}}" min="0" max="100" low="25" high="75" optimum="80"></meter>
           </div>
-          <div class="col-xs-2 text-center">
+          <div class="col-xs-2 text-center"  ui-sref="messages(
+        {
+          uid: item.uid,
+          name: item.fname + ' ' +  item.lname,
+          age: '',
+          gender: '',
+          email: '',
+          profile_url: '',
+          low: item.low,
+          medium: item.medium,
+          high: item.high
+        }
+        )" >
             <div class="unread">
               <span class="pos-rel icon ion-ios-email-outline" ng-class="{'shiftLeft': item.unread_messages == 0}"></span>
               <div class="unreadCount" ng-if="item.unread_messages > 0">

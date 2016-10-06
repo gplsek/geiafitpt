@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('geiaFitApp', ['ionic', 'rzModule','ngCordova'])
+angular.module('geiaFitApp', ['ionic', 'rzModule','ngCordova','highcharts-ng'])
 // .constant('ApiEndpoint', {
 //   url: 'http://192.168.2.196:8100/api'
 // })
@@ -26,11 +26,12 @@ angular.module('geiaFitApp', ['ionic', 'rzModule','ngCordova'])
 
     $rootScope.Regex = {
       email:/^[a-zA-Z0-9][a-zA-Z0-9_\-\+]*(?:[\.][a-zA-Z0-9_\-\+]+)*\@(?:[a-zA-Z0-9_\-\+]+\.)+[a-zA-Z0-9_\-\+]*[a-zA-Z0-9]$/,
+      //email:/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
     }
     $rootScope.flash = {
       show: false
     };
-
+    $rootScope.loggedInUserUid = '';
   });
 })
 // .run(function($httpBackend){
@@ -48,6 +49,7 @@ angular.module('geiaFitApp', ['ionic', 'rzModule','ngCordova'])
   $ionicConfigProvider.views.maxCache(0);
   // $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
   var patientParams = {
+      uid: null,
       name: null,
       age: null,
       gender: null,
@@ -215,7 +217,10 @@ templateUrl:'templates/addSnapshot.htm'
   })*/
   .state('messages', {
     url: '/messages', 
-    template: '<h1 class="comingSoon">Coming soon</h1>'
+    params: patientParams,
+    templateUrl: 'templates/message.htm',
+    controller: 'MessageCtrl'
+   
   })
   
    .state('vitals', {
@@ -262,11 +267,11 @@ templateUrl:'templates/addSnapshot.htm'
     url: 'myAccount', 
     templateUrl: "templates/myAccount.htm",
     controller: "MyAccountCtrl",
-    resolve: {
-      profile: ['$stateParams', 'AppService', function($stateParams, AppService){
-        return AppService.profile();
-      }]
-    }
+    // resolve: {
+    //   profile: ['$stateParams', 'AppService', function($stateParams, AppService){
+    //     return AppService.profile($rootScope.loggedInUserUid);
+    //   }]
+    // }
   });
   // .state('main.admin', {
   //   url: 'main/admin',
@@ -282,7 +287,7 @@ templateUrl:'templates/addSnapshot.htm'
   
   $urlRouterProvider.otherwise(function ($injector, $location) {
     var $state = $injector.get("$state");
-    $state.go("main.dash");
+    $state.go("login");
   });
 })
 .run(function ($rootScope, $state, AuthService, AUTH_EVENTS) {
