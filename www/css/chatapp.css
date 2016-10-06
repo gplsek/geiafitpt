@@ -8,7 +8,12 @@ body {
 /* it from getting too large also */
 .bar-footer {
   overflow: visible !important;
+  background: #000000 !important;
+  padding: 10px;
+  height: 50px;
+  border: none;
 }
+.bar-footer .item-input-wrapper{background:transparent;border: 0;}
 
 .bar-footer textarea {
   resize: none;
@@ -39,16 +44,16 @@ img.profile-pic {
   height: 40px;
   border-radius: 50%;
   position: absolute;
- /* bottom: 10px;*/
- top: 10px;
+  /* bottom: 10px;*/
+  top: 32px;
 }
 
 img.profile-pic.left {
-  left: 10px;
+  left: 40px;
 }
 
 img.profile-pic.right {
-  right: 10px;
+  right: 40px;
 }
 
 .ion-email {
@@ -68,10 +73,15 @@ img.profile-pic.right {
 
 .bar.item-input-inset .item-input-wrapper input {
   width: 100% !important;
+  border: 1px solid #666;
+  height: 34px !important;
+  line-height: 36px !important;
+  border-radius: 4px;
 }
 
 .message-wrapper {
   position: relative;
+  padding-bottom: 20px;
 }
 
 .message-wrapper:last-child {
@@ -90,37 +100,41 @@ img.profile-pic.right {
 .chat-bubble:before {
   content: "\00a0";
   display: block;
-  height: 16px;
-  width: 9px;
+  height: 20px;
+  width: 20px;
+  border-top: 0px solid transparent;
+  border-bottom: 20px solid transparent;
+  border-right: 20px solid #000000;
+  left: -20px;
   position: absolute;
-  bottom: -7.5px;
+  top: 7px;
 }
 
 .chat-bubble.left {
   /*background-color: #e6e5eb;*/
-  background-color: #292e33;
+  background-color: #000000;
   float: left;
-  margin-left: 55px;
+  margin-left: 120px;
 }
 
 .chat-bubble.left:before {
-  /*background-color: #e6e5eb;*/
-   background-color: #292e33;
-  left: 10px;
-  -webkit-transform: rotate(70deg) skew(5deg);
+  
 }
 
 .chat-bubble.right {
   background-color: #158ffe;
   color: #fff;
   float: right;
-  margin-right: 55px;
+  margin-right: 120px;
 }
 
 .chat-bubble.right:before {
-  background-color: #158ffe;
-  right: 10px;
-  -webkit-transform: rotate(118deg) skew(-5deg);
+  right: -20px;
+  border-top: 00px solid transparent;
+  border-bottom: 20px solid transparent;
+  border-right: 0px solid transparent;
+  border-left:20px solid #158ffe;
+  left: auto;
 }
 
 .chat-bubble.right a.autolinker {
@@ -199,28 +213,43 @@ a.autolinker {
 }
 
 .username
-{
-position: absolute;
-top: 50px;
-left: 20px
-
-}
+{position: absolute;top: 80px;left: 0px;width: 120px;text-align: center;}
 
 .username_right
-{
-position: absolute;
-top: 50px;
-right: 10px;
-}
+{position: absolute;top: 80px;right: 0px;text-align: center;width: 120px;}
 
 .chat-btn
 {
   
-    background: #F8A938;
-    width: 20%;
-    margin: 0 auto;
-    border-radius: 22px;
-    /* margin-top: 80px; */
-    height: 35px;
-    border: 0;
+background: #F8A938;
+  
+width: 20%;
+  
+margin: 0 auto;
+  
+border-radius: 22px;
+  
+/* margin-top: 80px; */
+  
+height: 35px;
+  
+border: 0;
+  
+font-size: 16px;
+  
+color: #fff;
+  
+font-weight: 600;
+  
+text-align: center;
+  
+line-height: 35px;
+}
+.dateposted{
+    line-height: 20px;
+    font-size: 10px;
+    text-align: center;
+    width: 100%;
+    display: block;
+    color: #999;
 }

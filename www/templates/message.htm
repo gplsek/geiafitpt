@@ -22,7 +22,7 @@
       
                   <div ng-if="user._id !== message.uid2">
                       
-                     <!--<span align="center">{{message.timestamp |  date:'MMM d, y h:mm:ss a'}}</span>-->
+                     <span class="dateposted">{{message.timestamp * 1000 |  date:'MMM d, y h:mm:ss a'}}</span>
                      
                         <div>
                              <img ng-click="viewProfile(message)" class="profile-pic left" 
@@ -46,7 +46,7 @@
       
                   <div ng-if="user._id === message.uid2">
                     
-                     <!--<span align="center">{{message.timestamp |  date:'MMM d, y h:mm:ss a'}}</span>-->
+                     <span class="dateposted">{{message.timestamp * 1000 |  date:'EEE MMM d, y h:mm:ss a'}}</span>
                          <div>
                              <img ng-click="viewProfile(message)" class="profile-pic right" 
                           ng-src="{{toUser.pic}}" onerror="onProfilePicError(this)" />
@@ -88,7 +88,7 @@
                     </button>
                   </div>-->
                    <div class="chat-btn" ng-click="sendMessage()">
-		  		    <h3    style=" margin-left: 50px;">Send</h3>		  		
+		  		    Send		  		
 			        </div>
               </ion-footer-bar>
            </form>
