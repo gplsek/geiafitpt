@@ -1301,28 +1301,28 @@ angular.module('geiaFitApp')
             enabled: false
           },
           pane: {
-            startAngle: 0,
-            endAngle: 360,
-            size: '70%',
-            background: [{ // Track for Move
-              outerRadius: '112%',
-              innerRadius: '88%',
-              backgroundColor: "yellow",
-              borderWidth: 0
-            }]
+                  startAngle: 0,
+                  endAngle: 360,
+                  size: '70%',
+                  background: [{ // Track for Move
+                          outerRadius: '123%',
+                          innerRadius: '77%',
+                          backgroundColor: Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0.3).get(),
+                          borderWidth: 0
+                  }]
           },
           plotOptions: {
-            solidgauge: {
-              borderWidth: '7%',
-              dataLabels: {
-                enabled: true,
-                y: -20,
-                borderWidth: 0,
-                useHTML: true
-              },
-              linecap: 'round',
-              stickyTracking: false
-            }
+                  solidgauge: {
+                          borderWidth: '14%',
+                          dataLabels: {
+                                  enabled: true,
+                                  y: -20,
+                                  borderWidth: 0,
+                                  useHTML: true
+                          },
+                          linecap: 'round',
+                          stickyTracking: false
+                  }
           },
         },
         yAxis: {
@@ -1332,24 +1332,33 @@ angular.module('geiaFitApp')
             tickPositions: []
           },
         series: [{
-            name: 'Move',
-            borderColor: "green",
-            data: [{
-              color: "green",
-              radius: '100%',
-              innerRadius: '100%',
-              y: data
-            }],
-             dataLabels: {
-                format: '<div style="text-align:center"><span style="font-size:25px;color:' +
-                    ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'red') + '">{y}</span>' +
-                       '<span style="font-size:25px;color:red">%</span></div>'
-            }
-          }],
-        /*size: {
-          width: 200,
-          height: 180
-        },*/
+                    name: 'Move',
+                    borderColor: {
+                        linearGradient: [0, 0, 500, 500],
+                        stops: [
+                            [0, 'rgb(66, 153, 209)'],
+                            [1, 'rgb(31, 96, 164)']
+                        ]
+                    },
+                    data: [{
+                        color: {
+                            linearGradient: [0, 60, 60, 500],
+                            stops: [
+                                [0, 'rgb(66, 153, 209)'],
+                                [1, 'rgb(31, 96, 164)']
+                            ]
+                        },
+                        radius: '100%',
+                        innerRadius: '100%',
+                        y: data
+                    }],
+                    dataLabels: {
+                        format: '<div style="text-align:center"><span style="font-size:24px;font-weight:normal;color:' +
+                        ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'white') + '">{y}</span>' +
+                        '<span style="font-size:24px;color:white;font-weight:normal">%</span></div>'
+                    }
+                }],
+        
         func: function (chart) {
         }
       };
@@ -1424,12 +1433,13 @@ angular.module('geiaFitApp')
           },
         },
         series: [{
-          data: dataGoal,
-          color: "yellow",
+                data: dataGoal,
+                color: "#F3A81B",
+                borderColor: 'transparent'
         }, {
-            data: dataAchived,
-            color: "blue",
-          }],
+                        data: dataAchived,
+                        color: "#009CDB",
+                }],
         func: function (chart) {
         }
 
@@ -1482,12 +1492,13 @@ angular.module('geiaFitApp')
           },
         },
         series: [{
-          data: dataGoal,
-          color: "yellow",
+                data: dataGoal,
+                color: "#F3A81B",
+                borderColor: 'transparent'
         }, {
-            data: dataAchived,
-            color: "blue",
-          }],
+                        data: dataAchived,
+                        color: "#009CDB",
+                }],
         func: function (chart) {
         }
 
