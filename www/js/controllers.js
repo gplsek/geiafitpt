@@ -1,6 +1,6 @@
 angular.module('geiaFitApp')
 
-  .controller('AppCtrl', function ($scope, $state, $ionicPopup, AuthService, AUTH_EVENTS, $ionicHistory) {
+  .controller('AppCtrl','Flash', function ($scope, $state, $ionicPopup, AuthService, AUTH_EVENTS, $ionicHistory,Flash) {
     $scope.username = AuthService.username();
 
     $scope.$on(AUTH_EVENTS.notAuthorized, function (event) {
@@ -12,8 +12,12 @@ angular.module('geiaFitApp')
 
 
     $scope.logout = function () {
-      AuthService.logout();
-      $state.transitionTo('login', {}, { reload: true });
+      AuthService.logout().then(function () {
+         Flash.showFlash({ type: 'Logged out successfully', message: "Logged out successfully !" });
+        $state.transitionTo('login', {}, { reload: true });
+      }, function (err) {
+        Flash.showFlash({ type: 'error', message: "Logout Failed !" });
+      });
     };
 
 
