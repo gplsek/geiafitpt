@@ -172,6 +172,20 @@ console.log("--- end loadUserCredentials");
     return prom;
   }
 
+  var getVitals = function(uid){
+    console.log(uid)
+    var prom = $http({
+      method: "GET",
+      url: ApiEndpoint.url + '/characteristics/'+uid
+    }).then(function(response){
+        return response.data;
+    }, function(err){
+      console.log(err);
+    })
+    return prom;
+  }
+
+
   var getProfile = function(uid){
     var prom = $http({
       method: "GET",
@@ -246,6 +260,7 @@ console.log("--- end loadUserCredentials");
   return {
     patientsData: getPatientsData,
     getActivity:getActivity,
+    getVitals:getVitals,
     addPatient : addPatient,
     profile: getProfile,
     sortedByList: getSortedList,
