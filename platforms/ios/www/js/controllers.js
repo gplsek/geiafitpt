@@ -1,6 +1,6 @@
 angular.module('geiaFitApp')
 
-  .controller('AppCtrl', function ($scope, $state, $ionicPopup, AuthService, AUTH_EVENTS, $ionicHistory) {
+  .controller('AppCtrl', ['$scope', '$state', '$ionicPopup', 'AuthService', 'AUTH_EVENTS','Flash', '$ionicHistory', function ($scope, $state, $ionicPopup, AuthService, AUTH_EVENTS,Flash, $ionicHistory) {
     $scope.username = AuthService.username();
 
     $scope.$on(AUTH_EVENTS.notAuthorized, function (event) {
@@ -12,8 +12,14 @@ angular.module('geiaFitApp')
 
 
     $scope.logout = function () {
-      AuthService.logout();
-      $state.transitionTo('login', {}, { reload: true });
+      // AuthService.logout();
+      // AuthService.logout().then
+      AuthService.logout().then(function () {
+         Flash.showFlash({ type: 'Logged out successfully', message: "Logged out successfully !" });
+        $state.transitionTo('login', {}, { reload: true });
+      }, function (err) {
+        Flash.showFlash({ type: 'error', message: "Logout Failed !" });
+      });
     };
 
 
@@ -48,14 +54,14 @@ angular.module('geiaFitApp')
 
 
 
-  })
+  }])
 
   .controller('LoginCtrl', ['$scope', '$state', '$ionicPopup', 'AuthService', 'Flash', '$rootScope', function ($scope, $state, $ionicPopup, AuthService, Flash, $rootScope) {
 
-  $scope.data = {
-    email: "",
-    password: ""
-  };
+    $scope.data = {
+      email: "",
+      password: ""
+    };
 
     function checkEmptyFields() {
       var isEmpty = false;
@@ -83,6 +89,7 @@ angular.module('geiaFitApp')
           // alert(data.email);
           if (checkEmail(data.email)) {
             AuthService.login(data.email, data.password, data.checked).then(function (authenticated) {
+              window.localStorage
               Flash.showFlash({ type: 'success', message: "Success !" });
               $state.go('main.dash', {}, { reload: true });
               $scope.setCurrentUsername(data.username);
@@ -412,13 +419,13 @@ angular.module('geiaFitApp')
 
   .controller('ExerciseLibraryCtrl', ['$scope', 'sortedByList', '$ionicPopup', 'ExerciseLibraryService', function ($scope, sortedByList, $ionicPopup, ExerciseLibraryService) {
 
-  var pageSize = 10;
-  $scope.pages = [];
-  $scope.webExPages = [];
- // $scope.filterPatient = 'yes';
- 
-    init = function(){
-      
+    var pageSize = 10;
+    $scope.pages = [];
+    $scope.webExPages = [];
+    // $scope.filterPatient = 'yes';
+
+    init = function () {
+
       $scope.sortedByList = sortedByList;
       $scope.sortedBy = $scope.sortedByList[0].id;
       $scope.selectedTab = 'My Exercises';
@@ -426,7 +433,7 @@ angular.module('geiaFitApp')
       $scope.webExView = false;
       $scope.tempWebExList = "";
 
-      
+
 
       var myExerciseList = [];
       var webExerciseList = [];
@@ -441,37 +448,37 @@ angular.module('geiaFitApp')
           }
         }
         $scope.exerciseList = myExerciseList
-        
+
         $scope.webExercise = webExerciseList
         $scope.tempWebExList = webExerciseList;
         console.log(webExerciseList)
-        
+
         var myExercisePages = Math.ceil(myExerciseList.length / pageSize);
-        var webExercisePages = Math.ceil(webExerciseList.length  / pageSize);
+        var webExercisePages = Math.ceil(webExerciseList.length / pageSize);
 
-        console.log(myExerciseList.length +""+ myExercisePages);
-        console.log(webExerciseList.length +""+ webExercisePages);
+        console.log(myExerciseList.length + "" + myExercisePages);
+        console.log(webExerciseList.length + "" + webExercisePages);
 
-        for(i=0;i<myExercisePages;i++){
-            var page = {
-                id : i+1,
-                title : "page "+(i+1)
-              }
-              $scope.pages.push(page);
+        for (i = 0; i < myExercisePages; i++) {
+          var page = {
+            id: i + 1,
+            title: "page " + (i + 1)
+          }
+          $scope.pages.push(page);
         }
 
-        for(i=0;i<webExercisePages;i++){
-            var page = {
-                id : i+1,
-                title : "page "+(i+1)
-              }
-              $scope.webExPages.push(page);
+        for (i = 0; i < webExercisePages; i++) {
+          var page = {
+            id: i + 1,
+            title: "page " + (i + 1)
+          }
+          $scope.webExPages.push(page);
         }
 
 
         $scope.selectedPage = $scope.pages[0].id;
         $scope.showNext(1);
-      },function(error){
+      }, function (error) {
 
 
       })
@@ -479,8 +486,8 @@ angular.module('geiaFitApp')
     }
     init();
 
-    $scope.getFilteredData = function(){
-      
+    $scope.getFilteredData = function () {
+
     }
 
     // function to tab between MyExercise and Web Exercise.
@@ -491,18 +498,18 @@ angular.module('geiaFitApp')
           $scope.selectedTab = 'My Exercises';
           $scope.webExView = false;
           $scope.exerciseView = true;
-          
+
           break;
         case 2:
           $scope.selectedTab = 'WebEx Exercises';
           $scope.webExView = true;
           $scope.exerciseView = false;
-          
+
           break;
         default:
           $scope.selectedTab = 'My Exercises';
           $scope.exerciseView = true;
-          
+
       }
 
     }
@@ -608,7 +615,7 @@ angular.module('geiaFitApp')
       $scope.webExercise = list.splice(offset, pageSize);
       $scope.selectedPage = $scope.webExPages[pageNo - 1].id;
     }
-    
+
 
     $scope.delete = function (index) {
       console.log("Delete called")
@@ -625,7 +632,7 @@ angular.module('geiaFitApp')
           console.log("cancel")
         }
       });
-   }
+    }
 
   }])
   .controller('AddExerciseCtrl', ['$scope', function ($scope) {
@@ -669,28 +676,28 @@ angular.module('geiaFitApp')
     // $scope.profile = profileData;
     $scope.editEnabled = false;
 
-    $scope.testFunction= function(file){
+    $scope.testFunction = function (file) {
       console.log(file)
       var fileReader = new FileReader();
       fileReader.readAsDataURL(file);
       fileReader.onload = function (e) {
-      var dataUrl = e.target.result;
-      var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
+        var dataUrl = e.target.result;
+        var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
 
-      var data = {
-        image_name : file.$ngfName, 
-        image : base64Data
-      }
+        var data = {
+          image_name: file.$ngfName,
+          image: base64Data
+        }
 
-        MyAccount.uploadImage(data).then(function(success){
+        MyAccount.uploadImage(data).then(function (success) {
           console.log(success)
-        },function(error){
+        }, function (error) {
           console.log(error)
         })
 
-    };
+      };
 
-//     //  $scope.src = "https://trip101.com/assets/default_profile_pic-9c5d869a996318867438aa3ccf9a9607daee021047c1088645fbdfbbed0e2aec.jpg"
+      //     //  $scope.src = "https://trip101.com/assets/default_profile_pic-9c5d869a996318867438aa3ccf9a9607daee021047c1088645fbdfbbed0e2aec.jpg"
     }
 
     $scope.setProfilePhoto = function () {
@@ -809,9 +816,9 @@ angular.module('geiaFitApp')
 
 
     getActivityDataForWeek = function (successData) {
-      
+
       var startDate = new Date();
-      var endDate = new Date(startDate.getFullYear(), startDate.getMonth() , startDate.getDate()-7,
+      var endDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() - 7,
         startDate.getHours(), startDate.getMinutes(), startDate.getSeconds(), startDate.getMilliseconds())
 
       for (var x in successData) {
@@ -825,7 +832,7 @@ angular.module('geiaFitApp')
 
     getWeekDates = function () {
       var endDate = new Date();
-      var startDate = new Date(endDate.getFullYear(), endDate.getMonth() , endDate.getDate()-7,
+      var startDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() - 7,
         endDate.getHours(), endDate.getMinutes(), endDate.getSeconds(), endDate.getMilliseconds())
       var dateList = [];
       var date = startDate;
@@ -938,7 +945,7 @@ angular.module('geiaFitApp')
 
     getMonthDates = function () {
       var endDate = new Date();
-      var startDate = new Date(endDate.getFullYear(), endDate.getMonth()-1, endDate.getDate(),
+      var startDate = new Date(endDate.getFullYear(), endDate.getMonth() - 1, endDate.getDate(),
         endDate.getHours(), endDate.getMinutes(), endDate.getSeconds(), endDate.getMilliseconds())
       var dateList = [];
       var date = startDate;
@@ -1163,26 +1170,26 @@ angular.module('geiaFitApp')
           },
         },
         yAxis: {
-            min: 0,
-            max: 100,
-            lineWidth: 0,
-            tickPositions: []
-          },
+          min: 0,
+          max: 100,
+          lineWidth: 0,
+          tickPositions: []
+        },
         series: [{
-            name: 'Move',
-            borderColor: "green",
-            data: [{
-              color: "green",
-              radius: '100%',
-              innerRadius: '100%',
-              y: data
-            }],
-             dataLabels: {
-                format: '<div style="text-align:center"><span style="font-size:25px;color:' +
-                    ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'red') + '">{y}</span>' +
-                       '<span style="font-size:25px;color:red">%</span></div>'
-            }
+          name: 'Move',
+          borderColor: "green",
+          data: [{
+            color: "green",
+            radius: '100%',
+            innerRadius: '100%',
+            y: data
           }],
+          dataLabels: {
+            format: '<div style="text-align:center"><span style="font-size:25px;color:' +
+            ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'red') + '">{y}</span>' +
+            '<span style="font-size:25px;color:red">%</span></div>'
+          }
+        }],
         /*size: {
           width: 200,
           height: 180
@@ -1206,11 +1213,11 @@ angular.module('geiaFitApp')
       var date = startDate;
       var i = 0;
       while (date < endDate) {
-        if(i == 0){
-          dateList.push(monthNames[date.getMonth()]+" "+date.getDate())
+        if (i == 0) {
+          dateList.push(monthNames[date.getMonth()] + " " + date.getDate())
           i++;
         }
-        else{
+        else {
           dateList.push(date.getDate())
         }
         var tempDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1,
@@ -1246,7 +1253,7 @@ angular.module('geiaFitApp')
           },
           //Make the legend invisible.[footer series labels]
           legend: {
-            x: 9999, 
+            x: 9999,
             y: 9999
           },
         },
@@ -1277,7 +1284,7 @@ angular.module('geiaFitApp')
 
     function getChartConfigForMonth(dataGoal, dataAchived) {
       var endDate = new Date();
-      var startDate = new Date(endDate.getFullYear(), endDate.getMonth()-1, endDate.getDate(),
+      var startDate = new Date(endDate.getFullYear(), endDate.getMonth() - 1, endDate.getDate(),
         endDate.getHours(), endDate.getMinutes(), endDate.getSeconds(), endDate.getMilliseconds())
       var dateList = [];
       var date = startDate;
@@ -1709,121 +1716,120 @@ angular.module('geiaFitApp')
     }
   }])
 
-.controller('MessageCtrl', function($scope, $state, $http, $ionicPopup, ChatApp,$timeout,$stateParams,$rootScope,
-AppService,$ionicScrollDelegate)
- {
-  var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
-  var uid = $rootScope.loggedInUserUid;
-   $scope.userImage="img/profile_icon.png";
-   $scope.toUserImage="img/profile_icon.png";
+  .controller('MessageCtrl', function ($scope, $state, $http, $ionicPopup, ChatApp, $timeout, $stateParams, $rootScope,
+    AppService, $ionicScrollDelegate) {
+    var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
+    var uid = $rootScope.loggedInUserUid;
+    $scope.userImage = "img/profile_icon.png";
+    $scope.toUserImage = "img/profile_icon.png";
 
-   $scope.patientProfile = {
+    $scope.patientProfile = {
       name: $stateParams.name,
     }
 
     $scope.doctorProfile = {
-          url: ''
-        }
-  
-   init = function () {
+      url: ''
+    }
+
+    init = function () {
 
       AppService.profile($stateParams.uid).then(function (success) {
         patientData = success;
         if (patientData.image != "") {
           $scope.userImage = patientData.image;
-          $scope.toUserImage= patientData.therapist_image;
+          $scope.toUserImage = patientData.therapist_image;
         }
 
-      //patient
-      $scope.toUser = {
-      _id:  $stateParams.uid,
-       pic: $scope.toUserImage,
-      username: patientData.therapist_first_name
-    };
+        //patient
+        $scope.toUser = {
+          _id: $stateParams.uid,
+          pic: $scope.toUserImage,
+          username: patientData.therapist_first_name
+        };
 
-     // this could be on $rootScope rather than in $stateParams
-     //doctor
-    $scope.user = {
-      _id: uid,
-      pic:$scope.userImage,
-      username: patientData.first_name
+        // this could be on $rootScope rather than in $stateParams
+        //doctor
+        $scope.user = {
+          _id: uid,
+          pic: $scope.userImage,
+          username: patientData.first_name
 
-    };
+        };
 
 
       }, function (error) {
 
       })
-    
+
     }
     init();
     getMessages();
 
-      //patient id
-  //  $scope.toUser = {
-  //     _id:  $stateParams.uid,
-  //      pic: $scope.toUserImage,
-  //     username: $stateParams.name
-  //   };
+    //patient id
+    //  $scope.toUser = {
+    //     _id:  $stateParams.uid,
+    //      pic: $scope.toUserImage,
+    //     username: $stateParams.name
+    //   };
 
-  //    // this could be on $rootScope rather than in $stateParams
-  //    //doctor
-  //   $scope.user = {
-  //     _id: uid,
-  //     pic:$scope.userImage,
-  //     username: 'Marty'
-  //   };
- 
+    //    // this could be on $rootScope rather than in $stateParams
+    //    //doctor
+    //   $scope.user = {
+    //     _id: uid,
+    //     pic:$scope.userImage,
+    //     username: 'Marty'
+    //   };
 
-   $scope.sendMessage = function() {
-    
-   // alert("Sendmessage"+$scope.input.message);
-    var data ={ 
-    "message": $scope.input.message,
-    "ptid":"1" //$stateParams.uid
-    };
-  
-  ChatApp.sendPatientMessage(data,$stateParams.uid).then(function(success){
-       //  alert("success"+JSON.stringify(success));
-var message ={
-"message_id": success.message_id,
-"uid1": $stateParams.uid,
-"uid2": uid,
-"message":  $scope.input.message,
-"timestamp": success.timestamp
 
-};
- keepKeyboardOpen();
-$scope.input.message = '';
-$scope.messages.push(message);
+    $scope.sendMessage = function () {
 
- $timeout(function() {
+      // alert("Sendmessage"+$scope.input.message);
+      var data = {
+        "message": $scope.input.message,
+        "ptid": "1" //$stateParams.uid
+      };
+
+      ChatApp.sendPatientMessage(data, $stateParams.uid).then(function (success) {
+        //  alert("success"+JSON.stringify(success));
+        var message = {
+          "message_id": success.message_id,
+          "uid1": $stateParams.uid,
+          "uid2": uid,
+          "message": $scope.input.message,
+          "timestamp": success.timestamp
+
+        };
         keepKeyboardOpen();
-        viewScroll.scrollBottom(true);
-      }, 0);
+        $scope.input.message = '';
+        $scope.messages.push(message);
 
-  $timeout(function() {
-     //   $scope.messages.push(MockService.getMockMessage());
-        keepKeyboardOpen();
-        viewScroll.scrollBottom(true);
-      }, 2000);
+        $timeout(function () {
+          keepKeyboardOpen();
+          viewScroll.scrollBottom(true);
+        }, 0);
+
+        $timeout(function () {
+          //   $scope.messages.push(MockService.getMockMessage());
+          keepKeyboardOpen();
+          viewScroll.scrollBottom(true);
+        }, 2000);
 
 
-   },function(error){
+      }, function (error) {
 
-   })
+      })
 
 
     };
 
-     function getMessages() {
+    function getMessages() {
       // the service is mock but you would probably pass the toUser's GUID here
-      ChatApp.getUserMessages($stateParams.uid).then(function(data) {
+      ChatApp.getUserMessages($stateParams.uid).then(function (data) {
         $scope.doneLoading = true;
         $scope.messages = data;
-     //   alert(JSON.stringify(data));
+        //   alert(JSON.stringify(data));
 
-        $timeout(function() {
+        $timeout(function () {
           viewScroll.scrollBottom();
         }, 0);
       });
@@ -1834,8 +1840,8 @@ $scope.messages.push(message);
       $ionicHistory.goBack();
     }
 
-      
-  function keepKeyboardOpen() {
+
+    function keepKeyboardOpen() {
       console.log('keepKeyboardOpen');
       // txtInput.one('blur', function() {
       //   console.log('textarea blur, focus back on it');
@@ -1843,17 +1849,17 @@ $scope.messages.push(message);
       // });
     }
 
-})
+  })
 
-// fitlers
-.filter('nl2br', ['$filter',
-  function($filter) {
-    return function(data) {
-      if (!data) return data;
-      return data.replace(/\n\r?/g, '<br />');
-    };
-  }
-])
+  // fitlers
+  .filter('nl2br', ['$filter',
+    function ($filter) {
+      return function (data) {
+        if (!data) return data;
+        return data.replace(/\n\r?/g, '<br />');
+      };
+    }
+  ])
 
   .controller('VitalsCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', '$ionicHistory', function ($scope, $state, $stateParams, sortedByList, $ionicHistory) {
     $scope.sortedByList = sortedByList;
