@@ -1,6 +1,6 @@
 angular.module('geiaFitApp')
 
-  .controller('AppCtrl','Flash', function ($scope, $state, $ionicPopup, AuthService, AUTH_EVENTS, $ionicHistory,Flash) {
+  .controller('AppCtrl',['$scope', '$state', '$ionicPopup', 'AuthService', 'AUTH_EVENTS','Flash', '$ionicHistory', function ($scope, $state, $ionicPopup, AuthService, AUTH_EVENTS,Flash, $ionicHistory) {
     $scope.username = AuthService.username();
 
     $scope.$on(AUTH_EVENTS.notAuthorized, function (event) {
@@ -52,7 +52,7 @@ angular.module('geiaFitApp')
 
 
 
-  })
+  }])
 
   .controller('LoginCtrl', ['$scope', '$state', '$ionicPopup', 'AuthService', 'Flash', '$rootScope', function ($scope, $state, $ionicPopup, AuthService, Flash, $rootScope) {
 
