@@ -1,0 +1,70 @@
+<ion-view class="setExerciseView" name="set-exercise-view">
+  <ion-nav-bar class="group">
+    <ion-nav-buttons side="left">
+        <span class="icon ion-close-round closePatient" ng-click="closePatient();"></span>  
+      <div class="title title-center header-item" ng-click="gotoHome()">{{patientProfile.name}}</div>       
+    </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+      <span class="icon ion-ios-trash-outline deletePatient" ng-click="deletePatient()"></span>   
+    </ion-nav-buttons>
+  </ion-nav-bar>
+ 
+    
+  <ion-content>
+    	<!--<div class="sortedBy text-center">
+		    <select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy"></select> 
+		</div>-->
+		<section class="main">
+			<div class="active group">
+				<span class="pull-left exerciseName">20 Pushups</span>
+				<span class=" pull-right switch-wrapper">
+					<span class="pull-left">Active: <span class="onoff on">ON</span></span> 
+					<div class="switch">
+					  <input type="checkbox">
+					  <label></label>
+					</div>
+					<span class="onoff off">OFF</span>  
+				</span>
+			</div>
+			<div class="video-container">
+                <iframe src="https://www.youtube.com/embed/rdzS43Pff1w" frameborder="0"></iframe>
+            </div>
+			<div class="exerciseSchedule">
+				
+			</div>
+            <div class="row"> 
+                        <div  class = "col col-30">
+            	      <label class="expiry">Reps
+                             <input type="text"  placeholder="DD/YY" ></label>
+                      </div>
+                      <div class = "col col-30">
+                      <label>Sets
+                           <input type="text" placeholder="00000"></label>
+                      </div>
+                    
+                     <div class="col col-30">
+                     <label>TimesDaily
+                         <input type="text"  placeholder="000"></label>
+                     </div>
+                     </div>
+           
+          
+            <label>Weekly</label> 
+       <div class="row">
+               <div class = "col"><button style="background-color:#444;border:none; padding:7px;">MO</button></div>
+               <div class = "col"><button style="background-color:#444;border:none; padding:7px;">TU</button></div>
+               <div class = "col"><button style="background-color:#444;border:none;padding:7px;">WE</button></div>
+               <div class = "col"><button style="background-color:#444;border:none;padding:7px;">TH</button></div>
+               <div class = "col"><button style="background-color:#444;border:none;padding:7px;">FR</button></div>
+               <div class = "col"><button style="background-color:#444;border:none;padding:7px;">SA</button></div>
+               <div class = "col"><button style="background-color:#444;border:none;padding:7px;">SU</button></div>
+            </div>
+            <div>
+					<p>Comments/Instructions</p>
+					<textarea placeholder="Be Safe when doing this exercise"></textarea>
+				</div>
+            <button id="button1" class="button button-block btn-yellow">Submit</button>
+		</section>
+  </ion-content>
+</ion-view>
+  

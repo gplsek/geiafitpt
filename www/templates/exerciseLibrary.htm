@@ -1,0 +1,103 @@
+<ion-view view-title="Exercise Library" class="exerciseLibrary activity">
+	<ion-nav-bar class="group">
+		<ion-nav-buttons side="left">
+			<span class="icon ion-ios-plus-outline" ui-sref="addExercise"></span>
+		</ion-nav-buttons>
+		<ion-nav-buttons side="right">
+			<a menu-toggle="right" class="icon ion-navicon"></a>
+		</ion-nav-buttons>
+	</ion-nav-bar>
+	<ion-content>
+		<div class="search">
+	      <input type="text" placeholder="Search" ng-model="filterPatient" ng-change="getFilteredData();"/>
+	      <span class="icon ion-ios-search-strong pull-right"></span>
+	    </div>
+		
+		<div class="sortedBy text-center">
+<div class="main">
+<ul class="selectionTab group">
+	<li ng-class="{'active': selectedTab == 'My Exercises'}" ng-click="changeView(1)">My Exercises</li>
+	<li ng-class="{'active': selectedTab == 'WebEx Exercises'}" ng-click="changeView(2)">WebEx Exercises</li>
+</ul>
+</div>
+</div>
+<div ng-show="exerciseView">
+
+<div class="sortedBy text-center">
+<p>
+<small for="repeatSelect">Sorted By:</small>
+</p>
+<select name="repeatSelect" id="repeatSelect" ng-model="data.model">
+<option ng-repeat="option in data.availableOptions" align="center" value="{{option.id}}">{{option.name}}</option>
+</select>
+</div>
+		
+		
+	   <!-- <div class="sortedBy text-center">
+	      <p><small>Sorted By:</small></p>
+	     
+	      <select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select>
+	       
+	    </div>-->
+		<ul class="exerciseList">
+			<!--<li ng-repeat="item in exerciseList" class="gieafitListItem group">-->
+				<li ng-repeat="item in filteredExerciseList = (exerciseList | filter: filterPatient)" class="gieafitListItem group">
+				<span class="pull-left"><span class="marginR5">{{item.id}}</span><span>{{item.title}}</span></span>
+				<span class="pull-right trash-icon" ng-click="delete($index)">
+					<span class="pos-rel">
+						<i class="icon ion-ios-trash-outline" ></i>
+						<!-- <i class="icon ion-ios-close-outline"></i> -->
+					</span>
+				</span>
+			</li>
+		</ul>
+		
+		<section class="pagination">
+			<select ng-model="selectedPage" ng-options="page.id as page.title for page in pages" class="customSelect" ng-change="showNext(selectedPage + 1)"></select>
+			<span class="pull-right next" ng-click="showNext(selectedPage + 2)">Next <i class="icon ion-chevron-right"></i></span>
+		</section>
+		<p ng-hide="filteredExerciseList.length" class="noResult text-center">No Matching Records!</p>
+</div>
+<!--WebExercise view-->
+
+<div ng-show="webExView">
+
+
+<div class="sortedBy text-center">
+<p>
+<small for="repeatSelect">Sorted By:</small>
+</p>
+<select name="repeatSelect" id="repeatSelect" ng-model="data.model">
+<option ng-repeat="option in data.availableOptions" align="center" value="{{option.id}}">{{option.name}}</option>
+</select>
+</div>
+		
+		
+	   <!-- <div class="sortedBy text-center">
+	      <p><small>Sorted By:</small></p>
+	     
+	      <select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select>
+	       
+	    </div>-->
+		<ul class="exerciseList">
+			<!--<li ng-repeat="item in webExercise" class="gieafitListItem group">-->
+				<li ng-repeat="item in filteredWebExList = ( webExercise | filter: filterPatient)" class="gieafitListItem group">
+				<span class="pull-left"><span class="marginR5">{{item.id}}</span><span>{{item.title}}</span></span>
+				<span class="pull-right trash-icon" ng-click="delete($index)">
+					<span class="pos-rel">
+						<i class="icon ion-ios-trash-outline" ></i>
+						<!-- <i class="icon ion-ios-close-outline"></i> -->
+					</span>
+				</span>
+			</li>
+		</ul>
+		
+		<section class="pagination">
+			<select ng-model="selectedPage" ng-options="page.id as page.title for page in webExPages" class="customSelect" ng-change="showNext(selectedPage,1)"></select>
+			<span class="pull-right next" ng-click="showNext(selectedPage + 1,2)" ng-show="selectedPage != webExercisePages">Next <i class="icon ion-chevron-right"></i></span>
+		</section>
+
+</div>	
+
+	</ion-content>
+</ion-view>

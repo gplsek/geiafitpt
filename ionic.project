@@ -1,0 +1,11 @@
+{
+  "name": "geiafit",
+  "app_id": "",
+   "proxies": [
+    {
+      "path": "/api",
+      "proxyUrl": "https://app.geiafit.com/api"
+    }
+  ],
+  "gulpStartupTasks": ["sass", "watch"]
+}

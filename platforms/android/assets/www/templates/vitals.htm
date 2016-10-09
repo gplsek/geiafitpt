@@ -1,0 +1,72 @@
+<ion-view class="vitals">
+  <ion-nav-bar class="group">
+		<ion-nav-buttons side="left">
+			<span class="icon ion-ios-arrow-back" ng-click="back()"></span>
+      <div class="title title-center header-item" ng-click="gotoHome()">{{patientProfile.name}}</div>
+		</ion-nav-buttons>
+  </ion-nav-bar>
+  
+   <ion-content>
+        <div class="sortedBy text-center">
+		    <select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select> 
+		</div>
+		
+		<section class="main">
+			<ul class="selectionTab">
+				<li ng-class="{'active': selectedView == 'Today'}" ng-click="changeView(1)">Today</li>
+				<li ng-class="{'active': selectedView == 'Week'}" ng-click="changeView(2)">Week</li>
+				<li ng-class="{'active': selectedView == 'Month'}" ng-click="changeView(3)">Month</li>
+			</ul>
+        </section>
+           
+       <center>
+          <h4 style="text-content:center;">Emotion</h4>
+       </center>
+       <br>
+        
+        <div class="row">
+            <input type="range" >
+        </div>
+        
+       <center>
+            <h4>Feeling <strong>Great</strong><!--Update this code to change with each increment of 10 (Ex: Terrible(0-10), Bad(10-20), Not Bad(20-30), So-So(30-40), OK(40-50), Alright(50-60), Good(60-70), Great (70-80), Awesome (80-90), Terrific (90-100) --> </h4>
+       </center>
+       
+       <div class="row" align="center">
+            <div class="col col-50 vitalBox">
+                Height<br><br><img src="img/Height.png"><br><br>
+                <input type="text" editable="false" placeholder="6'2''" style="text-align:center;">
+                </div>
+        
+        <div class="col col-50">
+                Weight<br><br><img src="img/Weight.png"><br><br>
+                <input type="text" placeholder="154 LBS" style="text-align:center;">
+                </div>
+        </div>
+     
+       <div class="row" align="center">
+            <div class="col col-50 vitalBoxAlt">
+                BMI<br><br><img src="img/Weight.png"><br><br>
+                <input type="text" placeholder="18" style="text-align:center;">
+                </div>
+               
+        <div class="col col-50 vitalBox">
+                Body Fat %<br><br><img src="img/Body-Fat.png"><br><br>
+                <input type="text" placeholder="22%" style="text-align:center;">
+                </div>
+        </div>
+        
+       
+        <div class="row" align="center">
+            <div class="col col-50">
+                Heart Rate<br><br><img src="img/Heart-Rate.png"><br><br>
+                <input type="text" placeholder="60 BPM" style="text-align:center;">
+                </div>
+        <div class="col col-50 vitalBox">
+                Blood Pressure<br><br><img src="img/Blood-Pressure.png"><br><br>
+                <input type="text" placeholder="120" class="vitalsBP">/<input type="text" placeholder="80" class="vitalsBP">
+                </div>
+        </div>
+                <button class="button button-block btn-yellow">Submit</button>
+    </ion-content>
+</ion-view>
