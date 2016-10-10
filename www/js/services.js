@@ -183,6 +183,19 @@ angular.module('geiaFitApp')
       return prom;
     }
 
+    var getHealthPoint = function (uid) {
+      console.log(uid)
+      var prom = $http({
+        method: "GET",
+        url: ApiEndpoint.url + '/log/health_points/' + uid
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      })
+      return prom;
+    }
+
     var getVitals = function (uid) {
       console.log(uid)
       var prom = $http({
@@ -229,7 +242,8 @@ angular.module('geiaFitApp')
           },
           {
             id: 3,
-            title: "Add Custom Exercise",
+            //title: "Add Custom Exercise",
+            title: "Set Exercise Program",
             routingStateName: "setExerciseProgram"
           },
           {
@@ -271,6 +285,7 @@ angular.module('geiaFitApp')
     return {
       patientsData: getPatientsData,
       getActivity: getActivity,
+      getHealthPoint : getHealthPoint,
       getVitals: getVitals,
       addPatient: addPatient,
       profile: getProfile,
@@ -294,6 +309,7 @@ angular.module('geiaFitApp')
         console.log(err);
       });
       return profileData;
+
     }
 
     var uploadProfileImage = function (params) {
@@ -306,6 +322,7 @@ angular.module('geiaFitApp')
         return response.data;
       }, function (err) {
         console.log(err);
+
       });
       return ProfileImage;
     }
@@ -318,34 +335,37 @@ angular.module('geiaFitApp')
   }])
   .service('ChatApp', ['$rootScope', '$http', 'ApiEndpoint', function ($rootScope, $http, ApiEndpoint) {
 
-    var uid = $rootScope.loggedInUserUid;
-    var getUserMessages = function (userId) {
+
+ var uid = $rootScope.loggedInUserUid;
+   var getUserMessages = function(userId,ptid){
 
       var messageData = $http({
-        method: "GET",
-        url: ApiEndpoint.url + "/messages/" + userId + "/000000"
-      }).then(function (response) {
-        return response.data;
-      }, function (err) {
-        console.log(err);
+        method: "GET", 
+        url: ApiEndpoint.url +"/ptmessages/"+ptid+"/"+userId+"/000000"
+      }).then(function(response){
+         return response.data;
+      }, function(err){
+          console.log(err);
       });
       return messageData;
 
     }
 
-    var sendPatientMessage = function (message, userId) {
-      alert("sendPatientMessage");
 
-      var messageData = $http({
-        headers: {
-          'X-CSRF-Token': $rootScope.token,
-          'Access-Control-Allow-Origin': '*'
-        },
-        method: "PUT",
-        url: ApiEndpoint.url + "/messages/" + userId,
+   var sendPatientMessage = function(message,userId,ptid){
+  //   alert("sendPatientMessage");
+
+    var messageData = $http({
+      headers: {
+                'X-CSRF-Token': $rootScope.token,
+                'Access-Control-Allow-Origin': '*'
+              },
+        method: "POST", 
+        url: ApiEndpoint.url + "/ptmessages/"+ptid+"/"+userId,
+
         data: message,
       }).then(function (response) {
-        alert("SERVICE SUCCESS" + JSON.stringify(response.data));
+       // alert("SERVICE SUCCESS" + JSON.stringify(response.data));
         return response.data;
       }, function (err) {
         alert("SERVICE ERROR" + JSON.stringify(err.data));

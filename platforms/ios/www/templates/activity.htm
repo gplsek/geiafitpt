@@ -118,8 +118,7 @@
                                 <img src="img/location_icon.png" alt="">
                                     <span>{{totalWeekExe}} </span> Exercises
                                     </div>
-                            <div class="right_title">
-                            </div>
+                            
                         </div>
                         <div class="chart_block">
                             <highchart id="container" config="chartConfigWeekViewExercise"></highchart>
@@ -185,7 +184,7 @@
                     <li>
                         <div class="title">
                             <div class="left_title">
-                                <div><img src="img/location_icon.png" alt=""></div>
+                                <div><img src="img/timer_icon.png" alt=""></div>
                                 <span> VIGOROUS </span> ACTIVITY
                             </div>
                             <div class="right_title">
@@ -205,119 +204,118 @@
                             <div class="left_title">
                                 <div><img src="img/location_icon.png" alt=""></div>
                                 <span> COMPLIANCE </span> SCORE</div>
-                            <div class="right_title"></div>
-                        </div>
-                        <div class="chart_block">
-                            <highchart id="container" config="chartConfigWeekViewComp"></highchart>
-                        </div>
-                    </li>
-                    
-                </ul>
-                
-                
-            </div>
-            
-            <div ng-show="MonthView">
-                <div class="navigationtitle">
-                    <button  ng-click="prevDate()">←</button>
-                    <span>{{DATE | date : "MMMM yyyy"}}</span>
-                    <button ng-click="nextDate()">→</button>
-                </div>
-                <ul class="bar_chart_list">
-                    <li>
-                        <div class="title">
-                            <div class="left_title">
+                            
+                                </div>
+                                <div class="chart_block">
+                                <highchart id="container" config="chartConfigWeekViewComp"></highchart>
+                                </div>
+                                </li>
+                                
+                                </ul>
+                                
+                                
+                                </div>
+                                
+                                <div ng-show="MonthView">
+                                <div class="navigationtitle">
+                                <button  ng-click="prevDate()">←</button>
+                                <span>{{DATE | date : "MMMM yyyy"}}</span>
+                                <button ng-click="nextDate()">→</button>
+                                </div>
+                                <ul class="bar_chart_list">
+                                <li>
+                                <div class="title">
+                                <div class="left_title">
                                 <img src="img/location_icon.png" alt="">
-                                    <span>{{totalMonthExe}} </span> Exercises
-                                    </div>
-                            <div class="right_title">
-                            </div>
-                        </div>
-                        <div class="chart_block">
-                            <highchart id="container" config="chartConfigMonthViewExercise"></highchart>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="title">
-                            <div class="left_title">
+                                <span>{{totalMonthExe}} </span> Exercises
+                                </div>
+                                
+                                </div>
+                                <div class="chart_block">
+                                <highchart id="container" config="chartConfigMonthViewExercise"></highchart>
+                                </div>
+                                </li>
+                                <li>
+                                <div class="title">
+                                <div class="left_title">
                                 <img src="img/location_icon.png" alt="">
-                                    <span class="twolinestitle">
-                                        <span>{{totalMonthSteps}}</span> Steps <br>
-                                        <small>{{totalMonthSteps / lastDateOfMonth | number:0}} steps/day</small>
-                                    </span>
-                                    </div>
-                            <div class="right_title">
                                 <span class="twolinestitle">
-                                    <span>{{totalMonthSteps / 2112 | number:0}}</span> Miles<br>
-                                    <small>{{totalMonthSteps / (2112 * lastDateOfMonth) | number:0}} mi/day</small>
+                                <span>{{totalMonthSteps}}</span> Steps <br>
+                                <small>{{totalMonthSteps / lastDateOfMonth | number:0}} steps/day</small>
+                                </span>
+                                </div>
+                                <div class="right_title">
+                                <span class="twolinestitle">
+                                <span>{{totalMonthSteps / 2112 | number:0}}</span> Miles<br>
+                                <small>{{totalMonthSteps / (2112 * lastDateOfMonth) | number:0}} mi/day</small>
                                 </span>
                                 <img src="img/timer_icon.png" alt="">
-                                    </div>
-                        </div>
-                        <div class="chart_block">
-                            <highchart id="container" config="chartConfigMonthViewSteps"></highchart>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="title">
-                            <div class="left_title">
+                                </div>
+                                </div>
+                                <div class="chart_block">
+                                <highchart id="container" config="chartConfigMonthViewSteps"></highchart>
+                                </div>
+                                </li>
+                                <li>
+                                <div class="title">
+                                <div class="left_title">
                                 <div><img src="img/location_icon.png" alt=""></div>
                                 <span> LIGHT </span> ACTIVITY
-                            </div>
-                            <div class="right_title">
+                                </div>
+                                <div class="right_title">
                                 <span class="twolinestitle">
-                                    <span>{{totalMonthLow}}</span> Hrs<br>
-                                    <small>{{totalMonthLow/lastDateOfMonth | number:0}} min/day</small>
+                                <span>{{totalMonthLow}}</span> Hrs<br>
+                                <small>{{totalMonthLow/lastDateOfMonth | number:0}} min/day</small>
                                 </span>
                                 <img src="img/timer_icon.png" alt="">
-                                    </div>
-                        </div>
-                        <div class="chart_block">
-                            <highchart id="container" config="chartConfigMonthViewLow"></highchart>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="title">
-                            <div class="left_title">
+                                </div>
+                                </div>
+                                <div class="chart_block">
+                                <highchart id="container" config="chartConfigMonthViewLow"></highchart>
+                                </div>
+                                </li>
+                                <li>
+                                <div class="title">
+                                <div class="left_title">
                                 <div><img src="img/location_icon.png" alt=""></div>
                                 <span> MODERATE </span> ACTIVITY
-                            </div>
-                            <div class="right_title">
+                                </div>
+                                <div class="right_title">
                                 <span class="twolinestitle">
-                                    <span>{{totalMonthMid}}</span> Hrs<br>
-                                    <small>{{totalMonthMid/lastDateOfMonth | number:0}} min/day</small>
+                                <span>{{totalMonthMid}}</span> Hrs<br>
+                                <small>{{totalMonthMid/lastDateOfMonth | number:0}} min/day</small>
                                 </span>
                                 <img src="img/timer_icon.png" alt="">
-                                    </div>
-                        </div>
-                        <div class="chart_block">
-                            <highchart id="container" config="chartConfigMonthViewMid"></highchart>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="title">
-                            <div class="left_title">
-                                <div><img src="img/location_icon.png" alt=""></div>
+                                </div>
+                                </div>
+                                <div class="chart_block">
+                                <highchart id="container" config="chartConfigMonthViewMid"></highchart>
+                                </div>
+                                </li>
+                                <li>
+                                <div class="title">
+                                <div class="left_title">
+                                <div><img src="img/timer_icon.png" alt=""></div>
                                 <span> VIGOROUS </span> ACTIVITY
-                            </div>
-                            <div class="right_title">
+                                </div>
+                                <div class="right_title">
                                 <span class="twolinestitle">
-                                    <span>{{totalMonthHigh}}</span> Hrs<br>
-                                    <small>{{totalMonthHigh/lastDateOfMonth | number:0}} min/day</small>
+                                <span>{{totalMonthHigh}}</span> Hrs<br>
+                                <small>{{totalMonthHigh/lastDateOfMonth | number:0}} min/day</small>
                                 </span>
                                 <img src="img/timer_icon.png" alt="">
-                                    </div>
-                        </div>
-                        <div class="chart_block">
-                            <highchart id="container" config="chartConfigMonthViewHigh"></highchart>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="title">
-                            <div class="left_title">
+                                </div>
+                                </div>
+                                <div class="chart_block">
+                                <highchart id="container" config="chartConfigMonthViewHigh"></highchart>
+                                </div>
+                                </li>
+                                <li>
+                                <div class="title">
+                                <div class="left_title">
                                 <div><img src="img/location_icon.png" alt=""></div>
                                 <span> COMPLIANCE </span> SCORE</div>
-                            <div class="right_title"></div>
+                                </div>
                         </div>
                         <div class="chart_block">
                             <highchart id="container" config="chartConfigMonthViewComp"></highchart>
