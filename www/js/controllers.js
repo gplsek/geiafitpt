@@ -1945,16 +1945,15 @@ AppService,$ionicScrollDelegate)
     
    // alert("Sendmessage"+$scope.input.message);
     var data ={ 
-    "message": $scope.input.message,
-    "ptid":"1" //$stateParams.uid
+    "message": $scope.input.message
     };
   
-  ChatApp.sendPatientMessage(data,$stateParams.uid).then(function(success){
+  ChatApp.sendPatientMessage(data,$stateParams.uid,uid).then(function(success){
        //  alert("success"+JSON.stringify(success));
 var message ={
 "message_id": success.message_id,
-"uid1": $stateParams.uid,
-"uid2": uid,
+"uid1": uid,
+"uid2": $stateParams.uid,
 "message":  $scope.input.message,
 "timestamp": success.timestamp
 
@@ -1984,7 +1983,7 @@ $scope.messages.push(message);
 
      function getMessages() {
       // the service is mock but you would probably pass the toUser's GUID here
-      ChatApp.getUserMessages($stateParams.uid).then(function(data) {
+      ChatApp.getUserMessages($stateParams.uid,uid).then(function(data) {
         $scope.doneLoading = true;
         $scope.messages = data;
      //   alert(JSON.stringify(data));

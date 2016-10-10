@@ -294,6 +294,7 @@ angular.module('geiaFitApp')
         console.log(err);
       });
       return profileData;
+
     }
 
     var uploadProfileImage = function (params) {
@@ -306,6 +307,7 @@ angular.module('geiaFitApp')
         return response.data;
       }, function (err) {
         console.log(err);
+
       });
       return ProfileImage;
     }
@@ -318,31 +320,34 @@ angular.module('geiaFitApp')
   }])
   .service('ChatApp', ['$rootScope', '$http', 'ApiEndpoint', function ($rootScope, $http, ApiEndpoint) {
 
-    var uid = $rootScope.loggedInUserUid;
-    var getUserMessages = function (userId) {
+
+ var uid = $rootScope.loggedInUserUid;
+   var getUserMessages = function(userId,ptid){
 
       var messageData = $http({
-        method: "GET",
-        url: ApiEndpoint.url + "/messages/" + userId + "/000000"
-      }).then(function (response) {
-        return response.data;
-      }, function (err) {
-        console.log(err);
+        method: "GET", 
+        url: ApiEndpoint.url +"/ptmessages/"+ptid+"/"+userId+"/000000"
+      }).then(function(response){
+         return response.data;
+      }, function(err){
+          console.log(err);
       });
       return messageData;
 
     }
 
-    var sendPatientMessage = function (message, userId) {
-      alert("sendPatientMessage");
 
-      var messageData = $http({
-        headers: {
-          'X-CSRF-Token': $rootScope.token,
-          'Access-Control-Allow-Origin': '*'
-        },
-        method: "PUT",
-        url: ApiEndpoint.url + "/messages/" + userId,
+   var sendPatientMessage = function(message,userId,ptid){
+     alert("sendPatientMessage");
+
+    var messageData = $http({
+      headers: {
+                'X-CSRF-Token': $rootScope.token,
+                'Access-Control-Allow-Origin': '*'
+              },
+        method: "POST", 
+        url: ApiEndpoint.url + "/ptmessages/"+ptid+"/"+userId,
+
         data: message,
       }).then(function (response) {
         alert("SERVICE SUCCESS" + JSON.stringify(response.data));
