@@ -16,6 +16,11 @@ angular.module('geiaFitApp').service('utilityService', ['$log',function ($log) {
 
         unixTimeToDate : function(timeStamp){
             return new Date(timeStamp*1000);
+        },
+
+        round : function (value, precision) {
+            var multiplier = Math.pow(10, precision || 0);
+            return Math.round(value * multiplier) / multiplier;
         }
 
     };

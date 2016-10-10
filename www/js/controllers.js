@@ -847,11 +847,11 @@ angular.module('geiaFitApp')
       console.log('lowPer ' + lowPer);
       console.log('mediumPer ' + mediumPer);
       console.log('highPer ' + highPer);
-      $scope.chartConfig = getChartConfigForDay(excPer);
-      $scope.chartConfig1 = getChartConfigForDay(stepsPer);
-      $scope.chartConfig2 = getChartConfigForDay(lowPer);
-      $scope.chartConfig3 = getChartConfigForDay(mediumPer);
-      $scope.chartConfig4 = getChartConfigForDay(highPer);
+      $scope.chartConfig = getChartConfigForDay(excPer, '#4299D1' , '#1F60A4' );
+      $scope.chartConfig1 = getChartConfigForDay(stepsPer,  '#4299D1' , '#1F60A4' );
+      $scope.chartConfig2 = getChartConfigForDay(lowPer,'#DDF6BC' , '#B8E986' );
+      $scope.chartConfig3 = getChartConfigForDay(mediumPer,'#00CBEF' , '#009CDB' );
+      $scope.chartConfig4 = getChartConfigForDay(highPer,'#4299D1' , '#1F60A4' );
     }
 
 
@@ -1286,7 +1286,10 @@ angular.module('geiaFitApp')
     }
 
 
-    function getChartConfigForDay(data) {
+    function getChartConfigForDay(data, color1, color2) {
+        if(data > 999){
+                data = 999;
+        }
       var chartConfig = {
         options: {
           chart: {
@@ -1340,21 +1343,25 @@ angular.module('geiaFitApp')
                     borderColor: {
                         linearGradient: [0, 0, 500, 500],
                         stops: [
-                            [0, 'rgb(66, 153, 209)'],
-                            [1, 'rgb(31, 96, 164)']
+                            /*[0, 'rgb(66, 153, 209)'],
+                            [1, 'rgb(31, 96, 164)']*/
+                            [0, color1],
+                            [1, color2]
                         ]
                     },
                     data: [{
                         color: {
                             linearGradient: [0, 60, 60, 500],
                             stops: [
-                                [0, 'rgb(66, 153, 209)'],
-                                [1, 'rgb(31, 96, 164)']
+                                /*[0, 'rgb(66, 153, 209)'],
+                                [1, 'rgb(31, 96, 164)']*/
+                                [0, color1],
+                                [1, color2]
                             ]
                         },
                         radius: '100%',
                         innerRadius: '100%',
-                        y: data
+                        y: utilityService.round(data,1) // one number after decimal
                     }],
                     dataLabels: {
                         format: '<div style="text-align:center"><span style="font-size:24px;font-weight:normal;color:' +
@@ -1439,11 +1446,14 @@ angular.module('geiaFitApp')
         series: [{
                 data: dataGoal,
                 color: "#F3A81B",
+                //color: color,
                 borderColor: 'transparent'
-        }, {
-                        data: dataAchived,
-                        color: "#009CDB",
-                }],
+        }, 
+        {
+                data: dataAchived,
+                color: "#009CDB",
+                //color: color,
+        }],
         func: function (chart) {
         }
 
@@ -1945,16 +1955,15 @@ AppService,$ionicScrollDelegate)
     
    // alert("Sendmessage"+$scope.input.message);
     var data ={ 
-    "message": $scope.input.message,
-    "ptid":"1" //$stateParams.uid
+    "message": $scope.input.message
     };
   
-  ChatApp.sendPatientMessage(data,$stateParams.uid).then(function(success){
+  ChatApp.sendPatientMessage(data,$stateParams.uid,uid).then(function(success){
        //  alert("success"+JSON.stringify(success));
 var message ={
 "message_id": success.message_id,
-"uid1": $stateParams.uid,
-"uid2": uid,
+"uid1": uid,
+"uid2": $stateParams.uid,
 "message":  $scope.input.message,
 "timestamp": success.timestamp
 
@@ -1984,7 +1993,7 @@ $scope.messages.push(message);
 
      function getMessages() {
       // the service is mock but you would probably pass the toUser's GUID here
-      ChatApp.getUserMessages($stateParams.uid).then(function(data) {
+      ChatApp.getUserMessages($stateParams.uid,uid).then(function(data) {
         $scope.doneLoading = true;
         $scope.messages = data;
      //   alert(JSON.stringify(data));
