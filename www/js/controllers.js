@@ -339,6 +339,11 @@ angular.module('geiaFitApp')
       $state.transitionTo(state, {}, { reload: true });
     }
 
+    init = function(){
+      console.log($stateParams.patientId)
+    }
+    init();
+
     /*$scope.setActivityGoals = function(data){
         console.log($scope.activityGoals)
         console.log(data)
@@ -1536,7 +1541,7 @@ angular.module('geiaFitApp')
     $scope.gotoAction = function (id) {
       var state = getStateTitle(id);
 
-      $state.transitionTo(state, { name: $stateParams.name }, { reload: true });
+      $state.transitionTo(state, { name: $stateParams.name , patientId :$stateParams.uid}, { reload: true });
     }
 
   }])
@@ -1704,6 +1709,11 @@ angular.module('geiaFitApp')
             $state.transitionTo(state,{name: $stateParams.name}, {reload: true});
           }
         */
+    init = function () {
+      console.log($stateParams.patientId)
+    }
+    init();
+
   }])
 
   .controller('paymentCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', function ($scope, $stateParams, sortedByList, $state) {
@@ -1902,6 +1912,8 @@ AppService,$ionicScrollDelegate)
         }
   
    init = function () {
+  
+      console.log($stateParams)
 
       AppService.profile($stateParams.uid).then(function (success) {
         patientData = success;
@@ -2045,7 +2057,8 @@ $scope.messages.push(message);
     }
 
      init = function () {
-      AppService.getVitals($stateParams.uid).then(function (success) {
+      console.log($stateParams.patientId)
+      AppService.getVitals($stateParams.patientId).then(function (success) {
         console.log("Vital Success")
         console.log(success)
         //getActivityDataForYesterday(success);
