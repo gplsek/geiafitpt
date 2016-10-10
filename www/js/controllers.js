@@ -769,6 +769,7 @@ angular.module('geiaFitApp')
 
 
   .controller('ActivityCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', 'AppService', 'utilityService', function ($scope, $stateParams, sortedByList, $state, AppService, utilityService) {
+   $scope.DefaultView = true;
     var patientData;
     var ActivityData;
     var complianceData;
@@ -1284,6 +1285,52 @@ angular.module('geiaFitApp')
       chartConfigForComplianceMonth();
     }
 
+     $scope.sortedByList = sortedByList;
+    $scope.sortedBy = $scope.sortedByList[0].id;
+    //$scope.selectedView = 'day';
+    //$scope.DayView = true;
+
+    $scope.changeView = function (view) {
+      switch (view) {
+        case 1:
+          $scope.selectedView = 'day';
+          chartConfigForDay();
+          $scope.DayView = true;
+          $scope.WeekView = false;
+          $scope.MonthView = false;
+          $scope.DefaultView = false;
+          break;
+        case 2:
+          $scope.selectedView = 'week';
+          chartConfigForWeek();
+          chartConfigForComplianceWeek();
+          $scope.WeekView = true;
+          $scope.DayView = false;
+          $scope.MonthView = false;
+          $scope.DefaultView = false;
+          break;
+        case 3:
+          $scope.selectedView = 'month';
+          chartConfigForMonth();
+          chartConfigForComplianceMonth();
+          var d = new Date();
+          $scope.DATE = new Date(d.getFullYear(),d.getMonth(),d.getDate());
+          $scope.MonthView = true;
+          $scope.DayView = false;
+          $scope.WeekView = false;
+          $scope.DefaultView = false;
+          break;
+        default:
+          $scope.selectedView = 'day';
+          chartConfigForDay();
+          $scope.DayView = true;
+          $scope.WeekView = false;
+          $scope.MonthView = false;
+          $scope.DefaultView = false;
+      }
+
+    }
+
     init = function () {
       var d = new Date();
       $scope.DATE = new Date(d.getFullYear(),d.getMonth(),d.getDate());
@@ -1363,55 +1410,11 @@ angular.module('geiaFitApp')
         console.log("getHealthPoint error")
       })
       
-    $scope.selectedView = 'day';
-    $scope.DayView = true;
-    }
-    init();
-
-
-
-    $scope.sortedByList = sortedByList;
-    $scope.sortedBy = $scope.sortedByList[0].id;
     //$scope.selectedView = 'day';
     //$scope.DayView = true;
-
-    $scope.changeView = function (view) {
-      switch (view) {
-        case 1:
-          $scope.selectedView = 'day';
-          chartConfigForDay();
-          $scope.DayView = true;
-          $scope.WeekView = false;
-          $scope.MonthView = false;
-          break;
-        case 2:
-          $scope.selectedView = 'week';
-          chartConfigForWeek();
-          chartConfigForComplianceWeek();
-          $scope.WeekView = true;
-          $scope.DayView = false;
-          $scope.MonthView = false;
-          break;
-        case 3:
-          $scope.selectedView = 'month';
-          chartConfigForMonth();
-          chartConfigForComplianceMonth();
-          $scope.MonthView = true;
-          $scope.DayView = false;
-          $scope.WeekView = false;
-          var d = new Date();
-          $scope.DATE = new Date(d.getFullYear(),d.getMonth(),d.getDate());
-          break;
-        default:
-          $scope.selectedView = 'day';
-          chartConfigForDay();
-          $scope.DayView = true;
-          $scope.WeekView = false;
-          $scope.MonthView = false;
-
-      }
-
+    $scope.changeView(1);
     }
+    init();
 
 
     function getChartConfigForDay(data, color1, color2) {
