@@ -1,6 +1,6 @@
 angular.module('geiaFitApp')
 
-  .controller('AppCtrl', function ($scope, $state, $ionicPopup, AuthService, AUTH_EVENTS, $ionicHistory) {
+  .controller('AppCtrl',['$scope', '$state', '$ionicPopup', 'AuthService', 'AUTH_EVENTS','Flash', '$ionicHistory', function ($scope, $state, $ionicPopup, AuthService, AUTH_EVENTS,Flash, $ionicHistory) {
     $scope.username = AuthService.username();
 
     $scope.$on(AUTH_EVENTS.notAuthorized, function (event) {
@@ -12,8 +12,12 @@ angular.module('geiaFitApp')
 
 
     $scope.logout = function () {
-      AuthService.logout();
-      $state.transitionTo('login', {}, { reload: true });
+      AuthService.logout().then(function () {
+         Flash.showFlash({ type: 'Logged out successfully', message: "Logged out successfully !" });
+        $state.transitionTo('login', {}, { reload: true });
+      }, function (err) {
+        Flash.showFlash({ type: 'error', message: "Logout Failed !" });
+      });
     };
 
 
@@ -48,7 +52,7 @@ angular.module('geiaFitApp')
 
 
 
-  })
+  }])
 
   .controller('LoginCtrl', ['$scope', '$state', '$ionicPopup', 'AuthService', 'Flash', '$rootScope', function ($scope, $state, $ionicPopup, AuthService, Flash, $rootScope) {
 
@@ -761,9 +765,12 @@ angular.module('geiaFitApp')
 
   .controller('ActivityCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', 'AppService', 'utilityService', function ($scope, $stateParams, sortedByList, $state, AppService, utilityService) {
     var patientData;
+    var ActivityData;
     var activityDataForWeek = [];
     var activityDataForMonth = [];
     var activityDataForYesterday = '';
+    var monthList = ["January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"];
 
     getActivityDataForYesterday = function (successData) {
       var startDate = new Date("Sun Sep 25 2016 17:04:28 GMT+0530 (IST)");
@@ -786,20 +793,53 @@ angular.module('geiaFitApp')
       var lowPer = 0;
       var mediumPer = 0;
       var highPer = 0;
+
+      $scope.DayExeDone = 0;
+      $scope.DayExeGoal = 0;
+      $scope.DayStepsDone = 0;
+      $scope.DayStepsGoal = 0;
+      $scope.DayLowDone = 0;
+      $scope.DayLowGoal = 0;
+      $scope.DayMidDone = 0;
+      $scope.DayMidGoal = 0;
+      $scope.DayHighDone = 0;
+      $scope.DayHighGoal = 0;
+
+
       if (activityDataForYesterday.total_exercise != null && activityDataForYesterday.total_exercise_goal != null) {
-        excPer = (activityDataForYesterday.total_exercise / activityDataForYesterday.total_exercise_goal) * 100;
+        var goal = activityDataForYesterday.total_exercise_goal;
+        var achieved = activityDataForYesterday.total_exercise;
+        $scope.DayExeDone = achieved;
+        $scope.DayExeGoal = goal;
+        excPer = (achieved / goal) * 100;
       }
       if (activityDataForYesterday.total_steps != null && activityDataForYesterday.total_steps_goal != null) {
-        stepsPer = (activityDataForYesterday.total_steps / activityDataForYesterday.total_steps_goal) * 100;
+        var goal = activityDataForYesterday.total_steps_goal;
+        var achieved = activityDataForYesterday.total_steps;
+        $scope.DayStepsDone = achieved;
+        $scope.DayStepsGoal = goal;
+        stepsPer = ( achieved/goal ) * 100;
       }
       if (activityDataForYesterday.time_active_low != null && activityDataForYesterday.time_active_low_goal != null) {
-        lowPer = (activityDataForYesterday.time_active_low / activityDataForYesterday.time_active_low_goal) * 100;
+        var goal = activityDataForYesterday.time_active_low_goal;
+        var achieved = activityDataForYesterday.time_active_low ;
+        $scope.DayLowDone = achieved;
+        $scope.DayLowGoal = goal;
+        lowPer = ( achieved/goal ) * 100;
       }
       if (activityDataForYesterday.time_active_medium != null && activityDataForYesterday.time_active_medium_goal != null) {
-        mediumPer = (activityDataForYesterday.time_active_medium / activityDataForYesterday.time_active_medium_goal) * 100;
+        var goal = activityDataForYesterday.time_active_medium_goal;
+        var achieved = activityDataForYesterday.time_active_medium;
+        $scope.DayMidDone = achieved;
+        $scope.DayMidGoal = goal;
+        mediumPer = ( achieved/goal ) * 100;
       }
       if (activityDataForYesterday.time_active_high != null && activityDataForYesterday.time_active_high_goal != null) {
-        highPer = (activityDataForYesterday.time_active_high / activityDataForYesterday.time_active_high_goal) * 100;
+        var goal = activityDataForYesterday.time_active_high_goal;
+        var achieved = activityDataForYesterday.time_active_high;
+        $scope.DayHighDone = achieved;
+        $scope.DayHighGoal = goal;
+        highPer = ( achieved/goal ) * 100;
       }
 
       console.log('excPer ' + excPer);
@@ -828,6 +868,7 @@ angular.module('geiaFitApp')
           activityDataForWeek.push(successData[x]);
         }
       }
+      console.log(activityDataForWeek)
     }
 
     getWeekDates = function () {
@@ -860,6 +901,13 @@ angular.module('geiaFitApp')
       var dataWeekVigorous = [];
       var dataWeekCompliance = [];
 
+      var totalWeekExe =0;
+      var totalWeekSteps =0;
+      var totalWeekLow =0;
+      var totalWeekMid =0;
+      var totalWeekHigh =0;
+
+
       var dates = getWeekDates();
 
       for (var d in dates) {
@@ -883,24 +931,41 @@ angular.module('geiaFitApp')
             tempDate.getDate() === dates[d].getDate()) {
             var temp = activityDataForWeek[x];
 
-            total_exercise_goal = parseInt(temp.total_exercise_goal)
-            total_exercise = parseInt(temp.total_exercise)
+            if (temp.total_exercise_goal != null && total_exercise != null) {
+              total_exercise_goal = parseInt(temp.total_exercise_goal)
+              total_exercise = parseInt(temp.total_exercise)
+            }
 
-            total_steps_goal = parseInt(temp.total_steps_goal)
-            total_steps = parseInt(temp.total_steps)
+            if (temp.total_steps_goal != null && total_steps != null) {
+              total_steps_goal = parseInt(temp.total_steps_goal)
+              total_steps = parseInt(temp.total_steps)
+            }
 
-            time_active_low_goal = parseInt(temp.time_active_low_goal)
-            time_active_low = parseInt(temp.time_active_low)
+            if (temp.time_active_low_goal != null && time_active_low != null) {
+              time_active_low_goal = parseInt(temp.time_active_low_goal)
+              time_active_low = parseInt(temp.time_active_low)
+            }
 
-            time_active_medium_goal = parseInt(temp.time_active_medium_goal)
-            time_active_medium = parseInt(temp.time_active_medium)
+            if (temp.time_active_medium_goal != null && time_active_medium != null) {
+              time_active_medium_goal = parseInt(temp.time_active_medium_goal)
+              time_active_medium = parseInt(temp.time_active_medium)
+            }
 
-            time_active_high_goal = parseInt(temp.time_active_high_goal)
-            time_active_high = parseInt(temp.time_active_high)
+            if (temp.time_active_high_goal != null && time_active_high != null) {
+              time_active_high_goal = parseInt(temp.time_active_high_goal)
+              time_active_high = parseInt(temp.time_active_high)
+            }
 
-            total_compliance_goal = parseInt(temp.total_exercise_goal) //TO DO
-            total_compliance = parseInt(temp.total_exercise)  //TO DO
+            if (temp.total_exercise_goal != null && total_exercise != null) {
+              total_compliance_goal = parseInt(temp.total_exercise_goal) //TO DO
+              total_compliance = parseInt(temp.total_exercise)  //TO DO
+            }
 
+             totalWeekExe = totalWeekExe + total_exercise;
+             totalWeekSteps = totalWeekSteps + total_steps;
+             totalWeekLow = totalWeekLow + time_active_low;
+             totalWeekMid = totalWeekMid + time_active_medium;
+             totalWeekHigh = totalWeekHigh + time_active_high;
             break;
           }
         }
@@ -919,6 +984,12 @@ angular.module('geiaFitApp')
         dataWeekCompliance.push(total_compliance);
       }
 
+      $scope.totalWeekExe = (totalWeekExe == null) ? 0 : totalWeekExe;
+      $scope.totalWeekSteps = (totalWeekSteps == null) ? 0 : totalWeekSteps;
+      $scope.totalWeekLow = (totalWeekLow == null) ? 0 : totalWeekLow;
+      $scope.totalWeekMid = (totalWeekMid == null) ? 0 : totalWeekMid;
+      $scope.totalWeekHigh = (totalWeekHigh == null) ? 0 : totalWeekHigh;
+
       $scope.chartConfigWeekViewExercise = getChartConfigForWeek(dataWeekExerciseGoal, dataWeekExercise)
       $scope.chartConfigWeekViewSteps = getChartConfigForWeek(dataWeekStepsGoal, dataWeekSteps)
       $scope.chartConfigWeekViewLow = getChartConfigForWeek(dataWeekLightGoal, dataWeekLight)
@@ -928,32 +999,37 @@ angular.module('geiaFitApp')
 
     }
 
-    getActivityDataForMonth = function (successData) {
-      var startDate = new Date();
-      var endDate = new Date(startDate.getFullYear(), startDate.getMonth() - 7, startDate.getDate(),
-        startDate.getHours(), startDate.getMinutes(), startDate.getSeconds(), startDate.getMilliseconds())
+    getActivityDataForMonth = function (successData, dateForView) {
+      var startDate
+      if(dateForView == null){
+        startDate = new Date();
+      }
+      else{
+        startDate = dateForView;
+      }
+      var endDate = new Date(startDate.getFullYear(), startDate.getMonth(),1)
 
       for (var x in successData) {
         var unixDate = successData[x].date
         var date = utilityService.unixTimeToDate(unixDate);
-        //console.log(date)
         if (startDate > date && date > endDate) {
           activityDataForMonth.push(successData[x]);
         }
       }
     }
 
-    getMonthDates = function () {
-      var endDate = new Date();
-      var startDate = new Date(endDate.getFullYear(), endDate.getMonth()-1, endDate.getDate(),
-        endDate.getHours(), endDate.getMinutes(), endDate.getSeconds(), endDate.getMilliseconds())
+    getMonthDates = function (date) {
+      var year = date.getFullYear()
+      var month = date.getMonth()
+      var date = date.getDate()
       var dateList = [];
-      var date = startDate;
-      while (date < endDate) {
+
+      var d = new Date(year, month, date);
+      var dateList = [];
+      while (d.getMonth() === month) {
+        var date = new Date(d.getFullYear(), d.getMonth(), d.getDate());
         dateList.push(date)
-        var tempDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1,
-          date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds())
-        date = tempDate;
+        d.setDate(d.getDate() - 1);
       }
       return dateList;
     }
@@ -973,9 +1049,17 @@ angular.module('geiaFitApp')
       var dataMonthVigorous = [];
       var dataMonthCompliance = [];
 
-      var dates = getMonthDates();
+      var totalMonthExe =0;
+      var totalMonthSteps =0;
+      var totalMonthLow =0;
+      var totalMonthMid =0;
+      var totalMonthHigh =0;
 
+      var dates = getMonthDates($scope.DATE);
+      var onlyDates = [] 
       for (var d in dates) {
+        onlyDates.push(dates[d].getDate())
+
         var total_exercise_goal = 0
         var total_exercise = 0
         var total_steps_goal = 0
@@ -996,24 +1080,42 @@ angular.module('geiaFitApp')
             tempDate.getDate() === dates[d].getDate()) {
             var temp = activityDataForMonth[x];
 
-            total_exercise_goal = parseInt(temp.total_exercise_goal)
-            total_exercise = parseInt(temp.total_exercise)
+             if (temp.total_exercise_goal != null && total_exercise != null) {
+              total_exercise_goal = parseInt(temp.total_exercise_goal)
+              total_exercise = parseInt(temp.total_exercise)
+            }
 
-            total_steps_goal = parseInt(temp.total_steps_goal)
-            total_steps = parseInt(temp.total_steps)
+            if (temp.total_steps_goal != null && total_steps != null) {
+              total_steps_goal = parseInt(temp.total_steps_goal)
+              total_steps = parseInt(temp.total_steps)
+            }
 
-            time_active_low_goal = parseInt(temp.time_active_low_goal)
-            time_active_low = parseInt(temp.time_active_low)
+            if (temp.time_active_low_goal != null && time_active_low != null) {
+              time_active_low_goal = parseInt(temp.time_active_low_goal)
+              time_active_low = parseInt(temp.time_active_low)
+            }
 
-            time_active_medium_goal = parseInt(temp.time_active_medium_goal)
-            time_active_medium = parseInt(temp.time_active_medium)
+            if (temp.time_active_medium_goal != null && time_active_medium != null) {
+              time_active_medium_goal = parseInt(temp.time_active_medium_goal)
+              time_active_medium = parseInt(temp.time_active_medium)
+            }
 
-            time_active_high_goal = parseInt(temp.time_active_high_goal)
-            time_active_high = parseInt(temp.time_active_high)
+            if (temp.time_active_high_goal != null && time_active_high != null) {
+              time_active_high_goal = parseInt(temp.time_active_high_goal)
+              time_active_high = parseInt(temp.time_active_high)
+            }
 
-            total_compliance_goal = parseInt(temp.total_exercise_goal) //TO DO
-            total_compliance = parseInt(temp.total_exercise)  //TO DO
+            if (temp.total_exercise_goal != null && total_exercise != null) {
+              total_compliance_goal = parseInt(temp.total_exercise_goal) //TO DO
+              total_compliance = parseInt(temp.total_exercise)  //TO DO
+            }
 
+
+            totalMonthExe = totalMonthExe + total_exercise;
+            totalMonthSteps = totalMonthSteps + total_steps;
+            totalMonthLow = totalMonthLow + time_active_low;
+            totalMonthMid = totalMonthMid + time_active_medium;
+            totalMonthHigh = totalMonthHigh + time_active_high;
             break;
           }
         }
@@ -1033,16 +1135,61 @@ angular.module('geiaFitApp')
         dataMonthCompliance.push(total_compliance);
       }
 
-      $scope.chartConfigMonthViewExercise = getChartConfigForMonth(dataMonthExerciseGoal, dataMonthExercise)
-      $scope.chartConfigMonthViewSteps = getChartConfigForMonth(dataMonthStepsGoal, dataMonthSteps)
-      $scope.chartConfigMonthViewLow = getChartConfigForMonth(dataMonthLightGoal, dataMonthLight)
-      $scope.chartConfigMonthViewMid = getChartConfigForMonth(dataMonthModerateGoal, dataMonthModerate)
-      $scope.chartConfigMonthViewHigh = getChartConfigForMonth(dataMonthVigorousGoal, dataMonthVigorous)
-      $scope.chartConfigMonthViewComp = getChartConfigForMonth(dataMonthComplianceGoal, dataMonthCompliance)
+      $scope.totalMonthExe = (totalMonthExe == null) ? 0 : totalMonthExe;
+      $scope.totalMonthSteps = (totalMonthSteps == null) ? 0 : totalMonthSteps;
+      $scope.totalMonthLow = (totalMonthLow == null) ? 0 : totalMonthLow;
+      $scope.totalMonthMid = (totalMonthMid == null) ? 0 : totalMonthMid;
+      $scope.totalMonthHigh = (totalMonthHigh == null) ? 0 : totalMonthHigh;
+      $scope.lastDateOfMonth =  Math.max(...onlyDates);
+
+       dataMonthExerciseGoal.reverse();
+       dataMonthStepsGoal.reverse();
+       dataMonthLightGoal.reverse();
+       dataMonthModerateGoal.reverse();
+       dataMonthVigorousGoal.reverse();
+       dataMonthComplianceGoal.reverse();
+
+       dataMonthExercise.reverse();
+       dataMonthSteps.reverse();
+       dataMonthLight.reverse();
+       dataMonthModerate.reverse();
+       dataMonthVigorous.reverse();
+       dataMonthCompliance.reverse();
+
+       onlyDates.reverse();
+
+
+      $scope.chartConfigMonthViewExercise = getChartConfigForMonth(dataMonthExerciseGoal, dataMonthExercise,onlyDates)
+      $scope.chartConfigMonthViewSteps = getChartConfigForMonth(dataMonthStepsGoal, dataMonthSteps,onlyDates)
+      $scope.chartConfigMonthViewLow = getChartConfigForMonth(dataMonthLightGoal, dataMonthLight,onlyDates)
+      $scope.chartConfigMonthViewMid = getChartConfigForMonth(dataMonthModerateGoal, dataMonthModerate,onlyDates)
+      $scope.chartConfigMonthViewHigh = getChartConfigForMonth(dataMonthVigorousGoal, dataMonthVigorous,onlyDates)
+      $scope.chartConfigMonthViewComp = getChartConfigForMonth(dataMonthComplianceGoal, dataMonthCompliance,onlyDates)
 
     }
 
+    $scope.prevDate = function(){
+      var d = $scope.DATE;
+      var tempDate = new Date(d.getFullYear(), d.getMonth()-1,1)
+      $scope.DATE = new Date(tempDate.getFullYear(), tempDate.getMonth() + 1, 0);
+      console.log("Perv Selected "+$scope.DATE)
+      getActivityDataForMonth(ActivityData,$scope.DATE) 
+      chartConfigForMonth(); 
+    }
+
+    $scope.nextDate = function(){
+      var d = $scope.DATE;
+      var tempDate = new Date(d.getFullYear(), d.getMonth()+1,1)
+      $scope.DATE = new Date(tempDate.getFullYear(), tempDate.getMonth() + 1, 0);
+      console.log("Next Selected "+$scope.DATE)
+      getActivityDataForMonth(ActivityData,$scope.DATE)
+      chartConfigForMonth();  
+    }
+
     init = function () {
+      var d = new Date();
+      $scope.DATE = new Date(d.getFullYear(),d.getMonth(),d.getDate());
+
       AppService.profile($stateParams.uid).then(function (success) {
         var imageUrl;
         var gender;
@@ -1084,12 +1231,13 @@ angular.module('geiaFitApp')
       })
 
       AppService.getActivity($stateParams.uid).then(function (success) {
-        console.log("Success")
+        console.log("getActivity Success")
+        ActivityData = success;
         getActivityDataForYesterday(success);
         getActivityDataForWeek(success);
         getActivityDataForMonth(success);
       }, function (error) {
-        console.log("error")
+        console.log("getActivity error")
       })
     }
     init();
@@ -1122,6 +1270,8 @@ angular.module('geiaFitApp')
           $scope.MonthView = true;
           $scope.DayView = false;
           $scope.WeekView = false;
+          var d = new Date();
+          $scope.DATE = new Date(d.getFullYear(),d.getMonth(),d.getDate());
           chartConfigForMonth();
           break;
         default:
@@ -1155,28 +1305,28 @@ angular.module('geiaFitApp')
             enabled: false
           },
           pane: {
-            startAngle: 0,
-            endAngle: 360,
-            size: '70%',
-            background: [{ // Track for Move
-              outerRadius: '112%',
-              innerRadius: '88%',
-              backgroundColor: "yellow",
-              borderWidth: 0
-            }]
+                  startAngle: 0,
+                  endAngle: 360,
+                  size: '70%',
+                  background: [{ // Track for Move
+                          outerRadius: '123%',
+                          innerRadius: '77%',
+                          backgroundColor: Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0.3).get(),
+                          borderWidth: 0
+                  }]
           },
           plotOptions: {
-            solidgauge: {
-              borderWidth: '7%',
-              dataLabels: {
-                enabled: true,
-                y: -20,
-                borderWidth: 0,
-                useHTML: true
-              },
-              linecap: 'round',
-              stickyTracking: false
-            }
+                  solidgauge: {
+                          borderWidth: '14%',
+                          dataLabels: {
+                                  enabled: true,
+                                  y: -20,
+                                  borderWidth: 0,
+                                  useHTML: true
+                          },
+                          linecap: 'round',
+                          stickyTracking: false
+                  }
           },
         },
         yAxis: {
@@ -1186,24 +1336,33 @@ angular.module('geiaFitApp')
             tickPositions: []
           },
         series: [{
-            name: 'Move',
-            borderColor: "green",
-            data: [{
-              color: "green",
-              radius: '100%',
-              innerRadius: '100%',
-              y: data
-            }],
-             dataLabels: {
-                format: '<div style="text-align:center"><span style="font-size:25px;color:' +
-                    ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'red') + '">{y}</span>' +
-                       '<span style="font-size:25px;color:red">%</span></div>'
-            }
-          }],
-        /*size: {
-          width: 200,
-          height: 180
-        },*/
+                    name: 'Move',
+                    borderColor: {
+                        linearGradient: [0, 0, 500, 500],
+                        stops: [
+                            [0, 'rgb(66, 153, 209)'],
+                            [1, 'rgb(31, 96, 164)']
+                        ]
+                    },
+                    data: [{
+                        color: {
+                            linearGradient: [0, 60, 60, 500],
+                            stops: [
+                                [0, 'rgb(66, 153, 209)'],
+                                [1, 'rgb(31, 96, 164)']
+                            ]
+                        },
+                        radius: '100%',
+                        innerRadius: '100%',
+                        y: data
+                    }],
+                    dataLabels: {
+                        format: '<div style="text-align:center"><span style="font-size:24px;font-weight:normal;color:' +
+                        ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'white') + '">{y}</span>' +
+                        '<span style="font-size:24px;color:white;font-weight:normal">%</span></div>'
+                    }
+                }],
+        
         func: function (chart) {
         }
       };
@@ -1278,12 +1437,13 @@ angular.module('geiaFitApp')
           },
         },
         series: [{
-          data: dataGoal,
-          color: "yellow",
+                data: dataGoal,
+                color: "#F3A81B",
+                borderColor: 'transparent'
         }, {
-            data: dataAchived,
-            color: "blue",
-          }],
+                        data: dataAchived,
+                        color: "#009CDB",
+                }],
         func: function (chart) {
         }
 
@@ -1292,19 +1452,7 @@ angular.module('geiaFitApp')
     }
 
 
-    function getChartConfigForMonth(dataGoal, dataAchived) {
-      var endDate = new Date();
-      var startDate = new Date(endDate.getFullYear(), endDate.getMonth()-1, endDate.getDate(),
-        endDate.getHours(), endDate.getMinutes(), endDate.getSeconds(), endDate.getMilliseconds())
-      var dateList = [];
-      var date = startDate;
-      while (date <= endDate) {
-        dateList.push(date.getDate())
-        var tempDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1,
-          date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds())
-        date = tempDate;
-      }
-
+    function getChartConfigForMonth(dataGoal, dataAchived, dates) {
       var chartConfig = {
         options: {
           chart: {
@@ -1339,7 +1487,7 @@ angular.module('geiaFitApp')
         },
         //X axis data
         xAxis: {
-          categories: dateList,
+          categories: dates,
         },
         yAxis: {
           min: 0,
@@ -1348,12 +1496,13 @@ angular.module('geiaFitApp')
           },
         },
         series: [{
-          data: dataGoal,
-          color: "yellow",
+                data: dataGoal,
+                color: "#F3A81B",
+                borderColor: 'transparent'
         }, {
-            data: dataAchived,
-            color: "blue",
-          }],
+                        data: dataAchived,
+                        color: "#009CDB",
+                }],
         func: function (chart) {
         }
 
@@ -1796,16 +1945,15 @@ AppService,$ionicScrollDelegate)
     
    // alert("Sendmessage"+$scope.input.message);
     var data ={ 
-    "message": $scope.input.message,
-    "ptid":"1" //$stateParams.uid
+    "message": $scope.input.message
     };
   
-  ChatApp.sendPatientMessage(data,$stateParams.uid).then(function(success){
+  ChatApp.sendPatientMessage(data,$stateParams.uid,uid).then(function(success){
        //  alert("success"+JSON.stringify(success));
 var message ={
 "message_id": success.message_id,
-"uid1": $stateParams.uid,
-"uid2": uid,
+"uid1": uid,
+"uid2": $stateParams.uid,
 "message":  $scope.input.message,
 "timestamp": success.timestamp
 
@@ -1835,7 +1983,7 @@ $scope.messages.push(message);
 
      function getMessages() {
       // the service is mock but you would probably pass the toUser's GUID here
-      ChatApp.getUserMessages($stateParams.uid).then(function(data) {
+      ChatApp.getUserMessages($stateParams.uid,uid).then(function(data) {
         $scope.doneLoading = true;
         $scope.messages = data;
      //   alert(JSON.stringify(data));
@@ -1872,9 +2020,11 @@ $scope.messages.push(message);
   }
 ])
 
-  .controller('VitalsCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', '$ionicHistory', function ($scope, $state, $stateParams, sortedByList, $ionicHistory) {
+  .controller('VitalsCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', '$ionicHistory','AppService', function ($scope, $state, $stateParams, sortedByList, $ionicHistory, AppService) {
     $scope.sortedByList = sortedByList;
     $scope.sortedBy = $scope.sortedByList[0].id;
+    $scope.selectedView = 'Today';
+    $scope.DayView = true;
 
     $scope.patientProfile = {
       name: $stateParams.name,
@@ -1884,7 +2034,17 @@ $scope.messages.push(message);
       url: $stateParams.profile_url
     }
 
-    $scope.selectedView = 'Today';
+     init = function () {
+      AppService.getVitals($stateParams.uid).then(function (success) {
+        console.log("Vital Success")
+        console.log(success)
+        //getActivityDataForYesterday(success);
+        //getActivityDataForWeek(success);
+        //getActivityDataForMonth(success);
+      }, function (error) {
+        console.log("error")
+      })
+    }
 
     $scope.changeView = function (view) {
       switch (view) {
@@ -1903,7 +2063,6 @@ $scope.messages.push(message);
 
     }
 
-
     function getStateTitle(id) {
       var title = '';
       var list = $scope.sortedByList;
@@ -1917,10 +2076,9 @@ $scope.messages.push(message);
 
     $scope.gotoAction = function (id) {
       var state = getStateTitle(id);
-
       $state.transitionTo(state, { name: $stateParams.name }, { reload: true });
     }
 
-
+    init();
 
   }]);
