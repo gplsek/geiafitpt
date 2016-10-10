@@ -183,6 +183,19 @@ angular.module('geiaFitApp')
       return prom;
     }
 
+    var getHealthPoint = function (uid) {
+      console.log(uid)
+      var prom = $http({
+        method: "GET",
+        url: ApiEndpoint.url + '/log/health_points/' + uid
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      })
+      return prom;
+    }
+
     var getVitals = function (uid) {
       console.log(uid)
       var prom = $http({
@@ -271,6 +284,7 @@ angular.module('geiaFitApp')
     return {
       patientsData: getPatientsData,
       getActivity: getActivity,
+      getHealthPoint : getHealthPoint,
       getVitals: getVitals,
       addPatient: addPatient,
       profile: getProfile,
