@@ -338,7 +338,7 @@ angular.module('geiaFitApp')
 
 
    var sendPatientMessage = function(message,userId,ptid){
-     alert("sendPatientMessage");
+  //   alert("sendPatientMessage");
 
     var messageData = $http({
       headers: {
@@ -350,7 +350,7 @@ angular.module('geiaFitApp')
 
         data: message,
       }).then(function (response) {
-        alert("SERVICE SUCCESS" + JSON.stringify(response.data));
+       // alert("SERVICE SUCCESS" + JSON.stringify(response.data));
         return response.data;
       }, function (err) {
         alert("SERVICE ERROR" + JSON.stringify(err.data));
