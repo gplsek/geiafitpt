@@ -368,6 +368,11 @@ $scope.title = 'Set Exercise Program';
       $state.transitionTo(state, {}, { reload: true });
     }
 
+    init = function(){
+      console.log($stateParams.patientId)
+    }
+    init();
+
     /*$scope.setActivityGoals = function(data){
         console.log($scope.activityGoals)
         console.log(data)
@@ -792,11 +797,15 @@ $scope.title = 'Set Exercise Program';
   }])
 
 
-  .controller('ActivityCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', 'AppService', 'utilityService','$rootScope', function ($scope, $stateParams, sortedByList, $state, AppService, utilityService,$rootScope) {
+  .controller('ActivityCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', 'AppService', 'utilityService', function ($scope, $stateParams, sortedByList, $state, AppService, utilityService) {
+   $scope.DefaultView = true;
     var patientData;
     var ActivityData;
+    var complianceData;
     var activityDataForWeek = [];
+    var complianceDataForWeek = [];
     var activityDataForMonth = [];
+    var complianceDataForMonth = [];
     var activityDataForYesterday = '';
     var monthList = ["January", "February", "March", "April", "May", "June",
       "July", "August", "September", "October", "November", "December"];
@@ -882,11 +891,11 @@ $scope.title = 'Set Exercise Program';
       console.log('lowPer ' + lowPer);
       console.log('mediumPer ' + mediumPer);
       console.log('highPer ' + highPer);
-      $scope.chartConfig = getChartConfigForDay(excPer);
-      $scope.chartConfig1 = getChartConfigForDay(stepsPer);
-      $scope.chartConfig2 = getChartConfigForDay(lowPer);
-      $scope.chartConfig3 = getChartConfigForDay(mediumPer);
-      $scope.chartConfig4 = getChartConfigForDay(highPer);
+      $scope.chartConfig = getChartConfigForDay(excPer, '#4299D1' , '#1F60A4' );
+      $scope.chartConfig1 = getChartConfigForDay(stepsPer,  '#4299D1' , '#1F60A4' );
+      $scope.chartConfig2 = getChartConfigForDay(lowPer,'#DDF6BC' , '#B8E986' );
+      $scope.chartConfig3 = getChartConfigForDay(mediumPer,'#00CBEF' , '#009CDB' );
+      $scope.chartConfig4 = getChartConfigForDay(highPer,'#4299D1' , '#1F60A4' );
     }
 
 
@@ -904,6 +913,22 @@ $scope.title = 'Set Exercise Program';
         }
       }
       console.log(activityDataForWeek)
+    }
+
+    getComplianceDataForWeek = function (successData) {
+      
+      var startDate = new Date();
+      var endDate = new Date(startDate.getFullYear(), startDate.getMonth() , startDate.getDate()-7,
+        startDate.getHours(), startDate.getMinutes(), startDate.getSeconds(), startDate.getMilliseconds())
+
+      for (var x in successData) {
+        var unixDate = successData[x].created
+        var date = utilityService.unixTimeToDate(unixDate);
+        if (startDate > date && date > endDate) {
+          complianceDataForWeek.push(successData[x]);
+        }
+      }
+      console.log(complianceDataForWeek)
     }
 
     getWeekDates = function () {
@@ -927,14 +952,12 @@ $scope.title = 'Set Exercise Program';
       var dataWeekLightGoal = [];
       var dataWeekModerateGoal = [];
       var dataWeekVigorousGoal = [];
-      var dataWeekComplianceGoal = [];
 
       var dataWeekExercise = [];
       var dataWeekSteps = [];
       var dataWeekLight = [];
       var dataWeekModerate = [];
       var dataWeekVigorous = [];
-      var dataWeekCompliance = [];
 
       var totalWeekExe =0;
       var totalWeekSteps =0;
@@ -956,8 +979,6 @@ $scope.title = 'Set Exercise Program';
         var time_active_medium = 0
         var time_active_high_goal = 0
         var time_active_high = 0
-        var total_compliance_goal = 0 //TO DO
-        var total_compliance = 0 //TO DO 
 
         for (var x in activityDataForWeek) {
           var tempDate = utilityService.unixTimeToDate(activityDataForWeek[x].date);
@@ -966,34 +987,29 @@ $scope.title = 'Set Exercise Program';
             tempDate.getDate() === dates[d].getDate()) {
             var temp = activityDataForWeek[x];
 
-            if (temp.total_exercise_goal != null && total_exercise != null) {
+            if (temp.total_exercise_goal != null && temp.total_exercise != null) {
               total_exercise_goal = parseInt(temp.total_exercise_goal)
               total_exercise = parseInt(temp.total_exercise)
             }
 
-            if (temp.total_steps_goal != null && total_steps != null) {
+            if (temp.total_steps_goal != null && temp.total_steps != null) {
               total_steps_goal = parseInt(temp.total_steps_goal)
               total_steps = parseInt(temp.total_steps)
             }
 
-            if (temp.time_active_low_goal != null && time_active_low != null) {
+            if (temp.time_active_low_goal != null && temp.time_active_low != null) {
               time_active_low_goal = parseInt(temp.time_active_low_goal)
               time_active_low = parseInt(temp.time_active_low)
             }
 
-            if (temp.time_active_medium_goal != null && time_active_medium != null) {
+            if (temp.time_active_medium_goal != null && temp.time_active_medium != null) {
               time_active_medium_goal = parseInt(temp.time_active_medium_goal)
               time_active_medium = parseInt(temp.time_active_medium)
             }
 
-            if (temp.time_active_high_goal != null && time_active_high != null) {
+            if (temp.time_active_high_goal != null && temp.time_active_high != null) {
               time_active_high_goal = parseInt(temp.time_active_high_goal)
               time_active_high = parseInt(temp.time_active_high)
-            }
-
-            if (temp.total_exercise_goal != null && total_exercise != null) {
-              total_compliance_goal = parseInt(temp.total_exercise_goal) //TO DO
-              total_compliance = parseInt(temp.total_exercise)  //TO DO
             }
 
              totalWeekExe = totalWeekExe + total_exercise;
@@ -1009,14 +1025,12 @@ $scope.title = 'Set Exercise Program';
         dataWeekLightGoal.push(time_active_low_goal);
         dataWeekModerateGoal.push(time_active_medium_goal);
         dataWeekVigorousGoal.push(time_active_high_goal);
-        dataWeekComplianceGoal.push(total_compliance_goal);
 
         dataWeekExercise.push(total_exercise);
         dataWeekSteps.push(total_steps);
         dataWeekLight.push(time_active_low);
         dataWeekModerate.push(time_active_medium);
         dataWeekVigorous.push(time_active_high);
-        dataWeekCompliance.push(total_compliance);
       }
 
       $scope.totalWeekExe = (totalWeekExe == null) ? 0 : totalWeekExe;
@@ -1030,9 +1044,38 @@ $scope.title = 'Set Exercise Program';
       $scope.chartConfigWeekViewLow = getChartConfigForWeek(dataWeekLightGoal, dataWeekLight)
       $scope.chartConfigWeekViewMid = getChartConfigForWeek(dataWeekModerateGoal, dataWeekModerate)
       $scope.chartConfigWeekViewHigh = getChartConfigForWeek(dataWeekVigorousGoal, dataWeekVigorous)
-      $scope.chartConfigWeekViewComp = getChartConfigForWeek(dataWeekComplianceGoal, dataWeekCompliance)
-
     }
+
+    chartConfigForComplianceWeek = function () {
+      var dataWeekComplianceGoal = [];
+      var dataWeekCompliance = [];
+      var totalWeekCompliance =0;
+
+      var dates = getWeekDates();
+
+      for (var d in dates) {
+        var total_compliance_goal = 0 
+        var total_compliance = 0 
+        for (var x in complianceDataForWeek) {
+          var tempDate = utilityService.unixTimeToDate(complianceDataForWeek[x].created);
+          if (tempDate.getFullYear() === dates[d].getFullYear() &&
+            tempDate.getMonth() === dates[d].getMonth() &&
+            tempDate.getDate() === dates[d].getDate()) {
+            var temp = complianceDataForWeek[x];
+            if (temp.daily_challenge != null && temp.daily_points != null) {
+              total_compliance_goal = parseInt(temp.daily_challenge)
+              total_compliance = parseInt(temp.daily_points)  
+            }
+            break;
+          }
+        }
+        dataWeekComplianceGoal.push(total_compliance_goal);
+        dataWeekCompliance.push(total_compliance);
+      }
+
+      $scope.chartConfigWeekViewComp = getChartConfigForWeek(dataWeekComplianceGoal, dataWeekCompliance)
+    }
+
 
     getActivityDataForMonth = function (successData, dateForView) {
       var startDate
@@ -1049,6 +1092,25 @@ $scope.title = 'Set Exercise Program';
         var date = utilityService.unixTimeToDate(unixDate);
         if (startDate > date && date > endDate) {
           activityDataForMonth.push(successData[x]);
+        }
+      }
+    }
+
+    getComplianceDataForMonth = function (successData, dateForView) {
+      var startDate
+      if(dateForView == null){
+        startDate = new Date();
+      }
+      else{
+        startDate = dateForView;
+      }
+      var endDate = new Date(startDate.getFullYear(), startDate.getMonth(),1)
+
+      for (var x in successData) {
+        var unixDate = successData[x].created
+        var date = utilityService.unixTimeToDate(unixDate);
+        if (startDate > date && date > endDate) {
+          complianceDataForMonth.push(successData[x]);
         }
       }
     }
@@ -1075,14 +1137,12 @@ $scope.title = 'Set Exercise Program';
       var dataMonthLightGoal = [];
       var dataMonthModerateGoal = [];
       var dataMonthVigorousGoal = [];
-      var dataMonthComplianceGoal = [];
 
       var dataMonthExercise = [];
       var dataMonthSteps = [];
       var dataMonthLight = [];
       var dataMonthModerate = [];
       var dataMonthVigorous = [];
-      var dataMonthCompliance = [];
 
       var totalMonthExe =0;
       var totalMonthSteps =0;
@@ -1090,7 +1150,8 @@ $scope.title = 'Set Exercise Program';
       var totalMonthMid =0;
       var totalMonthHigh =0;
 
-      var dates = getMonthDates($scope.DATE);
+      var tempDate = new Date($scope.DATE.getFullYear(), $scope.DATE.getMonth() + 1, 0);
+      var dates = getMonthDates(tempDate);
       var onlyDates = [] 
       for (var d in dates) {
         onlyDates.push(dates[d].getDate())
@@ -1105,8 +1166,6 @@ $scope.title = 'Set Exercise Program';
         var time_active_medium = 0
         var time_active_high_goal = 0
         var time_active_high = 0
-        var total_compliance_goal = 0 //TO DO
-        var total_compliance = 0 //TO DO 
 
         for (var x in activityDataForMonth) {
           var tempDate = utilityService.unixTimeToDate(activityDataForMonth[x].date);
@@ -1115,34 +1174,29 @@ $scope.title = 'Set Exercise Program';
             tempDate.getDate() === dates[d].getDate()) {
             var temp = activityDataForMonth[x];
 
-             if (temp.total_exercise_goal != null && total_exercise != null) {
+             if (temp.total_exercise_goal != null && temp.total_exercise != null) {
               total_exercise_goal = parseInt(temp.total_exercise_goal)
               total_exercise = parseInt(temp.total_exercise)
             }
 
-            if (temp.total_steps_goal != null && total_steps != null) {
+            if (temp.total_steps_goal != null && temp.total_steps != null) {
               total_steps_goal = parseInt(temp.total_steps_goal)
               total_steps = parseInt(temp.total_steps)
             }
 
-            if (temp.time_active_low_goal != null && time_active_low != null) {
+            if (temp.time_active_low_goal != null && temp.time_active_low != null) {
               time_active_low_goal = parseInt(temp.time_active_low_goal)
               time_active_low = parseInt(temp.time_active_low)
             }
 
-            if (temp.time_active_medium_goal != null && time_active_medium != null) {
+            if (temp.time_active_medium_goal != null && temp.time_active_medium != null) {
               time_active_medium_goal = parseInt(temp.time_active_medium_goal)
               time_active_medium = parseInt(temp.time_active_medium)
             }
 
-            if (temp.time_active_high_goal != null && time_active_high != null) {
+            if (temp.time_active_high_goal != null && temp.time_active_high != null) {
               time_active_high_goal = parseInt(temp.time_active_high_goal)
               time_active_high = parseInt(temp.time_active_high)
-            }
-
-            if (temp.total_exercise_goal != null && total_exercise != null) {
-              total_compliance_goal = parseInt(temp.total_exercise_goal) //TO DO
-              total_compliance = parseInt(temp.total_exercise)  //TO DO
             }
 
 
@@ -1160,14 +1214,12 @@ $scope.title = 'Set Exercise Program';
         dataMonthLightGoal.push(time_active_low_goal);
         dataMonthModerateGoal.push(time_active_medium_goal);
         dataMonthVigorousGoal.push(time_active_high_goal);
-        dataMonthComplianceGoal.push(total_compliance_goal);
 
         dataMonthExercise.push(total_exercise);
         dataMonthSteps.push(total_steps);
         dataMonthLight.push(time_active_low);
         dataMonthModerate.push(time_active_medium);
         dataMonthVigorous.push(time_active_high);
-        dataMonthCompliance.push(total_compliance);
       }
 
       $scope.totalMonthExe = (totalMonthExe == null) ? 0 : totalMonthExe;
@@ -1182,34 +1234,79 @@ $scope.title = 'Set Exercise Program';
        dataMonthLightGoal.reverse();
        dataMonthModerateGoal.reverse();
        dataMonthVigorousGoal.reverse();
-       dataMonthComplianceGoal.reverse();
 
        dataMonthExercise.reverse();
        dataMonthSteps.reverse();
        dataMonthLight.reverse();
        dataMonthModerate.reverse();
        dataMonthVigorous.reverse();
-       dataMonthCompliance.reverse();
 
        onlyDates.reverse();
-
 
       $scope.chartConfigMonthViewExercise = getChartConfigForMonth(dataMonthExerciseGoal, dataMonthExercise,onlyDates)
       $scope.chartConfigMonthViewSteps = getChartConfigForMonth(dataMonthStepsGoal, dataMonthSteps,onlyDates)
       $scope.chartConfigMonthViewLow = getChartConfigForMonth(dataMonthLightGoal, dataMonthLight,onlyDates)
       $scope.chartConfigMonthViewMid = getChartConfigForMonth(dataMonthModerateGoal, dataMonthModerate,onlyDates)
       $scope.chartConfigMonthViewHigh = getChartConfigForMonth(dataMonthVigorousGoal, dataMonthVigorous,onlyDates)
-      $scope.chartConfigMonthViewComp = getChartConfigForMonth(dataMonthComplianceGoal, dataMonthCompliance,onlyDates)
 
     }
+
+
+    chartConfigForComplianceMonth = function () {
+
+      var dataMonthComplianceGoal = [];
+      var dataMonthCompliance = [];
+
+      var tempDate = new Date($scope.DATE.getFullYear(), $scope.DATE.getMonth() + 1, 0);
+      var dates = getMonthDates(tempDate);
+      var onlyDates = []
+      for (var d in dates) {
+        onlyDates.push(dates[d].getDate())
+
+        var total_compliance_goal = 0
+        var total_compliance = 0
+
+        for (var x in complianceDataForMonth) {
+          var tempDate = utilityService.unixTimeToDate(complianceDataForMonth[x].created);
+          if (tempDate.getFullYear() === dates[d].getFullYear() &&
+            tempDate.getMonth() === dates[d].getMonth() &&
+            tempDate.getDate() === dates[d].getDate()) {
+            var temp = complianceDataForMonth[x];
+
+            if (temp.daily_challenge != null && temp.daily_points != null) {
+              total_compliance_goal = parseInt(temp.daily_challenge)
+              total_compliance = parseInt(temp.daily_points)
+            }
+
+            break;
+          }
+        }
+
+        dataMonthComplianceGoal.push(total_compliance_goal);
+        dataMonthCompliance.push(total_compliance);
+      }
+
+      $scope.lastDateOfMonth = Math.max(...onlyDates);
+
+      dataMonthComplianceGoal.reverse();
+      dataMonthCompliance.reverse();
+      onlyDates.reverse();
+
+      $scope.chartConfigMonthViewComp = getChartConfigForMonth(dataMonthComplianceGoal, dataMonthCompliance, onlyDates)
+
+    }
+
+
 
     $scope.prevDate = function(){
       var d = $scope.DATE;
       var tempDate = new Date(d.getFullYear(), d.getMonth()-1,1)
       $scope.DATE = new Date(tempDate.getFullYear(), tempDate.getMonth() + 1, 0);
       console.log("Perv Selected "+$scope.DATE)
-      getActivityDataForMonth(ActivityData,$scope.DATE) 
+      getActivityDataForMonth(ActivityData,$scope.DATE)
+      getComplianceDataForMonth(complianceData,$scope.DATE) 
       chartConfigForMonth(); 
+      chartConfigForComplianceMonth();
     }
 
     $scope.nextDate = function(){
@@ -1218,12 +1315,61 @@ $scope.title = 'Set Exercise Program';
       $scope.DATE = new Date(tempDate.getFullYear(), tempDate.getMonth() + 1, 0);
       console.log("Next Selected "+$scope.DATE)
       getActivityDataForMonth(ActivityData,$scope.DATE)
+      getComplianceDataForMonth(complianceData,$scope.DATE) 
       chartConfigForMonth();  
+      chartConfigForComplianceMonth();
+    }
+
+     $scope.sortedByList = sortedByList;
+    $scope.sortedBy = $scope.sortedByList[0].id;
+    //$scope.selectedView = 'day';
+    //$scope.DayView = true;
+
+    $scope.changeView = function (view) {
+      switch (view) {	
+        case 1:
+          $scope.selectedView = 'day';
+          chartConfigForDay();
+          $scope.DayView = true;
+          $scope.WeekView = false;
+          $scope.MonthView = false;
+          $scope.DefaultView = false;
+          break;
+        case 2:
+          $scope.selectedView = 'week';
+          chartConfigForWeek();
+          chartConfigForComplianceWeek();
+          $scope.WeekView = true;
+          $scope.DayView = false;
+          $scope.MonthView = false;
+          $scope.DefaultView = false;
+          break;
+        case 3:
+          $scope.selectedView = 'month';
+          chartConfigForMonth();
+          chartConfigForComplianceMonth();
+          var d = new Date();
+          $scope.DATE = new Date(d.getFullYear(),d.getMonth(),d.getDate());
+          $scope.MonthView = true;
+          $scope.DayView = false;
+          $scope.WeekView = false;
+          $scope.DefaultView = false;
+          break;
+        default:
+          $scope.selectedView = 'day';
+          chartConfigForDay();
+          $scope.DayView = true;
+          $scope.WeekView = false;
+          $scope.MonthView = false;
+          $scope.DefaultView = false;
+      }
+
     }
 
     init = function () {
       var d = new Date();
       $scope.DATE = new Date(d.getFullYear(),d.getMonth(),d.getDate());
+      $scope.HealthPoint = 0;
 
       AppService.profile($stateParams.uid).then(function (success) {
         var imageUrl;
@@ -1276,54 +1422,42 @@ $scope.title = 'Set Exercise Program';
       }, function (error) {
         console.log("getActivity error")
       })
+
+      AppService.getHealthPoint($stateParams.uid).then(function (success) {
+        console.log("getHealthPoint Success")
+        console.log(success)
+        complianceData = success
+        var DailyHP = success.daily;
+        var today = new Date();
+        for (var x in DailyHP) {
+        var unixDate = DailyHP[x].created
+        var date = utilityService.unixTimeToDate(unixDate);
+
+        if (date.getDate() == today.getDate() &&
+            date.getMonth() == today.getMonth() &&
+            date.getFullYear() == today.getFullYear() ) {
+          $scope.HealthPoint = DailyHP[x].daily_points
+        }
+      }
+
+      getComplianceDataForWeek(DailyHP);
+      getComplianceDataForMonth(DailyHP,$scope.DATE) 
+
+      }, function (error) {
+        console.log("getHealthPoint error")
+      })
+      
+    //$scope.selectedView = 'day';
+    //$scope.DayView = true;
+    $scope.changeView(1);
     }
     init();
 
 
-
-    $scope.sortedByList = sortedByList;
-    //$scope.sortedBy = $scope.sortedByList[0].id;
-    $scope.selectedView = 'day';
-    $scope.DayView = true;
-
-    $scope.changeView = function (view) {
-      switch (view) {
-        case 1:
-          $scope.selectedView = 'day';
-          $scope.DayView = true;
-          $scope.WeekView = false;
-          $scope.MonthView = false;
-          chartConfigForDay();
-          break;
-        case 2:
-          $scope.selectedView = 'week';
-          $scope.WeekView = true;
-          $scope.DayView = false;
-          $scope.MonthView = false;
-          chartConfigForWeek();
-          break;
-        case 3:
-          $scope.selectedView = 'month';
-          $scope.MonthView = true;
-          $scope.DayView = false;
-          $scope.WeekView = false;
-          var d = new Date();
-          $scope.DATE = new Date(d.getFullYear(),d.getMonth(),d.getDate());
-          chartConfigForMonth();
-          break;
-        default:
-          $scope.selectedView = 'day';
-          $scope.DayView = true;
-          $scope.WeekView = false;
-          $scope.MonthView = false;
-          chartConfigForDay();
-
-      }
-
-    }
-
-
-    function getChartConfigForDay(data) {
+    function getChartConfigForDay(data, color1, color2) {
+        if(data > 999){
+                data = 999;
+        }
       var chartConfig = {
         options: {
           chart: {
@@ -1377,21 +1511,25 @@ $scope.title = 'Set Exercise Program';
                     borderColor: {
                         linearGradient: [0, 0, 500, 500],
                         stops: [
-                            [0, 'rgb(66, 153, 209)'],
-                            [1, 'rgb(31, 96, 164)']
+                            /*[0, 'rgb(66, 153, 209)'],
+                            [1, 'rgb(31, 96, 164)']*/
+                            [0, color1],
+                            [1, color2]
                         ]
                     },
                     data: [{
                         color: {
                             linearGradient: [0, 60, 60, 500],
                             stops: [
-                                [0, 'rgb(66, 153, 209)'],
-                                [1, 'rgb(31, 96, 164)']
+                                /*[0, 'rgb(66, 153, 209)'],
+                                [1, 'rgb(31, 96, 164)']*/
+                                [0, color1],
+                                [1, color2]
                             ]
                         },
                         radius: '100%',
                         innerRadius: '100%',
-                        y: data
+                        y: utilityService.round(data,1) // one number after decimal
                     }],
                     dataLabels: {
                         format: '<div style="text-align:center"><span style="font-size:24px;font-weight:normal;color:' +
@@ -1476,11 +1614,14 @@ $scope.title = 'Set Exercise Program';
         series: [{
                 data: dataGoal,
                 color: "#F3A81B",
+                //color: color,
                 borderColor: 'transparent'
-        }, {
-                        data: dataAchived,
-                        color: "#009CDB",
-                }],
+        }, 
+        {
+                data: dataAchived,
+                color: "#009CDB",
+                //color: color,
+        }],
         func: function (chart) {
         }
 
@@ -1563,7 +1704,7 @@ $scope.title = 'Set Exercise Program';
     $scope.gotoAction = function (id) {
       var state = getStateTitle(id);
 
-      $state.transitionTo(state, { name: $stateParams.name }, { reload: true });
+      $state.transitionTo(state, { name: $stateParams.name , patientId :$stateParams.uid}, { reload: true });
     }
 
   }])
@@ -1720,7 +1861,7 @@ $scope.title = 'Exercise Program';
     }
 
 
-    
+      /*
      $scope.sortedByList = sortedByList;
     //  $scope.sortedBy =  $scope.sortedByList[0].id;
       function getStateTitle(id){
@@ -1738,7 +1879,12 @@ $scope.title = 'Exercise Program';
             var state = getStateTitle(id);
             $state.transitionTo(state,{name: $stateParams.name}, {reload: true});
           }
-        
+        */
+    init = function () {
+      console.log($stateParams.patientId)
+    }
+    init();
+
   }])
 
   .controller('paymentCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', function ($scope, $stateParams, sortedByList, $state) {
@@ -1962,6 +2108,8 @@ function getStateTitle(id) {
         }
   
    init = function () {
+  
+      console.log($stateParams)
 
       AppService.profile($stateParams.uid).then(function (success) {
         patientData = success;
@@ -2112,12 +2260,10 @@ $scope.messages.push(message);
     }
 
      init = function () {
-      AppService.getVitals($stateParams.uid).then(function (success) {
+      console.log($stateParams.patientId)
+      AppService.getVitals($stateParams.patientId).then(function (success) {
         console.log("Vital Success")
         console.log(success)
-        //getActivityDataForYesterday(success);
-        //getActivityDataForWeek(success);
-        //getActivityDataForMonth(success);
       }, function (error) {
         console.log("error")
       })

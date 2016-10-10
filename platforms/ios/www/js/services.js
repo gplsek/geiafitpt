@@ -61,53 +61,22 @@ angular.module('geiaFitApp')
         password: pw
       }
       form = JSON.stringify(form);
-
-//       var promise = $http({
-//         method: 'GET',
-//         url: 'https://api.geiafit.com/services/session/token'
-//       }).then(function (response) {
-//         console.log('before login' + response.data);
-//         var token = JSON.stringify(response.data);
-//         var promise = $http({
-//           method: "POST",
-//           headers: {
-//             'X-CSRF-Token': token,
-// //            'username': name,
-// //            'password': pw
-//           },
-//           url: ApiEndpoint.url + '/user/login',
-//           data: form
-//         }).then(function (response) {
-//           console.log("Store Use Credentials called");
-//           storeUserCredentials(name + response.data.token, isChecked);
-//           console.log(response);
-         
-//           var token = response.data.token;
-//           $rootScope.token = token;
-//           $rootScope.loggedInUserUid = response.data.user.uid;
-//           console.log("UID " + $rootScope.loggedInUserUid);
-//         });
-//         return promise;
-//       });
-//       return promise;
-
+      //$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
       var promise = $http({
-          method: "POST",
-
-          url: ApiEndpoint.url + '/user/login',
-          data: form
-        }).then(function (response) {
-          console.log("Store Use Credentials called");
-          storeUserCredentials(name + response.data.token, isChecked);
-          console.log(response);
-          var token = response.data.token
-          console.log(token);
-          window.localStorage.setItem("token",token);
-          $rootScope.token = token;
-          $rootScope.loggedInUserUid = response.data.user.uid;
-          console.log("UID " + $rootScope.loggedInUserUid);
-        });
-        return promise;
+        method: "POST",
+        url: ApiEndpoint.url + '/user/login',
+        data: form
+      }).then(function (response) {
+        console.log("Store Use Credentials called");
+        storeUserCredentials(name + response.data.token, isChecked);
+        console.log(response);
+        var token = response.data.token
+        console.log(token);
+        $rootScope.token = token;
+        $rootScope.loggedInUserUid = response.data.user.uid;
+        console.log("UID " + $rootScope.loggedInUserUid);
+      });
+      return promise;
       /*
            return $q(function(resolve, reject) {
              if ((name == 'admin' && pw == '1') || (name == 'user' && pw == '1')) {
@@ -214,6 +183,20 @@ angular.module('geiaFitApp')
       return prom;
     }
 
+    var getVitals = function (uid) {
+      console.log(uid)
+      var prom = $http({
+        method: "GET",
+        url: ApiEndpoint.url + '/characteristics/' + uid
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      })
+      return prom;
+    }
+
+
     var getProfile = function (uid) {
       var prom = $http({
         method: "GET",
@@ -288,6 +271,7 @@ angular.module('geiaFitApp')
     return {
       patientsData: getPatientsData,
       getActivity: getActivity,
+      getVitals: getVitals,
       addPatient: addPatient,
       profile: getProfile,
       sortedByList: getSortedList,
@@ -313,10 +297,11 @@ angular.module('geiaFitApp')
     }
 
     var uploadProfileImage = function (params) {
+      console.log(params)
       var ProfileImage = $http({
         method: "POST",
         url: ApiEndpoint.url + "/profile/profileimage/" + $rootScope.loggedInUserUid,
-        data: imageData
+        data: params
       }).then(function (response) {
         return response.data;
       }, function (err) {
@@ -349,6 +334,7 @@ angular.module('geiaFitApp')
     }
 
     var sendPatientMessage = function (message, userId) {
+      alert("sendPatientMessage");
 
       var messageData = $http({
         headers: {
@@ -359,6 +345,7 @@ angular.module('geiaFitApp')
         url: ApiEndpoint.url + "/messages/" + userId,
         data: message,
       }).then(function (response) {
+        alert("SERVICE SUCCESS" + JSON.stringify(response.data));
         return response.data;
       }, function (err) {
         alert("SERVICE ERROR" + JSON.stringify(err.data));

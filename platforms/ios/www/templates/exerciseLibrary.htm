@@ -93,8 +93,8 @@
 		</ul>
 		
 		<section class="pagination">
-			<select ng-model="selectedPage" ng-options="page.id as page.title for page in webExPages" class="customSelect" ng-change="showNext(selectedPage)"></select>
-			<span class="pull-right next" ng-click="showNext(selectedPage + 1)">Next <i class="icon ion-chevron-right"></i></span>
+			<select ng-model="selectedPage" ng-options="page.id as page.title for page in webExPages" class="customSelect" ng-change="showNext(selectedPage,1)"></select>
+			<span class="pull-right next" ng-click="showNext(selectedPage + 1,2)" ng-show="selectedPage != webExercisePages">Next <i class="icon ion-chevron-right"></i></span>
 		</section>
 
 </div>	

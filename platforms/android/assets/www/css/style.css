@@ -272,7 +272,8 @@ background: #ccc;
 .bar_chart_list li .title{ padding:10px 0; color: #999; font-size: 16px;  line-height: 40px; border-bottom: 1px solid #000000; width: 100%; float: left; vertical-align: middle; text-transform: uppercase}
 .bar_chart_list li .title span { color: #ffffff}
 .bar_chart_list li .title small{ font-size:10px; text-transform: none; color: #ffffff }
-.bar_chart_list li .title .left_title,.bar_chart_list li .title .right_title{ float: left; width: 50%;}
+.bar_chart_list li .title .left_title{ float: left; width: 55%;}
+.bar_chart_list li .title .right_title{ float: left; width: 45%;}
 .bar_chart_list li .title .right_title{ text-align: right}
 .bar_chart_list li .chart_block{ width: 100%; float: left }
 .bar_chart_list li .highcharts-container {width: 100% !important;}
@@ -289,3 +290,7 @@ background: #ccc;
 #container {
     width:100%;
 }
+.navigationtitle{ line-height: 40px; vertical-align: middle; text-align: center; font-size: 16px;  padding: 10px; padding-bottom: 0}
+.navigationtitle button{line-height: 36px; border: 0; font-size: 40px; background: transparent; display: inline-block; vertical-align: middle;color: #888888  }
+.navigationtitle button:first-child{ float:left }
+.navigationtitle button:last-child{ float:right }

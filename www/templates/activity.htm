@@ -35,7 +35,8 @@
                 <svg>
                     <g id="hp">
                         <circle cx="50" cy="35" r="30"></circle>
-                        <text x="53" y="36" text-anchor="middle">120
+                        <text x="53" y="36" text-anchor="middle">
+                            <tspan>{{HealthPoint}}</tspan>
                             <tspan x="53" y="56" text-anchor="middle">HP</tspan>
                         </text>
                     </g>
@@ -49,6 +50,8 @@
                 <li ng-class="{'active': selectedView == 'week'}" ng-click="changeView(2)">Week</li>
                 <li ng-class="{'active': selectedView == 'month'}" ng-click="changeView(3)">Month</li>
             </ul>
+
+            <div ng-show="DefaultView">DEFAULT VIEW</div>
 
             <div ng-show="DayView">
                 <div class="group marginT30 totalActivity">
@@ -121,7 +124,7 @@
                     <li>
                         <div class="title">
                             <div class="left_title">
-                                <img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt="">
+                                <img src="img/location_icon.png" alt="">
                                 <span>{{totalWeekExe}} </span> Exercises
                             </div>
                             <div class="right_title">
@@ -134,18 +137,18 @@
                     <li>
                         <div class="title">
                             <div class="left_title">
-                                <img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt="">
+                                <img src="img/location_icon.png" alt="">
                                 <span class="twolinestitle">
                                     <span>{{totalWeekSteps}} </span> Steps <br>
-                                <small>{{totalWeekSteps/7 | number:0}} steps/day</small>
+                                <small>{{totalWeekSteps/7 | number:1}} steps/day</small>
                                 </span>
                             </div>
                             <div class="right_title">
                                 <span class="twolinestitle">
-                                      <span>{{totalWeekSteps/2112 | number:0}}</span> Miles<br>
-                                      <small>{{totalWeekSteps/(2112 *7) | number:0}} mi/day</small>
+                                      <span>{{totalWeekSteps/2112 | number:1}}</span> Miles<br>
+                                      <small>{{totalWeekSteps/(2112 *7) | number:1}} mi/day</small>
                                 </span>
-                                <img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt="">
+                                <img src="img/timer_icon.png" alt="">
                             </div>
                         </div>
                         <div class="chart_block">
@@ -155,15 +158,15 @@
                     <li>
                         <div class="title">
                             <div class="left_title">
-                                <div><img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt=""></div>
+                                <div><img src="img/location_icon.png" alt=""></div>
                                 <span> LIGHT </span> ACTIVITY 
                             </div>
                             <div class="right_title">
                                 <span class="twolinestitle">
                                       <span>{{totalWeekLow}}</span> Min<br>
-                                      <small>{{totalWeekLow/7 | number:0}} min/day</small>
+                                      <small>{{totalWeekLow/7 | number:1}} min/day</small>
                                 </span>
-                                <img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt="">
+                                <img src="img/timer_icon.png" alt="">
                             </div>
                         </div>
                         <div class="chart_block">
@@ -173,15 +176,15 @@
                     <li>
                         <div class="title">
                             <div class="left_title">
-                                <div><img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt=""></div>
+                                <div><img src="img/location_icon.png" alt=""></div>
                                 <span> MODERATE </span> ACTIVITY
                             </div>
                             <div class="right_title">
                                 <span class="twolinestitle">
                                       <span>{{totalWeekMid}}</span> Min<br>
-                                      <small>{{totalWeekMid/7 | number:0}} min/day</small>
+                                      <small>{{totalWeekMid/7 | number:1}} min/day</small>
                                 </span>
-                                <img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt="">
+                                <img src="img/timer_icon.png" alt="">
                             </div>
                         </div>
                         <div class="chart_block">
@@ -191,15 +194,15 @@
                     <li>
                         <div class="title">
                             <div class="left_title">
-                               <div><img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt=""></div>
+                               <div><img src="img/location_icon.png" alt=""></div>
                                 <span> VIGOROUS </span> ACTIVITY
                             </div>
                              <div class="right_title">
                                 <span class="twolinestitle">
                                       <span>{{totalWeekHigh}}</span> Min<br>
-                                      <small>{{totalWeekHigh/7 | number:0}} min/day</small>
+                                      <small>{{totalWeekHigh/7 | number:1}} min/day</small>
                                 </span>
-                                <img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt="">
+                                <img src="img/timer_icon.png" alt="">
                             </div>
                         </div>
                         <div class="chart_block">
@@ -209,7 +212,7 @@
                     <li>
                         <div class="title">
                             <div class="left_title">
-                                <div><img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt=""></div>
+                                <div><img src="img/location_icon.png" alt=""></div>
                                 <span> COMPLIANCE </span> SCORE</div>
                             <div class="right_title"></div>
                         </div>
@@ -233,7 +236,7 @@
                     <li>
                         <div class="title">
                             <div class="left_title">
-                                <img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt="">
+                                <img src="img/location_icon.png" alt="">
                                 <span>{{totalMonthExe}} </span> Exercises
                             </div>
                             <div class="right_title">
@@ -246,18 +249,18 @@
                     <li>
                         <div class="title">
                             <div class="left_title">
-                                <img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt="">
+                                <img src="img/location_icon.png" alt="">
                                 <span class="twolinestitle">
                                     <span>{{totalMonthSteps}}</span> Steps <br>
-                                <small>{{totalMonthSteps / lastDateOfMonth | number:0}} steps/day</small>
+                                <small>{{totalMonthSteps / lastDateOfMonth | number:1}} steps/day</small>
                                 </span>
                             </div>
                             <div class="right_title">
                                 <span class="twolinestitle">
-                                      <span>{{totalMonthSteps / 2112 | number:0}}</span> Miles<br>
-                                      <small>{{totalMonthSteps / (2112 * lastDateOfMonth) | number:0}} mi/day</small>
+                                      <span>{{totalMonthSteps / 2112 | number:1}}</span> Miles<br>
+                                      <small>{{totalMonthSteps / (2112 * lastDateOfMonth) | number:1}} mi/day</small>
                                 </span>
-                                <img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt="">
+                                <img src="img/timer_icon.png" alt="">
                             </div>
                         </div>
                         <div class="chart_block">
@@ -267,15 +270,15 @@
                     <li>
                         <div class="title">
                             <div class="left_title">
-                                <div><img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt=""></div>
+                                <div><img src="img/location_icon.png" alt=""></div>
                                 <span> LIGHT </span> ACTIVITY 
                             </div>
                              <div class="right_title">
                                 <span class="twolinestitle">
                                       <span>{{totalMonthLow}}</span> Hrs<br>
-                                      <small>{{totalMonthLow/lastDateOfMonth | number:0}} min/day</small>
+                                      <small>{{totalMonthLow/lastDateOfMonth | number:1}} min/day</small>
                                 </span>
-                                <img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt="">
+                                <img src="img/timer_icon.png" alt="">
                             </div>
                         </div>
                         <div class="chart_block">
@@ -285,15 +288,15 @@
                     <li>
                         <div class="title">
                             <div class="left_title">
-                                <div><img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt=""></div>
+                                <div><img src="img/location_icon.png" alt=""></div>
                                 <span> MODERATE </span> ACTIVITY
                             </div>
                              <div class="right_title">
                                 <span class="twolinestitle">
                                       <span>{{totalMonthMid}}</span> Hrs<br>
-                                      <small>{{totalMonthMid/lastDateOfMonth | number:0}} min/day</small>
+                                      <small>{{totalMonthMid/lastDateOfMonth | number:1}} min/day</small>
                                 </span>
-                                <img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt="">
+                                <img src="img/timer_icon.png" alt="">
                             </div>
                         </div>
                         <div class="chart_block">
@@ -303,15 +306,15 @@
                     <li>
                         <div class="title">
                             <div class="left_title">
-                               <div><img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt=""></div>
+                               <div><img src="img/location_icon.png" alt=""></div>
                                 <span> VIGOROUS </span> ACTIVITY
                             </div>
                             <div class="right_title">
                                 <span class="twolinestitle">
                                       <span>{{totalMonthHigh}}</span> Hrs<br>
-                                      <small>{{totalMonthHigh/lastDateOfMonth | number:0}} min/day</small>
+                                      <small>{{totalMonthHigh/lastDateOfMonth | number:1}} min/day</small>
                                 </span>
-                                <img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt="">
+                                <img src="img/timer_icon.png" alt="">
                             </div>
                         </div>
                         <div class="chart_block">
@@ -321,7 +324,7 @@
                     <li>
                         <div class="title">
                             <div class="left_title">
-                                <div><img src="http://www.highcharts.com/apple-touch-icon-57x57.png" alt=""></div>
+                                <div><img src="img/location_icon.png" alt=""></div>
                                 <span> COMPLIANCE </span> SCORE</div>
                             <div class="right_title"></div>
                         </div>

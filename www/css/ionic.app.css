@@ -10862,7 +10862,9 @@ textarea {
       stroke-width: 1.7;
       font-size: 21px;
       letter-spacing: 1px; }
-      .activity .patientProfile svg text tspan {
+      
+      .activity .patientProfile svg text tspan{text-align:center }
+      .activity .patientProfile svg text tspan:last-child {
         stroke: #009CDB;
         stroke-width: 1.3;
         font-size: 15px; }
@@ -11083,7 +11085,7 @@ border:1.5px solid grey !important;
 
 
 
-//new css
+/*new css*/
 .balance{
     font-size: 20px;
 }
@@ -11143,7 +11145,6 @@ border-color: white;
 
   table.equalDevide tr td { width:100%;height:50%;border:1px solid gray; }
     
-}
 
 #col-align{
     align-content: center;

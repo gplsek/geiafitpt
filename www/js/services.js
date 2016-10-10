@@ -183,6 +183,19 @@ angular.module('geiaFitApp')
       return prom;
     }
 
+    var getHealthPoint = function (uid) {
+      console.log(uid)
+      var prom = $http({
+        method: "GET",
+        url: ApiEndpoint.url + '/log/health_points/' + uid
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      })
+      return prom;
+    }
+
     var getVitals = function (uid) {
       console.log(uid)
       var prom = $http({
@@ -272,6 +285,7 @@ angular.module('geiaFitApp')
     return {
       patientsData: getPatientsData,
       getActivity: getActivity,
+      getHealthPoint : getHealthPoint,
       getVitals: getVitals,
       addPatient: addPatient,
       profile: getProfile,
@@ -339,7 +353,7 @@ angular.module('geiaFitApp')
 
 
    var sendPatientMessage = function(message,userId,ptid){
-     alert("sendPatientMessage");
+  //   alert("sendPatientMessage");
 
     var messageData = $http({
       headers: {
@@ -351,7 +365,7 @@ angular.module('geiaFitApp')
 
         data: message,
       }).then(function (response) {
-        alert("SERVICE SUCCESS" + JSON.stringify(response.data));
+       // alert("SERVICE SUCCESS" + JSON.stringify(response.data));
         return response.data;
       }, function (err) {
         alert("SERVICE ERROR" + JSON.stringify(err.data));
