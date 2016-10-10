@@ -6,6 +6,7 @@
             <div class="title title-center header-item" ng-click="gotoHome()">{{patientProfile.name}}</div>
         </ion-nav-buttons>
     </ion-nav-bar>
+    
  
     <div class="loader-center" ng-if="!doneLoading">
             <div class="loader">
@@ -14,6 +15,25 @@
     </div>
       
     <ion-content  delegate-handle="userMessageScroll">
+
+        <!--code For Navigation starts-->
+ <div class="sortedBy text-center">
+		    <!--<select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select> -->
+		     <!--temp code-->
+<input type="button" class="itemdropdown" ng-click="showList();" value="{{title}}"/>
+<ion-list ng-show="subNavList" class="ddlistitems">
+  <ion-item ng-repeat="item in sortedByList" ng-click="gotoAction(item.id)">
+    <h2>{{item.title}}</h2>
+  </ion-item>
+</ion-list>
+
+<!--temp code-->
+ </div>
+	
+        <!--code for Navigation Ends-->
+
+
+
               <div ng-repeat="message in messages" class="message-wrapper"
                   on-hold="onMessageHold($event, $index, message)">
       

@@ -2,13 +2,27 @@
 	<ion-nav-bar class="group">
 		<ion-nav-buttons side="left">
 			<span class="icon ion-ios-arrow-back" ng-click="back()"></span>
-			<div class="title title-center header-item" ng-click="gotoHome()">{{patientProfile.name}}</div>
+			<div class="title title-center header-item" ng-click="gotoHome()">{{patientName}}</div>
 		</ion-nav-buttons>
 		<ion-nav-buttons side="right">
 			<span  menu-toggle="right" class="icon ion-ios-plus-outline" ng-click="addss()"></span>
 		</ion-nav-buttons>
 	</ion-nav-bar>
 	<ion-content>
+
+ <div class="sortedBy text-center">
+		    <!--<select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select> -->
+		     <!--temp code-->
+<input type="button" class="itemdropdown" ng-click="showList();" value="{{title}}"/>
+<ion-list ng-show="subNavList" class="ddlistitems">
+  <ion-item ng-repeat="item in sortedByList" ng-click="gotoAction(item.id)">
+    <h2>{{item.title}}</h2>
+  </ion-item>
+</ion-list>
+
+<!--temp code-->
+ </div>
+
 		<div class="search">
 	      <input type="text" placeholder="Search" ng-model="searchPatient" />
 	      <span class="icon ion-ios-search-strong pull-right"></span>

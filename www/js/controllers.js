@@ -212,13 +212,37 @@ angular.module('geiaFitApp')
     $scope.uid = $stateParams.uid;
     $scope.patientData = $stateParams.name;
     $scope.sortedByList = sortedByList;
-    $scope.sortedBy = $scope.sortedByList[2].id;
-    console.log(sortedByList);
+    //$scope.sortedBy = $scope.sortedByList[2].id;
+
+$scope.title = 'Set Exercise Program';
+
+ $scope.subNavList = false;
+
+ $scope.showList = function(){
+   $scope.subNavList = !$scope.subNavList;
+ }
 
     $scope.closePatient = function () {
 
       $state.go('exerciseProgram');
     }
+
+          function getStateTitle(id){
+        var title = '';
+        var list = $scope.sortedByList;
+        for(var i = 0; i < list.length; i++){
+          if(id == list[i].id){
+            title = list[i].routingStateName;
+            return title;
+          }
+        }
+      }
+        
+          $scope.gotoAction= function(id){
+            var state = getStateTitle(id);
+            $state.transitionTo(state,{name: $stateParams.name}, {reload: true});
+          }
+
   }])
 
   .controller('SetActivityGoalsCtrl', ['$scope', '$state', 'sortedByList', '$ionicHistory', 'threshold', '$window', '$stateParams', function ($scope, $state, sortedByList, $ionicHistory, threshold, $window, $stateParams) {
@@ -232,10 +256,15 @@ angular.module('geiaFitApp')
      };*/
     $scope.patientData = $stateParams.name;
     $scope.sortedByList = sortedByList;
-    $scope.sortedBy = $scope.sortedByList[2].id;
-    console.log(threshold);
-
+   // $scope.sortedBy = $scope.sortedByList[1].id;
     $scope.threshold = threshold;
+       $scope.title = 'Set Activity Goals';
+
+ $scope.subNavList = false;
+
+ $scope.showList = function(){
+   $scope.subNavList = !$scope.subNavList;
+ }
 
     $scope.slider = {
       min: 40,
@@ -780,7 +809,13 @@ angular.module('geiaFitApp')
     var activityDataForYesterday = '';
     var monthList = ["January", "February", "March", "April", "May", "June",
       "July", "August", "September", "October", "November", "December"];
+    $scope.title = 'Activity';
 
+ $scope.subNavList = false;
+
+ $scope.showList = function(){
+   $scope.subNavList = !$scope.subNavList;
+ }
     getActivityDataForYesterday = function (successData) {
       var startDate = new Date("Sun Sep 25 2016 17:04:28 GMT+0530 (IST)");
       var date = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() - 1,
@@ -1291,7 +1326,7 @@ angular.module('geiaFitApp')
     //$scope.DayView = true;
 
     $scope.changeView = function (view) {
-      switch (view) {
+      switch (view) {	
         case 1:
           $scope.selectedView = 'day';
           chartConfigForDay();
@@ -1372,6 +1407,8 @@ angular.module('geiaFitApp')
           email: patientData.email,
           url: imageUrl
         }
+
+        $rootScope.patientName = $stateParams.name;
       }, function (error) {
 
       })
@@ -1681,7 +1718,14 @@ angular.module('geiaFitApp')
 
     var pageSize = 10;
     $scope.sortedByList = sortedByList;
-    $scope.sortedBy = $scope.sortedByList[0].id;
+//    $scope.sortedBy = $scope.sortedByList[2].id;
+$scope.title = 'Exercise Program';
+
+ $scope.subNavList = false;
+
+ $scope.showList = function(){
+   $scope.subNavList = !$scope.subNavList;
+ }
 
     var exerciseList = [
       {
@@ -1817,9 +1861,9 @@ angular.module('geiaFitApp')
     }
 
 
-    /*
+      /*
      $scope.sortedByList = sortedByList;
-      $scope.sortedBy =  $scope.sortedByList[0].id;
+    //  $scope.sortedBy =  $scope.sortedByList[0].id;
       function getStateTitle(id){
         var title = '';
         var list = $scope.sortedByList;
@@ -1828,10 +1872,11 @@ angular.module('geiaFitApp')
             title = list[i].routingStateName;
             return title;
           }
+        }
+      }
         
           $scope.gotoAction= function(id){
             var state = getStateTitle(id);
-        
             $state.transitionTo(state,{name: $stateParams.name}, {reload: true});
           }
         */
@@ -1873,11 +1918,29 @@ angular.module('geiaFitApp')
 
   }])
 
-  .controller('ReviewSnapshotsCtrl', ['$scope', '$rootScope', 'Flash', '$ionicHistory', '$state', '$cordovaCamera', function ($scope, $rootScope, Flash, $ionicHistory, $state, $cordovaCamera) {
+  .controller('ReviewSnapshotsCtrl', ['$scope', '$rootScope', 'Flash', '$ionicHistory', '$state', '$cordovaCamera','sortedByList' ,function ($scope, $rootScope, Flash, $ionicHistory, $state, $cordovaCamera, sortedByList) {
 
+$scope.title = 'Review Snapshots';
+$scope.subNavList = false;
+$scope.showList = function(){
+   $scope.subNavList = !$scope.subNavList;
+   console.log($scope.subNavList)
+ }
+function getStateTitle(id) {
+      var title = '';
+      var list = $scope.sortedByList;
+      for (var i = 0; i < list.length; i++) {
+        if (id == list[i].id) {
+          title = list[i].routingStateName;
+          return title;
+        }
+      }
+    }
+    $scope.gotoAction = function (id) {
+      var state = getStateTitle(id);
 
-
-
+      $state.transitionTo(state, { name: $stateParams.name }, { reload: true });
+    }
 
     var pageSize = 10;
     var reportsList = [
@@ -2021,13 +2084,20 @@ angular.module('geiaFitApp')
     }
   }])
 
-.controller('MessageCtrl', function($scope, $state, $http, $ionicPopup, ChatApp,$timeout,$stateParams,$rootScope,
-AppService,$ionicScrollDelegate)
+.controller('MessageCtrl', function($scope, $state, $http, $ionicPopup, ChatApp,$timeout,$stateParams,$rootScope,AppService,$ionicScrollDelegate)
  {
   var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
   var uid = $rootScope.loggedInUserUid;
    $scope.userImage="img/profile_icon.png";
    $scope.toUserImage="img/profile_icon.png";
+   console.log("controller loaded")
+  $scope.sortedByList = AppService.sortedByList();
+ $scope.title = 'Messages';
+ $scope.subNavList = false;
+ $scope.showList = function(){
+   $scope.subNavList = !$scope.subNavList;
+ }
+
 
    $scope.patientProfile = {
       name: $stateParams.name,
@@ -2170,9 +2240,16 @@ $scope.messages.push(message);
 
   .controller('VitalsCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', '$ionicHistory','AppService', function ($scope, $state, $stateParams, sortedByList, $ionicHistory, AppService) {
     $scope.sortedByList = sortedByList;
-    $scope.sortedBy = $scope.sortedByList[0].id;
+    //$scope.sortedBy = $scope.sortedByList[5].id;
     $scope.selectedView = 'Today';
     $scope.DayView = true;
+    $scope.title = 'Vitals';
+
+ $scope.subNavList = false;
+
+ $scope.showList = function(){
+   $scope.subNavList = !$scope.subNavList;
+ }
 
     $scope.patientProfile = {
       name: $stateParams.name,

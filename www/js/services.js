@@ -242,7 +242,8 @@ angular.module('geiaFitApp')
           },
           {
             id: 3,
-            title: "Add Custom Exercise",
+            //title: "Add Custom Exercise",
+            title: "Set Exercise Program",
             routingStateName: "setExerciseProgram"
           },
           {
