@@ -46,7 +46,8 @@
         }
         )">{{item.fname + ' ' +  item.lname}}</div>
           <div class="col-xs-4">
-            <meter value="{{item.emotion}}" min="0" max="100" low="25" high="75" optimum="80"></meter>
+            <progress value={{item.emotion}} max="100"></progress>
+            <!--<meter value="{{item.emotion}}" min="0" max="100" low="25" high="75" optimum="80"></meter>-->
           </div>
           <div class="col-xs-2 text-center"  ui-sref="messages(
         {
