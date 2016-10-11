@@ -219,7 +219,12 @@ templateUrl:'templates/addSnapshot.htm'
     url: '/messages/:patientId', 
     params: patientParams,
     templateUrl: 'templates/message.htm',
-    controller: 'MessageCtrl'
+    controller: 'MessageCtrl',
+     resolve: {
+      sortedByList: function(AppService){
+        return AppService.sortedByList();
+      }
+    }
    
   })
   

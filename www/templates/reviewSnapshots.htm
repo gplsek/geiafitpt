@@ -1,7 +1,7 @@
 <ion-view  class="reviewSnapshots">
 	<ion-nav-bar class="group">
 		<ion-nav-buttons side="left">
-			<span class="icon ion-chevron-left" ng-click="back()"></span>
+			<span class="icon ion-ios-arrow-back" ng-click="back()"></span>
 			<div class="title title-center header-item" ng-click="gotoHome()">{{patientName}}</div>
 		</ion-nav-buttons>
 		<ion-nav-buttons side="right">
@@ -12,18 +12,19 @@
 	<ion-content>
 		
 	    <div class="sortedBy text-center">
-<input type="button" class="itemdropdown" ng-click="showList();" value="{{title}}"/>
+            <!--<select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select>-->
+            <input type="button" class="itemdropdown" ng-click="showList();" value="{{title}}"/>
 <ion-list ng-show="subNavList" class="ddlistitems">
   <ion-item ng-repeat="item in sortedByList" ng-click="gotoAction(item.id)">
     <h2>{{item.title}}</h2>
   </ion-item>
 </ion-list>
-	      <p><small>Sorted By:</small></p>
+	    </div>
+		<p><small>Sorted By:</small></p>
 	      <select  ng-model="sortedByNew">
           <option value="">New</option>  
           </select>
 	       
-	    </div>
 		<!--<div class="search">
 	      <input type="text" placeholder="Search" ng-model="searchReports" />
 	      <span class="icon ion-ios-search-strong pull-right"></span>
