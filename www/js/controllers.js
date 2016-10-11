@@ -848,20 +848,23 @@ $scope.title = 'Add Custom Exercise';
       "July", "August", "September", "October", "November", "December"];
     $scope.title = 'Activity';
 
- $scope.subNavList = false;
+    $scope.subNavList = false;
 
- $scope.showList = function(){
-   $scope.subNavList = !$scope.subNavList;
- }
+    $scope.showList = function () {
+      $scope.subNavList = !$scope.subNavList;
+    }
+
     getActivityDataForYesterday = function (successData) {
-      var startDate = new Date("Sun Sep 25 2016 17:04:28 GMT+0530 (IST)");
-      var date = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() - 1,
-        startDate.getHours(), startDate.getMinutes(), startDate.getSeconds(), startDate.getMilliseconds())
-
+     var date = moment().utcOffset('-07:00').subtract(1, 'days').startOf('day').format('L');
+     console.log("Yesterday----------"+date)
+     var Ndate = moment(date)
       for (var x in successData) {
-        var unixDate = successData[x].date
-        var newDate = utilityService.unixTimeToDate(unixDate);
-        if (date.getDate() === newDate.getDate() && date.getFullYear() === newDate.getFullYear() && date.getMonth() === newDate.getMonth()) {
+        
+        var unixDate = successData[x].updated
+        var newDate = moment.unix(unixDate).utcOffset('-07:00').format('L');
+        var NnewDate = moment(newDate)
+        if (Ndate.diff(NnewDate) == 0) {
+          console.log("Yesterday response----------"+newDate)
           activityDataForYesterday = successData[x];
         }
       }
@@ -885,7 +888,6 @@ $scope.title = 'Add Custom Exercise';
       $scope.DayMidGoal = 0;
       $scope.DayHighDone = 0;
       $scope.DayHighGoal = 0;
-
 
       if (activityDataForYesterday.total_exercise != null && activityDataForYesterday.total_exercise_goal != null) {
         var goal = activityDataForYesterday.total_exercise_goal;
@@ -923,11 +925,11 @@ $scope.title = 'Add Custom Exercise';
         highPer = ( achieved/goal ) * 100;
       }
 
-      console.log('excPer ' + excPer);
+      /*console.log('excPer ' + excPer);
       console.log('stepsPer ' + stepsPer);
       console.log('lowPer ' + lowPer);
       console.log('mediumPer ' + mediumPer);
-      console.log('highPer ' + highPer);
+      console.log('highPer ' + highPer);*/
       $scope.chartConfig = getChartConfigForDay(excPer, '#4299D1' , '#1F60A4' );
       $scope.chartConfig1 = getChartConfigForDay(stepsPer,  '#4299D1' , '#1F60A4' );
       $scope.chartConfig2 = getChartConfigForDay(lowPer,'#DDF6BC' , '#B8E986' );
@@ -937,48 +939,51 @@ $scope.title = 'Add Custom Exercise';
 
 
     getActivityDataForWeek = function (successData) {
-      
-      var startDate = new Date();
-      var endDate = new Date(startDate.getFullYear(), startDate.getMonth() , startDate.getDate()-7,
-        startDate.getHours(), startDate.getMinutes(), startDate.getSeconds(), startDate.getMilliseconds())
+      var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').startOf('day').format('L');
+      var startDate = moment(TstartDate);
+      var TendDate = moment().utcOffset('-07:00').format('L');
+      var endDate = moment(TendDate);
 
       for (var x in successData) {
-        var unixDate = successData[x].date
-        var date = utilityService.unixTimeToDate(unixDate);
-        if (startDate > date && date > endDate) {
+        var unixDate = successData[x].updated
+        var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
+        var date = moment(Tdate)
+
+        if (date.diff(startDate) > 0 && date.diff(endDate) < 0) {
           activityDataForWeek.push(successData[x]);
         }
       }
-      console.log(activityDataForWeek)
     }
 
     getComplianceDataForWeek = function (successData) {
-      
-      var startDate = new Date();
-      var endDate = new Date(startDate.getFullYear(), startDate.getMonth() , startDate.getDate()-7,
-        startDate.getHours(), startDate.getMinutes(), startDate.getSeconds(), startDate.getMilliseconds())
+      var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').startOf('day').format('L');
+      var startDate = moment(TstartDate);
+      var TendDate = moment().utcOffset('-07:00').format('L');
+      var endDate = moment(TendDate);
 
       for (var x in successData) {
         var unixDate = successData[x].created
-        var date = utilityService.unixTimeToDate(unixDate);
-        if (startDate > date && date > endDate) {
+        var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
+        var date = moment(Tdate)
+
+        if (date.diff(startDate) > 0 && date.diff(endDate) < 0) {
           complianceDataForWeek.push(successData[x]);
         }
       }
-      console.log(complianceDataForWeek)
     }
 
     getWeekDates = function () {
-      var endDate = new Date();
-      var startDate = new Date(endDate.getFullYear(), endDate.getMonth() , endDate.getDate()-7,
-        endDate.getHours(), endDate.getMinutes(), endDate.getSeconds(), endDate.getMilliseconds())
+      var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').startOf('day').format('L');
+      var startDate = moment(TstartDate)
+      var TendDate = moment().utcOffset('-07:00').format('L');
+      var endDate = moment(TendDate)
+
       var dateList = [];
       var date = startDate;
-      while (date < endDate) {
+      while (date.diff(endDate) < 0) {
         dateList.push(date)
-        var tempDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1,
-          date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds())
-        date = tempDate;
+        var tempDate = startDate.add(1, 'days').startOf('day').format('L');
+        date = moment(tempDate);
       }
       return dateList;
     }
@@ -1018,10 +1023,11 @@ $scope.title = 'Add Custom Exercise';
         var time_active_high = 0
 
         for (var x in activityDataForWeek) {
-          var tempDate = utilityService.unixTimeToDate(activityDataForWeek[x].date);
-          if (tempDate.getFullYear() === dates[d].getFullYear() &&
-            tempDate.getMonth() === dates[d].getMonth() &&
-            tempDate.getDate() === dates[d].getDate()) {
+          var unixDate = activityDataForWeek[x].created
+          var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
+          var tempDate = moment(Tdate)
+
+          if (tempDate.diff(dates[d]) == 0) {
             var temp = activityDataForWeek[x];
 
             if (temp.total_exercise_goal != null && temp.total_exercise != null) {
@@ -1094,10 +1100,11 @@ $scope.title = 'Add Custom Exercise';
         var total_compliance_goal = 0 
         var total_compliance = 0 
         for (var x in complianceDataForWeek) {
-          var tempDate = utilityService.unixTimeToDate(complianceDataForWeek[x].created);
-          if (tempDate.getFullYear() === dates[d].getFullYear() &&
-            tempDate.getMonth() === dates[d].getMonth() &&
-            tempDate.getDate() === dates[d].getDate()) {
+          var unixDate = complianceDataForWeek[x].created
+          var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
+          var tempDate = moment(Tdate)
+
+          if (tempDate.diff(dates[d]) == 0) {
             var temp = complianceDataForWeek[x];
             if (temp.daily_challenge != null && temp.daily_points != null) {
               total_compliance_goal = parseInt(temp.daily_challenge)
@@ -1109,7 +1116,6 @@ $scope.title = 'Add Custom Exercise';
         dataWeekComplianceGoal.push(total_compliance_goal);
         dataWeekCompliance.push(total_compliance);
       }
-
       $scope.chartConfigWeekViewComp = getChartConfigForWeek(dataWeekComplianceGoal, dataWeekCompliance)
     }
 
@@ -1125,7 +1131,7 @@ $scope.title = 'Add Custom Exercise';
       var endDate = new Date(startDate.getFullYear(), startDate.getMonth(),1)
 
       for (var x in successData) {
-        var unixDate = successData[x].date
+        var unixDate = successData[x].updated
         var date = utilityService.unixTimeToDate(unixDate);
         if (startDate > date && date > endDate) {
           activityDataForMonth.push(successData[x]);
