@@ -214,7 +214,7 @@ angular.module('geiaFitApp')
     $scope.sortedByList = sortedByList;
     //$scope.sortedBy = $scope.sortedByList[2].id;
 
-$scope.title = 'Set Exercise Program';
+$scope.title = 'Add Custom Exercise';
 
  $scope.subNavList = false;
 
@@ -239,8 +239,12 @@ $scope.title = 'Set Exercise Program';
       }
         
           $scope.gotoAction= function(id){
-            var state = getStateTitle(id);
-            $state.transitionTo(state,{name: $stateParams.name}, {reload: true});
+              if(id==3){
+        $scope.subNavList = false
+      }else{
+      var state = getStateTitle(id);
+      $state.transitionTo(state, { name: $stateParams.name , patientId :$stateParams.uid}, { reload: true });
+          }
           }
 
   }])
@@ -364,8 +368,12 @@ $scope.title = 'Set Exercise Program';
     }
 
     $scope.gotoAction = function (id) {
+        if(id==1){
+        $scope.subNavList = false
+      }else{
       var state = getStateTitle(id);
       $state.transitionTo(state, {}, { reload: true });
+      }
     }
 
     init = function(){
@@ -797,7 +805,7 @@ $scope.title = 'Set Exercise Program';
   }])
 
 
-  .controller('ActivityCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', 'AppService', 'utilityService', function ($scope, $stateParams, sortedByList, $state, AppService, utilityService) {
+  .controller('ActivityCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', '$rootScope','AppService', 'utilityService', function ($scope, $stateParams, sortedByList, $state, $rootScope,AppService, utilityService) {
    $scope.DefaultView = true;
     var patientData;
     var ActivityData;
@@ -1702,9 +1710,13 @@ $scope.title = 'Set Exercise Program';
     }
 
     $scope.gotoAction = function (id) {
+      if(id==0){
+        $scope.subNavList = false
+      }else{
       var state = getStateTitle(id);
-
       $state.transitionTo(state, { name: $stateParams.name , patientId :$stateParams.uid}, { reload: true });
+      }
+      
     }
 
   }])
@@ -1861,7 +1873,7 @@ $scope.title = 'Exercise Program';
     }
 
 
-      /*
+      
      $scope.sortedByList = sortedByList;
     //  $scope.sortedBy =  $scope.sortedByList[0].id;
       function getStateTitle(id){
@@ -1876,10 +1888,15 @@ $scope.title = 'Exercise Program';
       }
         
           $scope.gotoAction= function(id){
-            var state = getStateTitle(id);
-            $state.transitionTo(state,{name: $stateParams.name}, {reload: true});
+      if(id==2){
+        $scope.subNavList = false
+      }else{
+      var state = getStateTitle(id);
+      $state.transitionTo(state, { name: $stateParams.name , patientId :$stateParams.uid}, { reload: true });
+      }
+      
           }
-        */
+        
     init = function () {
       console.log($stateParams.patientId)
     }
@@ -1922,10 +1939,12 @@ $scope.title = 'Exercise Program';
 
 $scope.title = 'Review Snapshots';
 $scope.subNavList = false;
+$scope.sortedByList = sortedByList;
 $scope.showList = function(){
    $scope.subNavList = !$scope.subNavList;
    console.log($scope.subNavList)
  }
+
 function getStateTitle(id) {
       var title = '';
       var list = $scope.sortedByList;
@@ -1937,9 +1956,13 @@ function getStateTitle(id) {
       }
     }
     $scope.gotoAction = function (id) {
+      if(id==4){
+        $scope.subNavList = false
+      }else{
       var state = getStateTitle(id);
-
-      $state.transitionTo(state, { name: $stateParams.name }, { reload: true });
+      $state.transitionTo(state, {}, { reload: true });
+      }
+      
     }
 
     var pageSize = 10;
@@ -2084,18 +2107,20 @@ function getStateTitle(id) {
     }
   }])
 
-.controller('MessageCtrl', function($scope, $state, $http, $ionicPopup, ChatApp,$timeout,$stateParams,$rootScope,AppService,$ionicScrollDelegate)
+.controller('MessageCtrl',[ '$scope','sortedByList', '$state', '$http', '$ionicPopup', 'ChatApp','$timeout','$stateParams','$rootScope','AppService','$ionicScrollDelegate', function($scope,sortedByList, $state, $http, $ionicPopup, ChatApp,$timeout,$stateParams,$rootScope,AppService,$ionicScrollDelegate)
  {
   var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
   var uid = $rootScope.loggedInUserUid;
    $scope.userImage="img/profile_icon.png";
    $scope.toUserImage="img/profile_icon.png";
-   console.log("controller loaded")
-  $scope.sortedByList = AppService.sortedByList();
- $scope.title = 'Messages';
- $scope.subNavList = false;
- $scope.showList = function(){
+   $scope.sortedByList = sortedByList;
+   $scope.title = 'Messages';
+   $scope.subNavList = false;
+
+   $scope.showList = function(){
+   console.log($scope.subNavList)
    $scope.subNavList = !$scope.subNavList;
+   console.log($scope.subNavList)
  }
 
 
@@ -2226,7 +2251,28 @@ $scope.messages.push(message);
       // });
     }
 
-})
+    function getStateTitle(id) {
+      var title = '';
+      var list = $scope.sortedByList;
+      for (var i = 0; i < list.length; i++) {
+        if (id == list[i].id) {
+          title = list[i].routingStateName;
+          return title;
+        }
+      }
+    }
+
+    $scope.gotoAction = function (id) {
+      if(id==6){
+        $scope.subNavList = false
+      }else{
+      var state = getStateTitle(id);
+      $state.transitionTo(state, { name: $stateParams.name , patientId :$stateParams.uid}, { reload: true });
+      }
+      
+    }
+
+}])
 
 // fitlers
 .filter('nl2br', ['$filter',
@@ -2298,8 +2344,12 @@ $scope.messages.push(message);
     }
 
     $scope.gotoAction = function (id) {
+        if(id==5){
+        $scope.subNavList = false
+      }else{
       var state = getStateTitle(id);
-      $state.transitionTo(state, { name: $stateParams.name }, { reload: true });
+      $state.transitionTo(state, { name: $stateParams.name , patientId :$stateParams.uid}, { reload: true });
+    }
     }
 
     init();
