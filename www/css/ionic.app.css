@@ -10678,6 +10678,25 @@ textarea {
       height: 40px;
       padding-left: 7px;
       background-position-x: 90%; }
+
+      .exerciseProgram_customSelect {
+      width: 90%;
+      color: #fff;
+      margin-top: 0px;
+      border: 0;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background: url("../img/arrow_down_white.png") 95% 55% no-repeat #22282C;
+      background-size: 16px;
+      max-height: 40px;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 5px;
+      font-size: 14px;
+      height: 40px;
+      padding-left: 7px;
+      background-position-x: 90%; }
   .setActivityGoals .main .heartrateperhour {
     margin-top: 30px; }
     .setActivityGoals .main .heartrateperhour .activityInstructions {

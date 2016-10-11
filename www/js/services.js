@@ -57,8 +57,8 @@ angular.module('geiaFitApp')
 
     var login = function (name, pw, isChecked) {
       var form = {
-        username: name,
-        password: pw
+        username: "admin@geiafit.com",
+        password: "FitGeia1!"
       }
       form = JSON.stringify(form);
       //$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
@@ -364,7 +364,11 @@ angular.module('geiaFitApp')
 
         data: message,
       }).then(function (response) {
+<<<<<<< HEAD
        // alert("SERVICE SUCCESS" + JSON.stringify(response.data));
+=======
+      //  alert("SERVICE SUCCESS" + JSON.stringify(response.data));
+>>>>>>> 76390cb89aac8e556c407fb38c4ad7d396611c08
         return response.data;
       }, function (err) {
         alert("SERVICE ERROR" + JSON.stringify(err.data));
@@ -378,6 +382,47 @@ angular.module('geiaFitApp')
       getUserMessages: getUserMessages,
       sendPatientMessage: sendPatientMessage
 
+    }
+
+  }])
+
+.service('SetExerciseProgramService', ['$rootScope', '$http', 'ApiEndpoint', function ($rootScope, $http, ApiEndpoint) {
+
+    var getExerciseList = function (pid) {
+
+      var exerciseData = $http({
+        method: "GET",
+        url: "https://api.geiafit.com/api/webex/"+pid
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      });
+      return exerciseData;
+    }
+
+    var saveExercise = function(exercise,ptId)
+    {
+       var exerciseData = $http({
+      headers: {
+                'X-CSRF-Token': $rootScope.token,
+                'Access-Control-Allow-Origin': '*'
+              },
+        method: "PUT", 
+        url: ApiEndpoint.url + "/webex/"+ptId,
+    data: exercise,
+      }).then(function (response) {
+      //  alert("SERVICE SUCCESS" + JSON.stringify(response.data));
+        return response.data;
+      }, function (err) {
+        alert("SERVICE ERROR" + JSON.stringify(err.data));
+        console.log(err);
+      });
+      return exerciseData;
+    }
+
+    return {
+      listOfExercise: getExerciseList
     }
 
   }])
