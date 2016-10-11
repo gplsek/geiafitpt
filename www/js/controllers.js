@@ -23,7 +23,7 @@ angular.module('geiaFitApp')
 
 
     $scope.$on(AUTH_EVENTS.notAuthenticated, function (event) {
-      AuthService.logout();
+      //AuthService.logout();
       $state.go('login');
       var alertPopup = $ionicPopup.alert({
         title: 'Session Lost!',
@@ -161,6 +161,12 @@ if(validateFields($scope.data)){
     //  if(keepsignedin){
     //    $state.go('main.dash');
     //  }
+$scope.title = 'Name';
+ $scope.subNavList = false;
+ $scope.showList = function(){
+   $scope.subNavList = !$scope.subNavList;
+ }
+
     $scope.sortType = 'fname'; // set the default sort type
     $scope.sortReverse = false;  // set the default sort order
     $scope.searchName = '';     // set the default search/filter term
@@ -221,18 +227,25 @@ if(validateFields($scope.data)){
         case 0:
           $scope.sortType = 'fname';
           $scope.sortOrder = false;
+          $scope.title = 'Name'
           break;
         case 1:
           $scope.sortType = 'emotion';
           $scope.sortOrder = true;
+          $scope.title = 'Emotion Level'
           break;
         case 2:
+        $scope.title = 'New Message'
+        break;
         case 3:
+        $scope.title = 'New Activity'
+        break;
         default:
           $scope.sortType = 'unread_messages';
           $scope.sortOrder = true;
           break;
       }
+      $scope.subNavList = false;
     }
 
   })
