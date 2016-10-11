@@ -364,11 +364,7 @@ angular.module('geiaFitApp')
 
         data: message,
       }).then(function (response) {
-<<<<<<< HEAD
        // alert("SERVICE SUCCESS" + JSON.stringify(response.data));
-=======
-      //  alert("SERVICE SUCCESS" + JSON.stringify(response.data));
->>>>>>> 76390cb89aac8e556c407fb38c4ad7d396611c08
         return response.data;
       }, function (err) {
         alert("SERVICE ERROR" + JSON.stringify(err.data));

@@ -1954,7 +1954,7 @@ thumb2: $stateParams.thumb2
 
 
 
-  .controller('ExerciseProgramCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', '$ionicPopup', function ($scope, $stateParams, sortedByList, $state, $ionicPopup) {
+  .controller('ExerciseProgramCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', '$ionicPopup','SetExerciseProgramService', function ($scope, $stateParams, sortedByList, $state, $ionicPopup,SetExerciseProgramService) {
     console.log($stateParams);
 
 
@@ -1973,53 +1973,6 @@ thumb2: $stateParams.thumb2
     }
 
 
-    var exerciseList = [
-      {
-        id: 0,
-        title: "Exercise Name"
-      },
-      {
-        id: 1,
-        title: "Exercise Name"
-      },
-      {
-        id: 2,
-        title: "Exercise Name"
-      },
-      {
-        id: 3,
-        title: "Exercise Name"
-      },
-      {
-        id: 4,
-        title: "Exercise Name"
-      },
-      {
-        id: 5,
-        title: "Exercise Name"
-      },
-      {
-        id: 6,
-        title: "Exercise Name"
-      },
-      {
-        id: 7,
-        title: "Exercise Name"
-      },
-      {
-        id: 8,
-        title: "Exercise Name"
-      },
-      {
-        id: 9,
-        title: "Exercise Name"
-      },
-      {
-        id: 10,
-        title: "Exercise Name"
-      }
-
-    ];
 
   
   $scope.pages = [
@@ -2106,8 +2059,9 @@ thumb2: $stateParams.thumb2
         
 
      function getListOfExerciseProgramme() {
-      SetExerciseProgramService.listOfExercise($stateParams.uid).then(function(data) {
+      SetExerciseProgramService.listOfExercise($stateParams.patientId).then(function(data) {
         $scope.exerciseList = data.exercises;   
+        console.log($scope.exerciseList + 'inside controller');
       });
     }
 
