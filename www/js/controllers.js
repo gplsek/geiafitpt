@@ -108,7 +108,7 @@ angular.module('geiaFitApp')
     //   $scope.login = function(data) {
     //     $scope.data = {};
     //     if(!data){
-    //       var alertPopup = $ionicPopup.alert({
+    //       var alertPopup = $ionicPopup.//alet({
     //         title: 'Login failed!',
     //         template: 'Please check your credentials!'
     //       });
@@ -208,8 +208,9 @@ angular.module('geiaFitApp')
 
   })
 
-  .controller('SetExerciseProgramCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', function ($scope, $state, $stateParams, sortedByList) {
-    $scope.uid = $stateParams.uid;
+  .controller('SetExerciseProgramCtrl', ['$scope', '$state', '$stateParams', 'sortedByList','SetExerciseProgramService', function ($scope, $state, $stateParams, sortedByList,SetExerciseProgramService) {
+ // alert(""+JSON.stringify($stateParams));
+  $scope.uid = $stateParams.uid;
     $scope.patientData = $stateParams.name;
     $scope.sortedByList = sortedByList;
     $scope.sortedBy = $scope.sortedByList[2].id;
@@ -219,6 +220,188 @@ angular.module('geiaFitApp')
 
       $state.go('exerciseProgram');
     }
+
+  $scope.exerciseprogram=
+ {
+peid: $stateParams.peid,
+title: $stateParams.title,
+comments: $stateParams.comments,
+code: $stateParams.code,
+reps: $stateParams.reps,
+sets: $stateParams.sets,
+rest:$stateParams.rest,
+daily:$stateParams.daily,
+today: $stateParams.today,
+alldays:$stateParams.alldays,
+weekly: {
+sun: $stateParams.weekly.sun,
+mon: $stateParams.weekly.mon,
+tue: $stateParams.weekly.tue,
+wed: $stateParams.weekly.wed,
+thu: $stateParams.weekly.thu,
+fri: $stateParams.weekly.fri,
+sat: $stateParams.weekly.sat,
+},
+mp4: $stateParams.mp4,
+webm: $stateParams.webm,
+mov: $stateParams.mov,
+thumb1: $stateParams.thumb1,
+thumb2: $stateParams.thumb2
+};
+   
+   console.log("<nnnnnnnnnnnnnnnnnnnnnnnnnn");
+   console.log(""+JSON.stringify($scope.exerciseprogram));
+// $scope.enableButtonMon = function()
+// {
+// alert("MON");
+// exerciseprogram.weekly.mon == 1 ? exerciseprogram.weekly.mon =0 :exerciseprogram.weekly.mon =1;
+// };
+// $scope.enableButtonTue = function()
+// {
+// exerciseprogram.weekly.tue == 1 ? exerciseprogram.weekly.tue =0 :exerciseprogram.weekly.tue =1;  
+// alert("TUE");
+// };
+// $scope.enableButtonWed = function()
+// {
+// exerciseprogram.weekly.wed == 1 ? exerciseprogram.weekly.wed =0 :exerciseprogram.weekly.wed =1;
+// alert("WED");
+// };
+// $scope.enableButtonThu = function()
+// {
+// exerciseprogram.weekly.thu == 1 ? exerciseprogram.weekly.thu =0 :exerciseprogram.weekly.thu =1;
+// alert("WED");
+// };
+// $scope.enableButtonFri = function()
+// {
+// exerciseprogram.weekly.fri == 1 ? exerciseprogram.weekly.fri =0 :exerciseprogram.weekly.fri =1;
+// alert("WED");
+// };
+// $scope.enableButtonSat = function()
+// {
+// exerciseprogram.weekly.sat == 1 ? exerciseprogram.weekly.sat =0 :exerciseprogram.weekly.sat =1;
+// alert("WED");
+// };
+// $scope.enableButtonSun = function()
+// {
+// exerciseprogram.weekly.sun == 1 ? exerciseprogram.weekly.sun =0 :exerciseprogram.weekly.sun =1;
+// alert("WED");
+// };
+// $scope.editExercise = function()
+// {
+// exerciseprogram.weekly.sun == 1 ? exerciseprogram.weekly.sun =0 :exerciseprogram.weekly.sun =1;
+// alert("WED");
+// };
+
+
+   $scope.saveExercise = function() {
+  aler("ex");
+  var exercise= {
+      "exid":$scope.exerciseprogram.peid,
+      "title": $$scope.exerciseprogram.title,
+      "video_title": "Levator Update Stretch",
+      "video_name": "video.mp4",
+      "video_data": "asasas,asakjshashasasjhas ash akshaskas a.........",
+      "video_image_name": "image name",
+      "video_image":"asasasasasasasasasasasas..........",
+      "notes":"some notes go here",
+      "comments":"send me some commetns and here we are again" ,
+     "reps":$scope.exerciseprogram.reps,
+    "sets":$scope.exerciseprogram.sets,
+    "rest":$scope.exerciseprogram.rest,
+    "daily":$scope.exerciseprogram.daily,
+    "week_days":[
+        {
+        "day":"0",
+        "on":"1"
+        },
+        {
+        "day":"1",
+        "on":"0"
+        },
+        {
+        "day":"2",
+        "on":"1"
+        },
+        {
+        "day":"3",
+        "on":"0"
+        },
+        {
+        "day":"4",
+        "on":"0"
+        },
+        {
+        "day":"5",
+        "on":"1"
+        },
+        {
+        "day":"6",
+        "on":"0"
+        }
+        
+        ]
+};
+ 
+ alert("editEx"+JSON.stringify(exercise));
+
+  SetExerciseProgramService.saveExercise(execise,$scope.uid).then(function(success){
+      alert("success"+JSON.stringify(success));
+
+   },function(error){
+
+   })
+
+
+    };
+
+  //<!-----------------------------------------------------------!>
+    var repsList = [];
+
+    (function steps() {
+      var value = 0;
+      for (var i = 1; i <= 180; i++) {
+        repsList[i]= i;
+      //  value += 500;
+      }
+      console.log(repsList);
+    })();
+
+    $scope.stepsList = repsList;
+
+    $scope.selectedReps =$scope.exerciseprogram.reps;
+
+     var repsSet = [];
+
+    (function steps() {
+      var value = 0;
+      for (var i = 1; i <= 180; i++) {
+        repsSet[i]=i;
+      
+      }
+      console.log(repsSet);
+    })();
+
+    $scope.repsSet = repsSet;
+
+    $scope.selectedSet = $scope.exerciseprogram.sets;
+
+     var repsDaily = [];
+
+    (function steps() {
+      var value = 0;
+      for (var i = 1; i <= 180; i++) {
+         repsSet[i]=i;
+      }
+      console.log(repsDaily);
+    })();
+
+    $scope.repsDaily = repsDaily;
+
+    $scope.selectedDaily = $scope.exerciseprogram.daily;
+
+//<!-----------------------------------------------------------!> 
+
+ 
   }])
 
   .controller('SetActivityGoalsCtrl', ['$scope', '$state', 'sortedByList', '$ionicHistory', 'threshold', '$window', '$stateParams', function ($scope, $state, sortedByList, $ionicHistory, threshold, $window, $stateParams) {
@@ -1525,106 +1708,23 @@ angular.module('geiaFitApp')
 
     $scope.gotoAction = function (id) {
       var state = getStateTitle(id);
-
-      $state.transitionTo(state, { name: $stateParams.name }, { reload: true });
+      $state.transitionTo(state, { uid: $stateParams.uid,name: $stateParams.name }, { reload: true });
     }
 
   }])
 
 
 
-  .controller('ExerciseProgramCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', '$ionicPopup', function ($scope, $stateParams, sortedByList, $state, $ionicPopup) {
-    console.log($stateParams);
-
-
-
-    var pageSize = 10;
-    $scope.sortedByList = sortedByList;
-    $scope.sortedBy = $scope.sortedByList[0].id;
-
-    var exerciseList = [
-      {
-        id: 0,
-        title: "Exercise Name"
-      },
-      {
-        id: 1,
-        title: "Exercise Name"
-      },
-      {
-        id: 2,
-        title: "Exercise Name"
-      },
-      {
-        id: 3,
-        title: "Exercise Name"
-      },
-      {
-        id: 4,
-        title: "Exercise Name"
-      },
-      {
-        id: 5,
-        title: "Exercise Name"
-      },
-      {
-        id: 6,
-        title: "Exercise Name"
-      },
-      {
-        id: 7,
-        title: "Exercise Name"
-      },
-      {
-        id: 8,
-        title: "Exercise Name"
-      },
-      {
-        id: 9,
-        title: "Exercise Name"
-      },
-      {
-        id: 10,
-        title: "Exercise Name"
-      }
-
-    ];
-
-    $scope.pages = [
-      {
-        id: 0,
-        title: "Page 1"
-      },
-      {
-        id: 1,
-        title: "Page 2"
-      },
-      {
-        id: 2,
-        title: "Page 3"
-      },
-      {
-        id: 3,
-        title: "Page 4"
-      },
-      {
-        id: 4,
-        title: "Page 5"
-      }
-    ];
-
-    $scope.selectedPage = $scope.pages[0].id;
-
-    $scope.showNext = function (pageNo) {
-      var list = angular.copy(exerciseList);
-      var offset = (pageNo - 1) * pageSize;
-      $scope.exerciseList = list.splice(offset, pageSize);
-      $scope.selectedPage = $scope.pages[pageNo - 1].id;
-    }
-
-    //];
-
-    $scope.pages = [
+  .controller('ExerciseProgramCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', '$ionicPopup','SetExerciseProgramService', function ($scope, $stateParams, sortedByList, $state, $ionicPopup,SetExerciseProgramService) {
+  console.log($stateParams);
+  var exerciseList =[];
+  var pageSize = 10;
+  $scope.sortedByList = sortedByList;
+  $scope.sortedBy = $scope.sortedByList[0].id;
+ 
+  getListOfExerciseProgramme() ;
+  
+  $scope.pages = [
       {
         id: 0,
         title: "Page 1"
@@ -1694,6 +1794,13 @@ angular.module('geiaFitApp')
             $state.transitionTo(state,{name: $stateParams.name}, {reload: true});
           }
         */
+
+     function getListOfExerciseProgramme() {
+      SetExerciseProgramService.listOfExercise($stateParams.uid).then(function(data) {
+        $scope.exerciseList = data.exercises;   
+      });
+    }
+
   }])
 
   .controller('paymentCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', function ($scope, $stateParams, sortedByList, $state) {
