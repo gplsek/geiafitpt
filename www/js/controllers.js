@@ -1574,7 +1574,7 @@ thumb2: $stateParams.thumb2
     //$scope.DayView = true;
 
     $scope.changeView = function (view) {
-      switch (view) {	
+      switch (view) { 
         case 1:
           $scope.selectedView = 'day';
           chartConfigForDay();
@@ -1868,7 +1868,7 @@ thumb2: $stateParams.thumb2
         {
                 data: dataAchived,
                 color: "#009CDB",
-                //color: color,
+               borderColor: 'transparent'
         }],
         func: function (chart) {
         }
@@ -1928,6 +1928,7 @@ thumb2: $stateParams.thumb2
         }, {
                         data: dataAchived,
                         color: "#009CDB",
+                        borderColor: 'transparent'
                 }],
         func: function (chart) {
         }
