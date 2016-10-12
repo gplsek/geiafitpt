@@ -1065,16 +1065,15 @@ thumb2: $stateParams.thumb2
     }
 
     getActivityDataForYesterday = function (successData) {
-     var date = moment().utcOffset('-07:00').subtract(1, 'days').startOf('day').format('L');
-     console.log("Yesterday----------"+date)
-     var Ndate = moment(date)
+      var date = moment().utcOffset('-07:00').subtract(1, 'days').startOf('day').format('L');
+      var Ndate = moment(date)
+
       for (var x in successData) {
-        
         var unixDate = successData[x].updated
         var newDate = moment.unix(unixDate).utcOffset('-07:00').format('L');
         var NnewDate = moment(newDate)
+      
         if (Ndate.diff(NnewDate) == 0) {
-          console.log("Yesterday response----------"+newDate)
           activityDataForYesterday = successData[x];
         }
       }
@@ -1135,51 +1134,11 @@ thumb2: $stateParams.thumb2
         highPer = ( achieved/goal ) * 100;
       }
 
-      /*console.log('excPer ' + excPer);
-      console.log('stepsPer ' + stepsPer);
-      console.log('lowPer ' + lowPer);
-      console.log('mediumPer ' + mediumPer);
-      console.log('highPer ' + highPer);*/
       $scope.chartConfig = getChartConfigForDay(excPer, '#4299D1' , '#1F60A4' );
       $scope.chartConfig1 = getChartConfigForDay(stepsPer,  '#4299D1' , '#1F60A4' );
       $scope.chartConfig2 = getChartConfigForDay(lowPer,'#DDF6BC' , '#B8E986' );
       $scope.chartConfig3 = getChartConfigForDay(mediumPer,'#00CBEF' , '#009CDB' );
       $scope.chartConfig4 = getChartConfigForDay(highPer,'#4299D1' , '#1F60A4' );
-    }
-
-
-    getActivityDataForWeek = function (successData) {
-      var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').startOf('day').format('L');
-      var startDate = moment(TstartDate);
-      var TendDate = moment().utcOffset('-07:00').format('L');
-      var endDate = moment(TendDate);
-
-      for (var x in successData) {
-        var unixDate = successData[x].updated
-        var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
-        var date = moment(Tdate)
-
-        if (date.diff(startDate) > 0 && date.diff(endDate) < 0) {
-          activityDataForWeek.push(successData[x]);
-        }
-      }
-    }
-
-    getComplianceDataForWeek = function (successData) {
-      var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').startOf('day').format('L');
-      var startDate = moment(TstartDate);
-      var TendDate = moment().utcOffset('-07:00').format('L');
-      var endDate = moment(TendDate);
-
-      for (var x in successData) {
-        var unixDate = successData[x].created
-        var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
-        var date = moment(Tdate)
-
-        if (date.diff(startDate) > 0 && date.diff(endDate) < 0) {
-          complianceDataForWeek.push(successData[x]);
-        }
-      }
     }
 
     getWeekDates = function () {
@@ -1196,6 +1155,25 @@ thumb2: $stateParams.thumb2
         date = moment(tempDate);
       }
       return dateList;
+    }
+
+    getActivityDataForWeek = function (successData) {
+      activityDataForWeek = [];
+      var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').startOf('day').format('L');
+      var startDate = moment(TstartDate);
+      var TendDate = moment().utcOffset('-07:00').format('L');
+      var endDate = moment(TendDate);
+
+      for (var x in successData) {
+        var unixDate = successData[x].updated
+        var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
+        var date = moment(Tdate)
+
+        if (date.diff(startDate) >= 0 && date.diff(endDate) <= 0) {
+          activityDataForWeek.push(successData[x]);
+        }
+      }
+      chartConfigForWeek();
     }
 
     chartConfigForWeek = function () {
@@ -1216,7 +1194,6 @@ thumb2: $stateParams.thumb2
       var totalWeekLow =0;
       var totalWeekMid =0;
       var totalWeekHigh =0;
-
 
       var dates = getWeekDates();
 
@@ -1299,16 +1276,36 @@ thumb2: $stateParams.thumb2
       $scope.chartConfigWeekViewHigh = getChartConfigForWeek(dataWeekVigorousGoal, dataWeekVigorous)
     }
 
+     getComplianceDataForWeek = function (successData) {
+      complianceDataForWeek = [];
+      var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').startOf('day').format('L');
+      var startDate = moment(TstartDate);
+      var TendDate = moment().utcOffset('-07:00').format('L');
+      var endDate = moment(TendDate);
+
+      for (var x in successData) {
+        var unixDate = successData[x].created
+        var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
+        var date = moment(Tdate)
+
+        if (date.diff(startDate) >= 0 && date.diff(endDate) <= 0) {
+          complianceDataForWeek.push(successData[x]);
+        }
+      }
+      chartConfigForComplianceWeek();
+    }
+
     chartConfigForComplianceWeek = function () {
       var dataWeekComplianceGoal = [];
       var dataWeekCompliance = [];
-      var totalWeekCompliance =0;
+      var totalWeekCompliance = 0;
 
       var dates = getWeekDates();
 
       for (var d in dates) {
-        var total_compliance_goal = 0 
-        var total_compliance = 0 
+        var total_compliance_goal = 0
+        var total_compliance = 0
+
         for (var x in complianceDataForWeek) {
           var unixDate = complianceDataForWeek[x].created
           var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
@@ -1318,7 +1315,7 @@ thumb2: $stateParams.thumb2
             var temp = complianceDataForWeek[x];
             if (temp.daily_challenge != null && temp.daily_points != null) {
               total_compliance_goal = parseInt(temp.daily_challenge)
-              total_compliance = parseInt(temp.daily_points)  
+              total_compliance = parseInt(temp.daily_points)
             }
             break;
           }
@@ -1330,59 +1327,60 @@ thumb2: $stateParams.thumb2
     }
 
 
-    getActivityDataForMonth = function (successData, dateForView) {
-      var startDate
-      if(dateForView == null){
-        startDate = new Date();
-      }
-      else{
-        startDate = dateForView;
-      }
-      var endDate = new Date(startDate.getFullYear(), startDate.getMonth(),1)
-
-      for (var x in successData) {
-        var unixDate = successData[x].updated
-        var date = utilityService.unixTimeToDate(unixDate);
-        if (startDate > date && date > endDate) {
-          activityDataForMonth.push(successData[x]);
-        }
-      }
-    }
-
-    getComplianceDataForMonth = function (successData, dateForView) {
-      var startDate
-      if(dateForView == null){
-        startDate = new Date();
-      }
-      else{
-        startDate = dateForView;
-      }
-      var endDate = new Date(startDate.getFullYear(), startDate.getMonth(),1)
-
-      for (var x in successData) {
-        var unixDate = successData[x].created
-        var date = utilityService.unixTimeToDate(unixDate);
-        if (startDate > date && date > endDate) {
-          complianceDataForMonth.push(successData[x]);
-        }
-      }
-    }
-
     getMonthDates = function (date) {
-      var year = date.getFullYear()
-      var month = date.getMonth()
-      var date = date.getDate()
+      date = moment(date);
+
+      var TstartDate = date.utcOffset('-07:00').startOf('month').format('L');
+      var startDate = moment(TstartDate);
+
+      var TendDate = date.utcOffset('-07:00').endOf('month').format('L');
+      var endDate = moment(TendDate);
+
       var dateList = [];
 
-      var d = new Date(year, month, date);
-      var dateList = [];
-      while (d.getMonth() === month) {
-        var date = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-        dateList.push(date)
-        d.setDate(d.getDate() - 1);
+      while (startDate.diff(endDate) < 0) {
+        dateList.push(startDate)
+        var tempDate = startDate.add(1, 'days').format('L')
+        startDate = moment(tempDate)
       }
       return dateList;
     }
+
+    getMonthFirstLastDates = function (date) {
+      date = moment(date);
+     
+      var TstartDate = date.utcOffset('-07:00').startOf('month').format('L');
+      var startDate = moment(TstartDate);
+
+      var TendDate =  date.utcOffset('-07:00').endOf('month').format('L');
+      var endDate = moment(TendDate);
+
+      var dateList = [];
+
+      dateList.push(startDate)
+      dateList.push(endDate)
+  
+      return dateList;
+    }
+
+    getActivityDataForMonth = function (successData, dateForView) {
+      activityDataForMonth = [];
+      var dates; 
+      dates = getMonthFirstLastDates($scope.DATE);
+      var startDate = dates[0]
+      var endDate = dates[1]
+
+      for (var x in successData) {
+        var unixDate = successData[x].updated
+        var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
+        var date = moment(Tdate)
+        if (date.diff(startDate) > 0 && date.diff(endDate) < 0) {
+          activityDataForMonth.push(successData[x]);
+        }
+      }
+
+      chartConfigForMonth()
+    }    
 
     chartConfigForMonth = function () {
       var dataMonthExerciseGoal = [];
@@ -1403,11 +1401,11 @@ thumb2: $stateParams.thumb2
       var totalMonthMid =0;
       var totalMonthHigh =0;
 
-      var tempDate = new Date($scope.DATE.getFullYear(), $scope.DATE.getMonth() + 1, 0);
-      var dates = getMonthDates(tempDate);
+      var dates = getMonthDates($scope.DATE);
+
       var onlyDates = [] 
       for (var d in dates) {
-        onlyDates.push(dates[d].getDate())
+        onlyDates.push(dates[d].date())
 
         var total_exercise_goal = 0
         var total_exercise = 0
@@ -1421,10 +1419,16 @@ thumb2: $stateParams.thumb2
         var time_active_high = 0
 
         for (var x in activityDataForMonth) {
-          var tempDate = utilityService.unixTimeToDate(activityDataForMonth[x].date);
-          if (tempDate.getFullYear() === dates[d].getFullYear() &&
+          //var tempDate = utilityService.unixTimeToDate(activityDataForMonth[x].date);
+          var unixDate = activityDataForMonth[x].date
+          var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
+          var date = moment(Tdate)
+
+          /*if (tempDate.getFullYear() === dates[d].getFullYear() &&
             tempDate.getMonth() === dates[d].getMonth() &&
-            tempDate.getDate() === dates[d].getDate()) {
+            tempDate.getDate() === dates[d].getDate()) {*/
+            if (date.diff(dates[d]) == 0) {
+
             var temp = activityDataForMonth[x];
 
              if (temp.total_exercise_goal != null && temp.total_exercise != null) {
@@ -1482,7 +1486,7 @@ thumb2: $stateParams.thumb2
       $scope.totalMonthHigh = (totalMonthHigh == null) ? 0 : totalMonthHigh;
       $scope.lastDateOfMonth =  Math.max(...onlyDates);
 
-       dataMonthExerciseGoal.reverse();
+       /*dataMonthExerciseGoal.reverse();
        dataMonthStepsGoal.reverse();
        dataMonthLightGoal.reverse();
        dataMonthModerateGoal.reverse();
@@ -1494,7 +1498,7 @@ thumb2: $stateParams.thumb2
        dataMonthModerate.reverse();
        dataMonthVigorous.reverse();
 
-       onlyDates.reverse();
+       onlyDates.reverse();*/
 
       $scope.chartConfigMonthViewExercise = getChartConfigForMonth(dataMonthExerciseGoal, dataMonthExercise,onlyDates)
       $scope.chartConfigMonthViewSteps = getChartConfigForMonth(dataMonthStepsGoal, dataMonthSteps,onlyDates)
@@ -1505,25 +1509,50 @@ thumb2: $stateParams.thumb2
     }
 
 
+    getComplianceDataForMonth = function (successData, dateForView) {
+      complianceDataForMonth = [];
+      var dates;
+      dates = getMonthFirstLastDates($scope.DATE);
+      var startDate = dates[0]
+      var endDate = dates[1]
+
+      for (var x in successData) {
+        var unixDate = successData[x].created
+        var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
+        var date = moment(Tdate)
+
+        if (date.diff(startDate) > 0 && date.diff(endDate) < 0) {
+          complianceDataForMonth.push(successData[x]);
+        }
+      }
+      chartConfigForComplianceMonth()
+    }
+
+
     chartConfigForComplianceMonth = function () {
 
       var dataMonthComplianceGoal = [];
       var dataMonthCompliance = [];
 
-      var tempDate = new Date($scope.DATE.getFullYear(), $scope.DATE.getMonth() + 1, 0);
-      var dates = getMonthDates(tempDate);
+      var dates = getMonthDates($scope.DATE);
+
       var onlyDates = []
       for (var d in dates) {
-        onlyDates.push(dates[d].getDate())
+        onlyDates.push(dates[d].date())
 
         var total_compliance_goal = 0
         var total_compliance = 0
 
         for (var x in complianceDataForMonth) {
-          var tempDate = utilityService.unixTimeToDate(complianceDataForMonth[x].created);
-          if (tempDate.getFullYear() === dates[d].getFullYear() &&
+          //var tempDate = utilityService.unixTimeToDate(complianceDataForMonth[x].created);
+          var unixDate = complianceDataForMonth[x].created
+          var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
+          var date = moment(Tdate)
+          
+          /*if (tempDate.getFullYear() === dates[d].getFullYear() &&
             tempDate.getMonth() === dates[d].getMonth() &&
-            tempDate.getDate() === dates[d].getDate()) {
+            tempDate.getDate() === dates[d].getDate()) {*/
+          if (date.diff(dates[d]) == 0) { 
             var temp = complianceDataForMonth[x];
 
             if (temp.daily_challenge != null && temp.daily_points != null) {
@@ -1541,9 +1570,9 @@ thumb2: $stateParams.thumb2
 
       $scope.lastDateOfMonth = Math.max(...onlyDates);
 
-      dataMonthComplianceGoal.reverse();
+      /*dataMonthComplianceGoal.reverse();
       dataMonthCompliance.reverse();
-      onlyDates.reverse();
+      onlyDates.reverse();*/
 
       $scope.chartConfigMonthViewComp = getChartConfigForMonth(dataMonthComplianceGoal, dataMonthCompliance, onlyDates)
 
@@ -1552,25 +1581,41 @@ thumb2: $stateParams.thumb2
 
 
     $scope.prevDate = function(){
-      var d = $scope.DATE;
+      /*var d = $scope.DATE;
       var tempDate = new Date(d.getFullYear(), d.getMonth()-1,1)
-      $scope.DATE = new Date(tempDate.getFullYear(), tempDate.getMonth() + 1, 0);
+      $scope.DATE = new Date(tempDate.getFullYear(), tempDate.getMonth() + 1, 0);*/
+      
+      var Tdate = moment($scope.DATE);
+      var tempDate = Tdate.utcOffset('-07:00').subtract(1, 'month').format();
+      $scope.DATE = moment(tempDate).endOf('month').toDate();
+      console.log($scope.DATE)
+      var x  = moment($scope.DATE)
+      console.log(x)
       console.log("Perv Selected "+$scope.DATE)
+
       getActivityDataForMonth(ActivityData,$scope.DATE)
       getComplianceDataForMonth(complianceData,$scope.DATE) 
-      chartConfigForMonth(); 
-      chartConfigForComplianceMonth();
+      
+      //chartConfigForMonth(); 
+      //chartConfigForComplianceMonth();
     }
 
     $scope.nextDate = function(){
-      var d = $scope.DATE;
+      /*var d = $scope.DATE;
       var tempDate = new Date(d.getFullYear(), d.getMonth()+1,1)
-      $scope.DATE = new Date(tempDate.getFullYear(), tempDate.getMonth() + 1, 0);
+      $scope.DATE = new Date(tempDate.getFullYear(), tempDate.getMonth() + 1, 0);*/
+
+      var Tdate = moment($scope.DATE);
+      var tempDate = Tdate.utcOffset('-07:00').add(1, 'month').format();
+      $scope.DATE = moment(tempDate).endOf('month').toDate();
+
       console.log("Next Selected "+$scope.DATE)
+      
       getActivityDataForMonth(ActivityData,$scope.DATE)
       getComplianceDataForMonth(complianceData,$scope.DATE) 
-      chartConfigForMonth();  
-      chartConfigForComplianceMonth();
+      
+      //chartConfigForMonth();  
+      //chartConfigForComplianceMonth();
     }
 
      $scope.sortedByList = sortedByList;
@@ -1582,7 +1627,8 @@ thumb2: $stateParams.thumb2
       switch (view) { 
         case 1:
           $scope.selectedView = 'day';
-          chartConfigForDay();
+          //chartConfigForDay();
+          getActivityDataForYesterday(ActivityData);
           $scope.DayView = true;
           $scope.WeekView = false;
           $scope.MonthView = false;
@@ -1590,8 +1636,11 @@ thumb2: $stateParams.thumb2
           break;
         case 2:
           $scope.selectedView = 'week';
-          chartConfigForWeek();
-          chartConfigForComplianceWeek();
+          /*chartConfigForWeek();
+          chartConfigForComplianceWeek();*/
+          getActivityDataForWeek(ActivityData);
+          getComplianceDataForWeek(complianceData);
+
           $scope.WeekView = true;
           $scope.DayView = false;
           $scope.MonthView = false;
@@ -1601,8 +1650,14 @@ thumb2: $stateParams.thumb2
           $scope.selectedView = 'month';
           chartConfigForMonth();
           chartConfigForComplianceMonth();
-          var d = new Date();
-          $scope.DATE = new Date(d.getFullYear(),d.getMonth(),d.getDate());
+
+          /*var d = new Date();
+          $scope.DATE = new Date(d.getFullYear(), d.getMonth() + 1, 0);*/
+          
+          var Tdate = moment().utcOffset('-07:00').endOf("month").hours(0).minute(0).second(0).millisecond(0).format();
+          $scope.DATE = moment(Tdate).toDate();
+          console.log($scope.DATE)
+
           $scope.MonthView = true;
           $scope.DayView = false;
           $scope.WeekView = false;
@@ -1610,7 +1665,8 @@ thumb2: $stateParams.thumb2
           break;
         default:
           $scope.selectedView = 'day';
-          chartConfigForDay();
+          //chartConfigForDay();
+          getActivityDataForYesterday(ActivityData);
           $scope.DayView = true;
           $scope.WeekView = false;
           $scope.MonthView = false;
@@ -1620,15 +1676,23 @@ thumb2: $stateParams.thumb2
     }
 
     init = function () {
-      var d = new Date();
-      $scope.DATE = new Date(d.getFullYear(),d.getMonth(),d.getDate());
+      /*var d = new Date();
+      $scope.DATE = new Date(d.getFullYear(), d.getMonth() + 1, 0);*/
+      
+      var Tdate = moment().utcOffset('-07:00').endOf("month").hours(0).minute(0).second(0).millisecond(0).format();
+      $scope.DATE = moment(Tdate).toDate();
+      console.log($scope.DATE)
+      
       $scope.HealthPoint = 0;
-
-      AppService.profile($stateParams.uid).then(function (success) {
+      var uid = $stateParams.uid;
+      if(uid == null){
+        uid = $rootScope.UID;
+      }
+      AppService.profile(uid).then(function (success) {
         var imageUrl;
         var gender;
         patientData = success;
-
+        console.log(patientData)
         var age = "";
         if (!patientData.dob) {
           age = "N/A";
@@ -1644,42 +1708,40 @@ thumb2: $stateParams.thumb2
           imageUrl = "img/profile_icon.png";
         }
 
-        if (patientData.gender == '2'){
+        if (patientData.gender == '2') {
           gender = "male";
-        }else
-        if(patientData.gender == '1'){
-          gender = "female";
-        }else{
-          gender = "N/A";
-        }
-
+        } else
+          if (patientData.gender == '1') {
+            gender = "female";
+          } else {
+            gender = "N/A";
+          }
         $scope.patientProfile = {
-          name: $stateParams.name,
+          name: patientData.first_name +" "+patientData.last_name,
           age: age,
           gender: gender,
           email: patientData.email,
           url: imageUrl
         }
-
-        $rootScope.patientName = $stateParams.name;
+        $rootScope.patientName = patientData.first_name +" "+patientData.last_name;
       }, function (error) {
-
       })
 
-      AppService.getActivity($stateParams.uid).then(function (success) {
+      console.log(uid)
+      AppService.getActivity(uid).then(function (success) {
         console.log("getActivity Success")
         ActivityData = success;
-        getActivityDataForYesterday(success);
-        getActivityDataForWeek(success);
-        getActivityDataForMonth(success);
+        getActivityDataForYesterday(ActivityData);
+        //getActivityDataForWeek(ActivityData);
+        getActivityDataForMonth(ActivityData);
       }, function (error) {
         console.log("getActivity error")
       })
 
-      AppService.getHealthPoint($stateParams.uid).then(function (success) {
+      AppService.getHealthPoint(uid).then(function (success) {
         console.log("getHealthPoint Success")
         console.log(success)
-        complianceData = success
+        complianceData = success.daily
         var DailyHP = success.daily;
         var today = new Date();
         for (var x in DailyHP) {
@@ -1693,8 +1755,8 @@ thumb2: $stateParams.thumb2
         }
       }
 
-      getComplianceDataForWeek(DailyHP);
-      getComplianceDataForMonth(DailyHP,$scope.DATE) 
+      //getComplianceDataForWeek(complianceData);
+      getComplianceDataForMonth(complianceData,$scope.DATE) 
 
       }, function (error) {
         console.log("getHealthPoint error")

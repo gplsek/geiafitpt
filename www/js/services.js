@@ -178,6 +178,7 @@ angular.module('geiaFitApp')
 
     var getActivity = function (uid) {
       console.log(uid)
+      $rootScope.UID = uid ;
       var prom = $http({
         method: "GET",
         url: ApiEndpoint.url + '/log/activity/' + uid
