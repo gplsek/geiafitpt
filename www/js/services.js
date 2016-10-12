@@ -22,8 +22,8 @@ angular.module('geiaFitApp')
 
     function storeUserCredentials(token, isChecked) {
 
-      // window.localStorage.setItem('LOCAL_TOKEN_KEY', token);
-      // window.localStorage.setItem('KEEP_SIGNED_IN', isChecked);
+       localStorage.setItem('LOCAL_TOKEN_KEY', token);
+       localStorage.setItem('KEEP_SIGNED_IN', isChecked);
       useCredentials(token);
     }
 
@@ -52,7 +52,7 @@ angular.module('geiaFitApp')
       username = '';
       isAuthenticated = false;
       $http.defaults.headers.common['X-Auth-Token'] = undefined;
-      window.localStorage.removeItem(LOCAL_TOKEN_KEY);
+      localStorage.removeItem('LOCAL_TOKEN_KEY');
     }
 
     var login = function (name, pw, isChecked) {
@@ -62,16 +62,16 @@ angular.module('geiaFitApp')
       }
       form = JSON.stringify(form);
       //$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+      if(localStorage.getItem('LOCAL_TOKEN_KEY') != null){
+        logout();
+      }
       var promise = $http({
         method: "POST",
         url: ApiEndpoint.url + '/user/login',
         data: form
       }).then(function (response) {
-        console.log("Store Use Credentials called");
-        storeUserCredentials(name + response.data.token, isChecked);
-        console.log(response);
         var token = response.data.token
-        console.log(token);
+        storeUserCredentials(token, isChecked);
         $rootScope.token = token;
         $rootScope.loggedInUserUid = response.data.user.uid;
         console.log("UID " + $rootScope.loggedInUserUid);
@@ -90,10 +90,12 @@ angular.module('geiaFitApp')
     };
 
     var logout = function () {
-      destroyUserCredentials();
+      var logoutToken = localStorage.getItem(('LOCAL_TOKEN_KEY'))
+      destroyUserCredentials()
       return $http({
         headers: {
-          'X-CSRF-Token': $rootScope.token,
+          //'X-CSRF-Token': $rootScope.token,
+          'X-CSRF-Token': logoutToken,
           'Access-Control-Allow-Origin': '*'
         },
         method: 'POST',
