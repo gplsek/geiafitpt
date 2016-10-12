@@ -57,8 +57,8 @@ angular.module('geiaFitApp')
 
     var login = function (name, pw, isChecked) {
       var form = {
-        username: name,
-        password: pw
+        username: "admin@geiafit.com", //why is this hardcoded?
+        password: "FitGeia1!"
       }
       form = JSON.stringify(form);
       //$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
@@ -183,6 +183,19 @@ angular.module('geiaFitApp')
       return prom;
     }
 
+    var getHealthPoint = function (uid) {
+      console.log(uid)
+      var prom = $http({
+        method: "GET",
+        url: ApiEndpoint.url + '/log/health_points/' + uid
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      })
+      return prom;
+    }
+
     var getVitals = function (uid) {
       console.log(uid)
       var prom = $http({
@@ -256,9 +269,11 @@ angular.module('geiaFitApp')
     }
 
     var getThreshold = function (uid) {
+    console.log(uid)
+      
       var promise = $http({
         method: "GET",
-        url: ApiEndpoint.url + "/goals/tresholds/37" // Hardcoded needs to be replaced
+        url: ApiEndpoint.url + '/goals/tresholds/37' // Hardcoded needs to be replaced
       }).then(function (response) {
         return response.data;
       }, function (err) {
@@ -271,6 +286,7 @@ angular.module('geiaFitApp')
     return {
       patientsData: getPatientsData,
       getActivity: getActivity,
+      getHealthPoint : getHealthPoint,
       getVitals: getVitals,
       addPatient: addPatient,
       profile: getProfile,
@@ -294,6 +310,7 @@ angular.module('geiaFitApp')
         console.log(err);
       });
       return profileData;
+
     }
 
     var uploadProfileImage = function (params) {
@@ -306,6 +323,7 @@ angular.module('geiaFitApp')
         return response.data;
       }, function (err) {
         console.log(err);
+
       });
       return ProfileImage;
     }
@@ -318,34 +336,37 @@ angular.module('geiaFitApp')
   }])
   .service('ChatApp', ['$rootScope', '$http', 'ApiEndpoint', function ($rootScope, $http, ApiEndpoint) {
 
-    var uid = $rootScope.loggedInUserUid;
-    var getUserMessages = function (userId) {
+
+ var uid = $rootScope.loggedInUserUid;
+   var getUserMessages = function(userId,ptid){
 
       var messageData = $http({
-        method: "GET",
-        url: ApiEndpoint.url + "/messages/" + userId + "/000000"
-      }).then(function (response) {
-        return response.data;
-      }, function (err) {
-        console.log(err);
+        method: "GET", 
+        url: ApiEndpoint.url +"/ptmessages/"+ptid+"/"+userId+"/000000"
+      }).then(function(response){
+         return response.data;
+      }, function(err){
+          console.log(err);
       });
       return messageData;
 
     }
 
-    var sendPatientMessage = function (message, userId) {
-      alert("sendPatientMessage");
 
-      var messageData = $http({
-        headers: {
-          'X-CSRF-Token': $rootScope.token,
-          'Access-Control-Allow-Origin': '*'
-        },
-        method: "PUT",
-        url: ApiEndpoint.url + "/messages/" + userId,
+   var sendPatientMessage = function(message,userId,ptid){
+  //   alert("sendPatientMessage");
+
+    var messageData = $http({
+      headers: {
+                'X-CSRF-Token': $rootScope.token,
+                //'Access-Control-Allow-Origin': '*'
+              },
+        method: "POST", 
+        url: ApiEndpoint.url + "/ptmessages/"+ptid+"/"+userId,
+
         data: message,
       }).then(function (response) {
-        alert("SERVICE SUCCESS" + JSON.stringify(response.data));
+       // alert("SERVICE SUCCESS" + JSON.stringify(response.data));
         return response.data;
       }, function (err) {
         alert("SERVICE ERROR" + JSON.stringify(err.data));
@@ -359,6 +380,47 @@ angular.module('geiaFitApp')
       getUserMessages: getUserMessages,
       sendPatientMessage: sendPatientMessage
 
+    }
+
+  }])
+
+.service('SetExerciseProgramService', ['$rootScope', '$http', 'ApiEndpoint', function ($rootScope, $http, ApiEndpoint) {
+
+    var getExerciseList = function (pid) {
+
+      var exerciseData = $http({
+        method: "GET",
+        url: "https://api.geiafit.com/api/webex/"+pid
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      });
+      return exerciseData;
+    }
+
+    var saveExercise = function(exercise,ptId)
+    {
+       var exerciseData = $http({
+      headers: {
+                'X-CSRF-Token': $rootScope.token,
+                //'Access-Control-Allow-Origin': '*'
+              },
+        method: "PUT", 
+        url: ApiEndpoint.url + "/webex/"+ptId,
+    data: exercise,
+      }).then(function (response) {
+      //  alert("SERVICE SUCCESS" + JSON.stringify(response.data));
+        return response.data;
+      }, function (err) {
+        alert("SERVICE ERROR" + JSON.stringify(err.data));
+        console.log(err);
+      });
+      return exerciseData;
+    }
+
+    return {
+      listOfExercise: getExerciseList
     }
 
   }])

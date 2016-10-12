@@ -2,14 +2,23 @@
   <ion-nav-bar class="group">
 		<ion-nav-buttons side="left">
 			<span class="icon ion-ios-arrow-back" ng-click="back()"></span>
-      <div class="title title-center header-item" ng-click="gotoHome()">{{patientProfile.name}}</div>
+      <!--<div class="title title-center header-item" ng-click="gotoHome()">{{patientProfile.name}}</div>-->
+      <div class="title title-center header-item" ng-click="gotoHome()">{{patientName}}</div>
 		</ion-nav-buttons>
   </ion-nav-bar>
   
    <ion-content>
         <div class="sortedBy text-center">
-		    <select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select> 
-		</div>
+		    <!--<select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select> -->
+		     <!--temp code-->
+            <input type="button" class="itemdropdown" ng-click="showList();" value="{{title}}"/>
+            <ion-list ng-show="subNavList" class="ddlistitems">
+              <ion-item ng-repeat="item in sortedByList" ng-click="gotoAction(item.id)">
+                <h2>{{item.title}}</h2>
+              </ion-item>
+            </ion-list>
+            <!--temp code-->
+        </div>
 		
 		<section class="main">
 			<ul class="selectionTab">
@@ -18,7 +27,8 @@
 				<li ng-class="{'active': selectedView == 'Month'}" ng-click="changeView(3)">Month</li>
 			</ul>
         </section>
-           
+
+   
        <center>
           <h4 style="text-content:center;">Emotion</h4>
        </center>
@@ -38,19 +48,19 @@
                 <input type="text" editable="false" placeholder="6'2''" style="text-align:center;">
                 </div>
         
-        <div class="col col-50">
+        <div class="col col-50 vitalBoxAlt">
                 Weight<br><br><img src="img/Weight.png"><br><br>
                 <input type="text" placeholder="154 LBS" style="text-align:center;">
                 </div>
         </div>
      
        <div class="row" align="center">
-            <div class="col col-50 vitalBoxAlt">
+            <div class="col col-50 vitalBox">
                 BMI<br><br><img src="img/Weight.png"><br><br>
                 <input type="text" placeholder="18" style="text-align:center;">
                 </div>
                
-        <div class="col col-50 vitalBox">
+        <div class="col col-50 vitalBoxAlt">
                 Body Fat %<br><br><img src="img/Body-Fat.png"><br><br>
                 <input type="text" placeholder="22%" style="text-align:center;">
                 </div>
@@ -58,11 +68,11 @@
         
        
         <div class="row" align="center">
-            <div class="col col-50">
+            <div class="col col-50 vitalBox">
                 Heart Rate<br><br><img src="img/Heart-Rate.png"><br><br>
                 <input type="text" placeholder="60 BPM" style="text-align:center;">
                 </div>
-        <div class="col col-50 vitalBox">
+        <div class="col col-50 vitalBoxAlt">
                 Blood Pressure<br><br><img src="img/Blood-Pressure.png"><br><br>
                 <input type="text" placeholder="120" class="vitalsBP">/<input type="text" placeholder="80" class="vitalsBP">
                 </div>

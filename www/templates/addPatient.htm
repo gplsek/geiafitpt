@@ -33,17 +33,12 @@
 					<label>Password</label>
 					<input type="password" placeholder="password" class="formfields" ng-model="data.password">
 				</div>
-				<div class="form-group">
-					<label>Enter Monthly Subscription Amount</label>
-					<div class="input-group group">
-						<i class="icon ion-social-usd input-group-btn"></i>
-						<select class="pull-left formfields input-group-field" >
-						<option value="100" selected>100 - Gold</option>
-						<option value="50" >50 - Silver</option>
-						<option value="25" >25 - Bronze</option>
-
-						</select>
-					</div>
+                <div class="form-group">
+                    <label>Enter Monthly Subscription Amount</label>
+                    <div class="input-group group">
+                        <i class="icon ion-social-usd input-group-btn"></i>
+                        <input type="text" placeholder="$0.00" class="formfields form-group-select input-group-field" ng-model="data.subcription">
+                    </div>
 				</div>
 				<button type="submit" class="btn-yellow">
 		  			<h1 class="title">Submit</h1>		  		

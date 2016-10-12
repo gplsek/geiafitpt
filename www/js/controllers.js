@@ -23,7 +23,7 @@ angular.module('geiaFitApp')
 
 
     $scope.$on(AUTH_EVENTS.notAuthenticated, function (event) {
-      AuthService.logout();
+      //AuthService.logout();
       $state.go('login');
       var alertPopup = $ionicPopup.alert({
         title: 'Session Lost!',
@@ -61,16 +61,31 @@ angular.module('geiaFitApp')
     password: ""
   };
 
-    function checkEmptyFields() {
-      var isEmpty = false;
-      for (var property in $scope.data) {
-        if ($scope.data.hasOwnProperty(property)) {
-          if (!$scope.data[property]) {
-            isEmpty = true;
-          }
-        }
+    // function checkEmptyFields() {
+    //   var isEmpty = false;
+    //   for (var property in $scope.data) {
+    //     if ($scope.data.hasOwnProperty(property)) {
+    //       if (!$scope.data[property]) {
+    //         isEmpty = true;
+    //       }
+    //     }
+    //   }
+    //   return isEmpty;
+    // }
+
+    function validateFields(data){
+      if(data.email == "" || data.password == ""){
+          Flash.showFlash({ type: 'error', message: "Please fill in all fields !" });
+          return false;
+        }else
+      if(!data.email){
+        Flash.showFlash({ type: 'error', message: "Email is not valid !" });
+        return false;
+      }else if(!checkEmail(data.email)){
+        Flash.showFlash({ type: 'error', message: "Email is not valid !" });
+        return false
       }
-      return isEmpty;
+      return true;
     }
 
     function checkEmail(email) {
@@ -81,34 +96,48 @@ angular.module('geiaFitApp')
       return result;
     }
 
-    $scope.login = function (data) {
-      if (!(Object.keys(data).length === 0 && data.constructor === Object)) {
-        if (!checkEmptyFields()) {
-          // alert(data.email);
-          if (checkEmail(data.email)) {
-            AuthService.login(data.email, data.password, data.checked).then(function (authenticated) {
-              Flash.showFlash({ type: 'success', message: "Success !" });
-              $state.go('main.dash', {}, { reload: true });
-              $scope.setCurrentUsername(data.username);
-            }, function (err) {
-              Flash.showFlash({ type: 'error', message: "Login Failed !" });
-            });
-          } else {
-            Flash.showFlash({ type: 'error', message: "Email is not valid !" });
-          }
-        }
-        else {
-          Flash.showFlash({ type: 'error', message: "Please fill in all fields !" });
-        }
-      } else {
-        Flash.showFlash({ type: 'error', message: "Please fill in all fields !" });
-      }
+    $scope.resetPassword = function(){
+      alert($scope.data.email);
     }
 
+    $scope.login = function () {
+    //   if (!(Object.keys(data).length === 0 && data.constructor === Object)) {
+    //     if (!checkEmptyFields()) {
+    //       // alert(data.email);
+    //       if (checkEmail(data.email)) {
+    //         AuthService.login(data.email, data.password, data.checked).then(function (authenticated) {
+    //           Flash.showFlash({ type: 'success', message: "Success !" });
+    //           $state.go('main.dash', {}, { reload: true });
+    //           $scope.setCurrentUsername(data.username);
+    //         }, function (err) {
+    //           Flash.showFlash({ type: 'error', message: "Login Failed !" });
+    //         });
+    //       } else {
+    //         Flash.showFlash({ type: 'error', message: "Email is not valid !" });
+    //       }
+    //     }
+    //     else {
+    //       Flash.showFlash({ type: 'error', message: "Please fill in all fields !" });
+    //     }
+    //   } else {
+    //     Flash.showFlash({ type: 'error', message: "Please fill in all fields !" });
+    //   }
+    // }
+if(validateFields($scope.data)){
+  AuthService.login($scope.data.email,$scope.data.password,$scope.data.checked).
+  then(function(authenticated){
+      Flash.showFlash({ type: 'success', message: "Success !" });
+      $state.go('main.dash', {}, { reload: true });
+      //$scope.setCurrentUsername(data.username);
+  },function(err){
+      Flash.showFlash({ type: 'error', message: "Login Failed !" });
+  })
+}
+    }
     //   $scope.login = function(data) {
     //     $scope.data = {};
     //     if(!data){
-    //       var alertPopup = $ionicPopup.alert({
+    //       var alertPopup = $ionicPopup.//alet({
     //         title: 'Login failed!',
     //         template: 'Please check your credentials!'
     //       });
@@ -132,6 +161,12 @@ angular.module('geiaFitApp')
     //  if(keepsignedin){
     //    $state.go('main.dash');
     //  }
+$scope.title = 'Name';
+ $scope.subNavList = false;
+ $scope.showList = function(){
+   $scope.subNavList = !$scope.subNavList;
+ }
+
     $scope.sortType = 'fname'; // set the default sort type
     $scope.sortReverse = false;  // set the default sort order
     $scope.searchName = '';     // set the default search/filter term
@@ -192,29 +227,37 @@ angular.module('geiaFitApp')
         case 0:
           $scope.sortType = 'fname';
           $scope.sortOrder = false;
+          $scope.title = 'Name'
           break;
         case 1:
           $scope.sortType = 'emotion';
           $scope.sortOrder = true;
+          $scope.title = 'Emotion Level'
           break;
         case 2:
+        $scope.title = 'New Message'
+        break;
         case 3:
+        $scope.title = 'New Activity'
+        break;
         default:
           $scope.sortType = 'unread_messages';
           $scope.sortOrder = true;
           break;
       }
+      $scope.subNavList = false;
     }
 
   })
 
-  .controller('SetExerciseProgramCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', function ($scope, $state, $stateParams, sortedByList) {
-    $scope.uid = $stateParams.uid;
+  .controller('SetExerciseProgramCtrl', ['$scope', '$state', '$stateParams', 'sortedByList','SetExerciseProgramService', function ($scope, $state, $stateParams, sortedByList,SetExerciseProgramService) {
+ // alert(""+JSON.stringify($stateParams));
+  $scope.uid = $stateParams.uid;
     $scope.patientData = $stateParams.name;
     $scope.sortedByList = sortedByList;
     //$scope.sortedBy = $scope.sortedByList[2].id;
 
-$scope.title = 'Set Exercise Program';
+$scope.title = 'Add Custom Exercise';
 
  $scope.subNavList = false;
 
@@ -227,22 +270,207 @@ $scope.title = 'Set Exercise Program';
       $state.go('exerciseProgram');
     }
 
-          function getStateTitle(id){
-        var title = '';
-        var list = $scope.sortedByList;
-        for(var i = 0; i < list.length; i++){
-          if(id == list[i].id){
-            title = list[i].routingStateName;
-            return title;
-          }
+    function getStateTitle(id) {
+      var title = '';
+      var list = $scope.sortedByList;
+      for (var i = 0; i < list.length; i++) {
+        if (id == list[i].id) {
+          title = list[i].routingStateName;
+          return title;
         }
       }
+    }
         
-          $scope.gotoAction= function(id){
-            var state = getStateTitle(id);
-            $state.transitionTo(state,{name: $stateParams.name}, {reload: true});
+          $scope.gotoAction = function (id) {
+            if (id == 3) {
+              $scope.subNavList = false
+            } else {
+              var state = getStateTitle(id);
+              $state.transitionTo(state, { name: $stateParams.name, patientId: $stateParams.uid }, { reload: true });
+            }
           }
 
+  $scope.exerciseprogram=
+ {
+peid: $stateParams.peid,
+title: $stateParams.title,
+comments: $stateParams.comments,
+code: $stateParams.code,
+reps: $stateParams.reps,
+sets: $stateParams.sets,
+rest:$stateParams.rest,
+daily:$stateParams.daily,
+today: $stateParams.today,
+alldays:$stateParams.alldays,
+weekly: {
+sun: $stateParams.weekly.sun,
+mon: $stateParams.weekly.mon,
+tue: $stateParams.weekly.tue,
+wed: $stateParams.weekly.wed,
+thu: $stateParams.weekly.thu,
+fri: $stateParams.weekly.fri,
+sat: $stateParams.weekly.sat,
+},
+mp4: $stateParams.mp4,
+webm: $stateParams.webm,
+mov: $stateParams.mov,
+thumb1: $stateParams.thumb1,
+thumb2: $stateParams.thumb2
+};
+   
+   console.log("<nnnnnnnnnnnnnnnnnnnnnnnnnn");
+   console.log(""+JSON.stringify($scope.exerciseprogram));
+// $scope.enableButtonMon = function()
+// {
+// alert("MON");
+// exerciseprogram.weekly.mon == 1 ? exerciseprogram.weekly.mon =0 :exerciseprogram.weekly.mon =1;
+// };
+// $scope.enableButtonTue = function()
+// {
+// exerciseprogram.weekly.tue == 1 ? exerciseprogram.weekly.tue =0 :exerciseprogram.weekly.tue =1;  
+// alert("TUE");
+// };
+// $scope.enableButtonWed = function()
+// {
+// exerciseprogram.weekly.wed == 1 ? exerciseprogram.weekly.wed =0 :exerciseprogram.weekly.wed =1;
+// alert("WED");
+// };
+// $scope.enableButtonThu = function()
+// {
+// exerciseprogram.weekly.thu == 1 ? exerciseprogram.weekly.thu =0 :exerciseprogram.weekly.thu =1;
+// alert("WED");
+// };
+// $scope.enableButtonFri = function()
+// {
+// exerciseprogram.weekly.fri == 1 ? exerciseprogram.weekly.fri =0 :exerciseprogram.weekly.fri =1;
+// alert("WED");
+// };
+// $scope.enableButtonSat = function()
+// {
+// exerciseprogram.weekly.sat == 1 ? exerciseprogram.weekly.sat =0 :exerciseprogram.weekly.sat =1;
+// alert("WED");
+// };
+// $scope.enableButtonSun = function()
+// {
+// exerciseprogram.weekly.sun == 1 ? exerciseprogram.weekly.sun =0 :exerciseprogram.weekly.sun =1;
+// alert("WED");
+// };
+// $scope.editExercise = function()
+// {
+// exerciseprogram.weekly.sun == 1 ? exerciseprogram.weekly.sun =0 :exerciseprogram.weekly.sun =1;
+// alert("WED");
+// };
+
+
+   $scope.saveExercise = function() {
+  aler("ex");
+  var exercise= {
+      "exid":$scope.exerciseprogram.peid,
+      "title": $$scope.exerciseprogram.title,
+      "video_title": "Levator Update Stretch",
+      "video_name": "video.mp4",
+      "video_data": "asasas,asakjshashasasjhas ash akshaskas a.........",
+      "video_image_name": "image name",
+      "video_image":"asasasasasasasasasasasas..........",
+      "notes":"some notes go here",
+      "comments":"send me some commetns and here we are again" ,
+     "reps":$scope.exerciseprogram.reps,
+    "sets":$scope.exerciseprogram.sets,
+    "rest":$scope.exerciseprogram.rest,
+    "daily":$scope.exerciseprogram.daily,
+    "week_days":[
+        {
+        "day":"0",
+        "on":"1"
+        },
+        {
+        "day":"1",
+        "on":"0"
+        },
+        {
+        "day":"2",
+        "on":"1"
+        },
+        {
+        "day":"3",
+        "on":"0"
+        },
+        {
+        "day":"4",
+        "on":"0"
+        },
+        {
+        "day":"5",
+        "on":"1"
+        },
+        {
+        "day":"6",
+        "on":"0"
+        }
+        
+        ]
+};
+ 
+ alert("editEx"+JSON.stringify(exercise));
+
+  SetExerciseProgramService.saveExercise(execise,$scope.uid).then(function(success){
+      alert("success"+JSON.stringify(success));
+
+   },function(error){
+
+   })
+
+
+    };
+
+  //<!-----------------------------------------------------------!>
+    var repsList = [];
+
+    (function steps() {
+      var value = 0;
+      for (var i = 1; i <= 180; i++) {
+        repsList[i]= i;
+      //  value += 500;
+      }
+      console.log(repsList);
+    })();
+
+    $scope.stepsList = repsList;
+
+    $scope.selectedReps =$scope.exerciseprogram.reps;
+
+     var repsSet = [];
+
+    (function steps() {
+      var value = 0;
+      for (var i = 1; i <= 180; i++) {
+        repsSet[i]=i;
+      
+      }
+      console.log(repsSet);
+    })();
+
+    $scope.repsSet = repsSet;
+
+    $scope.selectedSet = $scope.exerciseprogram.sets;
+
+     var repsDaily = [];
+
+    (function steps() {
+      var value = 0;
+      for (var i = 1; i <= 180; i++) {
+         repsSet[i]=i;
+      }
+      console.log(repsDaily);
+    })();
+
+    $scope.repsDaily = repsDaily;
+
+    $scope.selectedDaily = $scope.exerciseprogram.daily;
+
+//<!-----------------------------------------------------------!> 
+
+ 
   }])
 
   .controller('SetActivityGoalsCtrl', ['$scope', '$state', 'sortedByList', '$ionicHistory', 'threshold', '$window', '$stateParams', function ($scope, $state, sortedByList, $ionicHistory, threshold, $window, $stateParams) {
@@ -364,8 +592,12 @@ $scope.title = 'Set Exercise Program';
     }
 
     $scope.gotoAction = function (id) {
+        if(id==1){
+        $scope.subNavList = false
+      }else{
       var state = getStateTitle(id);
       $state.transitionTo(state, {}, { reload: true });
+      }
     }
 
     init = function(){
@@ -797,7 +1029,7 @@ $scope.title = 'Set Exercise Program';
   }])
 
 
-  .controller('ActivityCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', 'AppService', 'utilityService', function ($scope, $stateParams, sortedByList, $state, AppService, utilityService) {
+  .controller('ActivityCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', '$rootScope','AppService', 'utilityService', function ($scope, $stateParams, sortedByList, $state, $rootScope,AppService, utilityService) {
    $scope.DefaultView = true;
     var patientData;
     var ActivityData;
@@ -811,20 +1043,23 @@ $scope.title = 'Set Exercise Program';
       "July", "August", "September", "October", "November", "December"];
     $scope.title = 'Activity';
 
- $scope.subNavList = false;
+    $scope.subNavList = false;
 
- $scope.showList = function(){
-   $scope.subNavList = !$scope.subNavList;
- }
+    $scope.showList = function () {
+      $scope.subNavList = !$scope.subNavList;
+    }
+
     getActivityDataForYesterday = function (successData) {
-      var startDate = new Date("Sun Sep 25 2016 17:04:28 GMT+0530 (IST)");
-      var date = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() - 1,
-        startDate.getHours(), startDate.getMinutes(), startDate.getSeconds(), startDate.getMilliseconds())
-
+     var date = moment().utcOffset('-07:00').subtract(1, 'days').startOf('day').format('L');
+     console.log("Yesterday----------"+date)
+     var Ndate = moment(date)
       for (var x in successData) {
-        var unixDate = successData[x].date
-        var newDate = utilityService.unixTimeToDate(unixDate);
-        if (date.getDate() === newDate.getDate() && date.getFullYear() === newDate.getFullYear() && date.getMonth() === newDate.getMonth()) {
+        
+        var unixDate = successData[x].updated
+        var newDate = moment.unix(unixDate).utcOffset('-07:00').format('L');
+        var NnewDate = moment(newDate)
+        if (Ndate.diff(NnewDate) == 0) {
+          console.log("Yesterday response----------"+newDate)
           activityDataForYesterday = successData[x];
         }
       }
@@ -848,7 +1083,6 @@ $scope.title = 'Set Exercise Program';
       $scope.DayMidGoal = 0;
       $scope.DayHighDone = 0;
       $scope.DayHighGoal = 0;
-
 
       if (activityDataForYesterday.total_exercise != null && activityDataForYesterday.total_exercise_goal != null) {
         var goal = activityDataForYesterday.total_exercise_goal;
@@ -886,11 +1120,11 @@ $scope.title = 'Set Exercise Program';
         highPer = ( achieved/goal ) * 100;
       }
 
-      console.log('excPer ' + excPer);
+      /*console.log('excPer ' + excPer);
       console.log('stepsPer ' + stepsPer);
       console.log('lowPer ' + lowPer);
       console.log('mediumPer ' + mediumPer);
-      console.log('highPer ' + highPer);
+      console.log('highPer ' + highPer);*/
       $scope.chartConfig = getChartConfigForDay(excPer, '#4299D1' , '#1F60A4' );
       $scope.chartConfig1 = getChartConfigForDay(stepsPer,  '#4299D1' , '#1F60A4' );
       $scope.chartConfig2 = getChartConfigForDay(lowPer,'#DDF6BC' , '#B8E986' );
@@ -900,48 +1134,51 @@ $scope.title = 'Set Exercise Program';
 
 
     getActivityDataForWeek = function (successData) {
-      
-      var startDate = new Date();
-      var endDate = new Date(startDate.getFullYear(), startDate.getMonth() , startDate.getDate()-7,
-        startDate.getHours(), startDate.getMinutes(), startDate.getSeconds(), startDate.getMilliseconds())
+      var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').startOf('day').format('L');
+      var startDate = moment(TstartDate);
+      var TendDate = moment().utcOffset('-07:00').format('L');
+      var endDate = moment(TendDate);
 
       for (var x in successData) {
-        var unixDate = successData[x].date
-        var date = utilityService.unixTimeToDate(unixDate);
-        if (startDate > date && date > endDate) {
+        var unixDate = successData[x].updated
+        var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
+        var date = moment(Tdate)
+
+        if (date.diff(startDate) > 0 && date.diff(endDate) < 0) {
           activityDataForWeek.push(successData[x]);
         }
       }
-      console.log(activityDataForWeek)
     }
 
     getComplianceDataForWeek = function (successData) {
-      
-      var startDate = new Date();
-      var endDate = new Date(startDate.getFullYear(), startDate.getMonth() , startDate.getDate()-7,
-        startDate.getHours(), startDate.getMinutes(), startDate.getSeconds(), startDate.getMilliseconds())
+      var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').startOf('day').format('L');
+      var startDate = moment(TstartDate);
+      var TendDate = moment().utcOffset('-07:00').format('L');
+      var endDate = moment(TendDate);
 
       for (var x in successData) {
         var unixDate = successData[x].created
-        var date = utilityService.unixTimeToDate(unixDate);
-        if (startDate > date && date > endDate) {
+        var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
+        var date = moment(Tdate)
+
+        if (date.diff(startDate) > 0 && date.diff(endDate) < 0) {
           complianceDataForWeek.push(successData[x]);
         }
       }
-      console.log(complianceDataForWeek)
     }
 
     getWeekDates = function () {
-      var endDate = new Date();
-      var startDate = new Date(endDate.getFullYear(), endDate.getMonth() , endDate.getDate()-7,
-        endDate.getHours(), endDate.getMinutes(), endDate.getSeconds(), endDate.getMilliseconds())
+      var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').startOf('day').format('L');
+      var startDate = moment(TstartDate)
+      var TendDate = moment().utcOffset('-07:00').format('L');
+      var endDate = moment(TendDate)
+
       var dateList = [];
       var date = startDate;
-      while (date < endDate) {
+      while (date.diff(endDate) < 0) {
         dateList.push(date)
-        var tempDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1,
-          date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds())
-        date = tempDate;
+        var tempDate = startDate.add(1, 'days').startOf('day').format('L');
+        date = moment(tempDate);
       }
       return dateList;
     }
@@ -981,10 +1218,11 @@ $scope.title = 'Set Exercise Program';
         var time_active_high = 0
 
         for (var x in activityDataForWeek) {
-          var tempDate = utilityService.unixTimeToDate(activityDataForWeek[x].date);
-          if (tempDate.getFullYear() === dates[d].getFullYear() &&
-            tempDate.getMonth() === dates[d].getMonth() &&
-            tempDate.getDate() === dates[d].getDate()) {
+          var unixDate = activityDataForWeek[x].created
+          var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
+          var tempDate = moment(Tdate)
+
+          if (tempDate.diff(dates[d]) == 0) {
             var temp = activityDataForWeek[x];
 
             if (temp.total_exercise_goal != null && temp.total_exercise != null) {
@@ -1057,10 +1295,11 @@ $scope.title = 'Set Exercise Program';
         var total_compliance_goal = 0 
         var total_compliance = 0 
         for (var x in complianceDataForWeek) {
-          var tempDate = utilityService.unixTimeToDate(complianceDataForWeek[x].created);
-          if (tempDate.getFullYear() === dates[d].getFullYear() &&
-            tempDate.getMonth() === dates[d].getMonth() &&
-            tempDate.getDate() === dates[d].getDate()) {
+          var unixDate = complianceDataForWeek[x].created
+          var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
+          var tempDate = moment(Tdate)
+
+          if (tempDate.diff(dates[d]) == 0) {
             var temp = complianceDataForWeek[x];
             if (temp.daily_challenge != null && temp.daily_points != null) {
               total_compliance_goal = parseInt(temp.daily_challenge)
@@ -1072,7 +1311,6 @@ $scope.title = 'Set Exercise Program';
         dataWeekComplianceGoal.push(total_compliance_goal);
         dataWeekCompliance.push(total_compliance);
       }
-
       $scope.chartConfigWeekViewComp = getChartConfigForWeek(dataWeekComplianceGoal, dataWeekCompliance)
     }
 
@@ -1088,7 +1326,7 @@ $scope.title = 'Set Exercise Program';
       var endDate = new Date(startDate.getFullYear(), startDate.getMonth(),1)
 
       for (var x in successData) {
-        var unixDate = successData[x].date
+        var unixDate = successData[x].updated
         var date = utilityService.unixTimeToDate(unixDate);
         if (startDate > date && date > endDate) {
           activityDataForMonth.push(successData[x]);
@@ -1702,80 +1940,42 @@ $scope.title = 'Set Exercise Program';
     }
 
     $scope.gotoAction = function (id) {
+      if(id==0){
+        $scope.subNavList = false
+      }else{
       var state = getStateTitle(id);
 
       $state.transitionTo(state, { name: $stateParams.name , patientId :$stateParams.uid}, { reload: true });
+      }
+      
     }
 
   }])
 
 
 
-  .controller('ExerciseProgramCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', '$ionicPopup', function ($scope, $stateParams, sortedByList, $state, $ionicPopup) {
+  .controller('ExerciseProgramCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', '$ionicPopup','SetExerciseProgramService', function ($scope, $stateParams, sortedByList, $state, $ionicPopup,SetExerciseProgramService) {
     console.log($stateParams);
 
 
-
+    var exerciseList = [];
     var pageSize = 10;
     $scope.sortedByList = sortedByList;
-//    $scope.sortedBy = $scope.sortedByList[2].id;
-$scope.title = 'Exercise Program';
+    $scope.sortedBy = $scope.sortedByList[0].id;
 
- $scope.subNavList = false;
+    getListOfExerciseProgramme();
 
- $scope.showList = function(){
-   $scope.subNavList = !$scope.subNavList;
- }
+    $scope.title = 'Exercise Program';
+    $scope.subNavList = false;
 
-    var exerciseList = [
-      {
-        id: 0,
-        title: "Exercise Name"
-      },
-      {
-        id: 1,
-        title: "Exercise Name"
-      },
-      {
-        id: 2,
-        title: "Exercise Name"
-      },
-      {
-        id: 3,
-        title: "Exercise Name"
-      },
-      {
-        id: 4,
-        title: "Exercise Name"
-      },
-      {
-        id: 5,
-        title: "Exercise Name"
-      },
-      {
-        id: 6,
-        title: "Exercise Name"
-      },
-      {
-        id: 7,
-        title: "Exercise Name"
-      },
-      {
-        id: 8,
-        title: "Exercise Name"
-      },
-      {
-        id: 9,
-        title: "Exercise Name"
-      },
-      {
-        id: 10,
-        title: "Exercise Name"
-      }
+    $scope.showList = function () {
+      $scope.subNavList = !$scope.subNavList;
+    }
 
-    ];
 
-    $scope.pages = [
+
+  
+  $scope.pages = [
       {
         id: 0,
         title: "Page 1"
@@ -1806,41 +2006,6 @@ $scope.title = 'Exercise Program';
       $scope.exerciseList = list.splice(offset, pageSize);
       $scope.selectedPage = $scope.pages[pageNo - 1].id;
     }
-
-    //];
-
-    $scope.pages = [
-      {
-        id: 0,
-        title: "Page 1"
-      },
-      {
-        id: 1,
-        title: "Page 2"
-      },
-      {
-        id: 2,
-        title: "Page 3"
-      },
-      {
-        id: 3,
-        title: "Page 4"
-      },
-      {
-        id: 4,
-        title: "Page 5"
-      }
-    ];
-
-    $scope.selectedPage = $scope.pages[0].id;
-
-    $scope.showNext = function (pageNo) {
-      var list = angular.copy(exerciseList);
-      var offset = (pageNo - 1) * pageSize;
-      $scope.exerciseList = list.splice(offset, pageSize);
-      $scope.selectedPage = $scope.pages[pageNo - 1].id;
-    }
-
     $scope.showNext(1);
 
     $scope.delete = function (index) {
@@ -1861,7 +2026,7 @@ $scope.title = 'Exercise Program';
     }
 
 
-      /*
+      
      $scope.sortedByList = sortedByList;
     //  $scope.sortedBy =  $scope.sortedByList[0].id;
       function getStateTitle(id){
@@ -1875,15 +2040,31 @@ $scope.title = 'Exercise Program';
         }
       }
         
-          $scope.gotoAction= function(id){
-            var state = getStateTitle(id);
-            $state.transitionTo(state,{name: $stateParams.name}, {reload: true});
-          }
-        */
+      $scope.gotoAction = function (id) {
+        if (id == 2) {
+          $scope.subNavList = false
+        } else {
+          var state = getStateTitle(id);
+          $state.transitionTo(state, { name: $stateParams.name, patientId: $stateParams.uid }, { reload: true });
+        }
+
+      }
+
+        
     init = function () {
       console.log($stateParams.patientId)
     }
     init();
+
+        
+
+     function getListOfExerciseProgramme() {
+      SetExerciseProgramService.listOfExercise($stateParams.patientId).then(function(data) {
+        $scope.exerciseList = data.exercises;   
+        console.log($scope.exerciseList + 'inside controller');
+      });
+    }
+
 
   }])
 
@@ -1922,10 +2103,12 @@ $scope.title = 'Exercise Program';
 
 $scope.title = 'Review Snapshots';
 $scope.subNavList = false;
+$scope.sortedByList = sortedByList;
 $scope.showList = function(){
    $scope.subNavList = !$scope.subNavList;
    console.log($scope.subNavList)
  }
+
 function getStateTitle(id) {
       var title = '';
       var list = $scope.sortedByList;
@@ -1937,9 +2120,13 @@ function getStateTitle(id) {
       }
     }
     $scope.gotoAction = function (id) {
+      if(id==4){
+        $scope.subNavList = false
+      }else{
       var state = getStateTitle(id);
-
-      $state.transitionTo(state, { name: $stateParams.name }, { reload: true });
+      $state.transitionTo(state, {}, { reload: true });
+      }
+      
     }
 
     var pageSize = 10;
@@ -2084,18 +2271,20 @@ function getStateTitle(id) {
     }
   }])
 
-.controller('MessageCtrl', function($scope, $state, $http, $ionicPopup, ChatApp,$timeout,$stateParams,$rootScope,AppService,$ionicScrollDelegate)
+.controller('MessageCtrl',[ '$scope','sortedByList', '$state', '$http', '$ionicPopup', 'ChatApp','$timeout','$stateParams','$rootScope','AppService','$ionicScrollDelegate', function($scope,sortedByList, $state, $http, $ionicPopup, ChatApp,$timeout,$stateParams,$rootScope,AppService,$ionicScrollDelegate)
  {
   var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
   var uid = $rootScope.loggedInUserUid;
    $scope.userImage="img/profile_icon.png";
    $scope.toUserImage="img/profile_icon.png";
-   console.log("controller loaded")
-  $scope.sortedByList = AppService.sortedByList();
- $scope.title = 'Messages';
- $scope.subNavList = false;
- $scope.showList = function(){
+   $scope.sortedByList = sortedByList;
+   $scope.title = 'Messages';
+   $scope.subNavList = false;
+
+   $scope.showList = function(){
+   console.log($scope.subNavList)
    $scope.subNavList = !$scope.subNavList;
+   console.log($scope.subNavList)
  }
 
 
@@ -2226,7 +2415,28 @@ $scope.messages.push(message);
       // });
     }
 
-})
+    function getStateTitle(id) {
+      var title = '';
+      var list = $scope.sortedByList;
+      for (var i = 0; i < list.length; i++) {
+        if (id == list[i].id) {
+          title = list[i].routingStateName;
+          return title;
+        }
+      }
+    }
+
+    $scope.gotoAction = function (id) {
+      if(id==6){
+        $scope.subNavList = false
+      }else{
+      var state = getStateTitle(id);
+      $state.transitionTo(state, { name: $stateParams.name , patientId :$stateParams.uid}, { reload: true });
+      }
+      
+    }
+
+}])
 
 // fitlers
 .filter('nl2br', ['$filter',
@@ -2298,8 +2508,12 @@ $scope.messages.push(message);
     }
 
     $scope.gotoAction = function (id) {
+        if(id==5){
+        $scope.subNavList = false
+      }else{
       var state = getStateTitle(id);
-      $state.transitionTo(state, { name: $stateParams.name }, { reload: true });
+      $state.transitionTo(state, { name: $stateParams.name , patientId :$stateParams.uid}, { reload: true });
+    }
     }
 
     init();

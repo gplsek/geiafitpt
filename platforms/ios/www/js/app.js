@@ -60,6 +60,34 @@ angular.module('geiaFitApp', ['ionic', 'rzModule','ngCordova','highcharts-ng','n
       high: null
     };
 
+
+  var exerciseprogram=  {
+peid: null,
+title:null,
+comments:null,
+code: null,
+reps: null,
+sets: null,
+rest:null,
+daily:null,
+today: null,
+alldays:null,
+weekly: {
+sun: null,
+mon: null,
+tue: null,
+wed:null,
+thu: null,
+fri: null,
+sat: null,
+},
+mp4: null,
+webm:null,
+mov: null,
+thumb1: null,
+thumb2: null
+};
+
   $stateProvider
   .state('login', {
     url: '/login',
@@ -101,7 +129,7 @@ angular.module('geiaFitApp', ['ionic', 'rzModule','ngCordova','highcharts-ng','n
   
     .state('setExerciseProgram', {
     url: '/setExerciseProgram',
-    params: patientParams,
+    params: exerciseprogram,
     templateUrl: 'templates/setExerciseProgram.htm',
     controller: 'SetExerciseProgramCtrl',
     resolve: {
@@ -139,7 +167,7 @@ templateUrl:'templates/vitalSuccess.htm'
     }
   })*/
   .state('setActivityGoals', {
-    url: '/setActivityGoals',
+    url: '/setActivityGoals/:patientId',
     params: {
       name: null
     },
@@ -169,7 +197,7 @@ templateUrl:'templates/vitalSuccess.htm'
   })
   
   .state('exerciseProgram', {
-    url: '/exerciseProgram', 
+    url: '/exerciseProgram/:patientId', 
     params: patientParams,
     templateUrl: 'templates/exerciseProgram.htm',
     controller: 'ExerciseProgramCtrl',
@@ -216,23 +244,28 @@ templateUrl:'templates/addSnapshot.htm'
     controller: 'ReviewSnapshotsCtrl'
   })*/
   .state('messages', {
-    url: '/messages', 
+    url: '/messages/:patientId', 
     params: patientParams,
     templateUrl: 'templates/message.htm',
-    controller: 'MessageCtrl'
-   
-  })
-  
-   .state('vitals', {
-    url: '/vitals', 
-      templateUrl: 'templates/vitals.htm',
-      controller:'VitalsCtrl',
-       resolve: {
+    controller: 'MessageCtrl',
+     resolve: {
       sortedByList: function(AppService){
         return AppService.sortedByList();
       }
     }
+   
   })
+  
+    .state('vitals', {
+      url: '/vitals/:patientId',
+      templateUrl: 'templates/vitals.htm',
+      controller: 'VitalsCtrl',
+      resolve: {
+        sortedByList: function (AppService) {
+          return AppService.sortedByList();
+        }
+      }
+    })
   
  /* 
   .state('vitals', {
@@ -342,4 +375,4 @@ templateUrl:'templates/addSnapshot.htm'
 
 jQuery(document).ready(function($){
   $('#multi-select').dropdown({allowAdditions: true});
-})
+       })
