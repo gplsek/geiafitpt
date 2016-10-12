@@ -208,10 +208,13 @@ $scope.title = 'Name';
 
     $scope.sortedBy = $scope.sortedByList[0].id;
 
+   // for loop to add activity field for sorting list as per activity
+    for(i in patientsData){
+      patientsData[i]['activity']=($scope.isActiveToday(patientsData[i].vitals_entered) || patientsData[i].unread_messages > 0)
+    }
     $scope.patientList = patientsData;
-    console.log("=============")
-    console.log(patientsData)
-    console.log("=============")
+    
+    
 
     //logout
     function getStateTitle(id) {
@@ -249,6 +252,8 @@ $scope.title = 'Name';
         break;
         case 3:
         $scope.title = 'New Activity'
+        $scope.sortType = 'activity';
+        $scope.sortOrder = true;
         break;
         default:
           $scope.sortType = 'unread_messages';
