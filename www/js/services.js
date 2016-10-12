@@ -164,6 +164,10 @@ angular.module('geiaFitApp')
       var uid = $rootScope.loggedInUserUid;
       var createPatientURL = ApiEndpoint.url + "/profile/createpatient/" + uid
       var req = {
+        headers: {
+          'X-CSRF-Token': $rootScope.token,
+          'Access-Control-Allow-Origin': '*'
+        },
         method: 'POST',
         url: createPatientURL,
         data: request_params
@@ -174,6 +178,7 @@ angular.module('geiaFitApp')
 
     var getActivity = function (uid) {
       console.log(uid)
+      $rootScope.UID = uid ;
       var prom = $http({
         method: "GET",
         url: ApiEndpoint.url + '/log/activity/' + uid
