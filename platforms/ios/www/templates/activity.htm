@@ -2,7 +2,7 @@
     <ion-nav-bar class="group">
         <ion-nav-buttons side="left">
             <span class="icon ion-ios-arrow-back" ng-click="back()"></span>
-            <div class="title title-center header-item" ng-click="gotoHome()">{{patientProfile.name}}</div>
+            <div class="title title-center" ng-click="gotoHome()">{{patientProfile.name}}</div>
         </ion-nav-buttons>
 
     </ion-nav-bar>
@@ -11,7 +11,13 @@
         <!-- <h3>Work in progress...<br/>Check out setActivityGoals for time being from dropdown.</h3> -->
 
         <div class="sortedBySmall text-center">
-            <select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select>
+            <!--<select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select>-->
+            <input type="button" class="itemdropdown" ng-click="showList();" value="{{title}}"/>
+<ion-list ng-show="subNavList" class="ddlistitems">
+  <ion-item ng-repeat="item in sortedByList" ng-click="gotoAction(item.id)">
+    <h2>{{item.title}}</h2>
+  </ion-item>
+</ion-list>
         </div>
         <section class="patientProfile">
             <div class="col-xs-3">

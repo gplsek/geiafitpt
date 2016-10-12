@@ -2,13 +2,27 @@
 	<ion-nav-bar class="group">
 		<ion-nav-buttons side="left">
 			<span class="icon ion-ios-arrow-back" ng-click="back()"></span>
-			<div class="title title-center header-item" ng-click="gotoHome()">{{patientProfile.name}}</div>
+			<div class="title title-center header-item" ng-click="gotoHome()">{{patientName}}</div>
 		</ion-nav-buttons>
 		<ion-nav-buttons side="right">
 			<span  menu-toggle="right" class="icon ion-ios-plus-outline" ng-click="addss()"></span>
 		</ion-nav-buttons>
 	</ion-nav-bar>
 	<ion-content>
+
+ <div class="sortedBy text-center">
+		    <!--<select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select> -->
+		     <!--temp code-->
+<input type="button" class="itemdropdown" ng-click="showList();" value="{{title}}"/>
+<ion-list ng-show="subNavList" class="ddlistitems">
+  <ion-item ng-repeat="item in sortedByList" ng-click="gotoAction(item.id)">
+    <h2>{{item.title}}</h2>
+  </ion-item>
+</ion-list>
+
+<!--temp code-->
+ </div>
+
 		<div class="search">
 	      <input type="text" placeholder="Search" ng-model="searchPatient" />
 	      <span class="icon ion-ios-search-strong pull-right"></span>
@@ -20,8 +34,35 @@
 	       
 	    </div>
 		<ul class="exerciseList">
-			<li ng-repeat="item in exerciseList" class="gieafitListItem group">
-				<span class="pull-left"><span class="marginR5">{{item.id+ 1}}.</span><span>{{item.title}}</span></span>
+			<li ng-repeat="item in exerciseList" class="gieafitListItem group" ui-sref="setExerciseProgram(
+       {
+peid: item.peid,
+title: item.title,
+comments: item.comments,
+code: item.code,
+reps: item.reps,
+sets: item.sets,
+rest: item.rest,
+daily:item.daily,
+today: item.today,
+alldays:item.alldays,
+weekly: {
+sun: item.weekly.sun,
+mon: item.weekly.mon,
+tue: item.weekly.tue,
+wed: item.weekly.wed,
+thu: item.weekly.thu,
+fri: item.weekly.fri,
+sat: item.weekly.sat,
+},
+mp4: item.mp4,
+webm: item.webm,
+mov: item.mov,
+thumb1: item.thumb1,
+thumb2: item.thumb2
+}
+        )">
+				<span class="pull-left"><span class="marginR5">{{$index+1}}.</span><span>{{item.title}}</span></span>
 				<span class="pull-right trash-icon" ng-click="delete($index)">
 					<span class="pos-rel">
 						<i class="icon ion-ios-trash-outline" ></i>
