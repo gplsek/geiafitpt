@@ -10277,7 +10277,7 @@ ion-header-bar {
     font-size: 15px;
     font-weight: 600;
     padding: 5px; }
-
+.dashboardView .sortedBy { height:100px;}
 .search {
   background: #2A2C2D;
   color: #fff;
