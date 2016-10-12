@@ -74,14 +74,19 @@ angular.module('geiaFitApp')
     // }
 
     function validateFields(data){
-      if(data.email == "" || data.password == ""){
+      if(data.email == "" && data.password == ""){
           Flash.showFlash({ type: 'error', message: "Please fill in all fields !" });
           return false;
-        }else
-      if(!data.email){
-        Flash.showFlash({ type: 'error', message: "Email is not valid !" });
-        return false;
-      }else if(!checkEmail(data.email)){
+        }
+      if(data.email == ""){
+        Flash.showFlash({ type: 'error', message: "Please enter email address." });
+          return false;
+      }
+      if(data.password == ""){
+        Flash.showFlash({ type: 'error', message: "Please enter your password." });
+          return false;
+      }
+       if(!checkEmail(data.email)){
         Flash.showFlash({ type: 'error', message: "Email is not valid !" });
         return false
       }
@@ -204,6 +209,9 @@ $scope.title = 'Name';
     $scope.sortedBy = $scope.sortedByList[0].id;
 
     $scope.patientList = patientsData;
+    console.log("=============")
+    console.log(patientsData)
+    console.log("=============")
 
     //logout
     function getStateTitle(id) {
@@ -235,7 +243,9 @@ $scope.title = 'Name';
           $scope.title = 'Emotion Level'
           break;
         case 2:
-        $scope.title = 'New Message'
+        $scope.title = 'New Message',
+        $scope.sortType = 'unread_messages';
+        $scope.sortOrder = true;
         break;
         case 3:
         $scope.title = 'New Activity'
