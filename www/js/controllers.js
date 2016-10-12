@@ -2085,9 +2085,9 @@ $scope.title = 'Add Custom Exercise';
 
 
 
-  .controller('ExerciseProgramCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', '$ionicPopup','SetExerciseProgramService', function ($scope, $stateParams, sortedByList, $state, $ionicPopup,SetExerciseProgramService) {
+  .controller('ExerciseProgramCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', '$rootScope','$ionicPopup','SetExerciseProgramService', function ($scope, $stateParams, sortedByList, $state, $rootScope, $ionicPopup,SetExerciseProgramService) {
     console.log($stateParams);
-
+    console.log($rootScope.UID)
 
     var exerciseList = [];
     var pageSize = 10;
@@ -2190,7 +2190,7 @@ $scope.title = 'Add Custom Exercise';
         
 
      function getListOfExerciseProgramme() {
-      SetExerciseProgramService.listOfExercise($stateParams.patientId).then(function(data) {
+      SetExerciseProgramService.listOfExercise($rootScope.UID).then(function(data) {
         $scope.exerciseList = data.exercises;   
         console.log($scope.exerciseList + 'inside controller');
       });
