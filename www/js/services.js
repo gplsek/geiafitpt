@@ -57,8 +57,8 @@ angular.module('geiaFitApp')
 
     var login = function (name, pw, isChecked) {
       var form = {
-        username: "admin@geiafit.com",
-        password: "FitGeia1!"
+        username: "",
+        password: ""
       }
       form = JSON.stringify(form);
       //$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
