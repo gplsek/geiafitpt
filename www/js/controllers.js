@@ -260,10 +260,12 @@ $scope.title = 'Name';
 
   })
 
-  .controller('SetExerciseProgramCtrl', ['$scope', '$state', '$stateParams', 'sortedByList','SetExerciseProgramService', function ($scope, $state, $stateParams, sortedByList,SetExerciseProgramService) {
- // alert(""+JSON.stringify($stateParams));
-  $scope.uid = $stateParams.uid;
-    $scope.patientData = $stateParams.name;
+  .controller('SetExerciseProgramCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', 'SetExerciseProgramService', '$rootScope', function ($scope, $state, $stateParams,
+    sortedByList, SetExerciseProgramService, $rootScope) {
+    $scope.submit = true;
+    $scope.edit = false;
+    $scope.uid = $stateParams.uid;
+    $scope.patientData = $rootScope.patientName;
     $scope.sortedByList = sortedByList;
     //$scope.sortedBy = $scope.sortedByList[2].id;
 
@@ -275,10 +277,11 @@ $scope.title = 'Add Custom Exercise';
    $scope.subNavList = !$scope.subNavList;
  }
 
-    $scope.closePatient = function () {
-
+    $scope.closePatient = function () 
+    {
       $state.go('exerciseProgram');
     }
+
 
     function getStateTitle(id) {
       var title = '';
@@ -300,187 +303,234 @@ $scope.title = 'Add Custom Exercise';
             }
           }
 
-  $scope.exerciseprogram=
- {
-peid: $stateParams.peid,
-title: $stateParams.title,
-comments: $stateParams.comments,
-code: $stateParams.code,
-reps: $stateParams.reps,
-sets: $stateParams.sets,
-rest:$stateParams.rest,
-daily:$stateParams.daily,
-today: $stateParams.today,
-alldays:$stateParams.alldays,
-weekly: {
-sun: $stateParams.weekly.sun,
-mon: $stateParams.weekly.mon,
-tue: $stateParams.weekly.tue,
-wed: $stateParams.weekly.wed,
-thu: $stateParams.weekly.thu,
-fri: $stateParams.weekly.fri,
-sat: $stateParams.weekly.sat,
-},
-mp4: $stateParams.mp4,
-webm: $stateParams.webm,
-mov: $stateParams.mov,
-thumb1: $stateParams.thumb1,
-thumb2: $stateParams.thumb2
-};
-   
-   console.log("<nnnnnnnnnnnnnnnnnnnnnnnnnn");
-   console.log(""+JSON.stringify($scope.exerciseprogram));
-// $scope.enableButtonMon = function()
-// {
-// alert("MON");
-// exerciseprogram.weekly.mon == 1 ? exerciseprogram.weekly.mon =0 :exerciseprogram.weekly.mon =1;
-// };
-// $scope.enableButtonTue = function()
-// {
-// exerciseprogram.weekly.tue == 1 ? exerciseprogram.weekly.tue =0 :exerciseprogram.weekly.tue =1;  
-// alert("TUE");
-// };
-// $scope.enableButtonWed = function()
-// {
-// exerciseprogram.weekly.wed == 1 ? exerciseprogram.weekly.wed =0 :exerciseprogram.weekly.wed =1;
-// alert("WED");
-// };
-// $scope.enableButtonThu = function()
-// {
-// exerciseprogram.weekly.thu == 1 ? exerciseprogram.weekly.thu =0 :exerciseprogram.weekly.thu =1;
-// alert("WED");
-// };
-// $scope.enableButtonFri = function()
-// {
-// exerciseprogram.weekly.fri == 1 ? exerciseprogram.weekly.fri =0 :exerciseprogram.weekly.fri =1;
-// alert("WED");
-// };
-// $scope.enableButtonSat = function()
-// {
-// exerciseprogram.weekly.sat == 1 ? exerciseprogram.weekly.sat =0 :exerciseprogram.weekly.sat =1;
-// alert("WED");
-// };
-// $scope.enableButtonSun = function()
-// {
-// exerciseprogram.weekly.sun == 1 ? exerciseprogram.weekly.sun =0 :exerciseprogram.weekly.sun =1;
-// alert("WED");
-// };
-// $scope.editExercise = function()
-// {
-// exerciseprogram.weekly.sun == 1 ? exerciseprogram.weekly.sun =0 :exerciseprogram.weekly.sun =1;
-// alert("WED");
-// };
+  
 
+    $scope.exerciseprogram =
+      {
+        peid: $stateParams.peid,
+        title: $stateParams.title,
+        comments: $stateParams.comments,
+        code: $stateParams.code,
+        reps: $stateParams.reps,
+        sets: $stateParams.sets,
+        rest: $stateParams.rest,
+        daily: $stateParams.daily,
+        today: $stateParams.today,
+        alldays: $stateParams.alldays,
+        weekly: {
+          sun: $stateParams.weekly.sun,
+          mon: $stateParams.weekly.mon,
+          tue: $stateParams.weekly.tue,
+          wed: $stateParams.weekly.wed,
+          thu: $stateParams.weekly.thu,
+          fri: $stateParams.weekly.fri,
+          sat: $stateParams.weekly.sat,
+        },
+        mp4: $stateParams.mp4,
+        webm: $stateParams.webm,
+        mov: $stateParams.mov,
+        thumb1: $stateParams.thumb1,
+        thumb2: $stateParams.thumb2
+      };
 
-   $scope.saveExercise = function() {
-  aler("ex");
-  var exercise= {
-      "exid":$scope.exerciseprogram.peid,
-      "title": $$scope.exerciseprogram.title,
-      "video_title": "Levator Update Stretch",
-      "video_name": "video.mp4",
-      "video_data": "asasas,asakjshashasasjhas ash akshaskas a.........",
-      "video_image_name": "image name",
-      "video_image":"asasasasasasasasasasasas..........",
-      "notes":"some notes go here",
-      "comments":"send me some commetns and here we are again" ,
-     "reps":$scope.exerciseprogram.reps,
-    "sets":$scope.exerciseprogram.sets,
-    "rest":$scope.exerciseprogram.rest,
-    "daily":$scope.exerciseprogram.daily,
-    "week_days":[
-        {
-        "day":"0",
-        "on":"1"
-        },
-        {
-        "day":"1",
-        "on":"0"
-        },
-        {
-        "day":"2",
-        "on":"1"
-        },
-        {
-        "day":"3",
-        "on":"0"
-        },
-        {
-        "day":"4",
-        "on":"0"
-        },
-        {
-        "day":"5",
-        "on":"1"
-        },
-        {
-        "day":"6",
-        "on":"0"
-        }
-        
-        ]
-};
- 
- alert("editEx"+JSON.stringify(exercise));
+    console.log("<nnnnnnnnnnnnnnnnnnnnnnnnnn");
+    console.log("" + JSON.stringify($scope.exerciseprogram));
 
-  SetExerciseProgramService.saveExercise(execise,$scope.uid).then(function(success){
-      alert("success"+JSON.stringify(success));
+    $scope.enableButtonMon = function () {
+      $scope.exerciseprogram.weekly.mon == 1 ? $scope.exerciseprogram.weekly.mon = 0 : $scope.exerciseprogram.weekly.mon = 1;
+    };
 
-   },function(error){
+    $scope.enableButtonTue = function () {
+      $scope.exerciseprogram.weekly.tue == 1 ? $scope.exerciseprogram.weekly.tue = 0 : $scope.exerciseprogram.weekly.tue = 1;
+    };
 
-   })
-
+    $scope.enableButtonWed = function () {
+      $scope.exerciseprogram.weekly.wed == 1 ? $scope.exerciseprogram.weekly.wed = 0 : $scope.exerciseprogram.weekly.wed = 1;
 
     };
 
-  //<!-----------------------------------------------------------!>
+    $scope.enableButtonThu = function () {
+      $scope.exerciseprogram.weekly.thu == 1 ? $scope.exerciseprogram.weekly.thu = 0 : $scope.exerciseprogram.weekly.thu = 1;
+    };
+
+    $scope.enableButtonFri = function () {
+      $scope.exerciseprogram.weekly.fri == 1 ? $scope.exerciseprogram.weekly.fri = 0 : $scope.exerciseprogram.weekly.fri = 1;
+    };
+
+    $scope.enableButtonSat = function () {
+      $scope.exerciseprogram.weekly.sat == 1 ? $scope.exerciseprogram.weekly.sat = 0 : $scope.exerciseprogram.weekly.sat = 1;
+    };
+
+    $scope.enableButtonSun = function () {
+      $scope.exerciseprogram.weekly.sun == 1 ? $scope.exerciseprogram.weekly.sun = 0 : $scope.exerciseprogram.weekly.sun = 1;
+    };
+
+    $scope.editExercise = function () {
+      $scope.submit = false;
+      $scope.edit = true;
+      $state.transitionTo('setExerciseProgram',
+        {
+          peid: $scope.exerciseprogram.peid,
+          title: $scope.exerciseprogram.title,
+          comments: $scope.exerciseprogram.comments,
+          code: $scope.exerciseprogram.code,
+          reps: $scope.exerciseprogram.reps,
+          sets: $scope.exerciseprogram.sets,
+          rest: $scope.exerciseprogram.rest,
+          daily: $scope.exerciseprogram.daily,
+          today: $scope.exerciseprogram.today,
+          alldays: $scope.exerciseprogram.alldays,
+          weekly: {
+            sun: $scope.exerciseprogram.weekly.sun,
+            mon: $scope.exerciseprogram.weekly.mon,
+            tue: $scope.exerciseprogram.weekly.tue,
+            wed: $scope.exerciseprogram.weekly.wed,
+            thu: $scope.exerciseprogram.weekly.thu,
+            fri: $scope.exerciseprogram.weekly.fri,
+            sat: $scope.exerciseprogram.weekly.sat,
+          },
+          mp4: $scope.exerciseprogram.mp4,
+          webm: $scope.exerciseprogram.webm,
+          mov: $scope.exerciseprogram.mov,
+          thumb1: $scope.exerciseprogram.thumb1,
+          thumb2: $scope.exerciseprogram.thumb2
+        }, { reload: false });
+
+    };
+
+
+
+    $scope.setReps = function (reps) {
+      $scope.exerciseprogram.reps = reps;
+    };
+    $scope.setSets = function (sets) {
+      $scope.exerciseprogram.sets = sets;
+    };
+    $scope.setDaily = function (daily) {
+      $scope.exerciseprogram.daily = daily;
+    };
+    $scope.gotoExerciseProgram = function () {
+      $state.transitionTo('exerciseProgram', {
+        uid: $rootScope.patientId,
+        name: '',
+        age: '',
+        gender: '',
+        email: '',
+        profile_url: '',
+        low: '',
+        medium: '',
+        high: ''
+      }, { reload: false });
+    }
+    //<!-----------------------------------------------------------!>
     var repsList = [];
 
     (function steps() {
       var value = 0;
       for (var i = 1; i <= 180; i++) {
-        repsList[i]= i;
-      //  value += 500;
+        repsList[i] = i;
+        //  value += 500;
       }
       console.log(repsList);
     })();
 
     $scope.stepsList = repsList;
+    $scope.selectedReps = parseInt($scope.exerciseprogram.reps);
 
-    $scope.selectedReps =$scope.exerciseprogram.reps;
-
-     var repsSet = [];
+    var repsSet = [];
 
     (function steps() {
       var value = 0;
       for (var i = 1; i <= 180; i++) {
-        repsSet[i]=i;
-      
+        repsSet[i] = i;
+
       }
       console.log(repsSet);
     })();
 
     $scope.repsSet = repsSet;
 
-    $scope.selectedSet = $scope.exerciseprogram.sets;
+    $scope.selectedSet = parseInt($scope.exerciseprogram.sets);
 
-     var repsDaily = [];
+    var repsDaily = [];
 
     (function steps() {
       var value = 0;
       for (var i = 1; i <= 180; i++) {
-         repsSet[i]=i;
+        repsDaily[i] = i;
       }
       console.log(repsDaily);
     })();
 
     $scope.repsDaily = repsDaily;
 
-    $scope.selectedDaily = $scope.exerciseprogram.daily;
+    $scope.selectedDaily = parseInt($scope.exerciseprogram.daily);
 
-//<!-----------------------------------------------------------!> 
+    // //<!-----------------------------------------------------------!> 
 
- 
+
+    $scope.saveExercise = function () {
+     // alert("ex" + $scope.selectedReps);
+      var exercise = {
+        "exid": $scope.exerciseprogram.peid,
+        "title": $scope.exerciseprogram.title,
+        "video_title": "",
+        "video_name": "",
+        "video_data": "",
+        "video_image_name": "",
+        "video_image": "",
+        "comments": "send me some commetns and here we are again",
+        "reps": "" + $scope.exerciseprogram.reps,
+        "sets": "" + $scope.exerciseprogram.sets,
+        "daily": "" + $scope.exerciseprogram.daily,
+        "week_days": [
+          {
+            "day": "0",
+            "on": $scope.exerciseprogram.weekly.sun
+          },
+          {
+            "day": "1",
+            "on": $scope.exerciseprogram.weekly.mon
+          },
+          {
+            "day": "2",
+            "on": $scope.exerciseprogram.weekly.tue
+          },
+          {
+            "day": "3",
+            "on": $scope.exerciseprogram.weekly.wed
+          },
+          {
+            "day": "4",
+            "on": $scope.exerciseprogram.weekly.thu
+          },
+          {
+            "day": "5",
+            "on": $scope.exerciseprogram.weekly.fri
+          },
+          {
+            "day": "6",
+            "on": $scope.exerciseprogram.weekly.sat
+          }
+
+        ]
+      };
+
+      console.log("editEx" + JSON.stringify(exercise));
+
+      SetExerciseProgramService.saveExercise(exercise, $scope.uid).then(function (success) {
+     //   alert("success" + JSON.stringify(success));
+
+      }, function (error) {
+
+      })
+
+
+    };
+
+
+
+
   }])
 
   .controller('SetActivityGoalsCtrl', ['$scope', '$state', 'sortedByList', '$ionicHistory', 'threshold', '$window', '$stateParams', function ($scope, $state, sortedByList, $ionicHistory, threshold, $window, $stateParams) {
@@ -1039,8 +1089,11 @@ thumb2: $stateParams.thumb2
   }])
 
 
+
   .controller('ActivityCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', '$rootScope','AppService', 'utilityService', function ($scope, $stateParams, sortedByList, $state, $rootScope,AppService, utilityService) {
    $scope.DefaultView = true;
+  $rootScope.patientName = $stateParams.name;
+
     var patientData;
     var ActivityData;
     var complianceData;

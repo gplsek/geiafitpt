@@ -211,8 +211,9 @@ angular.module('geiaFitApp')
       return prom;
     }
 
-
+ 
     var getProfile = function (uid) {
+      $rootScope.patientId = uid;
       var prom = $http({
         method: "GET",
         url: ApiEndpoint.url + '/profile/' + uid
@@ -385,7 +386,7 @@ angular.module('geiaFitApp')
   }])
 
 .service('SetExerciseProgramService', ['$rootScope', '$http', 'ApiEndpoint', function ($rootScope, $http, ApiEndpoint) {
-
+ console.log("SetExerciseProgramService"+$rootScope.patientId);
     var getExerciseList = function (pid) {
 
       var exerciseData = $http({
@@ -406,8 +407,8 @@ angular.module('geiaFitApp')
                 'X-CSRF-Token': $rootScope.token,
                 'Access-Control-Allow-Origin': '*'
               },
-        method: "PUT", 
-        url: ApiEndpoint.url + "/webex/"+ptId,
+        method: "POST", 
+        url: "https://api.geiafit.com/api/webex/"+$rootScope.patientId,
     data: exercise,
       }).then(function (response) {
       //  alert("SERVICE SUCCESS" + JSON.stringify(response.data));
@@ -420,7 +421,9 @@ angular.module('geiaFitApp')
     }
 
     return {
-      listOfExercise: getExerciseList
+      listOfExercise: getExerciseList,
+      saveExercise : saveExercise
+
     }
 
   }])
