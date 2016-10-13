@@ -677,20 +677,32 @@ $scope.title = 'Add Custom Exercise';
 
 
   }])
-  .controller('AddPatientCtrl', ['$scope', '$rootScope', 'Flash', '$ionicHistory', '$state', 'AppService',
-    function ($scope, $rootScope, Flash, $ionicHistory, $state, AppService) {
-      /*$scope.data = {
-        patientName: "",
-        email: "",
-        subscription: ""
-      };*/
+  .controller('AddPatientCtrl', ['$scope', '$rootScope', 'Flash', '$ionicHistory', '$state', 'AppService', 'MyAccount',
+    function ($scope, $rootScope, Flash, $ionicHistory, $state, AppService, MyAccount) {
+
+      $scope.enterprise = true;
+      init = function () {
+
+        MyAccount.myAccountDetails().then(function (success) {
+          $scope.enterprise = success.enterprise;
+        }, function (error) {
+
+        })
+
+      }
+
       $scope.data = {
         email: "",
         firstname: "",
         lastname: "",
+        password: "",
+        amount: "",
+        send_email: 1
+        //send_email: 0
       };
 
-      function checkEmptyFields() {
+
+      /*function checkEmptyFields() {
         var isEmpty = false;
         for (var property in $scope.data) {
           if ($scope.data.hasOwnProperty(property)) {
@@ -700,7 +712,7 @@ $scope.title = 'Add Custom Exercise';
           }
         }
         return isEmpty;
-      }
+      }*/
 
       function checkEmail(email) {
         var result = false;
@@ -709,11 +721,35 @@ $scope.title = 'Add Custom Exercise';
         return result;
       }
 
+      function checkPass(password,confirmPassword){
+        var result = false;
+        result = (password == confirmPassword);
+        return result;
+      }
+
+      $scope.checkPassword = function () {
+        var password = document.getElementById('password');
+        var confirmPassword = document.getElementById('confirmPassword');
+        var message = document.getElementById('confirmMessage');
+
+        var badColor = "#ff6666";
+        //Compare the values in the password field 
+        //and the confirmation field
+        if (password.value == confirmPassword.value) {
+          message.style.color = '';
+          message.innerHTML = ''
+        }
+        else {
+          message.style.color = badColor;
+          message.innerHTML = "Passwords Do Not Match!"
+        }
+      }  
+
       $scope.addPatient = function (data) {
 
         if (!(Object.keys(data).length === 0 && data.constructor === Object)) {
-          if (!checkEmptyFields()) {
-            if (checkEmail(data.email)) {
+          if (checkEmail(data.email)) {
+            if (checkPass(data.password, data.confirmPassword)) {
               console.log($scope.data)
               AppService.addPatient($scope.data).then(
                 function (success) {
@@ -731,17 +767,19 @@ $scope.title = 'Add Custom Exercise';
                 function (error) {
                   console.log(error)
                 });
-            } else {
-              Flash.showFlash({ type: 'error', message: "Email is not valid !" });
             }
-          }
-          else {
-            Flash.showFlash({ type: 'error', message: "Please fill in all fields !" });
+            else {
+              Flash.showFlash({ type: 'error', message: "ConfirmPassword is not valid !" });
+            }
+          } else {
+            Flash.showFlash({ type: 'error', message: "Email is not valid !" });
           }
         } else {
           Flash.showFlash({ type: 'error', message: "Please fill in all fields !" });
         }
       }
+
+      init();
 
     }])
 

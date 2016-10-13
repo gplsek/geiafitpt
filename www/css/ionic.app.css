@@ -10190,6 +10190,19 @@ ion-header-bar {
     font-size: 18px;
     line-height: 50px;
     font-weight: 500; }
+  .btn-yellow-low-margin {
+      background: #F8A938;
+      width: 100%;
+      margin: 0 auto;
+      border-radius: 22px;
+      margin-top: 20px;
+      height: 50px;
+      border: 0; }
+      .btn-yellow-low-margin h1 {
+    text-align: center;
+    font-size: 18px;
+    line-height: 50px;
+    font-weight: 500; }
 
 .flash {
   color: #fff;
