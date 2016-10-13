@@ -1,16 +1,17 @@
-<ion-view class="setExerciseView" name="set-exercise-view">
+<ion-view class="setExerciseView" name="set-exercise-view" >
   <ion-nav-bar class="group">
     <ion-nav-buttons side="left">
         <span class="icon ion-close-round closePatient" ng-click="closePatient()"></span>  
       <div class="title title-center header-item" ng-click="gotoExerciseProgram()">{{patientData}}</div>       
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
-      <span class="icon ion-ios-trash-outline deletePatient" ng-click="deletePatient()"></span>   
+      <span class="icon ion-ios-trash-outline deletePatient" ng-click="deleteExercise()"></span>   
       <!--<span ng-hide="true" class="icon ion-ios-trash-outline deletePatient" ng-click="saveExercise()"  ></span>-->
     </ion-nav-buttons>
   </ion-nav-bar>
  
     
+
   <ion-content>
     	<div class="sortedBy text-center">
 		    <!--<select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy"></select> -->
@@ -21,6 +22,7 @@
   </ion-item>
 </ion-list>
 		</div>
+
 		<section class="main">
 			<div class="active group">
 				<span class="pull-left exerciseName" ng-hide="edit">{{exerciseprogram.title}}</span>
@@ -51,7 +53,7 @@
                       </div>-->
                       <div  class="dailySteps col col-30">
                         <label class="expiry">Reps</label>
-                        <select class="exerciseProgram_customSelect" ng-options="item for item in stepsList"  ng-model="selectedReps" ng-change="setReps(selectedReps)"></select>
+                        <select class="exerciseProgram_customSelect " ng-options="item for item in stepsList"  ng-model="selectedReps" ng-change="setReps(selectedReps)" ng-disabled="submit"></select>
                     </div>
                       <!--<div class = "col col-30">
                       <label>Sets
@@ -59,7 +61,7 @@
                       </div>-->
                       <div  class="dailySteps col col-30">
                         <label class="expiry">Sets</label>
-                        <select class="exerciseProgram_customSelect" ng-options="item for item in repsSet"  ng-model="selectedSet" ng-change="setSets(selectedSet)"></select>
+                        <select class="exerciseProgram_customSelect" ng-options="item for item in repsSet"  ng-model="selectedSet" ng-change="setSets(selectedSet)" ng-disabled="submit"></select>
                     </div>
                     
                      <!--<div class="col col-30">
@@ -69,31 +71,31 @@
 
                      <div  class="dailySteps col col-30">
                         <label class="expiry">TimesDaily</label>
-                        <select class="exerciseProgram_customSelect" ng-options="item for item in repsDaily"  ng-model="selectedDaily" ng-change="setDaily(selectedDaily)"></select>
+                        <select class="exerciseProgram_customSelect" ng-options="item for item in repsDaily"  ng-model="selectedDaily" ng-change="setDaily(selectedDaily)" ng-disabled="submit"></select>
                     </div>
                      </div>
            
           
             <label>Weekly</label> 
        <div class="row">
-               <div class = "col"><button ng-model="exerciseprogram.weekly.mon"
-            ng-class="exerciseprogram.weekly.mon == 1 ? 'active_button' : 'deactive_button'"  ng-click="enableButtonMon()">MO</button></div>
+               <div class = "col" ><button  ng-model="exerciseprogram.weekly.mon"
+            ng-class="exerciseprogram.weekly.mon == 1 ? 'active_button' : 'deactive_button'"  ng-click="enableButtonMon()" ng-disabled="submit">MO</button></div>
                <div class = "col"><button ng-model="exerciseprogram.weekly.tue" 
-             ng-class="exerciseprogram.weekly.tue == 1 ? 'active_button' : 'deactive_button'" ng-click="enableButtonTue()">TU</button></div>
+             ng-class="exerciseprogram.weekly.tue == 1 ? 'active_button' : 'deactive_button'" ng-click="enableButtonTue()" ng-disabled="submit">TU</button></div>
                <div class = "col"><button  ng-model="exerciseprogram.weekly.wed"
-             ng-class="exerciseprogram.weekly.wed == 1 ? 'active_button' : 'deactive_button'" ng-click="enableButtonWed()" >WE</button></div>
+             ng-class="exerciseprogram.weekly.wed == 1 ? 'active_button' : 'deactive_button'" ng-click="enableButtonWed()" ng-disabled="submit">WE</button></div>
                <div class = "col"><button  ng-model="exerciseprogram.weekly.thu"
-             ng-class="exerciseprogram.weekly.thu == 1 ? 'active_button' : 'deactive_button'" ng-click="enableButtonThu()">TH</button></div>
+             ng-class="exerciseprogram.weekly.thu == 1 ? 'active_button' : 'deactive_button'" ng-click="enableButtonThu()" ng-disabled="submit">TH</button></div>
                <div class = "col"><button  ng-model="exerciseprogram.weekly.fri"
-            ng-class="exerciseprogram.weekly.fri == 1 ? 'active_button' : 'deactive_button'" ng-click="enableButtonFri()">FR</button></div>
+            ng-class="exerciseprogram.weekly.fri == 1 ? 'active_button' : 'deactive_button'" ng-click="enableButtonFri()" ng-disabled="submit">FR</button></div>
                <div class = "col"><button  ng-model="exerciseprogram.weekly.sat"
-              ng-class="exerciseprogram.weekly.sat == 1 ? 'active_button' : 'deactive_button'" ng-click="enableButtonSat()">SA</button></div>
+              ng-class="exerciseprogram.weekly.sat == 1 ? 'active_button' : 'deactive_button'" ng-click="enableButtonSat()" ng-disabled="submit">SA</button></div>
                <div class = "col"><button  ng-model="exerciseprogram.weekly.sun"
-              ng-class="exerciseprogram.weekly.sun == 1 ? 'active_button' : 'deactive_button'" ng-click="enableButtonSun()">SU</button></div>
+              ng-class="exerciseprogram.weekly.sun == 1 ? 'active_button' : 'deactive_button'" ng-click="enableButtonSun()" ng-disabled="submit">SU</button></div>
             </div>
             <div>
 					<p>Comments/Instructions</p>
-					<textarea placeholder="Be Safe when doing this exercise" ng-model="exerciseprogram.comments"></textarea>
+					<textarea placeholder="Be Safe when doing this exercise" ng-model="exerciseprogram.comments" ng-disabled="submit"> </textarea>
 				</div>
 
         <span ng-hide="submit"><button id="button1" class="button button-block btn-yellow" ng-click="saveExercise()">Submit</button></span>
