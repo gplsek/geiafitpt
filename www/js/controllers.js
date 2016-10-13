@@ -405,6 +405,7 @@ $scope.title = 'Add Custom Exercise';
 
 
 
+
     $scope.setReps = function (reps) {
       $scope.exerciseprogram.reps = reps;
     };
@@ -414,6 +415,17 @@ $scope.title = 'Add Custom Exercise';
     $scope.setDaily = function (daily) {
       $scope.exerciseprogram.daily = daily;
     };
+    $scope.deleteExercise = function () {
+  
+    SetExerciseProgramService.deleteExercise($rootScope.loggedInUserUid,$scope.exerciseprogram.peid).then(function (success) {
+       alert("success" + JSON.stringify(success));
+
+      }, function (error) {
+
+      })
+     
+    };
+    
     $scope.gotoExerciseProgram = function () {
       $state.transitionTo('exerciseProgram', {
         uid: $rootScope.patientId,

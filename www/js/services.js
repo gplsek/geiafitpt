@@ -396,7 +396,7 @@ angular.module('geiaFitApp')
 
       var exerciseData = $http({
         method: "GET",
-        url: "https://api.geiafit.com/api/webex/"+pid
+        url:  ApiEndpoint.url +"/webex/"+pid
       }).then(function (response) {
         return response.data;
       }, function (err) {
@@ -405,6 +405,21 @@ angular.module('geiaFitApp')
       return exerciseData;
     }
 
+ var deleteExercise = function (ptId,exId) {
+      var deleteExercise = $http({
+          headers: {
+                'X-CSRF-Token': $rootScope.token,
+                'Access-Control-Allow-Origin': '*'
+              },
+        method: "DELETE",
+        url:  ApiEndpoint.url +"/webex/"+ptId+"/"+exId
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      });
+      return deleteExercise;
+    }
     var saveExercise = function(exercise,ptId)
     {
        var exerciseData = $http({
@@ -412,8 +427,8 @@ angular.module('geiaFitApp')
                 'X-CSRF-Token': $rootScope.token,
                 'Access-Control-Allow-Origin': '*'
               },
-        method: "POST", 
-        url: "https://api.geiafit.com/api/webex/"+$rootScope.patientId,
+        method: "PUT", 
+        url: ApiEndpoint.url +"/webex/"+$rootScope.patientId,
     data: exercise,
       }).then(function (response) {
       //  alert("SERVICE SUCCESS" + JSON.stringify(response.data));
@@ -427,7 +442,8 @@ angular.module('geiaFitApp')
 
     return {
       listOfExercise: getExerciseList,
-      saveExercise : saveExercise
+      saveExercise : saveExercise,
+      deleteExercise : deleteExercise
 
     }
 
