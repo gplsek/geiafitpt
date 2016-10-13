@@ -2178,7 +2178,7 @@ alert(id)
           console.log("delete")
           SetExerciseProgramService.deleteExercise($rootScope.loggedInUserUid,peid).then(function (success)
            {
-             alert("success" + JSON.stringify(success));
+           //  alert("success" + JSON.stringify(success));
             $scope.exerciseList.splice(index, 1);
             //  if(success.success == true)
             //  {
@@ -2268,15 +2268,32 @@ alert(id)
     }
     init();
 
-        
-
-     function getListOfExerciseProgramme() {
-      SetExerciseProgramService.listOfExercise($rootScope.UID).then(function(data) {
-        $scope.exerciseList = data.exercises;   
-        console.log($scope.exerciseList + 'inside controller');
-      });
+    $scope.addss = function ()
+    {
+      $state.transitionTo('AddExcercisePopup', {}, { reload: true });
     }
 
+  
+     function getListOfExerciseProgramme() {
+      SetExerciseProgramService.listOfExercise($rootScope.UID).then(function(data) {
+        $scope.exerciseList = data.exercises;  
+     
+      });
+
+    
+
+    }
+//  $scope.day;
+                
+//         console.log($scope.exerciseList + 'inside controller'+day);
+       
+//         day = ($scope.exerciseList.weekly.sun === 1) ?"S":"";
+//         day = ($scope.exerciseList.weekly.mon === 1) ?"M":"";
+//         day = ($scope.exerciseList.weekly.tue === 1) ?"T":"";
+//         day = ($scope.exerciseList.weekly.wed === 1) ?"W":"";
+//         day = ($scope.exerciseList.weekly.thu === 1) ?"T":"";
+//         day = ($scope.exerciseList.weekly.fri === 1) ?"F":"";
+//         day = ($scope.exerciseList.weekly.sat === 1) ?"S":"";
 
   }])
 

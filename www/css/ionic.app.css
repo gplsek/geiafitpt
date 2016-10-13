@@ -7838,6 +7838,10 @@ select[readonly] {
   background-color: #f8f8f8;
   cursor: not-allowed; }
 
+ select[disabled] {background: url(../img/arrow_down_white.png) 95% 55% no-repeat #22282C;
+     background-size: 16px;
+     }
+
 input[type="radio"][disabled],
 input[type="checkbox"][disabled],
 input[type="radio"][readonly],
@@ -10149,7 +10153,7 @@ ion-header-bar {
   ion-header-bar .ion-navicon:before {
     font-size: 34px; }
 
-.buttons-left .title{ margin-top:20px}
+.platform-ios .buttons-left .title{ margin-top:20px}
 
 .form-group {
   margin-bottom: 25px; }
