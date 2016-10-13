@@ -405,6 +405,7 @@ $scope.title = 'Add Custom Exercise';
 
 
 
+
     $scope.setReps = function (reps) {
       $scope.exerciseprogram.reps = reps;
     };
@@ -414,6 +415,18 @@ $scope.title = 'Add Custom Exercise';
     $scope.setDaily = function (daily) {
       $scope.exerciseprogram.daily = daily;
     };
+    
+    $scope.deleteExercise = function () {
+  
+    SetExerciseProgramService.deleteExercise($rootScope.loggedInUserUid,$scope.exerciseprogram.peid).then(function (success) {
+       alert("success" + JSON.stringify(success));
+
+      }, function (error) {
+
+      })
+     
+    };
+    
     $scope.gotoExerciseProgram = function () {
       $state.transitionTo('exerciseProgram', {
         uid: $rootScope.patientId,
@@ -476,50 +489,66 @@ $scope.title = 'Add Custom Exercise';
 
     $scope.saveExercise = function () {
      // alert("ex" + $scope.selectedReps);
-      var exercise = {
-        "exid": $scope.exerciseprogram.peid,
-        "title": $scope.exerciseprogram.title,
-        "video_title": "",
-        "video_name": "",
-        "video_data": "",
-        "video_image_name": "",
-        "video_image": "",
-        "comments": "send me some commetns and here we are again",
-        "reps": "" + $scope.exerciseprogram.reps,
-        "sets": "" + $scope.exerciseprogram.sets,
-        "daily": "" + $scope.exerciseprogram.daily,
-        "week_days": [
-          {
-            "day": "0",
-            "on": $scope.exerciseprogram.weekly.sun
-          },
-          {
-            "day": "1",
-            "on": $scope.exerciseprogram.weekly.mon
-          },
-          {
-            "day": "2",
-            "on": $scope.exerciseprogram.weekly.tue
-          },
-          {
-            "day": "3",
-            "on": $scope.exerciseprogram.weekly.wed
-          },
-          {
-            "day": "4",
-            "on": $scope.exerciseprogram.weekly.thu
-          },
-          {
-            "day": "5",
-            "on": $scope.exerciseprogram.weekly.fri
-          },
-          {
-            "day": "6",
-            "on": $scope.exerciseprogram.weekly.sat
-          }
+     var exercise= {
+      "peid": $scope.exerciseprogram.peid,
+      "title":$scope.exerciseprogram.title,
+      "comments": $scope.exerciseprogram.comments,
+      "reps": "" + $scope.exerciseprogram.reps,
+      "sets": "" + $scope.exerciseprogram.sets,
+      "daily": "" + $scope.exerciseprogram.daily,
+      "weekly": {
+        "sun": $scope.exerciseprogram.weekly.sun,
+        "mon": $scope.exerciseprogram.weekly.mon,
+        "tue": $scope.exerciseprogram.weekly.tue,
+        "wed": $scope.exerciseprogram.weekly.wed,
+        "thu": $scope.exerciseprogram.weekly.thu,
+        "fri": $scope.exerciseprogram.weekly.fri,
+        "sat": $scope.exerciseprogram.weekly.sat
+      }};
+      // var exercise = {
+      //   "exid": $scope.exerciseprogram.peid,
+      //   "title": $scope.exerciseprogram.title,
+      //   "video_title": "",
+      //   "video_name": "",
+      //   "video_data": "",
+      //   "video_image_name": "",
+      //   "video_image": "",
+      //   "comments": "send me some commetns and here we are again",
+      //   "reps": "" + $scope.exerciseprogram.reps,
+      //   "sets": "" + $scope.exerciseprogram.sets,
+      //   "daily": "" + $scope.exerciseprogram.daily,
+      //   "week_days": [
+      //     {
+      //       "day": "0",
+      //       "on": $scope.exerciseprogram.weekly.sun
+      //     },
+      //     {
+      //       "day": "1",
+      //       "on": $scope.exerciseprogram.weekly.mon
+      //     },
+      //     {
+      //       "day": "2",
+      //       "on": $scope.exerciseprogram.weekly.tue
+      //     },
+      //     {
+      //       "day": "3",
+      //       "on": $scope.exerciseprogram.weekly.wed
+      //     },
+      //     {
+      //       "day": "4",
+      //       "on": $scope.exerciseprogram.weekly.thu
+      //     },
+      //     {
+      //       "day": "5",
+      //       "on": $scope.exerciseprogram.weekly.fri
+      //     },
+      //     {
+      //       "day": "6",
+      //       "on": $scope.exerciseprogram.weekly.sat
+      //     }
 
-        ]
-      };
+      //   ]
+      // };
 
       console.log("editEx" + JSON.stringify(exercise));
 
@@ -677,20 +706,32 @@ $scope.title = 'Add Custom Exercise';
 
 
   }])
-  .controller('AddPatientCtrl', ['$scope', '$rootScope', 'Flash', '$ionicHistory', '$state', 'AppService',
-    function ($scope, $rootScope, Flash, $ionicHistory, $state, AppService) {
-      /*$scope.data = {
-        patientName: "",
-        email: "",
-        subscription: ""
-      };*/
+  .controller('AddPatientCtrl', ['$scope', '$rootScope', 'Flash', '$ionicHistory', '$state', 'AppService', 'MyAccount',
+    function ($scope, $rootScope, Flash, $ionicHistory, $state, AppService, MyAccount) {
+
+      $scope.enterprise = true;
+      init = function () {
+
+        MyAccount.myAccountDetails().then(function (success) {
+          $scope.enterprise = success.enterprise;
+        }, function (error) {
+
+        })
+
+      }
+
       $scope.data = {
         email: "",
         firstname: "",
         lastname: "",
+        password: "",
+        amount: "",
+        send_email: 1
+        //send_email: 0
       };
 
-      function checkEmptyFields() {
+
+      /*function checkEmptyFields() {
         var isEmpty = false;
         for (var property in $scope.data) {
           if ($scope.data.hasOwnProperty(property)) {
@@ -700,7 +741,7 @@ $scope.title = 'Add Custom Exercise';
           }
         }
         return isEmpty;
-      }
+      }*/
 
       function checkEmail(email) {
         var result = false;
@@ -709,39 +750,96 @@ $scope.title = 'Add Custom Exercise';
         return result;
       }
 
+      function checkPass(password,confirmPassword){
+        var result = false;
+        result = (password == confirmPassword);
+        return result;
+      }
+
+      $scope.checkPassword = function () {
+        var password = document.getElementById('password');
+        var confirmPassword = document.getElementById('confirmPassword');
+        var message = document.getElementById('confirmMessage');
+
+        var badColor = "#ff6666";
+        if (password.value == confirmPassword.value) {
+          message.style.color = '';
+          message.innerHTML = ''
+        }
+        else {
+          message.style.color = badColor;
+          message.innerHTML = "Passwords Do Not Match!"
+        }
+      }  
+
+      $scope.checkAmount = function(){
+        var amount = document.getElementById('amount');
+        var message =  document.getElementById('amountMessage');
+
+        var data = parseFloat(amount.value)
+        var badColor = "#ff6666";
+        if(data < 0 || data > 10000){
+          message.style.color = badColor;
+          message.innerHTML = "Plase enter valid amount!"
+        }
+        else{
+          message.style.color = '';
+          message.innerHTML = ''
+        }
+      }
+
       $scope.addPatient = function (data) {
 
+        var amount = parseFloat(data.amount)
+        $scope.data.amount = Math.round(amount/100)*100
+        console.log($scope.data.amount)
+
+        var validAmount = false;
+        if(data.amount < 0 || data.amount > 10000){
+          validAmount = false
+        }
+        else{
+          validAmount = true
+        }
+
         if (!(Object.keys(data).length === 0 && data.constructor === Object)) {
-          if (!checkEmptyFields()) {
-            if (checkEmail(data.email)) {
-              console.log($scope.data)
-              AppService.addPatient($scope.data).then(
-                function (success) {
-                  console.log(success)
-                  var successMessage = success.data.message
-                  if (successMessage) {
-                    Flash.showFlash({ type: 'error', message: successMessage });
-                  }
-                  else {
-                    $scope.data = {};
-                    Flash.showFlash({ type: 'success', message: "Success !" });
-                    $state.go('main.dash', {}, { reload: true });
-                  }
-                },
-                function (error) {
-                  console.log(error)
-                });
-            } else {
-              Flash.showFlash({ type: 'error', message: "Email is not valid !" });
+          if (checkEmail(data.email)) {
+            if (checkPass(data.password, data.confirmPassword)) {
+              if (validAmount) {
+                console.log($scope.data)
+                AppService.addPatient($scope.data).then(
+                  function (success) {
+                    console.log(success)
+                    var successMessage = success.data.message
+                    if (successMessage) {
+                      Flash.showFlash({ type: 'error', message: successMessage });
+                    }
+                    else {
+                      $scope.data = {};
+                      Flash.showFlash({ type: 'success', message: "Success !" });
+                      $state.go('main.dash', {}, { reload: true });
+                    }
+                  },
+                  function (error) {
+                    console.log(error)
+                  });
+              }
+              else {
+                Flash.showFlash({ type: 'error', message: "Please enter valid Subscription Amount!" });
+              }
             }
-          }
-          else {
-            Flash.showFlash({ type: 'error', message: "Please fill in all fields !" });
+            else {
+              Flash.showFlash({ type: 'error', message: "ConfirmPassword is not valid !" });
+            }
+          } else {
+            Flash.showFlash({ type: 'error', message: "Email is not valid !" });
           }
         } else {
           Flash.showFlash({ type: 'error', message: "Please fill in all fields !" });
         }
       }
+
+      init();
 
     }])
 
@@ -750,6 +848,7 @@ $scope.title = 'Add Custom Exercise';
   var pageSize = 10;
   $scope.pages = [];
   $scope.webExPages = [];
+
 
     $scope.sortType = 'title'; // set the default sort type
     $scope.sortReverse = false;  // set the default sort order
@@ -2120,23 +2219,82 @@ if(data.length >= 3){
     console.log($stateParams);
     console.log($rootScope.UID)
 
-    var exerciseList = [];
-    var pageSize = 10;
-    $scope.sortedByList = sortedByList;
-    $scope.sortedBy = $scope.sortedByList[0].id;
-
-    getListOfExerciseProgramme();
-
+    
     $scope.title = 'Exercise Program';
     $scope.subNavList = false;
 
-    $scope.showList = function () {
+    getListOfExerciseProgramme();
+
+    var exerciseList = [];
+    var pageSize = 10;
+     var exerciseSortedByList = [
+      {
+        id: 0,
+        title: 'All'
+      },
+      {
+        id: 1,
+        title: 'Active'
+      },
+      {
+        id: 2,
+        title: 'Inactive'
+      },
+      {
+        id: 3,
+        title: 'Today'
+      },
+      {
+        id:4,
+        title: 'Rest of the Week'
+      }
+    ];
+
+  $scope.exerciseSortedByList = exerciseSortedByList;
+  $scope.sortedBy = $scope.exerciseSortedByList[0].id;
+
+ //This function is use to delete exercise belong to a patient.
+  $scope.delete = function (peid,index) 
+  {
+     console.log("Delete called")
+     var confirmPopup = $ionicPopup.confirm({
+        title: 'Delete exercise',
+        template: 'Are you sure you want to delete this exercise ?'
+      });
+
+      confirmPopup.then(function (res) 
+      {
+        if (res) 
+        {
+          console.log("delete")
+          SetExerciseProgramService.deleteExercise($rootScope.loggedInUserUid,peid).then(function (success)
+           {
+           //  alert("success" + JSON.stringify(success));
+            $scope.exerciseList.splice(index, 1);
+            //  if(success.success == true)
+            //  {
+            //   $scope.exerciseList.splice(index, 1);
+            //  }
+            //  else
+            //  {
+            //    console.log("unable to delete");
+            //  }
+          }, function (error) { })
+         
+        } else {
+          console.log("cancel")
+        }
+      });
+    
+  }
+
+
+  $scope.showList = function () 
+  {
       $scope.subNavList = !$scope.subNavList;
-    }
+  }
+      
 
-
-
-  
   $scope.pages = [
       {
         id: 0,
@@ -2170,23 +2328,7 @@ if(data.length >= 3){
     }
     $scope.showNext(1);
 
-    $scope.delete = function (index) {
-      console.log("Delete called")
-      var confirmPopup = $ionicPopup.confirm({
-        title: 'Delete exercise',
-        template: 'Are you sure you want to delete this exercise ?'
-      });
-
-      confirmPopup.then(function (res) {
-        if (res) {
-          console.log("delete")
-          $scope.exerciseList.splice(index, 1);
-        } else {
-          console.log("cancel")
-        }
-      });
-    }
-
+   
 
       
      $scope.sortedByList = sortedByList;
@@ -2212,20 +2354,42 @@ if(data.length >= 3){
 
       }
 
+
         
     init = function () {
       console.log($stateParams.patientId)
     }
     init();
 
-        
+    $scope.addss = function ()
+    {
+      $state.transitionTo('AddExcercisePopup', {}, { reload: true });
+    }
 
+
+  
      function getListOfExerciseProgramme() {
       SetExerciseProgramService.listOfExercise($rootScope.UID).then(function(data) {
+
         $scope.exerciseList = data.exercises;   
         console.log($scope.exerciseList + 'inside controller');
+
       });
+
+    
+
     }
+//  $scope.day;
+                
+//         console.log($scope.exerciseList + 'inside controller'+day);
+       
+//         day = ($scope.exerciseList.weekly.sun === 1) ?"S":"";
+//         day = ($scope.exerciseList.weekly.mon === 1) ?"M":"";
+//         day = ($scope.exerciseList.weekly.tue === 1) ?"T":"";
+//         day = ($scope.exerciseList.weekly.wed === 1) ?"W":"";
+//         day = ($scope.exerciseList.weekly.thu === 1) ?"T":"";
+//         day = ($scope.exerciseList.weekly.fri === 1) ?"F":"";
+//         day = ($scope.exerciseList.weekly.sat === 1) ?"S":"";
 
 
   }])
