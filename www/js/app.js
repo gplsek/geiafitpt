@@ -169,7 +169,7 @@ templateUrl:'templates/vitalSuccess.htm'
     }
   })*/
   .state('setActivityGoals', {
-    url: '/setActivityGoals',
+    url: '/setActivityGoals/:patientId',
     params: {
       name: null
     },
@@ -199,7 +199,7 @@ templateUrl:'templates/vitalSuccess.htm'
   })
   
   .state('exerciseProgram', {
-    url: '/exerciseProgram', 
+    url: '/exerciseProgram/:patientId', 
     params: patientParams,
     templateUrl: 'templates/exerciseProgram.htm',
     controller: 'ExerciseProgramCtrl',
@@ -246,23 +246,28 @@ templateUrl:'templates/addSnapshot.htm'
     controller: 'ReviewSnapshotsCtrl'
   })*/
   .state('messages', {
-    url: '/messages', 
+    url: '/messages/:patientId', 
     params: patientParams,
     templateUrl: 'templates/message.htm',
-    controller: 'MessageCtrl'
-   
-  })
-  
-   .state('vitals', {
-    url: '/vitals', 
-      templateUrl: 'templates/vitals.htm',
-      controller:'VitalsCtrl',
-       resolve: {
+    controller: 'MessageCtrl',
+     resolve: {
       sortedByList: function(AppService){
         return AppService.sortedByList();
       }
     }
+   
   })
+  
+    .state('vitals', {
+      url: '/vitals/:patientId',
+      templateUrl: 'templates/vitals.htm',
+      controller: 'VitalsCtrl',
+      resolve: {
+        sortedByList: function (AppService) {
+          return AppService.sortedByList();
+        }
+      }
+    })
   
  /* 
   .state('vitals', {

@@ -12,9 +12,15 @@
  
     
   <ion-content>
-    	<!--<div class="sortedBy text-center">
-		    <select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy"></select> 
-		</div>-->
+    	<div class="sortedBy text-center">
+		    <!--<select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy"></select> -->
+            <input type="button" class="itemdropdown" ng-click="showList();" value="{{title}}"/>
+<ion-list ng-show="subNavList" class="ddlistitems">
+  <ion-item ng-repeat="item in sortedByList" ng-click="gotoAction(item.id)">
+    <h2>{{item.title}}</h2>
+  </ion-item>
+</ion-list>
+		</div>
 		<section class="main">
 			<div class="active group">
 				<span class="pull-left exerciseName" ng-hide="edit">{{exerciseprogram.title}}</span>

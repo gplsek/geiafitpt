@@ -22,8 +22,8 @@ angular.module('geiaFitApp')
 
     function storeUserCredentials(token, isChecked) {
 
-      // window.localStorage.setItem('LOCAL_TOKEN_KEY', token);
-      // window.localStorage.setItem('KEEP_SIGNED_IN', isChecked);
+       localStorage.setItem('LOCAL_TOKEN_KEY', token);
+       localStorage.setItem('KEEP_SIGNED_IN', isChecked);
       useCredentials(token);
     }
 
@@ -52,26 +52,26 @@ angular.module('geiaFitApp')
       username = '';
       isAuthenticated = false;
       $http.defaults.headers.common['X-Auth-Token'] = undefined;
-      window.localStorage.removeItem(LOCAL_TOKEN_KEY);
+      localStorage.removeItem('LOCAL_TOKEN_KEY');
     }
 
     var login = function (name, pw, isChecked) {
       var form = {
-        username: "admin@geiafit.com",
-        password: "FitGeia1!"
+        username: name,
+        password: pw
       }
       form = JSON.stringify(form);
       //$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+      if(localStorage.getItem('LOCAL_TOKEN_KEY') != null){
+        logout();
+      }
       var promise = $http({
         method: "POST",
         url: ApiEndpoint.url + '/user/login',
         data: form
       }).then(function (response) {
-        console.log("Store Use Credentials called");
-        storeUserCredentials(name + response.data.token, isChecked);
-        console.log(response);
         var token = response.data.token
-        console.log(token);
+        storeUserCredentials(token, isChecked);
         $rootScope.token = token;
         $rootScope.loggedInUserUid = response.data.user.uid;
         console.log("UID " + $rootScope.loggedInUserUid);
@@ -90,10 +90,12 @@ angular.module('geiaFitApp')
     };
 
     var logout = function () {
-      destroyUserCredentials();
+      var logoutToken = localStorage.getItem(('LOCAL_TOKEN_KEY'))
+      destroyUserCredentials()
       return $http({
         headers: {
-          'X-CSRF-Token': $rootScope.token,
+          //'X-CSRF-Token': $rootScope.token,
+          'X-CSRF-Token': logoutToken,
           'Access-Control-Allow-Origin': '*'
         },
         method: 'POST',
@@ -162,6 +164,10 @@ angular.module('geiaFitApp')
       var uid = $rootScope.loggedInUserUid;
       var createPatientURL = ApiEndpoint.url + "/profile/createpatient/" + uid
       var req = {
+        headers: {
+          'X-CSRF-Token': $rootScope.token,
+          'Access-Control-Allow-Origin': '*'
+        },
         method: 'POST',
         url: createPatientURL,
         data: request_params
@@ -172,9 +178,23 @@ angular.module('geiaFitApp')
 
     var getActivity = function (uid) {
       console.log(uid)
+      $rootScope.UID = uid ;
       var prom = $http({
         method: "GET",
         url: ApiEndpoint.url + '/log/activity/' + uid
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      })
+      return prom;
+    }
+
+    var getHealthPoint = function (uid) {
+      console.log(uid)
+      var prom = $http({
+        method: "GET",
+        url: ApiEndpoint.url + '/log/health_points/' + uid
       }).then(function (response) {
         return response.data;
       }, function (err) {
@@ -272,6 +292,7 @@ angular.module('geiaFitApp')
     return {
       patientsData: getPatientsData,
       getActivity: getActivity,
+      getHealthPoint : getHealthPoint,
       getVitals: getVitals,
       addPatient: addPatient,
       profile: getProfile,
@@ -351,7 +372,7 @@ angular.module('geiaFitApp')
 
         data: message,
       }).then(function (response) {
-      //  alert("SERVICE SUCCESS" + JSON.stringify(response.data));
+       // alert("SERVICE SUCCESS" + JSON.stringify(response.data));
         return response.data;
       }, function (err) {
         alert("SERVICE ERROR" + JSON.stringify(err.data));
