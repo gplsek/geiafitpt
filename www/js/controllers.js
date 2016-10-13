@@ -415,6 +415,7 @@ $scope.title = 'Add Custom Exercise';
     $scope.setDaily = function (daily) {
       $scope.exerciseprogram.daily = daily;
     };
+    
     $scope.deleteExercise = function () {
   
     SetExerciseProgramService.deleteExercise($rootScope.loggedInUserUid,$scope.exerciseprogram.peid).then(function (success) {
@@ -488,50 +489,66 @@ $scope.title = 'Add Custom Exercise';
 
     $scope.saveExercise = function () {
      // alert("ex" + $scope.selectedReps);
-      var exercise = {
-        "exid": $scope.exerciseprogram.peid,
-        "title": $scope.exerciseprogram.title,
-        "video_title": "",
-        "video_name": "",
-        "video_data": "",
-        "video_image_name": "",
-        "video_image": "",
-        "comments": "send me some commetns and here we are again",
-        "reps": "" + $scope.exerciseprogram.reps,
-        "sets": "" + $scope.exerciseprogram.sets,
-        "daily": "" + $scope.exerciseprogram.daily,
-        "week_days": [
-          {
-            "day": "0",
-            "on": $scope.exerciseprogram.weekly.sun
-          },
-          {
-            "day": "1",
-            "on": $scope.exerciseprogram.weekly.mon
-          },
-          {
-            "day": "2",
-            "on": $scope.exerciseprogram.weekly.tue
-          },
-          {
-            "day": "3",
-            "on": $scope.exerciseprogram.weekly.wed
-          },
-          {
-            "day": "4",
-            "on": $scope.exerciseprogram.weekly.thu
-          },
-          {
-            "day": "5",
-            "on": $scope.exerciseprogram.weekly.fri
-          },
-          {
-            "day": "6",
-            "on": $scope.exerciseprogram.weekly.sat
-          }
+     var exercise= {
+      "peid": $scope.exerciseprogram.peid,
+      "title":$scope.exerciseprogram.title,
+      "comments": $scope.exerciseprogram.comments,
+      "reps": "" + $scope.exerciseprogram.reps,
+      "sets": "" + $scope.exerciseprogram.sets,
+      "daily": "" + $scope.exerciseprogram.daily,
+      "weekly": {
+        "sun": $scope.exerciseprogram.weekly.sun,
+        "mon": $scope.exerciseprogram.weekly.mon,
+        "tue": $scope.exerciseprogram.weekly.tue,
+        "wed": $scope.exerciseprogram.weekly.wed,
+        "thu": $scope.exerciseprogram.weekly.thu,
+        "fri": $scope.exerciseprogram.weekly.fri,
+        "sat": $scope.exerciseprogram.weekly.sat
+      }};
+      // var exercise = {
+      //   "exid": $scope.exerciseprogram.peid,
+      //   "title": $scope.exerciseprogram.title,
+      //   "video_title": "",
+      //   "video_name": "",
+      //   "video_data": "",
+      //   "video_image_name": "",
+      //   "video_image": "",
+      //   "comments": "send me some commetns and here we are again",
+      //   "reps": "" + $scope.exerciseprogram.reps,
+      //   "sets": "" + $scope.exerciseprogram.sets,
+      //   "daily": "" + $scope.exerciseprogram.daily,
+      //   "week_days": [
+      //     {
+      //       "day": "0",
+      //       "on": $scope.exerciseprogram.weekly.sun
+      //     },
+      //     {
+      //       "day": "1",
+      //       "on": $scope.exerciseprogram.weekly.mon
+      //     },
+      //     {
+      //       "day": "2",
+      //       "on": $scope.exerciseprogram.weekly.tue
+      //     },
+      //     {
+      //       "day": "3",
+      //       "on": $scope.exerciseprogram.weekly.wed
+      //     },
+      //     {
+      //       "day": "4",
+      //       "on": $scope.exerciseprogram.weekly.thu
+      //     },
+      //     {
+      //       "day": "5",
+      //       "on": $scope.exerciseprogram.weekly.fri
+      //     },
+      //     {
+      //       "day": "6",
+      //       "on": $scope.exerciseprogram.weekly.sat
+      //     }
 
-        ]
-      };
+      //   ]
+      // };
 
       console.log("editEx" + JSON.stringify(exercise));
 
@@ -2111,24 +2128,81 @@ alert(id)
   .controller('ExerciseProgramCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', '$rootScope','$ionicPopup','SetExerciseProgramService', function ($scope, $stateParams, sortedByList, $state, $rootScope, $ionicPopup,SetExerciseProgramService) {
     console.log($stateParams);
     console.log($rootScope.UID)
-
-    var exerciseList = [];
-    var pageSize = 10;
-    $scope.sortedByList = sortedByList;
-    $scope.sortedBy = $scope.sortedByList[0].id;
-
-    getListOfExerciseProgramme();
-
+    
     $scope.title = 'Exercise Program';
     $scope.subNavList = false;
 
-    $scope.showList = function () {
+    getListOfExerciseProgramme();
+
+    var exerciseList = [];
+    var pageSize = 10;
+     var exerciseSortedByList = [
+      {
+        id: 0,
+        title: 'All'
+      },
+      {
+        id: 1,
+        title: 'Active'
+      },
+      {
+        id: 2,
+        title: 'Inactive'
+      },
+      {
+        id: 3,
+        title: 'Today'
+      },
+      {
+        id:4,
+        title: 'Rest of the Week'
+      }
+    ];
+
+  $scope.exerciseSortedByList = exerciseSortedByList;
+  $scope.sortedBy = $scope.exerciseSortedByList[0].id;
+
+ //This function is use to delete exercise belong to a patient.
+  $scope.delete = function (peid,index) 
+  {
+     console.log("Delete called")
+     var confirmPopup = $ionicPopup.confirm({
+        title: 'Delete exercise',
+        template: 'Are you sure you want to delete this exercise ?'
+      });
+
+      confirmPopup.then(function (res) 
+      {
+        if (res) 
+        {
+          console.log("delete")
+          SetExerciseProgramService.deleteExercise($rootScope.loggedInUserUid,peid).then(function (success)
+           {
+             alert("success" + JSON.stringify(success));
+            $scope.exerciseList.splice(index, 1);
+            //  if(success.success == true)
+            //  {
+            //   $scope.exerciseList.splice(index, 1);
+            //  }
+            //  else
+            //  {
+            //    console.log("unable to delete");
+            //  }
+          }, function (error) { })
+         
+        } else {
+          console.log("cancel")
+        }
+      });
+    
+  }
+
+
+  $scope.showList = function () 
+  {
       $scope.subNavList = !$scope.subNavList;
-    }
-
-
-
-  
+  }
+      
   $scope.pages = [
       {
         id: 0,
@@ -2162,23 +2236,7 @@ alert(id)
     }
     $scope.showNext(1);
 
-    $scope.delete = function (index) {
-      console.log("Delete called")
-      var confirmPopup = $ionicPopup.confirm({
-        title: 'Delete exercise',
-        template: 'Are you sure you want to delete this exercise ?'
-      });
-
-      confirmPopup.then(function (res) {
-        if (res) {
-          console.log("delete")
-          $scope.exerciseList.splice(index, 1);
-        } else {
-          console.log("cancel")
-        }
-      });
-    }
-
+   
 
       
      $scope.sortedByList = sortedByList;

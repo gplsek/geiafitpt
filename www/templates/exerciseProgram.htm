@@ -30,11 +30,12 @@
 	    <div class="sortedBy text-center">
 	      <p><small>Sorted By:</small></p>
 	     
-	      <select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select>
+	      <select ng-options="item.id as item.title for item in exerciseSortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select>
 	       
 	    </div>
 		<ul class="exerciseList">
-			<li ng-repeat="item in exerciseList" class="gieafitListItem group" ui-sref="setExerciseProgram(
+			<li ng-repeat="item in exerciseList" class="gieafitListItem group" >
+			<div ui-sref="setExerciseProgram(
        {
 peid: item.peid,
 title: item.title,
@@ -61,9 +62,8 @@ mov: item.mov,
 thumb1: item.thumb1,
 thumb2: item.thumb2
 }
-        )">
-				<span class="pull-left"><span class="marginR5">{{$index+1}}.</span><span>{{item.title}}</span></span>
-				<span class="pull-right trash-icon" ng-click="delete($index)">
+        )">	<span class="pull-left"><span class="marginR5">{{$index+1}}.</span><span>{{item.title}}</span></span> </div>
+				<span class="pull-right trash-icon" ng-click="delete(item.peid,$index)">
 					<span class="pos-rel">
 						<i class="icon ion-ios-trash-outline" ></i>
 						<!-- <i class="icon ion-ios-close-outline"></i> -->

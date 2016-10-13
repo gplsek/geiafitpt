@@ -450,6 +450,27 @@ angular.module('geiaFitApp')
   }])
 
 
+ .service('ExerciseProgramService', ['$rootScope', '$http', 'ApiEndpoint', function ($rootScope, $http, ApiEndpoint) {
+
+    var getExerciseList = function () {
+
+      var exerciseData = $http({
+        method: "GET",
+        url: ApiEndpoint.url + "/ptexlib/" + $rootScope.loggedInUserUid
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      });
+      return exerciseData;
+    }
+
+    return {
+      exerciseData: getExerciseList
+    }
+
+  }])
+
   .service('ExerciseLibraryService', ['$rootScope', '$http', 'ApiEndpoint', function ($rootScope, $http, ApiEndpoint) {
 
     var getExerciseList = function () {
