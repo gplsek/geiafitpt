@@ -733,8 +733,6 @@ $scope.title = 'Add Custom Exercise';
         var message = document.getElementById('confirmMessage');
 
         var badColor = "#ff6666";
-        //Compare the values in the password field 
-        //and the confirmation field
         if (password.value == confirmPassword.value) {
           message.style.color = '';
           message.innerHTML = ''
@@ -745,28 +743,61 @@ $scope.title = 'Add Custom Exercise';
         }
       }  
 
+      $scope.checkAmount = function(){
+        var amount = document.getElementById('amount');
+        var message =  document.getElementById('amountMessage');
+
+        var data = parseFloat(amount.value)
+        var badColor = "#ff6666";
+        if(data < 0 || data > 10000){
+          message.style.color = badColor;
+          message.innerHTML = "Plase enter valid amount!"
+        }
+        else{
+          message.style.color = '';
+          message.innerHTML = ''
+        }
+      }
+
       $scope.addPatient = function (data) {
+
+        var amount = parseFloat(data.amount)
+        $scope.data.amount = Math.round(amount/100)*100
+        console.log($scope.data.amount)
+
+        var validAmount = false;
+        if(data.amount < 0 || data.amount > 10000){
+          validAmount = false
+        }
+        else{
+          validAmount = true
+        }
 
         if (!(Object.keys(data).length === 0 && data.constructor === Object)) {
           if (checkEmail(data.email)) {
             if (checkPass(data.password, data.confirmPassword)) {
-              console.log($scope.data)
-              AppService.addPatient($scope.data).then(
-                function (success) {
-                  console.log(success)
-                  var successMessage = success.data.message
-                  if (successMessage) {
-                    Flash.showFlash({ type: 'error', message: successMessage });
-                  }
-                  else {
-                    $scope.data = {};
-                    Flash.showFlash({ type: 'success', message: "Success !" });
-                    $state.go('main.dash', {}, { reload: true });
-                  }
-                },
-                function (error) {
-                  console.log(error)
-                });
+              if (validAmount) {
+                console.log($scope.data)
+                AppService.addPatient($scope.data).then(
+                  function (success) {
+                    console.log(success)
+                    var successMessage = success.data.message
+                    if (successMessage) {
+                      Flash.showFlash({ type: 'error', message: successMessage });
+                    }
+                    else {
+                      $scope.data = {};
+                      Flash.showFlash({ type: 'success', message: "Success !" });
+                      $state.go('main.dash', {}, { reload: true });
+                    }
+                  },
+                  function (error) {
+                    console.log(error)
+                  });
+              }
+              else {
+                Flash.showFlash({ type: 'error', message: "Please enter valid Subscription Amount!" });
+              }
             }
             else {
               Flash.showFlash({ type: 'error', message: "ConfirmPassword is not valid !" });

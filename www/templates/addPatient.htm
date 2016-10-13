@@ -48,7 +48,9 @@
                     <label>Enter Monthly Subscription Amount</label>
                     <div class="input-group group">
                         <i class="icon ion-social-usd input-group-btn"></i>
-                        <input type="text" placeholder="$0.00" class="form-control form-group-select input-group-field" name="amount" ng-model="data.amount">
+                        <input type="text" placeholder="$0.00" class="form-control form-group-select input-group-field" 
+							name="amount" id="amount" ng-model="data.amount" ng-blur="checkAmount()">
+						<span id="amountMessage" class="amountMessage"></span>
                     </div>
 				</div>
 				<button type="submit" class="btn-yellow-low-margin" ng-disabled="myForm.$invalid">
