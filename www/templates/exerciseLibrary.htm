@@ -22,14 +22,16 @@
 </div>
 </div>
 <div ng-show="exerciseView">
-
-<div class="sortedBy text-center">
-<p>
-<small for="repeatSelect">Sorted By:</small>
+<p class="text-center">
+<small >Sorted By:</small>
 </p>
-<select name="repeatSelect" id="repeatSelect" ng-model="data.model">
-<option ng-repeat="option in data.availableOptions" align="center" value="{{option.id}}">{{option.name}}</option>
-</select>
+<div class="sortedBy text-center">
+<input type="button" class="itemdropdown" ng-click="showList();" value="{{title}}"/>
+<ion-list ng-show="subNavList" class="ddlistitems">
+  <ion-item ng-repeat="option in data.availableOptions" ng-click="doSort(option.id,'myE')"/> 
+    <h2>{{option.name}}</h2>
+  </ion-item>
+</ion-list>
 </div>
 		
 		
@@ -41,8 +43,13 @@
 	    </div>-->
 		<ul class="exerciseList">
 			<!--<li ng-repeat="item in exerciseList" class="gieafitListItem group">-->
-				<li ng-repeat="item in filteredExerciseList = (exerciseList | filter: filterPatient)" class="gieafitListItem group">
-				<span class="pull-left"><span class="marginR5">{{item.id}}</span><span>{{item.title}}</span></span>
+				<!--<li ng-repeat="item in filteredExerciseList = (arrayList | filter: filterPatient | orderBy: sortType : sortOrder)" class="gieafitListItem group">-->
+				<li ng-repeat="item in filteredExerciseList = (myExerciseList | filter:{title : filterPatient} )" class="gieafitListItem group">
+				<span class="pull-left">
+					<span class="marginR5">{{item.id}}</span>
+					<span>{{item.title}}&nbsp;&nbsp; :</span>
+					<i><span>{{item.tags[0]}}&nbsp;{{item.tags[1]}}&nbsp;{{item.tags[2]}}</span></i>
+				</span>
 				<span class="pull-right trash-icon" ng-click="delete($index)">
 					<span class="pos-rel">
 						<i class="icon ion-ios-trash-outline" ></i>
@@ -52,24 +59,31 @@
 			</li>
 		</ul>
 		
-		<section class="pagination">
+		<!--<section class="pagination">
 			<select ng-model="selectedPage" ng-options="page.id as page.title for page in pages" class="customSelect" ng-change="showNext(selectedPage + 1)"></select>
 			<span class="pull-right next" ng-click="showNext(selectedPage + 2)">Next <i class="icon ion-chevron-right"></i></span>
-		</section>
+		</section>-->
 		<p ng-hide="filteredExerciseList.length" class="noResult text-center">No Matching Records!</p>
 </div>
 <!--WebExercise view-->
 
 <div ng-show="webExView">
 
-
-<div class="sortedBy text-center">
-<p>
+<p class="text-center">
 <small for="repeatSelect">Sorted By:</small>
 </p>
-<select name="repeatSelect" id="repeatSelect" ng-model="data.model">
+<div class="sortedBy text-center">
+<!--<select name="repeatSelect" id="repeatSelect" ng-model="data.model">
 <option ng-repeat="option in data.availableOptions" align="center" value="{{option.id}}">{{option.name}}</option>
-</select>
+</select>-->
+
+<input type="button" class="itemdropdown" ng-click="showList();" value="{{title}}"/>
+<ion-list ng-show="subNavList" class="ddlistitems">
+  <ion-item ng-repeat="option in data.availableOptions" ng-click="doSort(option.id,'webE')" ng-class="{{option.show}} ? 'asd' : 'bsd' "/> 
+	  <!--ng-click="gotoAction(item.id)-->
+    <h2>{{option.name}}</h2>
+  </ion-item>
+</ion-list>
 </div>
 		
 		
@@ -81,8 +95,13 @@
 	    </div>-->
 		<ul class="exerciseList">
 			<!--<li ng-repeat="item in webExercise" class="gieafitListItem group">-->
-				<li ng-repeat="item in filteredWebExList = ( webExercise | filter: filterPatient)" class="gieafitListItem group">
-				<span class="pull-left"><span class="marginR5">{{item.id}}</span><span>{{item.title}}</span></span>
+				<!--<li ng-repeat="item in filteredWebExList = ( webExercise | filter: filterPatient | orderBy: sortType : sortOrder)" class="gieafitListItem group">-->
+				<li ng-repeat="item in filteredWebExList = (webExercise | filter:{title : filterPatient} )" class="gieafitListItem group">
+				<span class="pull-left">
+					<span class="marginR5">{{item.id}}</span>
+					<span>{{item.title}} :</span>
+					<i><span>{{item.tags[0]}}&nbsp;{{item.tags[1]}}&nbsp;{{item.tags[2]}}</span></i>
+				</span>
 				<span class="pull-right trash-icon" ng-click="delete($index)">
 					<span class="pos-rel">
 						<i class="icon ion-ios-trash-outline" ></i>
@@ -92,10 +111,10 @@
 			</li>
 		</ul>
 		
-		<section class="pagination">
+		<!--<section class="pagination">
 			<select ng-model="selectedPage" ng-options="page.id as page.title for page in webExPages" class="customSelect" ng-change="showNext(selectedPage,1)"></select>
 			<span class="pull-right next" ng-click="showNext(selectedPage + 1,2)" ng-show="selectedPage != webExercisePages">Next <i class="icon ion-chevron-right"></i></span>
-		</section>
+		</section>-->
 
 </div>	
 
