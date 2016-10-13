@@ -962,12 +962,141 @@ angular.module('geiaFitApp')
       $scope.subNavList = !$scope.subNavList;
     }
 
-    $scope.doSort = function (id) {
-      alert(id)
-    }
+    $scope.sortType = 'title'; // set the default sort type
+    $scope.sortReverse = false;  // set the default sort order
+    $scope.searchName = '';     // set the default search/filter term
+    $scope.sortOrder = false;
 
-    init = function () {
 
+ function compare(a,b) {
+  if (a.title < b.title)
+    return -1;
+  if (a.title > b.title)
+    return 1;
+  return 0;
+}
+
+$scope.sortByGroup = function(categoryName,exerciseType) {
+  var categoryArrayList = [];
+  var nonCatArrayList = [];
+  var result = [];
+  var data = [];
+   if(exerciseType == "myE"){
+              data = $scope.myExerciseList;
+          }else if(exerciseType = "webE"){
+            data = $scope.webExercise;
+          }
+      
+  angular.forEach(data, function(value, key) {
+            var flag = false;
+            if(angular.isArray(value.categories) && value.categories.length > 0) {
+              for(var index=0; index<value.categories.length; index++) {
+                if(value.categories[index] == categoryName) {
+                  flag = true;
+                  break;
+                }
+              } 
+            }
+            if(flag == true) {
+              categoryArrayList.push(value);
+            } else {
+              nonCatArrayList.push(value);
+            }
+          });
+          categoryArrayList.sort(compare);
+          nonCatArrayList.sort(compare);
+          if(exerciseType == "myE"){
+              $scope.myExerciseList = categoryArrayList.concat(nonCatArrayList);
+              console.log($scope.myExerciseList);
+          }else if(exerciseType = "webE"){
+              $scope.webExercise = categoryArrayList.concat(nonCatArrayList);
+              console.log($scope.webExercise);
+          }
+          
+          
+}
+
+
+ $scope.doSort=function(id,service){
+      switch(id) {
+        case "1":
+          $scope.sortByGroup("title",service)
+          $scope.title = 'Exercise Name'
+          break;
+        case "2":
+          $scope.title = 'Category'
+          break;
+        case "3":
+        $scope.title = 'Upper Extremity';
+        break;
+        case "4":
+        $scope.title = 'Shoulder'
+        $scope.sortByGroup("shoulder",service)
+        break;
+        case "5":
+        $scope.title = 'Elbow'
+        $scope.sortByGroup("elbow",service)
+        break;
+        case "6":
+        $scope.title = 'Wrist'
+        $scope.sortByGroup("wrist",service)
+        break;
+        case "7":
+        $scope.title = 'Hand'
+        $scope.sortByGroup("hand",service)
+        break;
+        case "8":
+        $scope.title = 'Lower Extremity'
+        break;
+        case "9":
+        $scope.title = 'Hip'
+        $scope.sortByGroup("hip",service)
+        break;
+        case "10":
+        $scope.title = 'Knee'
+        $scope.sortByGroup("knee",service)
+        break;
+        case "11":
+        $scope.title = 'Foot'
+        $scope.sortByGroup("foot",service)
+        break;
+        default:
+          $scope.sortType = 'title';
+          $scope.sortOrder = true;
+          break;
+      }
+ $scope.subNavList = false;
+ }
+
+ setTags = function(data){
+var tag = [];
+if(data.length >= 3){
+  console.log(3)
+  tag[0]= data[0];
+  tag[1]= data[1];
+  tag[2]= data[2];
+}else
+   if(data.length == 2){
+     console.log(2)
+     tag[0] = data[0];
+     tag[1] = data[1];
+     tag[2] = "";
+   }else if(data.length == 1){
+     console.log(2)
+     tag[0] = data[0];
+     tag[1] = ""
+     tag[2] = "";
+   }else if(data.length == 0){
+     console.log(1)
+     tag[0] = "";
+     tag[1] = ""
+     tag[2] = "";
+   }
+   return tag;
+ }
+ 
+    init = function(){
+      
       $scope.sortedByList = sortedByList;
       $scope.sortedBy = $scope.sortedByList[0].id;
       $scope.selectedTab = 'My Exercises';
@@ -977,22 +1106,27 @@ angular.module('geiaFitApp')
 
 
 
-      var myExerciseList = [];
+      var myExerList = [];
       var webExerciseList = [];
       var exerciseList = ExerciseLibraryService.exerciseData().then(function (success) {
         var exerciseData = success;
         for (i in exerciseData.exercises) {
           if (exerciseData.exercises[i].webex == '1') {
+            exerciseData.exercises[i]['tags']=setTags(exerciseData.exercises[i].categories)
             webExerciseList.push(exerciseData.exercises[i]);
+    
           }
           else {
-            myExerciseList.push(exerciseData.exercises[i]);
+            exerciseData.exercises[i]['tags']=setTags(exerciseData.exercises[i].categories)
+            myExerList.push(exerciseData.exercises[i]);
+            
           }
         }
-        $scope.exerciseList = myExerciseList
 
+        $scope.myExerciseList = myExerList
         $scope.webExercise = webExerciseList
-        $scope.tempWebExList = webExerciseList;
+        $scope.doSort("1",'myE');
+        console.log(myExerList)
         console.log(webExerciseList)
 
         var myExercisePages = Math.ceil(myExerciseList.length / pageSize);
@@ -1018,10 +1152,9 @@ angular.module('geiaFitApp')
         }
 
 
-        $scope.selectedPage = $scope.pages[0].id;
-        $scope.showNext(1);
+        // $scope.selectedPage = $scope.pages[0].id;
+        // $scope.showNext(1);
       }, function (error) {
-
 
       })
 
@@ -1041,130 +1174,44 @@ angular.module('geiaFitApp')
           $scope.webExView = false;
           $scope.exerciseView = true;
 
+          $scope.doSort("1",'myE');
+          
           break;
         case 2:
           $scope.selectedTab = 'WebEx Exercises';
           $scope.webExView = true;
           $scope.exerciseView = false;
 
+          $scope.doSort("1",'webE');
+          
           break;
         default:
           $scope.selectedTab = 'My Exercises';
           $scope.exerciseView = true;
 
+          $scope.doSort("1",'myE');
+          
       }
 
     }
-
 
     $scope.data = {
       model: null,
       availableOptions: [
 
-        { id: '1', name: 'Exercise Name' },
-        { id: '2', name: 'Category' },
-        { id: '3', name: 'Upper Extremity' },
-        { id: '4', name: 'Shoulder' },
-        { id: '5', name: 'Elbow' },
-        { id: '6', name: 'Wrist' },
-        { id: '7', name: 'Hand' },
-        { id: '8', name: 'Lower Extemity' },
-        { id: '9', name: 'Hip' },
-        { id: '10', name: 'Knee' },
-        { id: '11', name: 'Foot' }
+        { id: '1', name: 'Exercise Name',show : 'true' },
+        { id: '2', name: 'Category', show : 'false'},
+        { id: '3', name: 'Upper Extremity', show : 'false' },
+        { id: '4', name: 'Shoulder', show : 'true' },
+        { id: '5', name: 'Elbow', show : 'true' },
+        { id: '6', name: 'Wrist', show : 'true' },
+        { id: '7', name: 'Hand', show : 'true' },
+        { id: '8', name: 'Lower Extemity', show : 'false' },
+        { id: '9', name: 'Hip', show : 'true' },
+        { id: '10', name: 'Knee', show : 'true' },
+        { id: '11', name: 'Foot', show : 'true' }
       ]
     };
-
-
-
-
-    var exerciseList = [
-      {
-        id: 0,
-        title: "Exercise 1"
-      },
-      {
-        id: 1,
-        title: "Exercise 2"
-      },
-      {
-        id: 2,
-        title: "Exercise 3"
-      },
-      {
-        id: 3,
-        title: "Exercise 4"
-      },
-      {
-        id: 4,
-        title: "Exercise 5"
-      },
-      {
-        id: 5,
-        title: "Exercise 6"
-      },
-      {
-        id: 6,
-        title: "Exercise 7"
-      },
-      {
-        id: 7,
-        title: "Exercise 8"
-      },
-      {
-        id: 8,
-        title: "Exercise 9"
-      },
-      {
-        id: 9,
-        title: "Exercise 10"
-      },
-      {
-        id: 10,
-        title: "Exercise 11"
-      }
-    ];
-
-
-    $scope.pages = [
-      {
-        id: 0,
-        title: "Page 1"
-      },
-      {
-        id: 1,
-        title: "Page 2"
-      },
-      {
-        id: 2,
-        title: "Page 3"
-      },
-      {
-        id: 3,
-        title: "Page 4"
-      },
-      {
-        id: 4,
-        title: "Page 5"
-      }
-    ];
-
-    $scope.selectedPage = $scope.pages[0].id;
-
-    $scope.showNext = function (pageNo, flag) {
-      var list = angular.copy($scope.tempWebExList);
-      var offset = (pageNo - 1) * pageSize;
-      $scope.webExercise = list.splice(offset, pageSize);
-      if (flag == 1) {
-        $scope.selectedPage = $scope.webExPages[pageNo - 1].id;
-      } else {
-        $scope.selectedPage = $scope.selectedPage + 1;
-      }
-
-      console.log($scope.selectedPage)
-      console.log($scope.webExercisePages)
-    }
-
 
     $scope.delete = function (index) {
       console.log("Delete called")
