@@ -22,8 +22,8 @@ angular.module('geiaFitApp')
 
     function storeUserCredentials(token, isChecked) {
 
-      // window.localStorage.setItem('LOCAL_TOKEN_KEY', token);
-      // window.localStorage.setItem('KEEP_SIGNED_IN', isChecked);
+       localStorage.setItem('LOCAL_TOKEN_KEY', token);
+       localStorage.setItem('KEEP_SIGNED_IN', isChecked);
       useCredentials(token);
     }
 
@@ -52,7 +52,7 @@ angular.module('geiaFitApp')
       username = '';
       isAuthenticated = false;
       $http.defaults.headers.common['X-Auth-Token'] = undefined;
-      window.localStorage.removeItem(LOCAL_TOKEN_KEY);
+      localStorage.removeItem('LOCAL_TOKEN_KEY');
     }
 
     var login = function (name, pw, isChecked) {
@@ -62,16 +62,16 @@ angular.module('geiaFitApp')
       }
       form = JSON.stringify(form);
       //$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+      if(localStorage.getItem('LOCAL_TOKEN_KEY') != null){
+        logout();
+      }
       var promise = $http({
         method: "POST",
         url: ApiEndpoint.url + '/user/login',
         data: form
       }).then(function (response) {
-        console.log("Store Use Credentials called");
-        storeUserCredentials(name + response.data.token, isChecked);
-        console.log(response);
         var token = response.data.token
-        console.log(token);
+        storeUserCredentials(token, isChecked);
         $rootScope.token = token;
         $rootScope.loggedInUserUid = response.data.user.uid;
         console.log("UID " + $rootScope.loggedInUserUid);
@@ -90,10 +90,12 @@ angular.module('geiaFitApp')
     };
 
     var logout = function () {
-      destroyUserCredentials();
+      var logoutToken = localStorage.getItem(('LOCAL_TOKEN_KEY'))
+      destroyUserCredentials()
       return $http({
         headers: {
-          'X-CSRF-Token': $rootScope.token,
+          //'X-CSRF-Token': $rootScope.token,
+          'X-CSRF-Token': logoutToken,
           'Access-Control-Allow-Origin': '*'
         },
         method: 'POST',
@@ -162,6 +164,10 @@ angular.module('geiaFitApp')
       var uid = $rootScope.loggedInUserUid;
       var createPatientURL = ApiEndpoint.url + "/profile/createpatient/" + uid
       var req = {
+        headers: {
+          'X-CSRF-Token': $rootScope.token,
+          'Access-Control-Allow-Origin': '*'
+        },
         method: 'POST',
         url: createPatientURL,
         data: request_params
@@ -172,9 +178,23 @@ angular.module('geiaFitApp')
 
     var getActivity = function (uid) {
       console.log(uid)
+      $rootScope.UID = uid ;
       var prom = $http({
         method: "GET",
         url: ApiEndpoint.url + '/log/activity/' + uid
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      })
+      return prom;
+    }
+
+    var getHealthPoint = function (uid) {
+      console.log(uid)
+      var prom = $http({
+        method: "GET",
+        url: ApiEndpoint.url + '/log/health_points/' + uid
       }).then(function (response) {
         return response.data;
       }, function (err) {
@@ -196,8 +216,9 @@ angular.module('geiaFitApp')
       return prom;
     }
 
-
+ 
     var getProfile = function (uid) {
+      $rootScope.patientId = uid;
       var prom = $http({
         method: "GET",
         url: ApiEndpoint.url + '/profile/' + uid
@@ -271,6 +292,7 @@ angular.module('geiaFitApp')
     return {
       patientsData: getPatientsData,
       getActivity: getActivity,
+      getHealthPoint : getHealthPoint,
       getVitals: getVitals,
       addPatient: addPatient,
       profile: getProfile,
@@ -294,6 +316,7 @@ angular.module('geiaFitApp')
         console.log(err);
       });
       return profileData;
+
     }
 
     var uploadProfileImage = function (params) {
@@ -306,6 +329,7 @@ angular.module('geiaFitApp')
         return response.data;
       }, function (err) {
         console.log(err);
+
       });
       return ProfileImage;
     }
@@ -318,34 +342,37 @@ angular.module('geiaFitApp')
   }])
   .service('ChatApp', ['$rootScope', '$http', 'ApiEndpoint', function ($rootScope, $http, ApiEndpoint) {
 
-    var uid = $rootScope.loggedInUserUid;
-    var getUserMessages = function (userId) {
+
+ var uid = $rootScope.loggedInUserUid;
+   var getUserMessages = function(userId,ptid){
 
       var messageData = $http({
-        method: "GET",
-        url: ApiEndpoint.url + "/messages/" + userId + "/000000"
-      }).then(function (response) {
-        return response.data;
-      }, function (err) {
-        console.log(err);
+        method: "GET", 
+        url: ApiEndpoint.url +"/ptmessages/"+ptid+"/"+userId+"/000000"
+      }).then(function(response){
+         return response.data;
+      }, function(err){
+          console.log(err);
       });
       return messageData;
 
     }
 
-    var sendPatientMessage = function (message, userId) {
-      alert("sendPatientMessage");
 
-      var messageData = $http({
-        headers: {
-          'X-CSRF-Token': $rootScope.token,
-          'Access-Control-Allow-Origin': '*'
-        },
-        method: "PUT",
-        url: ApiEndpoint.url + "/messages/" + userId,
+   var sendPatientMessage = function(message,userId,ptid){
+  //   alert("sendPatientMessage");
+
+    var messageData = $http({
+      headers: {
+                'X-CSRF-Token': $rootScope.token,
+                'Access-Control-Allow-Origin': '*'
+              },
+        method: "POST", 
+        url: ApiEndpoint.url + "/ptmessages/"+ptid+"/"+userId,
+
         data: message,
       }).then(function (response) {
-        alert("SERVICE SUCCESS" + JSON.stringify(response.data));
+       // alert("SERVICE SUCCESS" + JSON.stringify(response.data));
         return response.data;
       }, function (err) {
         alert("SERVICE ERROR" + JSON.stringify(err.data));
@@ -363,6 +390,86 @@ angular.module('geiaFitApp')
 
   }])
 
+.service('SetExerciseProgramService', ['$rootScope', '$http', 'ApiEndpoint', function ($rootScope, $http, ApiEndpoint) {
+ console.log("SetExerciseProgramService"+$rootScope.patientId);
+    var getExerciseList = function (pid) {
+
+      var exerciseData = $http({
+        method: "GET",
+        url:  ApiEndpoint.url +"/webex/"+pid
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      });
+      return exerciseData;
+    }
+
+ var deleteExercise = function (ptId,exId) {
+      var deleteExercise = $http({
+          headers: {
+                'X-CSRF-Token': $rootScope.token,
+                'Access-Control-Allow-Origin': '*'
+              },
+        method: "DELETE",
+        url:  ApiEndpoint.url +"/webex/"+ptId+"/"+exId
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      });
+      return deleteExercise;
+    }
+    var saveExercise = function(exercise,ptId)
+    {
+       var exerciseData = $http({
+      headers: {
+                'X-CSRF-Token': $rootScope.token,
+                'Access-Control-Allow-Origin': '*'
+              },
+        method: "PUT", 
+        url: ApiEndpoint.url +"/webex/"+$rootScope.patientId,
+    data: exercise,
+      }).then(function (response) {
+      //  alert("SERVICE SUCCESS" + JSON.stringify(response.data));
+        return response.data;
+      }, function (err) {
+        alert("SERVICE ERROR" + JSON.stringify(err.data));
+        console.log(err);
+      });
+      return exerciseData;
+    }
+
+    return {
+      listOfExercise: getExerciseList,
+      saveExercise : saveExercise,
+      deleteExercise : deleteExercise
+
+    }
+
+  }])
+
+
+ .service('ExerciseProgramService', ['$rootScope', '$http', 'ApiEndpoint', function ($rootScope, $http, ApiEndpoint) {
+
+    var getExerciseList = function () {
+
+      var exerciseData = $http({
+        method: "GET",
+        url: ApiEndpoint.url + "/ptexlib/" + $rootScope.loggedInUserUid
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      });
+      return exerciseData;
+    }
+
+    return {
+      exerciseData: getExerciseList
+    }
+
+  }])
 
   .service('ExerciseLibraryService', ['$rootScope', '$http', 'ApiEndpoint', function ($rootScope, $http, ApiEndpoint) {
 

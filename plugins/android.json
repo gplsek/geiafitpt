@@ -13,6 +13,12 @@
         "cordova-plugin-device": {
             "PACKAGE_NAME": "com.ionicframework.geiafit309210"
         },
+        "cordova-plugin-media-capture": {
+            "PACKAGE_NAME": "com.ionicframework.geiafit309210"
+        },
+        "cordova-plugin-photokandy-video-thumbnail": {
+            "PACKAGE_NAME": "com.ionicframework.geiafit309210"
+        },
         "cordova-plugin-splashscreen": {
             "PACKAGE_NAME": "com.ionicframework.geiafit309210"
         },
@@ -23,12 +29,6 @@
             "PACKAGE_NAME": "com.ionicframework.geiafit309210"
         },
         "ionic-plugin-keyboard": {
-            "PACKAGE_NAME": "com.ionicframework.geiafit309210"
-        },
-        "cordova-plugin-photokandy-video-thumbnail": {
-            "PACKAGE_NAME": "com.ionicframework.geiafit309210"
-        },
-        "cordova-plugin-media-capture": {
             "PACKAGE_NAME": "com.ionicframework.geiafit309210"
         }
     },

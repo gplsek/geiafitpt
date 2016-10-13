@@ -3,9 +3,10 @@
     <ion-nav-bar class="group">
         <ion-nav-buttons side="left">
             <span class="icon ion-ios-arrow-back" ng-click="back()"></span>
-            <div class="title title-center header-item" ng-click="gotoHome()">{{patientProfile.name}}</div>
+            <div class="title title-center header-item" ng-click="gotoHome()">{{patientName}}</div>
         </ion-nav-buttons>
     </ion-nav-bar>
+    
  
     <div class="loader-center" ng-if="!doneLoading">
             <div class="loader">
@@ -14,10 +15,26 @@
     </div>
       
     <ion-content  delegate-handle="userMessageScroll">
+
+        <!--code For Navigation starts-->
+ <div class="sortedBySmall text-center">
+            <!--<select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select>-->
+            <input type="button" class="itemdropdown" ng-click="showList();" value="{{title}}"/>
+<ion-list ng-show="subNavList" class="ddlistitems">
+  <ion-item ng-repeat="item in sortedByList" ng-click="gotoAction(item.id)">
+    <h2>{{item.title}}</h2>
+  </ion-item>
+</ion-list>
+        </div>
+	
+        <!--code for Navigation Ends-->
+
+
+
               <div ng-repeat="message in messages" class="message-wrapper"
                   on-hold="onMessageHold($event, $index, message)">
       
-                  <div ng-if="user._id !== message.uid2">
+                  <div ng-if="user._id !== message.uid1">
                       
                      <span class="dateposted">{{message.timestamp * 1000 |  date:'MMM d, y h:mm a'}}</span>
                      
@@ -34,7 +51,7 @@
                       </div>
                   </div>
       
-                  <div ng-if="user._id === message.uid2">
+                  <div ng-if="user._id === message.uid1">
                     
                      <span class="dateposted">{{message.timestamp * 1000 |  date:'EEE MMM d, y h:mm a'}}</span>
                          <div>

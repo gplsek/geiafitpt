@@ -1,104 +1,120 @@
 <ion-view class="setExerciseView" name="set-exercise-view">
-  <ion-nav-bar class="group">
-    <ion-nav-buttons side="left">
-        <span class="icon ion-close-round closePatient" ng-click="closePatient()"></span>  
-      <div class="title title-center header-item" ng-click="gotoExerciseProgram()">{{patientData}}</div>       
-    </ion-nav-buttons>
-    <ion-nav-buttons side="right">
-      <span class="icon ion-ios-trash-outline deletePatient" ng-click="deletePatient()"></span>   
-      <!--<span ng-hide="true" class="icon ion-ios-trash-outline deletePatient" ng-click="saveExercise()"  ></span>-->
-    </ion-nav-buttons>
-  </ion-nav-bar>
- 
-    
-  <ion-content>
-    	<div class="sortedBy text-center">
-		    <!--<select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy"></select> -->
-            <input type="button" class="itemdropdown" ng-click="showList();" value="{{title}}"/>
-<ion-list ng-show="subNavList" class="ddlistitems">
-  <ion-item ng-repeat="item in sortedByList" ng-click="gotoAction(item.id)">
-    <h2>{{item.title}}</h2>
-  </ion-item>
-</ion-list>
+	<ion-nav-bar class="group">
+		<ion-nav-buttons side="left">
+			<span class="icon ion-close-round closePatient" ng-click="closePatient()"></span>
+			<div class="title title-center header-item" ng-click="gotoExerciseProgram()">{{patientData}}</div>
+		</ion-nav-buttons>
+		<ion-nav-buttons side="right">
+			<span class="icon ion-ios-trash-outline deletePatient" ng-click="deleteExercise()"></span>
+			<!--<span ng-hide="true" class="icon ion-ios-trash-outline deletePatient" ng-click="saveExercise()"  ></span>-->
+		</ion-nav-buttons>
+	</ion-nav-bar>
+
+
+
+	<ion-content>
+		<div class="sortedBy text-center">
+			<!--<select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy"></select> -->
+			<input type="button" class="itemdropdown" ng-click="showList();" value="{{title}}" />
+			<ion-list ng-show="subNavList" class="ddlistitems">
+				<ion-item ng-repeat="item in sortedByList" ng-click="gotoAction(item.id)">
+					<h2>{{item.title}}</h2>
+				</ion-item>
+			</ion-list>
 		</div>
+
 		<section class="main">
 			<div class="active group">
 				<span class="pull-left exerciseName" ng-hide="edit">{{exerciseprogram.title}}</span>
-         <div  class = "col col-30" ng-hide="submit">
-            	      <label class="expiry">Exercise Name
+				<div class="col col-30" ng-hide="submit">
+					<label class="expiry">Exercise Name
                              <input type="text"  ng-model="exerciseprogram.title"></label>
-          </div>
+				</div>
 				<span class=" pull-right switch-wrapper">
-					<span class="pull-left">Active: <span class="onoff on">ON</span></span> 
-					<div class="switch">
-					  <input type="checkbox">
-					  <label></label>
-					</div>
-					<span class="onoff off">OFF</span>  
+					<span class="pull-left">Active: <span class="onoff on">ON</span></span>
+				<div class="switch">
+					<input type="checkbox">
+					<label></label>
+				</div>
+				<span class="onoff off">OFF</span>
 				</span>
 			</div>
 			<div class="video-container">
-                <iframe src="https://www.youtube.com/embed/rdzS43Pff1w" frameborder="0"></iframe>
-      </div>
-		
-    	<div class="exerciseSchedule">
-				
+				<!--<iframe src="https://www.youtube.com/embed/rdzS43Pff1w" frameborder="0"></iframe>-->
+
+				<div class="list">
+					<div class="item item-divider">
+						<i class="ion-videocamera"></i> Current clip
+					</div>
+					<img ng-src="{{urlForClipThumb(clip)}}" ng-click="showClip(clip)" style="height: 250px; width: 150px;" />
+				</div>
+				<div class="button-bar">
+					<button class="button button-positive" ng-click="captureVideo()">
+			  Capture a video
+		  </button>
+				</div>
 			</div>
-            <div class="row"> 
-                        <!--<div  class = "col col-30">
+
+			<div class="exerciseSchedule">
+
+			</div>
+			<div class="row">
+				<!--<div  class = "col col-30">
             	      <label class="expiry">Reps
                              <input type="text"  placeholder="DD/YY" ng-model="exerciseprogram.reps"></label>
                       </div>-->
-                      <div  class="dailySteps col col-30">
-                        <label class="expiry">Reps</label>
-                        <select class="exerciseProgram_customSelect" ng-options="item for item in stepsList"  ng-model="selectedReps" ng-change="setReps(selectedReps)"></select>
-                    </div>
-                      <!--<div class = "col col-30">
+				<div class="dailySteps col col-30">
+					<label class="expiry">Reps</label>
+					<select class="exerciseProgram_customSelect " ng-options="item for item in stepsList" ng-model="selectedReps" ng-change="setReps(selectedReps)"
+						ng-disabled="submit"></select>
+				</div>
+				<!--<div class = "col col-30">
                       <label>Sets
                            <input type="text" placeholder="00000" ng-model="exerciseprogram.sets"></label>
                       </div>-->
-                      <div  class="dailySteps col col-30">
-                        <label class="expiry">Sets</label>
-                        <select class="exerciseProgram_customSelect" ng-options="item for item in repsSet"  ng-model="selectedSet" ng-change="setSets(selectedSet)"></select>
-                    </div>
-                    
-                     <!--<div class="col col-30">
+				<div class="dailySteps col col-30">
+					<label class="expiry">Sets</label>
+					<select class="exerciseProgram_customSelect" ng-options="item for item in repsSet" ng-model="selectedSet" ng-change="setSets(selectedSet)"
+						ng-disabled="submit"></select>
+				</div>
+
+				<!--<div class="col col-30">
                      <label>TimesDaily
                          <input type="text"  placeholder="000" ng-model="exerciseprogram.daily"></label>
                      </div>-->
 
-                     <div  class="dailySteps col col-30">
-                        <label class="expiry">TimesDaily</label>
-                        <select class="exerciseProgram_customSelect" ng-options="item for item in repsDaily"  ng-model="selectedDaily" ng-change="setDaily(selectedDaily)"></select>
-                    </div>
-                     </div>
-           
-          
-            <label>Weekly</label> 
-       <div class="row">
-               <div class = "col"><button ng-model="exerciseprogram.weekly.mon"
-            ng-class="exerciseprogram.weekly.mon == 1 ? 'active_button' : 'deactive_button'"  ng-click="enableButtonMon()">MO</button></div>
-               <div class = "col"><button ng-model="exerciseprogram.weekly.tue" 
-             ng-class="exerciseprogram.weekly.tue == 1 ? 'active_button' : 'deactive_button'" ng-click="enableButtonTue()">TU</button></div>
-               <div class = "col"><button  ng-model="exerciseprogram.weekly.wed"
-             ng-class="exerciseprogram.weekly.wed == 1 ? 'active_button' : 'deactive_button'" ng-click="enableButtonWed()" >WE</button></div>
-               <div class = "col"><button  ng-model="exerciseprogram.weekly.thu"
-             ng-class="exerciseprogram.weekly.thu == 1 ? 'active_button' : 'deactive_button'" ng-click="enableButtonThu()">TH</button></div>
-               <div class = "col"><button  ng-model="exerciseprogram.weekly.fri"
-            ng-class="exerciseprogram.weekly.fri == 1 ? 'active_button' : 'deactive_button'" ng-click="enableButtonFri()">FR</button></div>
-               <div class = "col"><button  ng-model="exerciseprogram.weekly.sat"
-              ng-class="exerciseprogram.weekly.sat == 1 ? 'active_button' : 'deactive_button'" ng-click="enableButtonSat()">SA</button></div>
-               <div class = "col"><button  ng-model="exerciseprogram.weekly.sun"
-              ng-class="exerciseprogram.weekly.sun == 1 ? 'active_button' : 'deactive_button'" ng-click="enableButtonSun()">SU</button></div>
-            </div>
-            <div>
-					<p>Comments/Instructions</p>
-					<textarea placeholder="Be Safe when doing this exercise" ng-model="exerciseprogram.comments"></textarea>
+				<div class="dailySteps col col-30">
+					<label class="expiry">TimesDaily</label>
+					<select class="exerciseProgram_customSelect" ng-options="item for item in repsDaily" ng-model="selectedDaily" ng-change="setDaily(selectedDaily)"
+						ng-disabled="submit"></select>
 				</div>
+			</div>
 
-        <span ng-hide="submit"><button id="button1" class="button button-block btn-yellow" ng-click="saveExercise()">Submit</button></span>
-         <span ng-hide="edit"><button id="button1" class="button button-block btn-yellow" ng-click="editExercise()">Edit</button></span>
+
+			<label>Weekly</label>
+			<div class="row">
+				<div class="col"><button ng-model="exerciseprogram.weekly.mon" ng-class="exerciseprogram.weekly.mon == 1 ? 'active_button' : 'deactive_button'"
+						ng-click="enableButtonMon()" ng-disabled="submit">MO</button></div>
+				<div class="col"><button ng-model="exerciseprogram.weekly.tue" ng-class="exerciseprogram.weekly.tue == 1 ? 'active_button' : 'deactive_button'"
+						ng-click="enableButtonTue()" ng-disabled="submit">TU</button></div>
+				<div class="col"><button ng-model="exerciseprogram.weekly.wed" ng-class="exerciseprogram.weekly.wed == 1 ? 'active_button' : 'deactive_button'"
+						ng-click="enableButtonWed()" ng-disabled="submit">WE</button></div>
+				<div class="col"><button ng-model="exerciseprogram.weekly.thu" ng-class="exerciseprogram.weekly.thu == 1 ? 'active_button' : 'deactive_button'"
+						ng-click="enableButtonThu()" ng-disabled="submit">TH</button></div>
+				<div class="col"><button ng-model="exerciseprogram.weekly.fri" ng-class="exerciseprogram.weekly.fri == 1 ? 'active_button' : 'deactive_button'"
+						ng-click="enableButtonFri()" ng-disabled="submit">FR</button></div>
+				<div class="col"><button ng-model="exerciseprogram.weekly.sat" ng-class="exerciseprogram.weekly.sat == 1 ? 'active_button' : 'deactive_button'"
+						ng-click="enableButtonSat()" ng-disabled="submit">SA</button></div>
+				<div class="col"><button ng-model="exerciseprogram.weekly.sun" ng-class="exerciseprogram.weekly.sun == 1 ? 'active_button' : 'deactive_button'"
+						ng-click="enableButtonSun()" ng-disabled="submit">SU</button></div>
+			</div>
+			<div>
+				<p>Comments/Instructions</p>
+				<textarea placeholder="Be Safe when doing this exercise" ng-model="exerciseprogram.comments" ng-disabled="submit"> </textarea>
+			</div>
+
+			<span ng-hide="submit"><button id="button1" class="button button-block btn-yellow" ng-click="saveExercise()">Submit</button></span>
+			<span ng-hide="edit"><button id="button1" class="button button-block btn-yellow" ng-click="editExercise()">Edit</button></span>
 		</section>
-  </ion-content>
+	</ion-content>
 </ion-view>
-  
