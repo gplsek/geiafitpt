@@ -2161,12 +2161,33 @@ alert(id)
     ];
 
   $scope.exerciseSortedByList = exerciseSortedByList;
-  $scope.sortedBy = $scope.exerciseSortedByList[0].id;
+  $scope.sortedBy = $scope.exerciseSortedByList[0].title;
 
   $scope.showListSortList = function () 
   {
       $scope.sortList = !$scope.sortList;
   }
+
+   $scope.sortPatients = function () 
+  {
+      $scope.sortList = !$scope.sortList;
+  }
+
+  //  $scope.sortedByList = sortedByList;
+  //   //  $scope.sortedBy =  $scope.sortedByList[0].id;
+  //     function getStateTitle(id){
+  //       var title = '';
+  //       var list = $scope.sortedByList;
+  //       for(var i = 0; i < list.length; i++){
+  //         if(id == list[i].id){
+  //           title = list[i].routingStateName;
+  //           return title;
+  //         }
+  //       }
+  //     }
+
+
+
  //This function is use to delete exercise belong to a patient.
   $scope.delete = function (peid,index) 
   {
@@ -2203,32 +2224,32 @@ alert(id)
   }
 
  $scope.sortExercises = function (sortType) {
-      // switch (sortType) {
-      //   case 0:
-      //     $scope.sortType = 'fname';
-      //     $scope.sortOrder = false;
-      //     $scope.title = 'Name'
-      //     break;
-      //   case 1:
-      //     $scope.sortType = 'emotion';
-      //     $scope.sortOrder = true;
-      //     $scope.title = 'Emotion Level'
-      //     break;
-      //   case 2:
-      //   $scope.title = 'New Message',
-      //   $scope.sortType = 'unread_messages';
-      //   $scope.sortOrder = true;
-      //   break;
-      //   case 3:
-      //   $scope.title = 'New Activity'
-      //   $scope.sortType = 'activity';
-      //   $scope.sortOrder = true;
-      //   break;
-      //   default:
-      //     $scope.sortType = 'unread_messages';
-      //     $scope.sortOrder = true;
-      //     break;
-      // }
+      switch (sortType) {
+        case 0:
+          $scope.sortType = 'fname';
+          $scope.sortOrder = false;
+          $scope.title = 'Name'
+          break;
+        case 1:
+          $scope.sortType = 'emotion';
+          $scope.sortOrder = true;
+          $scope.title = 'Emotion Level'
+          break;
+        case 2:
+        $scope.title = 'New Message',
+        $scope.sortType = 'unread_messages';
+        $scope.sortOrder = true;
+        break;
+        case 3:
+        $scope.title = 'New Activity'
+        $scope.sortType = 'activity';
+        $scope.sortOrder = true;
+        break;
+        default:
+          $scope.sortType = 'unread_messages';
+          $scope.sortOrder = true;
+          break;
+      }
       $scope.subNavList = false;
     }
 
@@ -2237,18 +2258,7 @@ alert(id)
       $scope.subNavList = !$scope.subNavList;
   }
             
-     $scope.sortedByList = sortedByList;
-    //  $scope.sortedBy =  $scope.sortedByList[0].id;
-      function getStateTitle(id){
-        var title = '';
-        var list = $scope.sortedByList;
-        for(var i = 0; i < list.length; i++){
-          if(id == list[i].id){
-            title = list[i].routingStateName;
-            return title;
-          }
-        }
-      }
+    
         
       $scope.gotoAction = function (id) {
         if (id == 2) {

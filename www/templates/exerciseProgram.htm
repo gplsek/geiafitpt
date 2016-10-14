@@ -29,9 +29,6 @@
 		</div>
 		<div class="sortedBy text-center">
 			<p><small >Sorted By:</small></p>
-
-			<!--<select ng-options="item.id as item.title for item in exerciseSortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select>-->
-
 			<input type="button" class="itemdropdown" ng-click="showListSortList();" value="{{sortedBy}}" />
 			<ion-list ng-show="sortList" class="ddlistitems">
 				<ion-item ng-repeat="item in exerciseSortedByList" ng-model="sortedBy" ng-click="sortPatients({{item.id}})">
