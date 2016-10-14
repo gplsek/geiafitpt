@@ -7838,6 +7838,10 @@ select[readonly] {
   background-color: #f8f8f8;
   cursor: not-allowed; }
 
+ select[disabled] {background: url(../img/arrow_down_white.png) 95% 55% no-repeat #22282C;
+     background-size: 16px;
+     }
+
 input[type="radio"][disabled],
 input[type="checkbox"][disabled],
 input[type="radio"][readonly],
@@ -10149,7 +10153,11 @@ ion-header-bar {
   ion-header-bar .ion-navicon:before {
     font-size: 34px; }
 
-.buttons-left .title{ margin-top:20px}
+
+/*.buttons-left .title{ margin-top:20px}*/
+
+.platform-ios .buttons-left .title{ margin-top:20px}
+
 
 .form-group {
   margin-bottom: 25px; }
@@ -10186,6 +10194,19 @@ ion-header-bar {
   height: 50px;
   border: 0; }
   .btn-yellow h1 {
+    text-align: center;
+    font-size: 18px;
+    line-height: 50px;
+    font-weight: 500; }
+  .btn-yellow-low-margin {
+      background: #F8A938;
+      width: 100%;
+      margin: 0 auto;
+      border-radius: 22px;
+      margin-top: 20px;
+      height: 50px;
+      border: 0; }
+      .btn-yellow-low-margin h1 {
     text-align: center;
     font-size: 18px;
     line-height: 50px;
@@ -10253,7 +10274,7 @@ ion-header-bar {
     appearance: none;
     background: url("../img/arrow_down_white.png") 95% 55% no-repeat #121516;
     background-size: 16px;
-    max-height: 200px;
+    max-height: 40px;
     font-size: 15px;
     font-weight: 600;
     padding: 5px; }
@@ -10277,7 +10298,7 @@ ion-header-bar {
     font-size: 15px;
     font-weight: 600;
     padding: 5px; }
-
+.dashboardView .sortedBy { height:100px;}
 .search {
   background: #2A2C2D;
   color: #fff;
@@ -11006,13 +11027,14 @@ color: black !important;
 border:1.5px solid grey !important;
 }
 .vitalBox {
-    border:1px solid #23282C;
-    border-style:inset;
+    border-bottom:1px solid #000000;
+    border-right:1px solid #000000;
+/*    border-style:inset;*/
 }
 .vitalBoxAlt {
-    border-bottom:1px solid #23282C;
+    border-bottom:1px solid #000000;
 }
-.col-50.vitalBox .vitalsBP {
+.col-50.vitalBoxAlt .vitalsBP {
     text-align:center; 
     width:45%!important; 
     display:inline-block;
@@ -11287,4 +11309,3 @@ height:40px;
     margin-top:130px;
 background-color: black !important;
 }
-
