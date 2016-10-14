@@ -1,16 +1,16 @@
 <ion-view class="vitals">
   <ion-nav-bar class="group">
-		<ion-nav-buttons side="left">
-			<span class="icon ion-ios-arrow-back" ng-click="back()"></span>
+    <ion-nav-buttons side="left">
+      <span class="icon ion-ios-arrow-back" ng-click="back()"></span>
       <!--<div class="title title-center header-item" ng-click="gotoHome()">{{patientProfile.name}}</div>-->
       <div class="title title-center header-item" ng-click="gotoHome()">{{patientName}}</div>
-		</ion-nav-buttons>
+    </ion-nav-buttons>
   </ion-nav-bar>
   
    <ion-content>
         <div class="sortedBy text-center">
-		    <!--<select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select> -->
-		     <!--temp code-->
+        <!--<select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select> -->
+         <!--temp code-->
             <input type="button" class="itemdropdown" ng-click="showList();" value="{{title}}"/>
             <ion-list ng-show="subNavList" class="ddlistitems">
               <ion-item ng-repeat="item in sortedByList" ng-click="gotoAction(item.id)">
@@ -19,13 +19,13 @@
             </ion-list>
             <!--temp code-->
         </div>
-		
-		<section class="main">
-			<ul class="selectionTab">
-				<li ng-class="{'active': selectedView == 'Today'}" ng-click="changeView(1)">Today</li>
-				<li ng-class="{'active': selectedView == 'Week'}" ng-click="changeView(2)">Week</li>
-				<li ng-class="{'active': selectedView == 'Month'}" ng-click="changeView(3)">Month</li>
-			</ul>
+    
+    <section class="main">
+      <ul class="selectionTab">
+        <li ng-class="{'active': selectedView == 'Today'}" ng-click="changeView(1)">Today</li>
+        <li ng-class="{'active': selectedView == 'Week'}" ng-click="changeView(2)">Week</li>
+        <li ng-class="{'active': selectedView == 'Month'}" ng-click="changeView(3)">Month</li>
+      </ul>
         </section>
 
    

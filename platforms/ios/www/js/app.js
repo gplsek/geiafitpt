@@ -32,6 +32,8 @@ angular.module('geiaFitApp', ['ionic', 'rzModule','ngCordova','highcharts-ng','n
       show: false
     };
     $rootScope.loggedInUserUid = '';
+    $rootScope.patientId = '';
+    $rootScope.patientName ='';
   });
 })
 // .run(function($httpBackend){
@@ -375,4 +377,4 @@ templateUrl:'templates/addSnapshot.htm'
 
 jQuery(document).ready(function($){
   $('#multi-select').dropdown({allowAdditions: true});
-       })
+})

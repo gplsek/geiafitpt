@@ -1,88 +1,83 @@
 <ion-view class="dashboardView" view-title="Patients" name="dashboard-view">
-  <ion-nav-bar class="group">
-    <ion-nav-buttons side="left">
-      <div class="circle-add-patient" ui-sref="addPatient">
-        <span>
-          <i class="button icon ion-android-add addPatient" aria-hidden="true"></i>
-        </span>        
-      </div>
-    </ion-nav-buttons>
-    <ion-nav-buttons side="right">
-      <a menu-toggle="right" class="icon ion-navicon btn-navicon"></a>
-    </ion-nav-buttons>
-
-  </ion-nav-bar>
- 
-    
-  <ion-content>
-    <div class="search">
-      <input type="text" placeholder="Search" ng-model="searchPatient" />
-      <span class="icon ion-ios-search-strong pull-right"></span>
-    </div>
-<p class="text-center"><small>Sorted By:</small></p>
-    <div class="sortedBy text-center"> 
-      <!--<select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy" ng-change="sortPatients(sortedBy)"></select>-->
-       
-            <input type="button" class="itemdropdown" ng-click="showList();" value="{{title}}"/>
-            <ion-list ng-show="subNavList" class="ddlistitems">
-            <ion-item ng-repeat="item in sortedByList" ng-model="sortedBy" ng-click="sortPatients({{item.id}})">
-            <h2>{{item.title}}</h2>
-            </ion-item>
-</ion-list>
-
-    </div>
-    <ul class="patientList">
-      <li ng-repeat="item in filteredList = (patientList | filter: searchPatient | orderBy: sortType : sortOrder)" >
-        <div class="group">
-          <div class="col-xs-1">
-            <span class="activityDot" ng-show="isActiveToday(item.vitals_entered) || item.unread_messages > 0"></span>
-            <span class="paddedEle" ng-hide="isActiveToday(item.vitals_entered) || item.unread_messages > 0"></span>
-          </div>
-          <div class="col-xs-5" ui-sref="activity(
-        {
-          uid: item.uid,
-          name: item.fname + ' ' +  item.lname,
-          age: '',
-          gender: '',
-          email: '',
-          profile_url: '',
-          low: item.low,
-          medium: item.medium,
-          high: item.high
-        }
-        )">{{item.fname + ' ' +  item.lname}}</div>
-          <div class="col-xs-4">
-            <progress value={{item.emotion}} max="100">
-                <div class="progress-bar" role="progressbar" aria-valuenow="{{item.emotion}}"aria-valuemin="0" aria-valuemax="100">
-                    </div>
-            </progress>
-            <!--<meter value="{{item.emotion}}" min="0" max="100" low="25" high="75" optimum="80"></meter>-->
-          </div>
-          <div class="col-xs-2 text-center"  ui-sref="messages(
-        {
-          uid: item.uid,
-          name: item.fname + ' ' +  item.lname,
-          age: '',
-          gender: '',
-          email: '',
-          profile_url: '',
-          low: item.low,
-          medium: item.medium,
-          high: item.high
-        }
-        )" >
-            <div class="unread">
-              <span class="pos-rel icon ion-ios-email-outline" ng-class="{'shiftLeft': item.unread_messages == 0}"></span>
-              <div class="unreadCount" ng-if="item.unread_messages > 0">
-                <span>{{item.unread_messages}}</span>
-              </div>
+    <ion-nav-bar class="group">
+        <ion-nav-buttons side="left">
+            <div class="circle-add-patient" ui-sref="addPatient">
+                <span>
+                    <i class="button icon ion-android-add addPatient" aria-hidden="true"></i>
+                </span>
             </div>
+        </ion-nav-buttons>
+        <ion-nav-buttons side="right">
+            <a menu-toggle="right" class="icon ion-navicon btn-navicon"></a>
+        </ion-nav-buttons>
+        
+    </ion-nav-bar>
+    
+    
+    <ion-content>
+        <div class="search">
+            <input type="text" placeholder="Search" ng-model="searchPatient" />
+            <span class="icon ion-ios-search-strong pull-right"></span>
         </div>
-      </li>
-    </ul>
-    <p ng-hide="filteredList.length" class="noResult text-center">Nothing here!</p> 
-  </ion-content>
+        
+        <div class="sortedBy text-center">
+            <p class="text-center"><small>Sorted By:</small></p>
+            <input type="button" class="itemdropdown" ng-click="showList();" value="{{title}}" />
+            <ion-list ng-show="subNavList" class="ddlistitems">
+                <ion-item ng-repeat="item in sortedByList" ng-model="sortedBy" ng-click="sortPatients({{item.id}})">
+                    <h2>{{item.title}}</h2>
+                </ion-item>
+            </ion-list>
+        </div>
+        <ul class="patientList">
+            <li ng-repeat="item in filteredList = (patientList | filter: searchPatient | orderBy: sortType : sortOrder)">
+                <div class="group">
+                    <div class="col-xs-1">
+                        <span class="activityDot" ng-show="isActiveToday(item.vitals_entered) || item.unread_messages > 0"></span>
+                        <span class="paddedEle" ng-hide="isActiveToday(item.vitals_entered) || item.unread_messages > 0"></span>
+                    </div>
+                    <div class="col-xs-5" ui-sref="activity(
+                        {
+                        uid: item.uid,
+                        name: item.fname + ' ' +  item.lname,
+                        age: '',
+                        gender: '',
+                        email: '',
+                        profile_url: '',
+                        low: item.low,
+                        medium: item.medium,
+                        high: item.high
+                        }
+                        )">{{item.fname + ' ' + item.lname}}</div>
+                    <div class="col-xs-4">
+                        <progress value={{item.emotion}} max="100">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="{{item.emotion}}" aria-valuemin="0" aria-valuemax="100">
+                            </div>
+                        </progress>
+                        <!--<meter value="{{item.emotion}}" min="0" max="100" low="25" high="75" optimum="80"></meter>-->
+                    </div>
+                    <div class="col-xs-2 text-center" ui-sref="messages(
+                        {
+                        uid: item.uid,
+                        name: item.fname + ' ' +  item.lname,
+                        age: '',
+                        gender: '',
+                        email: '',
+                        profile_url: '',
+                        low: item.low,
+                        medium: item.medium,
+                        high: item.high
+                        }
+                        )">
+                        <div class="unread">
+                            <span class="pos-rel icon ion-ios-email-outline" ng-class="{'shiftLeft': item.unread_messages == 0}"></span>
+                            <div class="unreadCount" ng-if="item.unread_messages > 0">
+                                <span>{{item.unread_messages}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    </li>
+        </ul>
+        <p ng-hide="filteredList.length" class="noResult text-center">Nothing here!</p>
+    </ion-content>
 </ion-view>
-  
-
-  
