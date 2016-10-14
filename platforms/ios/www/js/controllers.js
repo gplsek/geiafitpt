@@ -873,7 +873,7 @@ angular.module('geiaFitApp')
         }
         else {
           message.style.color = badColor;
-          message.innerHTML = "Passwords Do Not Match!"
+          message.innerHTML = "Password & confirm password do not match!"
         }
       }
 
@@ -885,7 +885,7 @@ angular.module('geiaFitApp')
         var badColor = "#ff6666";
         if (data < 0 || data > 10000) {
           message.style.color = badColor;
-          message.innerHTML = "Plase enter valid amount!"
+          message.innerHTML = "Please enter an amount between 0 and 1000!"
         }
         else {
           message.style.color = '';
