@@ -1663,9 +1663,6 @@ if(data.length >= 3){
         startDate = moment(tempDate)
       }
       
-      for(var x in dateList){
-        console.log(dateList[x].date())
-      }
       return dateList;
     }
 
