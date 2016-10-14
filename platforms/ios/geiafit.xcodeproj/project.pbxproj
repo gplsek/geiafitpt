@@ -383,7 +383,7 @@
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "geiafit/geiafit-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = biz.wellnesslinks.GeiaFitPtApp;
+				PRODUCT_BUNDLE_IDENTIFIER = biz.wellnesslinks.GeiaFitApp;
 				PRODUCT_NAME = geiafit;
 			};
 			name = Debug;
@@ -406,7 +406,7 @@
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "geiafit/geiafit-Info.plist";
-				PRODUCT_BUNDLE_IDENTIFIER = biz.wellnesslinks.GeiaFitPtApp;
+				PRODUCT_BUNDLE_IDENTIFIER = biz.wellnesslinks.GeiaFitApp;
 				PRODUCT_NAME = geiafit;
 			};
 			name = Release;
