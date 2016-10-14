@@ -1,6 +1,6 @@
 angular.module('geiaFitApp')
 
-  .controller('AppCtrl',['$scope', '$state', '$ionicPopup', 'AuthService', 'AUTH_EVENTS','Flash', '$ionicHistory', function ($scope, $state, $ionicPopup, AuthService, AUTH_EVENTS,Flash, $ionicHistory) {
+  .controller('AppCtrl', ['$scope', '$state', '$ionicPopup', 'AuthService', 'AUTH_EVENTS', 'Flash', '$ionicHistory', function ($scope, $state, $ionicPopup, AuthService, AUTH_EVENTS, Flash, $ionicHistory) {
     $scope.username = AuthService.username();
 
     $scope.$on(AUTH_EVENTS.notAuthorized, function (event) {
@@ -13,7 +13,7 @@ angular.module('geiaFitApp')
 
     $scope.logout = function () {
       AuthService.logout().then(function () {
-         Flash.showFlash({ type: 'Logged out successfully', message: "Logged out successfully !" });
+        Flash.showFlash({ type: 'Logged out successfully', message: "Logged out successfully !" });
         $state.transitionTo('login', {}, { reload: true });
       }, function (err) {
         Flash.showFlash({ type: 'error', message: "Logout Failed !" });
@@ -56,10 +56,10 @@ angular.module('geiaFitApp')
 
   .controller('LoginCtrl', ['$scope', '$state', '$ionicPopup', 'AuthService', 'Flash', '$rootScope', function ($scope, $state, $ionicPopup, AuthService, Flash, $rootScope) {
 
-  $scope.data = {
-    email: "admin@geiafit.com",
-    password: "FitGeia1!"
-  };
+    $scope.data = {
+      email: "admin@geiafit.com",
+      password: "FitGeia1!"
+    };
 
     // function checkEmptyFields() {
     //   var isEmpty = false;
@@ -73,20 +73,20 @@ angular.module('geiaFitApp')
     //   return isEmpty;
     // }
 
-    function validateFields(data){
-      if(data.email == "" && data.password == ""){
-          Flash.showFlash({ type: 'error', message: "Please fill in all fields !" });
-          return false;
-        }
-      if(data.email == ""){
+    function validateFields(data) {
+      if (data.email == "" && data.password == "") {
+        Flash.showFlash({ type: 'error', message: "Please fill in all fields !" });
+        return false;
+      }
+      if (data.email == "") {
         Flash.showFlash({ type: 'error', message: "Please enter email address." });
-          return false;
+        return false;
       }
-      if(data.password == ""){
+      if (data.password == "") {
         Flash.showFlash({ type: 'error', message: "Please enter your password." });
-          return false;
+        return false;
       }
-       if(!checkEmail(data.email)){
+      if (!checkEmail(data.email)) {
         Flash.showFlash({ type: 'error', message: "Email is not valid !" });
         return false
       }
@@ -101,43 +101,43 @@ angular.module('geiaFitApp')
       return result;
     }
 
-    $scope.resetPassword = function(){
+    $scope.resetPassword = function () {
       alert($scope.data.email);
     }
 
     $scope.login = function () {
-    //   if (!(Object.keys(data).length === 0 && data.constructor === Object)) {
-    //     if (!checkEmptyFields()) {
-    //       // alert(data.email);
-    //       if (checkEmail(data.email)) {
-    //         AuthService.login(data.email, data.password, data.checked).then(function (authenticated) {
-    //           Flash.showFlash({ type: 'success', message: "Success !" });
-    //           $state.go('main.dash', {}, { reload: true });
-    //           $scope.setCurrentUsername(data.username);
-    //         }, function (err) {
-    //           Flash.showFlash({ type: 'error', message: "Login Failed !" });
-    //         });
-    //       } else {
-    //         Flash.showFlash({ type: 'error', message: "Email is not valid !" });
-    //       }
-    //     }
-    //     else {
-    //       Flash.showFlash({ type: 'error', message: "Please fill in all fields !" });
-    //     }
-    //   } else {
-    //     Flash.showFlash({ type: 'error', message: "Please fill in all fields !" });
-    //   }
-    // }
-if(validateFields($scope.data)){
-  AuthService.login($scope.data.email,$scope.data.password,$scope.data.checked).
-  then(function(authenticated){
-      Flash.showFlash({ type: 'success', message: "Success !" });
-      $state.go('main.dash', {}, { reload: true });
-      //$scope.setCurrentUsername(data.username);
-  },function(err){
-      Flash.showFlash({ type: 'error', message: "Login Failed !" });
-  })
-}
+      //   if (!(Object.keys(data).length === 0 && data.constructor === Object)) {
+      //     if (!checkEmptyFields()) {
+      //       // alert(data.email);
+      //       if (checkEmail(data.email)) {
+      //         AuthService.login(data.email, data.password, data.checked).then(function (authenticated) {
+      //           Flash.showFlash({ type: 'success', message: "Success !" });
+      //           $state.go('main.dash', {}, { reload: true });
+      //           $scope.setCurrentUsername(data.username);
+      //         }, function (err) {
+      //           Flash.showFlash({ type: 'error', message: "Login Failed !" });
+      //         });
+      //       } else {
+      //         Flash.showFlash({ type: 'error', message: "Email is not valid !" });
+      //       }
+      //     }
+      //     else {
+      //       Flash.showFlash({ type: 'error', message: "Please fill in all fields !" });
+      //     }
+      //   } else {
+      //     Flash.showFlash({ type: 'error', message: "Please fill in all fields !" });
+      //   }
+      // }
+      if (validateFields($scope.data)) {
+        AuthService.login($scope.data.email, $scope.data.password, $scope.data.checked).
+          then(function (authenticated) {
+            Flash.showFlash({ type: 'success', message: "Success !" });
+            $state.go('main.dash', {}, { reload: true });
+            //$scope.setCurrentUsername(data.username);
+          }, function (err) {
+            Flash.showFlash({ type: 'error', message: "Login Failed !" });
+          })
+      }
     }
     //   $scope.login = function(data) {
     //     $scope.data = {};
@@ -166,11 +166,11 @@ if(validateFields($scope.data)){
     //  if(keepsignedin){
     //    $state.go('main.dash');
     //  }
-$scope.title = 'Name';
- $scope.subNavList = false;
- $scope.showList = function(){
-   $scope.subNavList = !$scope.subNavList;
- }
+    $scope.title = 'Name';
+    $scope.subNavList = false;
+    $scope.showList = function () {
+      $scope.subNavList = !$scope.subNavList;
+    }
 
     $scope.sortType = 'fname'; // set the default sort type
     $scope.sortReverse = false;  // set the default sort order
@@ -208,13 +208,13 @@ $scope.title = 'Name';
 
     $scope.sortedBy = $scope.sortedByList[0].id;
 
-   // for loop to add activity field for sorting list as per activity
-    for(i in patientsData){
-      patientsData[i]['activity']=($scope.isActiveToday(patientsData[i].vitals_entered) || patientsData[i].unread_messages > 0)
+    // for loop to add activity field for sorting list as per activity
+    for (i in patientsData) {
+      patientsData[i]['activity'] = ($scope.isActiveToday(patientsData[i].vitals_entered) || patientsData[i].unread_messages > 0)
     }
     $scope.patientList = patientsData;
-    
-    
+
+
 
     //logout
     function getStateTitle(id) {
@@ -246,15 +246,15 @@ $scope.title = 'Name';
           $scope.title = 'Emotion Level'
           break;
         case 2:
-        $scope.title = 'New Message',
-        $scope.sortType = 'unread_messages';
-        $scope.sortOrder = true;
-        break;
+          $scope.title = 'New Message',
+            $scope.sortType = 'unread_messages';
+          $scope.sortOrder = true;
+          break;
         case 3:
-        $scope.title = 'New Activity'
-        $scope.sortType = 'activity';
-        $scope.sortOrder = true;
-        break;
+          $scope.title = 'New Activity'
+          $scope.sortType = 'activity';
+          $scope.sortOrder = true;
+          break;
         default:
           $scope.sortType = 'unread_messages';
           $scope.sortOrder = true;
@@ -274,16 +274,15 @@ $scope.title = 'Name';
     $scope.sortedByList = sortedByList;
     //$scope.sortedBy = $scope.sortedByList[2].id;
 
-$scope.title = 'Add Custom Exercise';
+    $scope.title = 'Add Custom Exercise';
 
- $scope.subNavList = false;
+    $scope.subNavList = false;
 
- $scope.showList = function(){
-   $scope.subNavList = !$scope.subNavList;
- }
+    $scope.showList = function () {
+      $scope.subNavList = !$scope.subNavList;
+    }
 
-    $scope.closePatient = function () 
-    {
+    $scope.closePatient = function () {
       $state.go('exerciseProgram');
     }
 
@@ -298,17 +297,17 @@ $scope.title = 'Add Custom Exercise';
         }
       }
     }
-        
-          $scope.gotoAction = function (id) {
-            if (id == 3) {
-              $scope.subNavList = false
-            } else {
-              var state = getStateTitle(id);
-              $state.transitionTo(state, { name: $stateParams.name, patientId: $stateParams.uid }, { reload: true });
-            }
-          }
 
-  
+    $scope.gotoAction = function (id) {
+      if (id == 3) {
+        $scope.subNavList = false
+      } else {
+        var state = getStateTitle(id);
+        $state.transitionTo(state, { name: $stateParams.name, patientId: $stateParams.uid }, { reload: true });
+      }
+    }
+
+
 
     $scope.exerciseprogram =
       {
@@ -415,18 +414,18 @@ $scope.title = 'Add Custom Exercise';
     $scope.setDaily = function (daily) {
       $scope.exerciseprogram.daily = daily;
     };
-    
+
     $scope.deleteExercise = function () {
-  
-    SetExerciseProgramService.deleteExercise($rootScope.loggedInUserUid,$scope.exerciseprogram.peid).then(function (success) {
-       alert("success" + JSON.stringify(success));
+
+      SetExerciseProgramService.deleteExercise($rootScope.loggedInUserUid, $scope.exerciseprogram.peid).then(function (success) {
+        alert("success" + JSON.stringify(success));
 
       }, function (error) {
 
       })
-     
+
     };
-    
+
     $scope.gotoExerciseProgram = function () {
       $state.transitionTo('exerciseProgram', {
         uid: $rootScope.patientId,
@@ -488,23 +487,24 @@ $scope.title = 'Add Custom Exercise';
 
 
     $scope.saveExercise = function () {
-     // alert("ex" + $scope.selectedReps);
-     var exercise= {
-      "peid": $scope.exerciseprogram.peid,
-      "title":$scope.exerciseprogram.title,
-      "comments": $scope.exerciseprogram.comments,
-      "reps": "" + $scope.exerciseprogram.reps,
-      "sets": "" + $scope.exerciseprogram.sets,
-      "daily": "" + $scope.exerciseprogram.daily,
-      "weekly": {
-        "sun": $scope.exerciseprogram.weekly.sun,
-        "mon": $scope.exerciseprogram.weekly.mon,
-        "tue": $scope.exerciseprogram.weekly.tue,
-        "wed": $scope.exerciseprogram.weekly.wed,
-        "thu": $scope.exerciseprogram.weekly.thu,
-        "fri": $scope.exerciseprogram.weekly.fri,
-        "sat": $scope.exerciseprogram.weekly.sat
-      }};
+      // alert("ex" + $scope.selectedReps);
+      var exercise = {
+        "peid": $scope.exerciseprogram.peid,
+        "title": $scope.exerciseprogram.title,
+        "comments": $scope.exerciseprogram.comments,
+        "reps": "" + $scope.exerciseprogram.reps,
+        "sets": "" + $scope.exerciseprogram.sets,
+        "daily": "" + $scope.exerciseprogram.daily,
+        "weekly": {
+          "sun": $scope.exerciseprogram.weekly.sun,
+          "mon": $scope.exerciseprogram.weekly.mon,
+          "tue": $scope.exerciseprogram.weekly.tue,
+          "wed": $scope.exerciseprogram.weekly.wed,
+          "thu": $scope.exerciseprogram.weekly.thu,
+          "fri": $scope.exerciseprogram.weekly.fri,
+          "sat": $scope.exerciseprogram.weekly.sat
+        }
+      };
       // var exercise = {
       //   "exid": $scope.exerciseprogram.peid,
       //   "title": $scope.exerciseprogram.title,
@@ -553,7 +553,7 @@ $scope.title = 'Add Custom Exercise';
       console.log("editEx" + JSON.stringify(exercise));
 
       SetExerciseProgramService.saveExercise(exercise, $scope.uid).then(function (success) {
-     //   alert("success" + JSON.stringify(success));
+        //   alert("success" + JSON.stringify(success));
 
       }, function (error) {
 
@@ -578,15 +578,15 @@ $scope.title = 'Add Custom Exercise';
      };*/
     $scope.patientData = $stateParams.name;
     $scope.sortedByList = sortedByList;
-   // $scope.sortedBy = $scope.sortedByList[1].id;
+    // $scope.sortedBy = $scope.sortedByList[1].id;
     $scope.threshold = threshold;
-       $scope.title = 'Set Activity Goals';
+    $scope.title = 'Set Activity Goals';
 
- $scope.subNavList = false;
+    $scope.subNavList = false;
 
- $scope.showList = function(){
-   $scope.subNavList = !$scope.subNavList;
- }
+    $scope.showList = function () {
+      $scope.subNavList = !$scope.subNavList;
+    }
 
     $scope.slider = {
       min: 40,
@@ -686,15 +686,15 @@ $scope.title = 'Add Custom Exercise';
     }
 
     $scope.gotoAction = function (id) {
-        if(id==1){
+      if (id == 1) {
         $scope.subNavList = false
-      }else{
-      var state = getStateTitle(id);
-      $state.transitionTo(state, {}, { reload: true });
+      } else {
+        var state = getStateTitle(id);
+        $state.transitionTo(state, {}, { reload: true });
       }
     }
 
-    init = function(){
+    init = function () {
       console.log($stateParams.patientId)
     }
     init();
@@ -776,24 +776,24 @@ $scope.title = 'Add Custom Exercise';
 
   .controller('ExerciseLibraryCtrl', ['$scope', 'sortedByList', '$ionicPopup', 'ExerciseLibraryService', function ($scope, sortedByList, $ionicPopup, ExerciseLibraryService) {
 
-  var pageSize = 10;
-  $scope.pages = [];
-  $scope.webExPages = [];
+    var pageSize = 10;
+    $scope.pages = [];
+    $scope.webExPages = [];
 
-  $scope.title = 'Exercise Name';
+    $scope.title = 'Exercise Name';
 
- $scope.subNavList = false;
+    $scope.subNavList = false;
 
- $scope.showList = function(){
-   $scope.subNavList = !$scope.subNavList;
- }
+    $scope.showList = function () {
+      $scope.subNavList = !$scope.subNavList;
+    }
 
- $scope.doSort=function(id){
-alert(id)
- }
- 
-    init = function(){
-      
+    $scope.doSort = function (id) {
+      alert(id)
+    }
+
+    init = function () {
+
       $scope.sortedByList = sortedByList;
       $scope.sortedBy = $scope.sortedByList[0].id;
       $scope.selectedTab = 'My Exercises';
@@ -801,7 +801,7 @@ alert(id)
       $scope.webExView = false;
       $scope.tempWebExList = "";
 
-      
+
 
       var myExerciseList = [];
       var webExerciseList = [];
@@ -816,37 +816,37 @@ alert(id)
           }
         }
         $scope.exerciseList = myExerciseList
-        
+
         $scope.webExercise = webExerciseList
         $scope.tempWebExList = webExerciseList;
         console.log(webExerciseList)
-        
+
         var myExercisePages = Math.ceil(myExerciseList.length / pageSize);
-        $scope.webExercisePages = Math.ceil(webExerciseList.length  / pageSize);
+        $scope.webExercisePages = Math.ceil(webExerciseList.length / pageSize);
 
-        console.log(myExerciseList.length +""+ myExercisePages);
-        console.log(webExerciseList.length +""+ $scope.webExercisePages);
+        console.log(myExerciseList.length + "" + myExercisePages);
+        console.log(webExerciseList.length + "" + $scope.webExercisePages);
 
-        for(i=0;i<myExercisePages;i++){
-            var page = {
-                id : i+1,
-                title : "page "+(i+1)
-              }
-              $scope.pages.push(page);
+        for (i = 0; i < myExercisePages; i++) {
+          var page = {
+            id: i + 1,
+            title: "page " + (i + 1)
+          }
+          $scope.pages.push(page);
         }
 
-        for(i=0;i<$scope.webExercisePages;i++){
-            var page = {
-                id : i+1,
-                title : "page "+(i+1)
-              }
-              $scope.webExPages.push(page);
+        for (i = 0; i < $scope.webExercisePages; i++) {
+          var page = {
+            id: i + 1,
+            title: "page " + (i + 1)
+          }
+          $scope.webExPages.push(page);
         }
 
 
         $scope.selectedPage = $scope.pages[0].id;
         $scope.showNext(1);
-      },function(error){
+      }, function (error) {
 
 
       })
@@ -854,8 +854,8 @@ alert(id)
     }
     init();
 
-    $scope.getFilteredData = function(){
-      
+    $scope.getFilteredData = function () {
+
     }
 
     // function to tab between MyExercise and Web Exercise.
@@ -866,18 +866,18 @@ alert(id)
           $scope.selectedTab = 'My Exercises';
           $scope.webExView = false;
           $scope.exerciseView = true;
-          
+
           break;
         case 2:
           $scope.selectedTab = 'WebEx Exercises';
           $scope.webExView = true;
           $scope.exerciseView = false;
-          
+
           break;
         default:
           $scope.selectedTab = 'My Exercises';
           $scope.exerciseView = true;
-          
+
       }
 
     }
@@ -977,20 +977,20 @@ alert(id)
 
     $scope.selectedPage = $scope.pages[0].id;
 
-    $scope.showNext = function (pageNo,flag) {
+    $scope.showNext = function (pageNo, flag) {
       var list = angular.copy($scope.tempWebExList);
       var offset = (pageNo - 1) * pageSize;
       $scope.webExercise = list.splice(offset, pageSize);
-      if(flag==1){
+      if (flag == 1) {
         $scope.selectedPage = $scope.webExPages[pageNo - 1].id;
-      }else{
-        $scope.selectedPage = $scope.selectedPage + 1; 
+      } else {
+        $scope.selectedPage = $scope.selectedPage + 1;
       }
-      
+
       console.log($scope.selectedPage)
       console.log($scope.webExercisePages)
     }
-    
+
 
     $scope.delete = function (index) {
       console.log("Delete called")
@@ -1007,7 +1007,7 @@ alert(id)
           console.log("cancel")
         }
       });
-   }
+    }
 
   }])
   .controller('AddExerciseCtrl', ['$scope', function ($scope) {
@@ -1051,28 +1051,28 @@ alert(id)
     // $scope.profile = profileData;
     $scope.editEnabled = false;
 
-    $scope.testFunction= function(file){
+    $scope.testFunction = function (file) {
       console.log(file)
       var fileReader = new FileReader();
       fileReader.readAsDataURL(file);
       fileReader.onload = function (e) {
-      var dataUrl = e.target.result;
-      var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
+        var dataUrl = e.target.result;
+        var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
 
-      var data = {
-        image_name : file.$ngfName, 
-        image : base64Data
-      }
+        var data = {
+          image_name: file.$ngfName,
+          image: base64Data
+        }
 
-        MyAccount.uploadImage(data).then(function(success){
+        MyAccount.uploadImage(data).then(function (success) {
           console.log(success)
-        },function(error){
+        }, function (error) {
           console.log(error)
         })
 
-    };
+      };
 
-//     //  $scope.src = "https://trip101.com/assets/default_profile_pic-9c5d869a996318867438aa3ccf9a9607daee021047c1088645fbdfbbed0e2aec.jpg"
+      //     //  $scope.src = "https://trip101.com/assets/default_profile_pic-9c5d869a996318867438aa3ccf9a9607daee021047c1088645fbdfbbed0e2aec.jpg"
     }
 
     $scope.setProfilePhoto = function () {
@@ -1135,9 +1135,9 @@ alert(id)
 
 
 
-  .controller('ActivityCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', '$rootScope','AppService', 'utilityService', function ($scope, $stateParams, sortedByList, $state, $rootScope,AppService, utilityService) {
-   $scope.DefaultView = true;
-  $rootScope.patientName = $stateParams.name;
+  .controller('ActivityCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', '$rootScope', 'AppService', 'utilityService', function ($scope, $stateParams, sortedByList, $state, $rootScope, AppService, utilityService) {
+    $scope.DefaultView = true;
+    $rootScope.patientName = $stateParams.name;
 
     var patientData;
     var ActivityData;
@@ -1165,7 +1165,7 @@ alert(id)
         var unixDate = successData[x].updated
         var newDate = moment.unix(unixDate).utcOffset('-07:00').format('L');
         var NnewDate = moment(newDate)
-      
+
         if (Ndate.diff(NnewDate) == 0) {
           activityDataForYesterday = successData[x];
         }
@@ -1203,35 +1203,35 @@ alert(id)
         var achieved = activityDataForYesterday.total_steps;
         $scope.DayStepsDone = achieved;
         $scope.DayStepsGoal = goal;
-        stepsPer = ( achieved/goal ) * 100;
+        stepsPer = (achieved / goal) * 100;
       }
       if (activityDataForYesterday.time_active_low != null && activityDataForYesterday.time_active_low_goal != null) {
         var goal = activityDataForYesterday.time_active_low_goal;
-        var achieved = activityDataForYesterday.time_active_low ;
+        var achieved = activityDataForYesterday.time_active_low;
         $scope.DayLowDone = achieved;
         $scope.DayLowGoal = goal;
-        lowPer = ( achieved/goal ) * 100;
+        lowPer = (achieved / goal) * 100;
       }
       if (activityDataForYesterday.time_active_medium != null && activityDataForYesterday.time_active_medium_goal != null) {
         var goal = activityDataForYesterday.time_active_medium_goal;
         var achieved = activityDataForYesterday.time_active_medium;
         $scope.DayMidDone = achieved;
         $scope.DayMidGoal = goal;
-        mediumPer = ( achieved/goal ) * 100;
+        mediumPer = (achieved / goal) * 100;
       }
       if (activityDataForYesterday.time_active_high != null && activityDataForYesterday.time_active_high_goal != null) {
         var goal = activityDataForYesterday.time_active_high_goal;
         var achieved = activityDataForYesterday.time_active_high;
         $scope.DayHighDone = achieved;
         $scope.DayHighGoal = goal;
-        highPer = ( achieved/goal ) * 100;
+        highPer = (achieved / goal) * 100;
       }
 
-      $scope.chartConfig = getChartConfigForDay(excPer, '#4299D1' , '#1F60A4' );
-      $scope.chartConfig1 = getChartConfigForDay(stepsPer,  '#4299D1' , '#1F60A4' );
-      $scope.chartConfig2 = getChartConfigForDay(lowPer,'#DDF6BC' , '#B8E986' );
-      $scope.chartConfig3 = getChartConfigForDay(mediumPer,'#00CBEF' , '#009CDB' );
-      $scope.chartConfig4 = getChartConfigForDay(highPer,'#4299D1' , '#1F60A4' );
+      $scope.chartConfig = getChartConfigForDay(excPer, '#4299D1', '#1F60A4');
+      $scope.chartConfig1 = getChartConfigForDay(stepsPer, '#4299D1', '#1F60A4');
+      $scope.chartConfig2 = getChartConfigForDay(lowPer, '#DDF6BC', '#B8E986');
+      $scope.chartConfig3 = getChartConfigForDay(mediumPer, '#00CBEF', '#009CDB');
+      $scope.chartConfig4 = getChartConfigForDay(highPer, '#4299D1', '#1F60A4');
     }
 
     getWeekDates = function () {
@@ -1282,11 +1282,11 @@ alert(id)
       var dataWeekModerate = [];
       var dataWeekVigorous = [];
 
-      var totalWeekExe =0;
-      var totalWeekSteps =0;
-      var totalWeekLow =0;
-      var totalWeekMid =0;
-      var totalWeekHigh =0;
+      var totalWeekExe = 0;
+      var totalWeekSteps = 0;
+      var totalWeekLow = 0;
+      var totalWeekMid = 0;
+      var totalWeekHigh = 0;
 
       var dates = getWeekDates();
 
@@ -1335,11 +1335,11 @@ alert(id)
               time_active_high = parseInt(temp.time_active_high)
             }
 
-             totalWeekExe = totalWeekExe + total_exercise;
-             totalWeekSteps = totalWeekSteps + total_steps;
-             totalWeekLow = totalWeekLow + time_active_low;
-             totalWeekMid = totalWeekMid + time_active_medium;
-             totalWeekHigh = totalWeekHigh + time_active_high;
+            totalWeekExe = totalWeekExe + total_exercise;
+            totalWeekSteps = totalWeekSteps + total_steps;
+            totalWeekLow = totalWeekLow + time_active_low;
+            totalWeekMid = totalWeekMid + time_active_medium;
+            totalWeekHigh = totalWeekHigh + time_active_high;
             break;
           }
         }
@@ -1369,7 +1369,7 @@ alert(id)
       $scope.chartConfigWeekViewHigh = getChartConfigForWeek(dataWeekVigorousGoal, dataWeekVigorous)
     }
 
-     getComplianceDataForWeek = function (successData) {
+    getComplianceDataForWeek = function (successData) {
       complianceDataForWeek = [];
       var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').startOf('day').format('L');
       var startDate = moment(TstartDate);
@@ -1441,24 +1441,24 @@ alert(id)
 
     getMonthFirstLastDates = function (date) {
       date = moment(date);
-     
+
       var TstartDate = date.utcOffset('-07:00').startOf('month').format('L');
       var startDate = moment(TstartDate);
 
-      var TendDate =  date.utcOffset('-07:00').endOf('month').format('L');
+      var TendDate = date.utcOffset('-07:00').endOf('month').format('L');
       var endDate = moment(TendDate);
 
       var dateList = [];
 
       dateList.push(startDate)
       dateList.push(endDate)
-  
+
       return dateList;
     }
 
     getActivityDataForMonth = function (successData, dateForView) {
       activityDataForMonth = [];
-      var dates; 
+      var dates;
       dates = getMonthFirstLastDates($scope.DATE);
       var startDate = dates[0]
       var endDate = dates[1]
@@ -1473,7 +1473,7 @@ alert(id)
       }
 
       chartConfigForMonth()
-    }    
+    }
 
     chartConfigForMonth = function () {
       var dataMonthExerciseGoal = [];
@@ -1488,15 +1488,15 @@ alert(id)
       var dataMonthModerate = [];
       var dataMonthVigorous = [];
 
-      var totalMonthExe =0;
-      var totalMonthSteps =0;
-      var totalMonthLow =0;
-      var totalMonthMid =0;
-      var totalMonthHigh =0;
+      var totalMonthExe = 0;
+      var totalMonthSteps = 0;
+      var totalMonthLow = 0;
+      var totalMonthMid = 0;
+      var totalMonthHigh = 0;
 
       var dates = getMonthDates($scope.DATE);
 
-      var onlyDates = [] 
+      var onlyDates = []
       for (var d in dates) {
         onlyDates.push(dates[d].date())
 
@@ -1520,11 +1520,11 @@ alert(id)
           /*if (tempDate.getFullYear() === dates[d].getFullYear() &&
             tempDate.getMonth() === dates[d].getMonth() &&
             tempDate.getDate() === dates[d].getDate()) {*/
-            if (date.diff(dates[d]) == 0) {
+          if (date.diff(dates[d]) == 0) {
 
             var temp = activityDataForMonth[x];
 
-             if (temp.total_exercise_goal != null && temp.total_exercise != null) {
+            if (temp.total_exercise_goal != null && temp.total_exercise != null) {
               total_exercise_goal = parseInt(temp.total_exercise_goal)
               total_exercise = parseInt(temp.total_exercise)
             }
@@ -1577,27 +1577,27 @@ alert(id)
       $scope.totalMonthLow = (totalMonthLow == null) ? 0 : totalMonthLow;
       $scope.totalMonthMid = (totalMonthMid == null) ? 0 : totalMonthMid;
       $scope.totalMonthHigh = (totalMonthHigh == null) ? 0 : totalMonthHigh;
-      $scope.lastDateOfMonth =  Math.max(...onlyDates);
+      $scope.lastDateOfMonth = Math.max(...onlyDates);
 
-       /*dataMonthExerciseGoal.reverse();
-       dataMonthStepsGoal.reverse();
-       dataMonthLightGoal.reverse();
-       dataMonthModerateGoal.reverse();
-       dataMonthVigorousGoal.reverse();
+      /*dataMonthExerciseGoal.reverse();
+      dataMonthStepsGoal.reverse();
+      dataMonthLightGoal.reverse();
+      dataMonthModerateGoal.reverse();
+      dataMonthVigorousGoal.reverse();
 
-       dataMonthExercise.reverse();
-       dataMonthSteps.reverse();
-       dataMonthLight.reverse();
-       dataMonthModerate.reverse();
-       dataMonthVigorous.reverse();
+      dataMonthExercise.reverse();
+      dataMonthSteps.reverse();
+      dataMonthLight.reverse();
+      dataMonthModerate.reverse();
+      dataMonthVigorous.reverse();
 
-       onlyDates.reverse();*/
+      onlyDates.reverse();*/
 
-      $scope.chartConfigMonthViewExercise = getChartConfigForMonth(dataMonthExerciseGoal, dataMonthExercise,onlyDates)
-      $scope.chartConfigMonthViewSteps = getChartConfigForMonth(dataMonthStepsGoal, dataMonthSteps,onlyDates)
-      $scope.chartConfigMonthViewLow = getChartConfigForMonth(dataMonthLightGoal, dataMonthLight,onlyDates)
-      $scope.chartConfigMonthViewMid = getChartConfigForMonth(dataMonthModerateGoal, dataMonthModerate,onlyDates)
-      $scope.chartConfigMonthViewHigh = getChartConfigForMonth(dataMonthVigorousGoal, dataMonthVigorous,onlyDates)
+      $scope.chartConfigMonthViewExercise = getChartConfigForMonth(dataMonthExerciseGoal, dataMonthExercise, onlyDates)
+      $scope.chartConfigMonthViewSteps = getChartConfigForMonth(dataMonthStepsGoal, dataMonthSteps, onlyDates)
+      $scope.chartConfigMonthViewLow = getChartConfigForMonth(dataMonthLightGoal, dataMonthLight, onlyDates)
+      $scope.chartConfigMonthViewMid = getChartConfigForMonth(dataMonthModerateGoal, dataMonthModerate, onlyDates)
+      $scope.chartConfigMonthViewHigh = getChartConfigForMonth(dataMonthVigorousGoal, dataMonthVigorous, onlyDates)
 
     }
 
@@ -1641,11 +1641,11 @@ alert(id)
           var unixDate = complianceDataForMonth[x].created
           var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
           var date = moment(Tdate)
-          
+
           /*if (tempDate.getFullYear() === dates[d].getFullYear() &&
             tempDate.getMonth() === dates[d].getMonth() &&
             tempDate.getDate() === dates[d].getDate()) {*/
-          if (date.diff(dates[d]) == 0) { 
+          if (date.diff(dates[d]) == 0) {
             var temp = complianceDataForMonth[x];
 
             if (temp.daily_challenge != null && temp.daily_points != null) {
@@ -1673,27 +1673,27 @@ alert(id)
 
 
 
-    $scope.prevDate = function(){
+    $scope.prevDate = function () {
       /*var d = $scope.DATE;
       var tempDate = new Date(d.getFullYear(), d.getMonth()-1,1)
       $scope.DATE = new Date(tempDate.getFullYear(), tempDate.getMonth() + 1, 0);*/
-      
+
       var Tdate = moment($scope.DATE);
       var tempDate = Tdate.utcOffset('-07:00').subtract(1, 'month').format();
       $scope.DATE = moment(tempDate).endOf('month').toDate();
       console.log($scope.DATE)
-      var x  = moment($scope.DATE)
+      var x = moment($scope.DATE)
       console.log(x)
-      console.log("Perv Selected "+$scope.DATE)
+      console.log("Perv Selected " + $scope.DATE)
 
-      getActivityDataForMonth(ActivityData,$scope.DATE)
-      getComplianceDataForMonth(complianceData,$scope.DATE) 
-      
+      getActivityDataForMonth(ActivityData, $scope.DATE)
+      getComplianceDataForMonth(complianceData, $scope.DATE)
+
       //chartConfigForMonth(); 
       //chartConfigForComplianceMonth();
     }
 
-    $scope.nextDate = function(){
+    $scope.nextDate = function () {
       /*var d = $scope.DATE;
       var tempDate = new Date(d.getFullYear(), d.getMonth()+1,1)
       $scope.DATE = new Date(tempDate.getFullYear(), tempDate.getMonth() + 1, 0);*/
@@ -1702,22 +1702,22 @@ alert(id)
       var tempDate = Tdate.utcOffset('-07:00').add(1, 'month').format();
       $scope.DATE = moment(tempDate).endOf('month').toDate();
 
-      console.log("Next Selected "+$scope.DATE)
-      
-      getActivityDataForMonth(ActivityData,$scope.DATE)
-      getComplianceDataForMonth(complianceData,$scope.DATE) 
-      
+      console.log("Next Selected " + $scope.DATE)
+
+      getActivityDataForMonth(ActivityData, $scope.DATE)
+      getComplianceDataForMonth(complianceData, $scope.DATE)
+
       //chartConfigForMonth();  
       //chartConfigForComplianceMonth();
     }
 
-     $scope.sortedByList = sortedByList;
+    $scope.sortedByList = sortedByList;
     $scope.sortedBy = $scope.sortedByList[0].id;
     //$scope.selectedView = 'day';
     //$scope.DayView = true;
 
     $scope.changeView = function (view) {
-      switch (view) { 
+      switch (view) {
         case 1:
           $scope.selectedView = 'day';
           //chartConfigForDay();
@@ -1746,7 +1746,7 @@ alert(id)
 
           /*var d = new Date();
           $scope.DATE = new Date(d.getFullYear(), d.getMonth() + 1, 0);*/
-          
+
           var Tdate = moment().utcOffset('-07:00').endOf("month").hours(0).minute(0).second(0).millisecond(0).format();
           $scope.DATE = moment(Tdate).toDate();
           console.log($scope.DATE)
@@ -1771,14 +1771,14 @@ alert(id)
     init = function () {
       /*var d = new Date();
       $scope.DATE = new Date(d.getFullYear(), d.getMonth() + 1, 0);*/
-      
+
       var Tdate = moment().utcOffset('-07:00').endOf("month").hours(0).minute(0).second(0).millisecond(0).format();
       $scope.DATE = moment(Tdate).toDate();
       console.log($scope.DATE)
-      
+
       $scope.HealthPoint = 0;
       var uid = $stateParams.uid;
-      if(uid == null){
+      if (uid == null) {
         uid = $rootScope.UID;
       }
       AppService.profile(uid).then(function (success) {
@@ -1810,13 +1810,13 @@ alert(id)
             gender = "N/A";
           }
         $scope.patientProfile = {
-          name: patientData.first_name +" "+patientData.last_name,
+          name: patientData.first_name + " " + patientData.last_name,
           age: age,
           gender: gender,
           email: patientData.email,
           url: imageUrl
         }
-        $rootScope.patientName = patientData.first_name +" "+patientData.last_name;
+        $rootScope.patientName = patientData.first_name + " " + patientData.last_name;
       }, function (error) {
       })
 
@@ -1838,34 +1838,34 @@ alert(id)
         var DailyHP = success.daily;
         var today = new Date();
         for (var x in DailyHP) {
-        var unixDate = DailyHP[x].created
-        var date = utilityService.unixTimeToDate(unixDate);
+          var unixDate = DailyHP[x].created
+          var date = utilityService.unixTimeToDate(unixDate);
 
-        if (date.getDate() == today.getDate() &&
+          if (date.getDate() == today.getDate() &&
             date.getMonth() == today.getMonth() &&
-            date.getFullYear() == today.getFullYear() ) {
-          $scope.HealthPoint = DailyHP[x].daily_points
+            date.getFullYear() == today.getFullYear()) {
+            $scope.HealthPoint = DailyHP[x].daily_points
+          }
         }
-      }
 
-      //getComplianceDataForWeek(complianceData);
-      getComplianceDataForMonth(complianceData,$scope.DATE) 
+        //getComplianceDataForWeek(complianceData);
+        getComplianceDataForMonth(complianceData, $scope.DATE)
 
       }, function (error) {
         console.log("getHealthPoint error")
       })
-      
-    //$scope.selectedView = 'day';
-    //$scope.DayView = true;
-    $scope.changeView(1);
+
+      //$scope.selectedView = 'day';
+      //$scope.DayView = true;
+      $scope.changeView(1);
     }
     init();
 
 
     function getChartConfigForDay(data, color1, color2) {
-        if(data > 999){
-                data = 999;
-        }
+      if (data > 999) {
+        data = 999;
+      }
       var chartConfig = {
         options: {
           chart: {
@@ -1884,68 +1884,68 @@ alert(id)
             enabled: false
           },
           pane: {
-                  startAngle: 0,
-                  endAngle: 360,
-                  size: '70%',
-                  background: [{ // Track for Move
-                          outerRadius: '123%',
-                          innerRadius: '77%',
-                          backgroundColor: Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0.3).get(),
-                          borderWidth: 0
-                  }]
+            startAngle: 0,
+            endAngle: 360,
+            size: '70%',
+            background: [{ // Track for Move
+              outerRadius: '123%',
+              innerRadius: '77%',
+              backgroundColor: Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0.3).get(),
+              borderWidth: 0
+            }]
           },
           plotOptions: {
-                  solidgauge: {
-                          borderWidth: '14%',
-                          dataLabels: {
-                                  enabled: true,
-                                  y: -20,
-                                  borderWidth: 0,
-                                  useHTML: true
-                          },
-                          linecap: 'round',
-                          stickyTracking: false
-                  }
+            solidgauge: {
+              borderWidth: '14%',
+              dataLabels: {
+                enabled: true,
+                y: -20,
+                borderWidth: 0,
+                useHTML: true
+              },
+              linecap: 'round',
+              stickyTracking: false
+            }
           },
         },
         yAxis: {
-            min: 0,
-            max: 100,
-            lineWidth: 0,
-            tickPositions: []
-          },
+          min: 0,
+          max: 100,
+          lineWidth: 0,
+          tickPositions: []
+        },
         series: [{
-                    name: 'Move',
-                    borderColor: {
-                        linearGradient: [0, 0, 500, 500],
-                        stops: [
-                            /*[0, 'rgb(66, 153, 209)'],
-                            [1, 'rgb(31, 96, 164)']*/
-                            [0, color1],
-                            [1, color2]
-                        ]
-                    },
-                    data: [{
-                        color: {
-                            linearGradient: [0, 60, 60, 500],
-                            stops: [
-                                /*[0, 'rgb(66, 153, 209)'],
-                                [1, 'rgb(31, 96, 164)']*/
-                                [0, color1],
-                                [1, color2]
-                            ]
-                        },
-                        radius: '100%',
-                        innerRadius: '100%',
-                        y: utilityService.round(data,1) // one number after decimal
-                    }],
-                    dataLabels: {
-                        format: '<div style="text-align:center"><span style="font-size:24px;font-weight:normal;color:' +
-                        ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'white') + '">{y}</span>' +
-                        '<span style="font-size:24px;color:white;font-weight:normal">%</span></div>'
-                    }
-                }],
-        
+          name: 'Move',
+          borderColor: {
+            linearGradient: [0, 0, 500, 500],
+            stops: [
+              /*[0, 'rgb(66, 153, 209)'],
+              [1, 'rgb(31, 96, 164)']*/
+              [0, color1],
+              [1, color2]
+            ]
+          },
+          data: [{
+            color: {
+              linearGradient: [0, 60, 60, 500],
+              stops: [
+                /*[0, 'rgb(66, 153, 209)'],
+                [1, 'rgb(31, 96, 164)']*/
+                [0, color1],
+                [1, color2]
+              ]
+            },
+            radius: '100%',
+            innerRadius: '100%',
+            y: utilityService.round(data, 1) // one number after decimal
+          }],
+          dataLabels: {
+            format: '<div style="text-align:center"><span style="font-size:24px;font-weight:normal;color:' +
+            ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'white') + '">{y}</span>' +
+            '<span style="font-size:24px;color:white;font-weight:normal">%</span></div>'
+          }
+        }],
+
         func: function (chart) {
         }
       };
@@ -1965,11 +1965,11 @@ alert(id)
       var date = startDate;
       var i = 0;
       while (date < endDate) {
-        if(i == 0){
-          dateList.push(monthNames[date.getMonth()]+" "+date.getDate())
+        if (i == 0) {
+          dateList.push(monthNames[date.getMonth()] + " " + date.getDate())
           i++;
         }
-        else{
+        else {
           dateList.push(date.getDate())
         }
         var tempDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1,
@@ -2005,7 +2005,7 @@ alert(id)
           },
           //Make the legend invisible.[footer series labels]
           legend: {
-            x: 9999, 
+            x: 9999,
             y: 9999
           },
         },
@@ -2020,16 +2020,16 @@ alert(id)
           },
         },
         series: [{
-                data: dataGoal,
-                color: "#F3A81B",
-                //color: color,
-                borderColor: 'transparent'
-        }, 
-        {
-                data: dataAchived,
-                color: "#009CDB",
-               borderColor: 'transparent'
-        }],
+          data: dataGoal,
+          color: "#F3A81B",
+          //color: color,
+          borderColor: 'transparent'
+        },
+          {
+            data: dataAchived,
+            color: "#009CDB",
+            borderColor: 'transparent'
+          }],
         func: function (chart) {
         }
 
@@ -2082,14 +2082,14 @@ alert(id)
           },
         },
         series: [{
-                data: dataGoal,
-                color: "#F3A81B",
-                borderColor: 'transparent'
+          data: dataGoal,
+          color: "#F3A81B",
+          borderColor: 'transparent'
         }, {
-                        data: dataAchived,
-                        color: "#009CDB",
-                        borderColor: 'transparent'
-                }],
+            data: dataAchived,
+            color: "#009CDB",
+            borderColor: 'transparent'
+          }],
         func: function (chart) {
         }
 
@@ -2111,33 +2111,32 @@ alert(id)
     }
 
     $scope.gotoAction = function (id) {
-      if(id==0){
+      if (id == 0) {
         $scope.subNavList = false
-      }else{
-      var state = getStateTitle(id);
+      } else {
+        var state = getStateTitle(id);
 
-      $state.transitionTo(state, { name: $stateParams.name , patientId :$stateParams.uid}, { reload: true });
+        $state.transitionTo(state, { name: $stateParams.name, patientId: $stateParams.uid }, { reload: true });
       }
-      
+
     }
 
   }])
 
 
 
-  .controller('ExerciseProgramCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', '$rootScope','$ionicPopup','SetExerciseProgramService', function ($scope, $stateParams, sortedByList, $state, $rootScope, $ionicPopup,SetExerciseProgramService) {
+  .controller('ExerciseProgramCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', '$rootScope', '$ionicPopup', 'SetExerciseProgramService', function ($scope, $stateParams, sortedByList, $state, $rootScope, $ionicPopup, SetExerciseProgramService) {
     console.log($stateParams);
     console.log($rootScope.UID)
-    
+
     $scope.title = 'Exercise Program';
     $scope.subNavList = false;
-    $scope.sortList=false;
-
+    $scope.sortList = false;
+    var exerciseListBackup;
     getListOfExerciseProgramme();
 
     var exerciseList = [];
-    var pageSize = 10;
-     var exerciseSortedByList = [
+    var exerciseSortedByList = [
       {
         id: 0,
         title: 'All'
@@ -2155,56 +2154,106 @@ alert(id)
         title: 'Today'
       },
       {
-        id:4,
+        id: 4,
         title: 'Rest of the Week'
       }
     ];
 
-  $scope.exerciseSortedByList = exerciseSortedByList;
-  $scope.sortedBy = $scope.exerciseSortedByList[0].title;
+    $scope.exerciseSortedByList = exerciseSortedByList;
+    $scope.sortedBy = $scope.exerciseSortedByList[0].title;
 
-  $scope.showListSortList = function () 
-  {
+    $scope.showList = function () {
+      $scope.subNavList = !$scope.subNavList;
+    }
+    $scope.showListSortList = function () {
       $scope.sortList = !$scope.sortList;
-  }
+    }
 
-   $scope.sortPatients = function () 
-  {
+    $scope.sortPatients = function (sortType,title) {
+     
+      switch (sortType) {
+        case 0:
+          $scope.exerciseList =  exerciseListBackup;
+           $scope.sortedBy = title;
+          break;
+        case 1:
+          $scope.exerciseList =  exerciseListBackup;
+            $scope.sortedBy = title;
+          break;
+        case 2:
+          $scope.exerciseList = [];
+            $scope.sortedBy = title;
+          break;
+        case 3:
+        var todayExercise = [];
+        var exerciseListForToday = exerciseListBackup ;
+       for (var i = 0; i <  exerciseListForToday.length ; i++) {
+         if(exerciseListForToday[i].today === 1)
+         {
+           todayExercise.push(exerciseListForToday[i]);
+         }
+       }
+        $scope.sortedBy = title;
+        $scope.exerciseList = todayExercise;
+          break;
+        case 4:
+          var restOfWeekExercise = [];
+            var exerciseListForRestOfDay = exerciseListBackup ;
+           for (var i = 0; i <  exerciseListForRestOfDay.length ; i++) {
+          if( exerciseListForRestOfDay[i].today === 0)
+           {
+           restOfWeekExercise.push(exerciseListForRestOfDay[i]);
+          }
+           }
+        $scope.sortedBy = title;
+        $scope.exerciseList = restOfWeekExercise;
+          break;
+        default:
+           $scope.exerciseList =  exerciseListBackup;
+          break;
+      }
+
       $scope.sortList = !$scope.sortList;
-  }
+    }
 
-  //  $scope.sortedByList = sortedByList;
-  //   //  $scope.sortedBy =  $scope.sortedByList[0].id;
-  //     function getStateTitle(id){
-  //       var title = '';
-  //       var list = $scope.sortedByList;
-  //       for(var i = 0; i < list.length; i++){
-  //         if(id == list[i].id){
-  //           title = list[i].routingStateName;
-  //           return title;
-  //         }
-  //       }
-  //     }
+    $scope.gotoAction = function (id) {
+      if (id == 2) {
+        $scope.subNavList = false
+      } else {
+        var state = getStateTitle(id);
+        $state.transitionTo(state, { name: $stateParams.name, patientId: $stateParams.uid }, { reload: true });
+      }
+
+    }
+
+    $scope.sortedByList = sortedByList;
+    //  $scope.sortedBy =  $scope.sortedByList[0].id;
+    function getStateTitle(id) {
+      var title = '';
+      var list = $scope.sortedByList;
+      for (var i = 0; i < list.length; i++) {
+        if (id == list[i].id) {
+          title = list[i].routingStateName;
+          return title;
+        }
+      }
+    }
 
 
 
- //This function is use to delete exercise belong to a patient.
-  $scope.delete = function (peid,index) 
-  {
-     console.log("Delete called")
-     var confirmPopup = $ionicPopup.confirm({
+    //This function is use to delete exercise belong to a patient.
+    $scope.delete = function (peid, index) {
+      console.log("Delete called")
+      var confirmPopup = $ionicPopup.confirm({
         title: 'Delete exercise',
         template: 'Are you sure you want to delete this exercise ?'
       });
 
-      confirmPopup.then(function (res) 
-      {
-        if (res) 
-        {
+      confirmPopup.then(function (res) {
+        if (res) {
           console.log("delete")
-          SetExerciseProgramService.deleteExercise($rootScope.loggedInUserUid,peid).then(function (success)
-           {
-           //  alert("success" + JSON.stringify(success));
+          SetExerciseProgramService.deleteExercise($rootScope.loggedInUserUid, peid).then(function (success) {
+            //  alert("success" + JSON.stringify(success));
             $scope.exerciseList.splice(index, 1);
             //  if(success.success == true)
             //  {
@@ -2215,103 +2264,50 @@ alert(id)
             //    console.log("unable to delete");
             //  }
           }, function (error) { })
-         
+
         } else {
           console.log("cancel")
         }
       });
-    
-  }
 
- $scope.sortExercises = function (sortType) {
-      switch (sortType) {
-        case 0:
-          $scope.sortType = 'fname';
-          $scope.sortOrder = false;
-          $scope.title = 'Name'
-          break;
-        case 1:
-          $scope.sortType = 'emotion';
-          $scope.sortOrder = true;
-          $scope.title = 'Emotion Level'
-          break;
-        case 2:
-        $scope.title = 'New Message',
-        $scope.sortType = 'unread_messages';
-        $scope.sortOrder = true;
-        break;
-        case 3:
-        $scope.title = 'New Activity'
-        $scope.sortType = 'activity';
-        $scope.sortOrder = true;
-        break;
-        default:
-          $scope.sortType = 'unread_messages';
-          $scope.sortOrder = true;
-          break;
-      }
-      $scope.subNavList = false;
     }
 
- $scope.showList = function () 
-  {
-      $scope.subNavList = !$scope.subNavList;
-  }
-            
-    
-        
-      $scope.gotoAction = function (id) {
-        if (id == 2) {
-          $scope.subNavList = false
-        } else {
-          var state = getStateTitle(id);
-          $state.transitionTo(state, { name: $stateParams.name, patientId: $stateParams.uid }, { reload: true });
-        }
-
-      }
-
-        
     init = function () {
       console.log($stateParams.patientId)
     }
     init();
 
-    $scope.addss = function ()
-    {
+    $scope.addss = function () {
 
-  $ionicPopup.show({
-    template: ' <button class="button button-block btn-yellow">My Mobile Device</button><button class="button button-block btn-yellow">My Library</button><button class="button button-block btn-yellow">Create New</button>',
-    title: 'Add Exercise',
-    subTitle: 'Choose a Source',
-    scope: $scope,
-    buttons: [
-      { text: 'Cancel' }
-    ]
-	});
-     // $state.transitionTo('AddExcercisePopup', {}, { reload: true });
-    }
-
-  
-     function getListOfExerciseProgramme() {
-      SetExerciseProgramService.listOfExercise($rootScope.UID).then(function(data) {
-        $scope.exerciseList = data.exercises;  
-     
+      $ionicPopup.show({
+        template: '<div style="background: #121516; color: #fff;"> <button class="button button-block btn-yellow">My Mobile Device</button><button class="button button-block btn-yellow">My Library</button><button class="button button-block btn-yellow">Create New</button></div>',
+        title: 'Add Exercise',
+        subTitle: 'Choose a Source',
+        scope: $scope,
+        buttons: [
+          { text: 'Cancel' }
+        ]
       });
 
-    
-
     }
-//  $scope.day;
-                
-//         console.log($scope.exerciseList + 'inside controller'+day);
-       
-//         day = ($scope.exerciseList.weekly.sun === 1) ?"S":"";
-//         day = ($scope.exerciseList.weekly.mon === 1) ?"M":"";
-//         day = ($scope.exerciseList.weekly.tue === 1) ?"T":"";
-//         day = ($scope.exerciseList.weekly.wed === 1) ?"W":"";
-//         day = ($scope.exerciseList.weekly.thu === 1) ?"T":"";
-//         day = ($scope.exerciseList.weekly.fri === 1) ?"F":"";
-//         day = ($scope.exerciseList.weekly.sat === 1) ?"S":"";
+
+    function getListOfExerciseProgramme() {
+      SetExerciseProgramService.listOfExercise($rootScope.UID).then(function (data) {
+        $scope.exerciseList = data.exercises;
+        exerciseListBackup = data.exercises;
+      });
+    }
+    //  $scope.day;
+
+    //         console.log($scope.exerciseList + 'inside controller'+day);
+
+    //         day = ($scope.exerciseList.weekly.sun === 1) ?"S":"";
+    //         day = ($scope.exerciseList.weekly.mon === 1) ?"M":"";
+    //         day = ($scope.exerciseList.weekly.tue === 1) ?"T":"";
+    //         day = ($scope.exerciseList.weekly.wed === 1) ?"W":"";
+    //         day = ($scope.exerciseList.weekly.thu === 1) ?"T":"";
+    //         day = ($scope.exerciseList.weekly.fri === 1) ?"F":"";
+    //         day = ($scope.exerciseList.weekly.sat === 1) ?"S":"";
 
   }])
 
@@ -2346,17 +2342,17 @@ alert(id)
 
   }])
 
-  .controller('ReviewSnapshotsCtrl', ['$scope', '$rootScope', 'Flash', '$ionicHistory', '$state', '$cordovaCamera','sortedByList' ,function ($scope, $rootScope, Flash, $ionicHistory, $state, $cordovaCamera, sortedByList) {
+  .controller('ReviewSnapshotsCtrl', ['$scope', '$rootScope', 'Flash', '$ionicHistory', '$state', '$cordovaCamera', 'sortedByList', function ($scope, $rootScope, Flash, $ionicHistory, $state, $cordovaCamera, sortedByList) {
 
-$scope.title = 'Review Snapshots';
-$scope.subNavList = false;
-$scope.sortedByList = sortedByList;
-$scope.showList = function(){
-   $scope.subNavList = !$scope.subNavList;
-   console.log($scope.subNavList)
- }
+    $scope.title = 'Review Snapshots';
+    $scope.subNavList = false;
+    $scope.sortedByList = sortedByList;
+    $scope.showList = function () {
+      $scope.subNavList = !$scope.subNavList;
+      console.log($scope.subNavList)
+    }
 
-function getStateTitle(id) {
+    function getStateTitle(id) {
       var title = '';
       var list = $scope.sortedByList;
       for (var i = 0; i < list.length; i++) {
@@ -2367,13 +2363,13 @@ function getStateTitle(id) {
       }
     }
     $scope.gotoAction = function (id) {
-      if(id==4){
+      if (id == 4) {
         $scope.subNavList = false
-      }else{
-      var state = getStateTitle(id);
-      $state.transitionTo(state, {}, { reload: true });
+      } else {
+        var state = getStateTitle(id);
+        $state.transitionTo(state, {}, { reload: true });
       }
-      
+
     }
 
     var pageSize = 10;
@@ -2518,131 +2514,130 @@ function getStateTitle(id) {
     }
   }])
 
-.controller('MessageCtrl',[ '$scope','sortedByList', '$state', '$http', '$ionicPopup', 'ChatApp','$timeout','$stateParams','$rootScope','AppService','$ionicScrollDelegate', function($scope,sortedByList, $state, $http, $ionicPopup, ChatApp,$timeout,$stateParams,$rootScope,AppService,$ionicScrollDelegate)
- {
-  var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
-  var uid = $rootScope.loggedInUserUid;
-   $scope.userImage="img/profile_icon.png";
-   $scope.toUserImage="img/profile_icon.png";
-   $scope.sortedByList = sortedByList;
-   $scope.title = 'Messages';
-   $scope.subNavList = false;
+  .controller('MessageCtrl', ['$scope', 'sortedByList', '$state', '$http', '$ionicPopup', 'ChatApp', '$timeout', '$stateParams', '$rootScope', 'AppService', '$ionicScrollDelegate', function ($scope, sortedByList, $state, $http, $ionicPopup, ChatApp, $timeout, $stateParams, $rootScope, AppService, $ionicScrollDelegate) {
+    var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
+    var uid = $rootScope.loggedInUserUid;
+    $scope.userImage = "img/profile_icon.png";
+    $scope.toUserImage = "img/profile_icon.png";
+    $scope.sortedByList = sortedByList;
+    $scope.title = 'Messages';
+    $scope.subNavList = false;
 
-   $scope.showList = function(){
-   console.log($scope.subNavList)
-   $scope.subNavList = !$scope.subNavList;
-   console.log($scope.subNavList)
- }
+    $scope.showList = function () {
+      console.log($scope.subNavList)
+      $scope.subNavList = !$scope.subNavList;
+      console.log($scope.subNavList)
+    }
 
 
-   $scope.patientProfile = {
+    $scope.patientProfile = {
       name: $stateParams.name,
     }
 
     $scope.doctorProfile = {
-          url: ''
-        }
-  
-   init = function () {
-  
+      url: ''
+    }
+
+    init = function () {
+
       console.log($stateParams)
 
       AppService.profile($stateParams.uid).then(function (success) {
         patientData = success;
         if (patientData.image != "") {
           $scope.userImage = patientData.image;
-          $scope.toUserImage= patientData.therapist_image;
+          $scope.toUserImage = patientData.therapist_image;
         }
 
-      //patient
-      $scope.toUser = {
-      _id:  $stateParams.uid,
-       pic: $scope.toUserImage,
-      username: patientData.therapist_first_name
-    };
+        //patient
+        $scope.toUser = {
+          _id: $stateParams.uid,
+          pic: $scope.toUserImage,
+          username: patientData.therapist_first_name
+        };
 
-     // this could be on $rootScope rather than in $stateParams
-     //doctor
-    $scope.user = {
-      _id: uid,
-      pic:$scope.userImage,
-      username: patientData.first_name
+        // this could be on $rootScope rather than in $stateParams
+        //doctor
+        $scope.user = {
+          _id: uid,
+          pic: $scope.userImage,
+          username: patientData.first_name
 
-    };
+        };
 
 
       }, function (error) {
 
       })
-    
+
     }
     init();
     getMessages();
 
-      //patient id
-  //  $scope.toUser = {
-  //     _id:  $stateParams.uid,
-  //      pic: $scope.toUserImage,
-  //     username: $stateParams.name
-  //   };
+    //patient id
+    //  $scope.toUser = {
+    //     _id:  $stateParams.uid,
+    //      pic: $scope.toUserImage,
+    //     username: $stateParams.name
+    //   };
 
-  //    // this could be on $rootScope rather than in $stateParams
-  //    //doctor
-  //   $scope.user = {
-  //     _id: uid,
-  //     pic:$scope.userImage,
-  //     username: 'Marty'
-  //   };
- 
+    //    // this could be on $rootScope rather than in $stateParams
+    //    //doctor
+    //   $scope.user = {
+    //     _id: uid,
+    //     pic:$scope.userImage,
+    //     username: 'Marty'
+    //   };
 
-   $scope.sendMessage = function() {
-    
-   // alert("Sendmessage"+$scope.input.message);
-    var data ={ 
-    "message": $scope.input.message
-    };
-  
-  ChatApp.sendPatientMessage(data,$stateParams.uid,uid).then(function(success){
-       //  alert("success"+JSON.stringify(success));
-var message ={
-"message_id": success.message_id,
-"uid1": uid,
-"uid2": $stateParams.uid,
-"message":  $scope.input.message,
-"timestamp": success.timestamp
 
-};
- keepKeyboardOpen();
-$scope.input.message = '';
-$scope.messages.push(message);
+    $scope.sendMessage = function () {
 
- $timeout(function() {
+      // alert("Sendmessage"+$scope.input.message);
+      var data = {
+        "message": $scope.input.message
+      };
+
+      ChatApp.sendPatientMessage(data, $stateParams.uid, uid).then(function (success) {
+        //  alert("success"+JSON.stringify(success));
+        var message = {
+          "message_id": success.message_id,
+          "uid1": uid,
+          "uid2": $stateParams.uid,
+          "message": $scope.input.message,
+          "timestamp": success.timestamp
+
+        };
         keepKeyboardOpen();
-        viewScroll.scrollBottom(true);
-      }, 0);
+        $scope.input.message = '';
+        $scope.messages.push(message);
 
-  $timeout(function() {
-     //   $scope.messages.push(MockService.getMockMessage());
-        keepKeyboardOpen();
-        viewScroll.scrollBottom(true);
-      }, 2000);
+        $timeout(function () {
+          keepKeyboardOpen();
+          viewScroll.scrollBottom(true);
+        }, 0);
+
+        $timeout(function () {
+          //   $scope.messages.push(MockService.getMockMessage());
+          keepKeyboardOpen();
+          viewScroll.scrollBottom(true);
+        }, 2000);
 
 
-   },function(error){
+      }, function (error) {
 
-   })
+      })
 
 
     };
 
-     function getMessages() {
+    function getMessages() {
       // the service is mock but you would probably pass the toUser's GUID here
-      ChatApp.getUserMessages($stateParams.uid,uid).then(function(data) {
+      ChatApp.getUserMessages($stateParams.uid, uid).then(function (data) {
         $scope.doneLoading = true;
         $scope.messages = data;
-     //   alert(JSON.stringify(data));
+        //   alert(JSON.stringify(data));
 
-        $timeout(function() {
+        $timeout(function () {
           viewScroll.scrollBottom();
         }, 0);
       });
@@ -2653,8 +2648,8 @@ $scope.messages.push(message);
       $ionicHistory.goBack();
     }
 
-      
-  function keepKeyboardOpen() {
+
+    function keepKeyboardOpen() {
       console.log('keepKeyboardOpen');
       // txtInput.one('blur', function() {
       //   console.log('textarea blur, focus back on it');
@@ -2674,39 +2669,39 @@ $scope.messages.push(message);
     }
 
     $scope.gotoAction = function (id) {
-      if(id==6){
+      if (id == 6) {
         $scope.subNavList = false
-      }else{
-      var state = getStateTitle(id);
-      $state.transitionTo(state, { name: $stateParams.name , patientId :$stateParams.uid}, { reload: true });
+      } else {
+        var state = getStateTitle(id);
+        $state.transitionTo(state, { name: $stateParams.name, patientId: $stateParams.uid }, { reload: true });
       }
-      
+
     }
 
-}])
+  }])
 
-// fitlers
-.filter('nl2br', ['$filter',
-  function($filter) {
-    return function(data) {
-      if (!data) return data;
-      return data.replace(/\n\r?/g, '<br />');
-    };
-  }
-])
+  // fitlers
+  .filter('nl2br', ['$filter',
+    function ($filter) {
+      return function (data) {
+        if (!data) return data;
+        return data.replace(/\n\r?/g, '<br />');
+      };
+    }
+  ])
 
-  .controller('VitalsCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', '$ionicHistory','AppService', function ($scope, $state, $stateParams, sortedByList, $ionicHistory, AppService) {
+  .controller('VitalsCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', '$ionicHistory', 'AppService', function ($scope, $state, $stateParams, sortedByList, $ionicHistory, AppService) {
     $scope.sortedByList = sortedByList;
     //$scope.sortedBy = $scope.sortedByList[5].id;
     $scope.selectedView = 'Today';
     $scope.DayView = true;
     $scope.title = 'Vitals';
 
- $scope.subNavList = false;
+    $scope.subNavList = false;
 
- $scope.showList = function(){
-   $scope.subNavList = !$scope.subNavList;
- }
+    $scope.showList = function () {
+      $scope.subNavList = !$scope.subNavList;
+    }
 
     $scope.patientProfile = {
       name: $stateParams.name,
@@ -2716,7 +2711,7 @@ $scope.messages.push(message);
       url: $stateParams.profile_url
     }
 
-     init = function () {
+    init = function () {
       console.log($stateParams.patientId)
       AppService.getVitals($stateParams.patientId).then(function (success) {
         console.log("Vital Success")
@@ -2755,12 +2750,12 @@ $scope.messages.push(message);
     }
 
     $scope.gotoAction = function (id) {
-        if(id==5){
+      if (id == 5) {
         $scope.subNavList = false
-      }else{
-      var state = getStateTitle(id);
-      $state.transitionTo(state, { name: $stateParams.name , patientId :$stateParams.uid}, { reload: true });
-    }
+      } else {
+        var state = getStateTitle(id);
+        $state.transitionTo(state, { name: $stateParams.name, patientId: $stateParams.uid }, { reload: true });
+      }
     }
 
     init();
