@@ -2131,6 +2131,7 @@ alert(id)
     
     $scope.title = 'Exercise Program';
     $scope.subNavList = false;
+    $scope.sortList=false;
 
     getListOfExerciseProgramme();
 
@@ -2162,6 +2163,10 @@ alert(id)
   $scope.exerciseSortedByList = exerciseSortedByList;
   $scope.sortedBy = $scope.exerciseSortedByList[0].id;
 
+  $scope.showListSortList = function () 
+  {
+      $scope.sortList = !$scope.sortList;
+  }
  //This function is use to delete exercise belong to a patient.
   $scope.delete = function (peid,index) 
   {
@@ -2197,48 +2202,41 @@ alert(id)
     
   }
 
+ $scope.sortExercises = function (sortType) {
+      // switch (sortType) {
+      //   case 0:
+      //     $scope.sortType = 'fname';
+      //     $scope.sortOrder = false;
+      //     $scope.title = 'Name'
+      //     break;
+      //   case 1:
+      //     $scope.sortType = 'emotion';
+      //     $scope.sortOrder = true;
+      //     $scope.title = 'Emotion Level'
+      //     break;
+      //   case 2:
+      //   $scope.title = 'New Message',
+      //   $scope.sortType = 'unread_messages';
+      //   $scope.sortOrder = true;
+      //   break;
+      //   case 3:
+      //   $scope.title = 'New Activity'
+      //   $scope.sortType = 'activity';
+      //   $scope.sortOrder = true;
+      //   break;
+      //   default:
+      //     $scope.sortType = 'unread_messages';
+      //     $scope.sortOrder = true;
+      //     break;
+      // }
+      $scope.subNavList = false;
+    }
 
-  $scope.showList = function () 
+ $scope.showList = function () 
   {
       $scope.subNavList = !$scope.subNavList;
   }
-      
-  $scope.pages = [
-      {
-        id: 0,
-        title: "Page 1"
-      },
-      {
-        id: 1,
-        title: "Page 2"
-      },
-      {
-        id: 2,
-        title: "Page 3"
-      },
-      {
-        id: 3,
-        title: "Page 4"
-      },
-      {
-        id: 4,
-        title: "Page 5"
-      }
-    ];
-
-    $scope.selectedPage = $scope.pages[0].id;
-
-    $scope.showNext = function (pageNo) {
-      var list = angular.copy(exerciseList);
-      var offset = (pageNo - 1) * pageSize;
-      $scope.exerciseList = list.splice(offset, pageSize);
-      $scope.selectedPage = $scope.pages[pageNo - 1].id;
-    }
-    $scope.showNext(1);
-
-   
-
-      
+            
      $scope.sortedByList = sortedByList;
     //  $scope.sortedBy =  $scope.sortedByList[0].id;
       function getStateTitle(id){
@@ -2270,7 +2268,17 @@ alert(id)
 
     $scope.addss = function ()
     {
-      $state.transitionTo('AddExcercisePopup', {}, { reload: true });
+
+  $ionicPopup.show({
+    template: ' <button class="button button-block btn-yellow">My Mobile Device</button><button class="button button-block btn-yellow">My Library</button><button class="button button-block btn-yellow">Create New</button>',
+    title: 'Add Exercise',
+    subTitle: 'Choose a Source',
+    scope: $scope,
+    buttons: [
+      { text: 'Cancel' }
+    ]
+	});
+     // $state.transitionTo('AddExcercisePopup', {}, { reload: true });
     }
 
   
