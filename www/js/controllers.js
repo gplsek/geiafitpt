@@ -61,17 +61,6 @@ angular.module('geiaFitApp')
     password: ""
   };
 
-    // function checkEmptyFields() {
-    //   var isEmpty = false;
-    //   for (var property in $scope.data) {
-    //     if ($scope.data.hasOwnProperty(property)) {
-    //       if (!$scope.data[property]) {
-    //         isEmpty = true;
-    //       }
-    //     }
-    //   }
-    //   return isEmpty;
-    // }
 
     function validateFields(data){
       if(data.email == "" && data.password == ""){
@@ -102,35 +91,42 @@ angular.module('geiaFitApp')
     }
 
     $scope.resetPassword = function(){
-      alert($scope.data.email);
+      if($scope.data.email == ""){
+        Flash.showFlash({ type: 'error', message: "Please enter email address." });
+      }else
+      if(!(checkEmail($scope.data.email))){
+        Flash.showFlash({ type: 'error', message: "Email is not valid !" });
+      }else{
+
+        AuthService.forgetPassword($scope.data.email)
+        .then(function(res){
+          if(res.data.success == 0){
+         $ionicPopup.alert({
+            title: 'Password reset',
+            template: res.data.message
+          });
+
+          }
+          if(res.data.Status == 1){
+            $ionicPopup.alert({
+            title: 'Password reset',
+            template: 'Please check your email for your password."'
+          });
+          }
+          console.log(res)
+        },function(error){
+          
+        })        
+          
+      }
+      
     }
 
     $scope.login = function () {
-    //   if (!(Object.keys(data).length === 0 && data.constructor === Object)) {
-    //     if (!checkEmptyFields()) {
-    //       // alert(data.email);
-    //       if (checkEmail(data.email)) {
-    //         AuthService.login(data.email, data.password, data.checked).then(function (authenticated) {
-    //           Flash.showFlash({ type: 'success', message: "Success !" });
-    //           $state.go('main.dash', {}, { reload: true });
-    //           $scope.setCurrentUsername(data.username);
-    //         }, function (err) {
-    //           Flash.showFlash({ type: 'error', message: "Login Failed !" });
-    //         });
-    //       } else {
-    //         Flash.showFlash({ type: 'error', message: "Email is not valid !" });
-    //       }
-    //     }
-    //     else {
-    //       Flash.showFlash({ type: 'error', message: "Please fill in all fields !" });
-    //     }
-    //   } else {
-    //     Flash.showFlash({ type: 'error', message: "Please fill in all fields !" });
-    //   }
-    // }
-if(validateFields($scope.data)){
-  AuthService.login($scope.data.email,$scope.data.password,$scope.data.checked).
-  then(function(authenticated){
+  
+      if(validateFields($scope.data)){
+      AuthService.login($scope.data.email,$scope.data.password,$scope.data.checked).
+      then(function(authenticated){
       Flash.showFlash({ type: 'success', message: "Success !" });
       $state.go('main.dash', {}, { reload: true });
       //$scope.setCurrentUsername(data.username);
@@ -851,9 +847,9 @@ $scope.title = 'Add Custom Exercise';
 
 
     $scope.sortType = 'title'; // set the default sort type
-    $scope.sortReverse = false;  // set the default sort order
+   // $scope.sortReverse = false;  // set the default sort order
     $scope.searchName = '';     // set the default search/filter term
-    $scope.sortOrder = false;
+    //$scope.sortOrder = false;
 
  $scope.title = 'Exercise Name';
  $scope.subNavList = false;
@@ -1037,7 +1033,7 @@ if(data.length >= 3){
 
     // function to tab between MyExercise and Web Exercise.
     $scope.changeView = function (view) {
-      this.filterPatient = '';
+      
       switch (view) {
         case 1:
           $scope.selectedTab = 'My Exercises';
@@ -1059,6 +1055,7 @@ if(data.length >= 3){
           $scope.doSort("1",'myE');
           
       }
+      this.filterPatient = undefined;
 
     }
 

@@ -4,10 +4,11 @@ angular.module('geiaFitApp').service('utilityService', ['$log',function ($log) {
        
        calculcateAge : function(dateString){
             var today = new Date();
-            var birthDate = new Date(dateString);
-            var age = today.getFullYear() - birthDate.getFullYear();
-            var m = today.getMonth() - birthDate.getMonth();
-            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) 
+            var newDate = moment.unix(dateString).utcOffset('-07:00').format();
+            var birthDate = moment(newDate)
+            var age = today.getFullYear() - birthDate.year();
+            var m = today.getMonth() - birthDate.month();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.date())) 
                 {
                     age--;
                 }

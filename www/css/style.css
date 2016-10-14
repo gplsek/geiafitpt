@@ -320,3 +320,12 @@ progress[value]::-webkit-progress-bar {
     position: relative;
     display:inline-block;
 }
+
+/*.limitSpan {
+    width: 50%;
+    float: left;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}*/

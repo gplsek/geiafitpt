@@ -10797,7 +10797,25 @@ textarea {
 .exerciseLibrary .exerciseList li {
   padding: 0 15px;
   font-size: 14px;
-  font-weight: 300; }
+  font-weight: 300;
+  width: 100%;
+  float: left;
+   }
+
+  .exerciseLibrary .exerciseList li span{  
+     max-width: 40%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    vertical-align: middle; 
+  }
+.exerciseLibrary .exerciseList li span i{    
+   display: block;
+   vertical-align: middle;
+   margin-top: 8px;
+   line-height: 30px;
+}
   .exerciseLibrary .exerciseList li .ion-ios-trash-outline:before {
     font-size: 34px; }
   .exerciseLibrary .exerciseList li .trash-icon span {
@@ -10914,7 +10932,7 @@ textarea {
         font-size: 15px; }
 
 .activity .sortedBy {
-  background: #2A2C2D;
+  /*background: #2A2C2D;*/
   height: 60px;
   line-height: 60px; }
 
@@ -10942,7 +10960,7 @@ textarea {
       border-radius: 22px; }
 
 .activity.exerciseLibrary .main .selectionTab li{margin-top: 0; width: 50%;}
-.activity.exerciseLibrary .sortedBy{ height: auto; padding: 15px 0; line-height: 20px; background: #121516 }
+.activity.exerciseLibrary .sortedBy1{ height: auto; padding: 15px 0; line-height: 20px; background: #121516 }
 .activity.exerciseLibrary .main .selectionTab{ margin-top: 0}
 
 .activity .main .totalActivity {

@@ -114,6 +114,23 @@ angular.module('geiaFitApp')
       return (isAuthenticated && authorizedRoles.indexOf(role) !== -1);
     };
 
+    var resetPassword = function(email){
+
+     var params = {
+       "email" : email
+     }
+     return $http({
+        method: 'POST',
+        data:params,
+        url: ApiEndpoint.url + "/profile/pwdreset "
+      }).then(function (response) {
+        return response;
+      }, function (err) {
+        console.log(err);
+      });
+
+    };
+
     console.log("---loadUserCredentials");
     loadUserCredentials();
     console.log("--- end loadUserCredentials");
@@ -123,9 +140,11 @@ angular.module('geiaFitApp')
       isAuthorized: isAuthorized,
       isAuthenticated: function () { return isAuthenticated; },
       username: function () { return username; },
-      role: function () { return role; }
+      role: function () { return role; },
+      forgetPassword : resetPassword
     };
   }])
+
   .factory('AuthInterceptor', function ($rootScope, $q, AUTH_EVENTS) {
     return {
       responseError: function (response) {
@@ -137,9 +156,11 @@ angular.module('geiaFitApp')
       }
     };
   })
+
   .config(function ($httpProvider) {
     $httpProvider.interceptors.push('AuthInterceptor');
   })
+
   .service('AppService', ['$http', 'AuthService', '$q', 'ApiEndpoint', '$rootScope', function ($http, AuthService, $q, ApiEndpoint, $rootScope) {
 
 
