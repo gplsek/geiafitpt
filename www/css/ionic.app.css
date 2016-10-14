@@ -10246,7 +10246,7 @@ ion-header-bar {
   text-align: center; }
 
 .sortedBy {
-  height: 80px;
+  /*height: 80px;*/
   line-height: 20px;
   background: #121516;
   color: #fff;
