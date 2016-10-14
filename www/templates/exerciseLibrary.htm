@@ -41,8 +41,7 @@
 	      <select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select>
 	       
 	    </div>-->
-		<ul class="exerciseList">
-		
+		<ul class="exerciseList">		
 			<li ng-repeat="item in filteredExerciseList = (myExerciseList | filter:{title : filterPatient} )" class="gieafitListItem group">
 					<span class="">{{item.id}}</span>
 					<span class="limitSpan">{{item.title}} :</span>

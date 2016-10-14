@@ -122,6 +122,7 @@ angular.module('geiaFitApp')
       
     }
 
+
     $scope.login = function () {
   
       if(validateFields($scope.data)){
@@ -136,6 +137,7 @@ angular.module('geiaFitApp')
 }
 
     }
+
     //   $scope.login = function(data) {
     //     $scope.data = {};
     //     if(!data){
@@ -965,6 +967,7 @@ angular.module('geiaFitApp')
     //$scope.sortOrder = false;
 
 
+
  function compare(a,b) {
   if (a.title < b.title)
     return -1;
@@ -1467,10 +1470,7 @@ if(data.length >= 3){
         var tempDate = startDate.add(1, 'days').startOf('day').format('L');
         date = moment(tempDate);
       }
-  
-      for(var x in weekDates){
-        console.log(weekDates[x].date())
-      }
+
       return weekDates;
     }
 
@@ -1533,6 +1533,7 @@ if(data.length >= 3){
           var tempDate = moment(Tdate)
 
           if (tempDate.diff(weekDates[d]) == 0) {
+
             var temp = activityDataForWeek[x];
 
             if (temp.total_exercise_goal != null && temp.total_exercise != null) {
@@ -1631,6 +1632,7 @@ if(data.length >= 3){
           var tempDate = moment(Tdate)
 
           if (tempDate.diff(weekDates[d]) == 0) {
+
             var temp = complianceDataForWeek[x];
             if (temp.daily_challenge != null && temp.daily_points != null) {
               total_compliance_goal = parseInt(temp.daily_challenge)
@@ -1662,7 +1664,7 @@ if(data.length >= 3){
         var tempDate = startDate.add(1, 'days').format('L')
         startDate = moment(tempDate)
       }
-      
+
       return dateList;
     }
 
@@ -1958,7 +1960,9 @@ if(data.length >= 3){
           $scope.selectedView = 'week';
           /*chartConfigForWeek();
           chartConfigForComplianceWeek();*/
+
           getWeekDates();
+
           getActivityDataForWeek(ActivityData);
           getComplianceDataForWeek(complianceData);
 
@@ -2194,6 +2198,7 @@ if(data.length >= 3){
       var dateList = [];
       var tempDate = startDate;
       var i = 0;
+
       while (tempDate.diff(endDate) <= 0) {
         if (i == 0) {
           dateList.push(monthNames[tempDate.month()] + " " + tempDate.date())
@@ -2201,7 +2206,6 @@ if(data.length >= 3){
         }
         else {
           dateList.push(tempDate.date())
-
         }
         var Tdate = startDate.add(1, 'days').startOf('day').format('L');
         tempDate = moment(Tdate);

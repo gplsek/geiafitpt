@@ -10923,10 +10923,12 @@ textarea {
       font-size: 21px;
       letter-spacing: 1px; }
 
+
       /*.activity .patientProfile svg text tspan {*/
 
       .activity .patientProfile svg text tspan{text-align:center }
       .activity .patientProfile svg text tspan:last-child {
+
         stroke: #009CDB;
         stroke-width: 1.3;
         font-size: 15px; }
