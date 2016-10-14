@@ -2293,7 +2293,7 @@ if(data.length >= 3){
   .controller('ExerciseProgramCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', '$rootScope', '$ionicPopup', 'SetExerciseProgramService', function ($scope, $stateParams, sortedByList, $state, $rootScope, $ionicPopup, SetExerciseProgramService) {
     console.log($stateParams);
     console.log($rootScope.UID)
-
+    $scope.searchExercise;
     $scope.title = 'Exercise Program';
     $scope.subNavList = false;
     $scope.sortList = false;
@@ -2721,6 +2721,7 @@ if(data.length >= 3){
     $scope.sortedByList = sortedByList;
     $scope.title = 'Messages';
     $scope.subNavList = false;
+    $stateParams.uid = $rootScope.UID;
 
     $scope.showList = function () {
       console.log($scope.subNavList)
@@ -2842,7 +2843,7 @@ if(data.length >= 3){
 
     function getMessages() {
       // the service is mock but you would probably pass the toUser's GUID here
-      ChatApp.getUserMessages($stateParams.uid, uid).then(function (data) {
+      ChatApp.getUserMessages($rootScope.UID, uid).then(function (data) {
         $scope.doneLoading = true;
         $scope.messages = data;
         //   alert(JSON.stringify(data));

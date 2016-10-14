@@ -24,7 +24,7 @@
 		</div>
 
 		<div class="search">
-			<input type="text" placeholder="Search" ng-model="searchPatient" />
+			<input type="text" placeholder="Search" ng-model="searchExercise" />
 			<span class="icon ion-ios-search-strong pull-right"></span>
 		</div>
 		<div class="sortedBy text-center">
@@ -37,7 +37,7 @@
 			</ion-list>
 		</div>
 		<ul class="exerciseList">
-			<li ng-repeat="item in exerciseList" class="gieafitListItem group">
+			<li ng-repeat="item in exerciseList  | filter: searchExercise" class="gieafitListItem group">
 				<div ui-sref="setExerciseProgram(
        {
 peid: item.peid,
