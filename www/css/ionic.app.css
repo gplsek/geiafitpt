@@ -10905,7 +10905,7 @@ textarea {
   padding: 15px; }
 
 .activity .patientProfile {
-  height: 100px;
+  /*height: 100px;*/
   background: #22282C;
   color: #fff;
   padding: 10px;
@@ -10918,7 +10918,7 @@ textarea {
   .activity .patientProfile svg {
     position: relative;
     top: -5px;
-    right: 25px; }
+    right: 25px;  max-height: 80px;}
     .activity .patientProfile svg circle {
       stroke: #009CDB;
       stroke-width: 4px;
@@ -10937,7 +10937,7 @@ textarea {
 
         stroke: #009CDB;
         stroke-width: 1.3;
-        font-size: 15px; }
+        font-size: 10px; }
 
 .activity .sortedBy {
   /*background: #2A2C2D;*/
@@ -10958,7 +10958,7 @@ textarea {
     width: 33.33%;
     text-align: center;
     color: #616060;
-    margin-top: -39px;
+   /* margin-top: -39px; */
     height: 43px;
     font-size: 18px;
     line-height: 44px; }
