@@ -277,9 +277,9 @@ input[type=range]:focus::-ms-fill-upper {
 .bar_chart_list li .title .right_title{ text-align: right}
 .bar_chart_list li .chart_block{ width: 100%; float: left }
 .bar_chart_list li .highcharts-container {width: 100% !important;}
-.bar_chart_list li .title .left_title img{ float: left; max-width: 40px; margin-right: 5px;}
+.bar_chart_list li .title .left_title img{ float: left; max-width: 25px; margin-right: 5px;}
 .bar_chart_list li .title .left_title .twolinestitle { float: left; line-height: 18px; padding: 2px 0}
-.bar_chart_list li .title .right_title img{ float: right; max-width: 40px; margin-right: 5px;}
+.bar_chart_list li .title .right_title img{ float: right; max-width: 25px; margin-right: 5px;}
 .bar_chart_list li .title .right_title .twolinestitle { float: right; line-height: 18px; padding: 2px 0}
 
 .chartbottomtitle{}
