@@ -5569,7 +5569,8 @@ ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs
     max-width: 100%;
     max-height: 90%;
     border-radius: 0px;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color:#222222;
+    border: 1px solid #333333;
     display: -webkit-box;
     display: -webkit-flex;
     display: -moz-box;
@@ -5588,8 +5589,10 @@ ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs
 
 .popup-head {
   padding: 15px 10px;
-  border-bottom: 1px solid #eee;
-  text-align: center; }
+  /* border-bottom: 1px solid #eee; */
+  text-align: center;
+  color: #fff;
+  }
 
 .popup-title {
   margin: 0;
@@ -5600,7 +5603,9 @@ ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs
   margin: 5px 0 0 0;
   padding: 0;
   font-weight: normal;
-  font-size: 11px; }
+  font-size: 11px;
+  color: #fff;
+  }
 
 .popup-body {
   padding: 10px;
@@ -5630,7 +5635,7 @@ ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs
     flex: 1;
     display: block;
     min-height: 45px;
-    border-radius: 2px;
+    border-radius: 24px;
     line-height: 20px;
     margin-right: 5px; }
     .popup-buttons .button:last-child {
@@ -10018,7 +10023,8 @@ input[type=range]::-ms-thumb {
   cursor: pointer; }
 
 .popup, .popup-title {
-  color: #000; }
+  color: #fff;
+  }
 
 .ion-ios-arrow-back {
   width: 40px;

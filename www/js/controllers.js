@@ -57,10 +57,10 @@ angular.module('geiaFitApp')
   .controller('LoginCtrl', ['$scope', '$state', '$ionicPopup', 'AuthService', 'Flash', '$rootScope', function ($scope, $state, $ionicPopup, AuthService, Flash, $rootScope) {
 
     $scope.data = {
+
       email: "",
       password: ""
     };
-
 
     function validateFields(data) {
       if (data.email == "" && data.password == "") {
@@ -89,6 +89,7 @@ angular.module('geiaFitApp')
       result = pattern.test(email);
       return result;
     }
+
 
     $scope.resetPassword = function(){
       if($scope.data.email == ""){
@@ -119,8 +120,7 @@ angular.module('geiaFitApp')
         })        
           
       }
-      
-    }
+    }   
 
 
     $scope.login = function () {
@@ -135,28 +135,18 @@ angular.module('geiaFitApp')
       Flash.showFlash({ type: 'error', message: "Login Failed !" });
   })
 }
+      if (validateFields($scope.data)) {
+        AuthService.login($scope.data.email, $scope.data.password, $scope.data.checked).
+          then(function (authenticated) {
+            Flash.showFlash({ type: 'success', message: "Success !" });
+            $state.go('main.dash', {}, { reload: true });
+            //$scope.setCurrentUsername(data.username);
+          }, function (err) {
+            Flash.showFlash({ type: 'error', message: "Login Failed !" });
+          })
+      }
 
     }
-
-    //   $scope.login = function(data) {
-    //     $scope.data = {};
-    //     if(!data){
-    //       var alertPopup = $ionicPopup.//alet({
-    //         title: 'Login failed!',
-    //         template: 'Please check your credentials!'
-    //       });
-    //       return
-    //     }
-    //       AuthService.login(data.username, data.password,data.checked).then(function(authenticated) {
-    //       $state.go('main.dash', {}, {reload: true});
-    //       $scope.setCurrentUsername(data.username);
-    //     }, function(err) {
-    //       var alertPopup = $ionicPopup.alert({
-    //         title: 'Login failed!',
-    //         template: 'Please check your credentials!'
-    //       });
-    //     });
-    //   };
 
 
   }])
@@ -1105,7 +1095,6 @@ if(data.length >= 3){
       $scope.tempWebExList = "";
 
 
-
       var myExerList = [];
       var webExerciseList = [];
       var exerciseList = ExerciseLibraryService.exerciseData().then(function (success) {
@@ -1122,7 +1111,6 @@ if(data.length >= 3){
             
           }
         }
-
         $scope.myExerciseList = myExerList
         $scope.webExercise = webExerciseList
         $scope.doSort("1",'myE');
@@ -1151,10 +1139,8 @@ if(data.length >= 3){
           $scope.webExPages.push(page);
         }
 
-
-        // $scope.selectedPage = $scope.pages[0].id;
-        // $scope.showNext(1);
       }, function (error) {
+
 
       })
 
@@ -1173,24 +1159,18 @@ if(data.length >= 3){
           $scope.selectedTab = 'My Exercises';
           $scope.webExView = false;
           $scope.exerciseView = true;
-
           $scope.doSort("1",'myE');
-          
           break;
         case 2:
           $scope.selectedTab = 'WebEx Exercises';
           $scope.webExView = true;
           $scope.exerciseView = false;
-
           $scope.doSort("1",'webE');
-          
           break;
         default:
           $scope.selectedTab = 'My Exercises';
           $scope.exerciseView = true;
-
           $scope.doSort("1",'myE');
-          
       }
       this.filterPatient = undefined;
 
@@ -1954,6 +1934,7 @@ if(data.length >= 3){
     }
 
     init = function () {
+
       var Tdate = moment().utcOffset('-07:00').endOf("month").hours(0).minute(0).second(0).millisecond(0).format();
       $scope.DATE = moment(Tdate).toDate();
       console.log($scope.DATE)
@@ -2313,14 +2294,14 @@ if(data.length >= 3){
     console.log($stateParams);
     console.log($rootScope.UID)
 
-
     $scope.title = 'Exercise Program';
     $scope.subNavList = false;
-
+    $scope.sortList = false;
+    var exerciseListBackup;
     getListOfExerciseProgramme();
 
     var exerciseList = [];
-    var pageSize = 10;
+
     var exerciseSortedByList = [
       {
         id: 0,
@@ -2345,15 +2326,91 @@ if(data.length >= 3){
     ];
 
     $scope.exerciseSortedByList = exerciseSortedByList;
-    $scope.sortedBy = $scope.exerciseSortedByList[0].id;
+    $scope.sortedBy = $scope.exerciseSortedByList[0].title;
+
+    $scope.showList = function () {
+      $scope.subNavList = !$scope.subNavList;
+    }
+    $scope.showListSortList = function () {
+      $scope.sortList = !$scope.sortList;
+    }
+
+    $scope.sortPatients = function (sortType,title) {
+     
+      switch (sortType) {
+        case 0:
+          $scope.exerciseList =  exerciseListBackup;
+           $scope.sortedBy = title;
+          break;
+        case 1:
+          $scope.exerciseList =  exerciseListBackup;
+            $scope.sortedBy = title;
+          break;
+        case 2:
+          $scope.exerciseList = [];
+            $scope.sortedBy = title;
+          break;
+        case 3:
+        var todayExercise = [];
+        var exerciseListForToday = exerciseListBackup ;
+       for (var i = 0; i <  exerciseListForToday.length ; i++) {
+         if(exerciseListForToday[i].today === 1)
+         {
+           todayExercise.push(exerciseListForToday[i]);
+         }
+       }
+        $scope.sortedBy = title;
+        $scope.exerciseList = todayExercise;
+          break;
+        case 4:
+          var restOfWeekExercise = [];
+            var exerciseListForRestOfDay = exerciseListBackup ;
+           for (var i = 0; i <  exerciseListForRestOfDay.length ; i++) {
+          if( exerciseListForRestOfDay[i].today === 0)
+           {
+           restOfWeekExercise.push(exerciseListForRestOfDay[i]);
+          }
+           }
+        $scope.sortedBy = title;
+        $scope.exerciseList = restOfWeekExercise;
+          break;
+        default:
+           $scope.exerciseList =  exerciseListBackup;
+          break;
+      }
+
+      $scope.sortList = !$scope.sortList;
+    }
+
+    $scope.gotoAction = function (id) {
+      if (id == 2) {
+        $scope.subNavList = false
+      } else {
+        var state = getStateTitle(id);
+        $state.transitionTo(state, { name: $stateParams.name, patientId: $stateParams.uid }, { reload: true });
+      }
+
+    }
+
+    $scope.sortedByList = sortedByList;
+    //  $scope.sortedBy =  $scope.sortedByList[0].id;
+    function getStateTitle(id) {
+      var title = '';
+      var list = $scope.sortedByList;
+      for (var i = 0; i < list.length; i++) {
+        if (id == list[i].id) {
+          title = list[i].routingStateName;
+          return title;
+        }
+      }
+    }
+
+
+
 
     //This function is use to delete exercise belong to a patient.
     $scope.delete = function (peid, index) {
       console.log("Delete called")
-      var confirmPopup = $ionicPopup.confirm({
-        title: 'Delete exercise',
-        template: 'Are you sure you want to delete this exercise ?'
-      });
 
       confirmPopup.then(function (res) {
         if (res) {
@@ -2376,6 +2433,7 @@ if(data.length >= 3){
         }
       });
 
+
     }
 
 
@@ -2383,39 +2441,6 @@ if(data.length >= 3){
       $scope.subNavList = !$scope.subNavList;
     }
 
-
-    $scope.pages = [
-      {
-        id: 0,
-        title: "Page 1"
-      },
-      {
-        id: 1,
-        title: "Page 2"
-      },
-      {
-        id: 2,
-        title: "Page 3"
-      },
-      {
-        id: 3,
-        title: "Page 4"
-      },
-      {
-        id: 4,
-        title: "Page 5"
-      }
-    ];
-
-    $scope.selectedPage = $scope.pages[0].id;
-
-    $scope.showNext = function (pageNo) {
-      var list = angular.copy(exerciseList);
-      var offset = (pageNo - 1) * pageSize;
-      $scope.exerciseList = list.splice(offset, pageSize);
-      $scope.selectedPage = $scope.pages[pageNo - 1].id;
-    }
-    $scope.showNext(1);
 
 
 
@@ -2444,28 +2469,31 @@ if(data.length >= 3){
     }
 
 
-
     init = function () {
       console.log($stateParams.patientId)
     }
     init();
 
     $scope.addss = function () {
-      $state.transitionTo('AddExcercisePopup', {}, { reload: true });
-    }
 
+      $ionicPopup.show({
+        template: '<div style="background: #121516; color: #fff;"> <button class="button button-block btn-yellow">My Mobile Device</button><button class="button button-block btn-yellow">My Library</button><button class="button button-block btn-yellow">Create New</button></div>',
+        title: 'Add Exercise',
+        subTitle: 'Choose a Source',
+        scope: $scope,
+        buttons: [
+          { text: 'Cancel' }
+        ]
+      });
+
+    }
 
 
     function getListOfExerciseProgramme() {
       SetExerciseProgramService.listOfExercise($rootScope.UID).then(function (data) {
-
         $scope.exerciseList = data.exercises;
-        console.log($scope.exerciseList + 'inside controller');
-
+        exerciseListBackup = data.exercises;
       });
-
-
-
     }
     //  $scope.day;
 
@@ -2782,6 +2810,19 @@ if(data.length >= 3){
         $scope.input.message = '';
         $scope.messages.push(message);
 
+
+        $timeout(function () {
+          keepKeyboardOpen();
+          viewScroll.scrollBottom(true);
+        }, 0);
+
+        // $timeout(function () {
+        //   //   $scope.messages.push(MockService.getMockMessage());
+        //   keepKeyboardOpen();
+        //   viewScroll.scrollBottom(true);
+        // }, 2000);
+
+
         $timeout(function () {
           keepKeyboardOpen();
           viewScroll.scrollBottom(true);
@@ -2792,8 +2833,6 @@ if(data.length >= 3){
           keepKeyboardOpen();
           viewScroll.scrollBottom(true);
         }, 2000);
-
-
       }, function (error) {
 
       })
