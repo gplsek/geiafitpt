@@ -57,10 +57,10 @@ angular.module('geiaFitApp')
   .controller('LoginCtrl', ['$scope', '$state', '$ionicPopup', 'AuthService', 'Flash', '$rootScope', function ($scope, $state, $ionicPopup, AuthService, Flash, $rootScope) {
 
     $scope.data = {
+
       email: "",
       password: ""
     };
-
 
     function validateFields(data) {
       if (data.email == "" && data.password == "") {
@@ -89,6 +89,7 @@ angular.module('geiaFitApp')
       result = pattern.test(email);
       return result;
     }
+
 
     $scope.resetPassword = function(){
       if($scope.data.email == ""){
@@ -129,8 +130,8 @@ angular.module('geiaFitApp')
         })        
           
       }
-      
-    }
+    }   
+
 
     $scope.login = function () {
   
@@ -144,27 +145,18 @@ angular.module('geiaFitApp')
       Flash.showFlash({ type: 'error', message: "Login Failed !" });
   })
 }
+      if (validateFields($scope.data)) {
+        AuthService.login($scope.data.email, $scope.data.password, $scope.data.checked).
+          then(function (authenticated) {
+            Flash.showFlash({ type: 'success', message: "Success !" });
+            $state.go('main.dash', {}, { reload: true });
+            //$scope.setCurrentUsername(data.username);
+          }, function (err) {
+            Flash.showFlash({ type: 'error', message: "Login Failed !" });
+          })
+      }
 
     }
-    //   $scope.login = function(data) {
-    //     $scope.data = {};
-    //     if(!data){
-    //       var alertPopup = $ionicPopup.//alet({
-    //         title: 'Login failed!',
-    //         template: 'Please check your credentials!'
-    //       });
-    //       return
-    //     }
-    //       AuthService.login(data.username, data.password,data.checked).then(function(authenticated) {
-    //       $state.go('main.dash', {}, {reload: true});
-    //       $scope.setCurrentUsername(data.username);
-    //     }, function(err) {
-    //       var alertPopup = $ionicPopup.alert({
-    //         title: 'Login failed!',
-    //         template: 'Please check your credentials!'
-    //       });
-    //     });
-    //   };
 
 
   }])
@@ -975,6 +967,7 @@ angular.module('geiaFitApp')
     //$scope.sortOrder = false;
 
 
+
  function compare(a,b) {
   if (a.title < b.title)
     return -1;
@@ -1112,7 +1105,6 @@ if(data.length >= 3){
       $scope.tempWebExList = "";
 
 
-
       var myExerList = [];
       var webExerciseList = [];
       var exerciseList = ExerciseLibraryService.exerciseData().then(function (success) {
@@ -1129,39 +1121,13 @@ if(data.length >= 3){
             
           }
         }
-
         $scope.myExerciseList = myExerList
         $scope.webExercise = webExerciseList
         $scope.doSort("1",'myE');
         console.log(myExerList)
         console.log(webExerciseList)
-
-        // var myExercisePages = Math.ceil(myExerciseList.length / pageSize);
-        // $scope.webExercisePages = Math.ceil(webExerciseList.length / pageSize);
-
-        // console.log(myExerciseList.length + "" + myExercisePages);
-        // console.log(webExerciseList.length + "" + $scope.webExercisePages);
-
-        // for (i = 0; i < myExercisePages; i++) {
-        //   var page = {
-        //     id: i + 1,
-        //     title: "page " + (i + 1)
-        //   }
-        //   $scope.pages.push(page);
-        // }
-
-        // for (i = 0; i < $scope.webExercisePages; i++) {
-        //   var page = {
-        //     id: i + 1,
-        //     title: "page " + (i + 1)
-        //   }
-        //   $scope.webExPages.push(page);
-        // }
-
-
-        // // $scope.selectedPage = $scope.pages[0].id;
-        // // $scope.showNext(1);
       }, function (error) {
+
 
       })
 
@@ -1180,24 +1146,18 @@ if(data.length >= 3){
           $scope.selectedTab = 'My Exercises';
           $scope.webExView = false;
           $scope.exerciseView = true;
-
           $scope.doSort("1",'myE');
-          
           break;
         case 2:
           $scope.selectedTab = 'WebEx Exercises';
           $scope.webExView = true;
           $scope.exerciseView = false;
-
           $scope.doSort("1",'webE');
-          
           break;
         default:
           $scope.selectedTab = 'My Exercises';
           $scope.exerciseView = true;
-
           $scope.doSort("1",'myE');
-          
       }
       this.filterPatient = undefined;
 
@@ -1372,6 +1332,7 @@ if(data.length >= 3){
     var patientData;
     var ActivityData;
     var complianceData;
+    var weekDates = [];
     var activityDataForWeek = [];
     var complianceDataForWeek = [];
     var activityDataForMonth = [];
@@ -1465,19 +1426,19 @@ if(data.length >= 3){
     }
 
     getWeekDates = function () {
-      var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').startOf('day').format('L');
+      var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').format('L');
       var startDate = moment(TstartDate)
       var TendDate = moment().utcOffset('-07:00').format('L');
       var endDate = moment(TendDate)
 
-      var dateList = [];
+      var weekDates = [];
       var date = startDate;
       while (date.diff(endDate) < 0) {
-        dateList.push(date)
+        weekDates.push(date)
         var tempDate = startDate.add(1, 'days').startOf('day').format('L');
         date = moment(tempDate);
       }
-      return dateList;
+      return weekDates;
     }
 
     getActivityDataForWeek = function (successData) {
@@ -1518,9 +1479,9 @@ if(data.length >= 3){
       var totalWeekMid = 0;
       var totalWeekHigh = 0;
 
-      var dates = getWeekDates();
+      var weekDates = getWeekDates();
 
-      for (var d in dates) {
+      for (var d in weekDates) {
         var total_exercise_goal = 0
         var total_exercise = 0
         var total_steps_goal = 0
@@ -1537,7 +1498,8 @@ if(data.length >= 3){
           var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
           var tempDate = moment(Tdate)
 
-          if (tempDate.diff(dates[d]) == 0) {
+          if (tempDate.diff(weekDates[d]) == 0) {
+
             var temp = activityDataForWeek[x];
 
             if (temp.total_exercise_goal != null && temp.total_exercise != null) {
@@ -1623,9 +1585,9 @@ if(data.length >= 3){
       var dataWeekCompliance = [];
       var totalWeekCompliance = 0;
 
-      var dates = getWeekDates();
+       var weekDates = getWeekDates();
 
-      for (var d in dates) {
+      for (var d in weekDates) {
         var total_compliance_goal = 0
         var total_compliance = 0
 
@@ -1634,7 +1596,8 @@ if(data.length >= 3){
           var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
           var tempDate = moment(Tdate)
 
-          if (tempDate.diff(dates[d]) == 0) {
+          if (tempDate.diff(weekDates[d]) == 0) {
+
             var temp = complianceDataForWeek[x];
             if (temp.daily_challenge != null && temp.daily_points != null) {
               total_compliance_goal = parseInt(temp.daily_challenge)
@@ -1666,6 +1629,7 @@ if(data.length >= 3){
         var tempDate = startDate.add(1, 'days').format('L')
         startDate = moment(tempDate)
       }
+
       return dateList;
     }
 
@@ -1725,11 +1689,10 @@ if(data.length >= 3){
       var totalMonthHigh = 0;
 
       var dates = getMonthDates($scope.DATE);
-
       var onlyDates = []
+
       for (var d in dates) {
         onlyDates.push(dates[d].date())
-
         var total_exercise_goal = 0
         var total_exercise = 0
         var total_steps_goal = 0
@@ -1742,14 +1705,10 @@ if(data.length >= 3){
         var time_active_high = 0
 
         for (var x in activityDataForMonth) {
-          //var tempDate = utilityService.unixTimeToDate(activityDataForMonth[x].date);
           var unixDate = activityDataForMonth[x].date
           var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
           var date = moment(Tdate)
 
-          /*if (tempDate.getFullYear() === dates[d].getFullYear() &&
-            tempDate.getMonth() === dates[d].getMonth() &&
-            tempDate.getDate() === dates[d].getDate()) {*/
           if (date.diff(dates[d]) == 0) {
 
             var temp = activityDataForMonth[x];
@@ -1853,28 +1812,21 @@ if(data.length >= 3){
 
 
     chartConfigForComplianceMonth = function () {
-
       var dataMonthComplianceGoal = [];
       var dataMonthCompliance = [];
-
       var dates = getMonthDates($scope.DATE);
-
       var onlyDates = []
+
       for (var d in dates) {
         onlyDates.push(dates[d].date())
-
         var total_compliance_goal = 0
         var total_compliance = 0
-
+        
         for (var x in complianceDataForMonth) {
-          //var tempDate = utilityService.unixTimeToDate(complianceDataForMonth[x].created);
           var unixDate = complianceDataForMonth[x].created
           var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
           var date = moment(Tdate)
 
-          /*if (tempDate.getFullYear() === dates[d].getFullYear() &&
-            tempDate.getMonth() === dates[d].getMonth() &&
-            tempDate.getDate() === dates[d].getDate()) {*/
           if (date.diff(dates[d]) == 0) {
             var temp = complianceDataForMonth[x];
 
@@ -1892,11 +1844,6 @@ if(data.length >= 3){
       }
 
       $scope.lastDateOfMonth = Math.max(...onlyDates);
-
-      /*dataMonthComplianceGoal.reverse();
-      dataMonthCompliance.reverse();
-      onlyDates.reverse();*/
-
       $scope.chartConfigMonthViewComp = getChartConfigForMonth(dataMonthComplianceGoal, dataMonthCompliance, onlyDates)
 
     }
@@ -1904,29 +1851,20 @@ if(data.length >= 3){
 
 
     $scope.prevDate = function () {
-      /*var d = $scope.DATE;
-      var tempDate = new Date(d.getFullYear(), d.getMonth()-1,1)
-      $scope.DATE = new Date(tempDate.getFullYear(), tempDate.getMonth() + 1, 0);*/
 
       var Tdate = moment($scope.DATE);
       var tempDate = Tdate.utcOffset('-07:00').subtract(1, 'month').format();
       $scope.DATE = moment(tempDate).endOf('month').toDate();
       console.log($scope.DATE)
       var x = moment($scope.DATE)
-      console.log(x)
+
       console.log("Perv Selected " + $scope.DATE)
 
       getActivityDataForMonth(ActivityData, $scope.DATE)
       getComplianceDataForMonth(complianceData, $scope.DATE)
-
-      //chartConfigForMonth(); 
-      //chartConfigForComplianceMonth();
     }
 
     $scope.nextDate = function () {
-      /*var d = $scope.DATE;
-      var tempDate = new Date(d.getFullYear(), d.getMonth()+1,1)
-      $scope.DATE = new Date(tempDate.getFullYear(), tempDate.getMonth() + 1, 0);*/
 
       var Tdate = moment($scope.DATE);
       var tempDate = Tdate.utcOffset('-07:00').add(1, 'month').format();
@@ -1936,21 +1874,15 @@ if(data.length >= 3){
 
       getActivityDataForMonth(ActivityData, $scope.DATE)
       getComplianceDataForMonth(complianceData, $scope.DATE)
-
-      //chartConfigForMonth();  
-      //chartConfigForComplianceMonth();
     }
 
     $scope.sortedByList = sortedByList;
     $scope.sortedBy = $scope.sortedByList[0].id;
-    //$scope.selectedView = 'day';
-    //$scope.DayView = true;
 
     $scope.changeView = function (view) {
       switch (view) {
         case 1:
           $scope.selectedView = 'day';
-          //chartConfigForDay();
           getActivityDataForYesterday(ActivityData);
           $scope.DayView = true;
           $scope.WeekView = false;
@@ -1959,28 +1891,20 @@ if(data.length >= 3){
           break;
         case 2:
           $scope.selectedView = 'week';
-          /*chartConfigForWeek();
-          chartConfigForComplianceWeek();*/
           getActivityDataForWeek(ActivityData);
           getComplianceDataForWeek(complianceData);
-
           $scope.WeekView = true;
           $scope.DayView = false;
           $scope.MonthView = false;
           $scope.DefaultView = false;
           break;
         case 3:
-          $scope.selectedView = 'month';
-          chartConfigForMonth();
-          chartConfigForComplianceMonth();
-
-          /*var d = new Date();
-          $scope.DATE = new Date(d.getFullYear(), d.getMonth() + 1, 0);*/
-
+          $scope.selectedView = 'month'; 
           var Tdate = moment().utcOffset('-07:00').endOf("month").hours(0).minute(0).second(0).millisecond(0).format();
           $scope.DATE = moment(Tdate).toDate();
-          console.log($scope.DATE)
-
+          console.log($scope.DATE)       
+          getActivityDataForMonth(ActivityData) ;
+          getComplianceDataForMonth(complianceData);
           $scope.MonthView = true;
           $scope.DayView = false;
           $scope.WeekView = false;
@@ -1988,7 +1912,6 @@ if(data.length >= 3){
           break;
         default:
           $scope.selectedView = 'day';
-          //chartConfigForDay();
           getActivityDataForYesterday(ActivityData);
           $scope.DayView = true;
           $scope.WeekView = false;
@@ -1999,8 +1922,6 @@ if(data.length >= 3){
     }
 
     init = function () {
-      /*var d = new Date();
-      $scope.DATE = new Date(d.getFullYear(), d.getMonth() + 1, 0);*/
 
       var Tdate = moment().utcOffset('-07:00').endOf("month").hours(0).minute(0).second(0).millisecond(0).format();
       $scope.DATE = moment(Tdate).toDate();
@@ -2056,7 +1977,7 @@ if(data.length >= 3){
         ActivityData = success;
         getActivityDataForYesterday(ActivityData);
         //getActivityDataForWeek(ActivityData);
-        getActivityDataForMonth(ActivityData);
+        //getActivityDataForMonth(ActivityData);
       }, function (error) {
         console.log("getActivity error")
       })
@@ -2077,9 +1998,8 @@ if(data.length >= 3){
             $scope.HealthPoint = DailyHP[x].daily_points
           }
         }
-
         //getComplianceDataForWeek(complianceData);
-        getComplianceDataForMonth(complianceData, $scope.DATE)
+        //getComplianceDataForMonth(complianceData, $scope.DATE)
 
       }, function (error) {
         console.log("getHealthPoint error")
@@ -2188,24 +2108,27 @@ if(data.length >= 3){
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
       ];
 
-      var endDate = new Date();
-      var startDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() - 7,
-        endDate.getHours(), endDate.getMinutes(), endDate.getSeconds(), endDate.getMilliseconds())
+      var TstartDate = moment().utcOffset('-07:00').subtract(6, 'days').format('L');
+      var startDate = moment(TstartDate)
+      var TendDate = moment().utcOffset('-07:00').format('L');
+      var endDate = moment(TendDate)
+
       var dateList = [];
-      var date = startDate;
+      var tempDate = startDate;
       var i = 0;
-      while (date < endDate) {
+
+      while (tempDate.diff(endDate) <= 0) {
         if (i == 0) {
-          dateList.push(monthNames[date.getMonth()] + " " + date.getDate())
+          dateList.push(monthNames[tempDate.month()] + " " + tempDate.date())
           i++;
         }
         else {
-          dateList.push(date.getDate())
+          dateList.push(tempDate.date())
         }
-        var tempDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1,
-          date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds())
-        date = tempDate;
+        var Tdate = startDate.add(1, 'days').startOf('day').format('L');
+        tempDate = moment(Tdate);
       }
+
 
       var chartConfig = {
         options: {
@@ -2359,14 +2282,14 @@ if(data.length >= 3){
     console.log($stateParams);
     console.log($rootScope.UID)
 
-
     $scope.title = 'Exercise Program';
     $scope.subNavList = false;
-
+    $scope.sortList = false;
+    var exerciseListBackup;
     getListOfExerciseProgramme();
 
     var exerciseList = [];
-    var pageSize = 10;
+
     var exerciseSortedByList = [
       {
         id: 0,
@@ -2391,15 +2314,91 @@ if(data.length >= 3){
     ];
 
     $scope.exerciseSortedByList = exerciseSortedByList;
-    $scope.sortedBy = $scope.exerciseSortedByList[0].id;
+    $scope.sortedBy = $scope.exerciseSortedByList[0].title;
+
+    $scope.showList = function () {
+      $scope.subNavList = !$scope.subNavList;
+    }
+    $scope.showListSortList = function () {
+      $scope.sortList = !$scope.sortList;
+    }
+
+    $scope.sortPatients = function (sortType,title) {
+     
+      switch (sortType) {
+        case 0:
+          $scope.exerciseList =  exerciseListBackup;
+           $scope.sortedBy = title;
+          break;
+        case 1:
+          $scope.exerciseList =  exerciseListBackup;
+            $scope.sortedBy = title;
+          break;
+        case 2:
+          $scope.exerciseList = [];
+            $scope.sortedBy = title;
+          break;
+        case 3:
+        var todayExercise = [];
+        var exerciseListForToday = exerciseListBackup ;
+       for (var i = 0; i <  exerciseListForToday.length ; i++) {
+         if(exerciseListForToday[i].today === 1)
+         {
+           todayExercise.push(exerciseListForToday[i]);
+         }
+       }
+        $scope.sortedBy = title;
+        $scope.exerciseList = todayExercise;
+          break;
+        case 4:
+          var restOfWeekExercise = [];
+            var exerciseListForRestOfDay = exerciseListBackup ;
+           for (var i = 0; i <  exerciseListForRestOfDay.length ; i++) {
+          if( exerciseListForRestOfDay[i].today === 0)
+           {
+           restOfWeekExercise.push(exerciseListForRestOfDay[i]);
+          }
+           }
+        $scope.sortedBy = title;
+        $scope.exerciseList = restOfWeekExercise;
+          break;
+        default:
+           $scope.exerciseList =  exerciseListBackup;
+          break;
+      }
+
+      $scope.sortList = !$scope.sortList;
+    }
+
+    $scope.gotoAction = function (id) {
+      if (id == 2) {
+        $scope.subNavList = false
+      } else {
+        var state = getStateTitle(id);
+        $state.transitionTo(state, { name: $stateParams.name, patientId: $stateParams.uid }, { reload: true });
+      }
+
+    }
+
+    $scope.sortedByList = sortedByList;
+    //  $scope.sortedBy =  $scope.sortedByList[0].id;
+    function getStateTitle(id) {
+      var title = '';
+      var list = $scope.sortedByList;
+      for (var i = 0; i < list.length; i++) {
+        if (id == list[i].id) {
+          title = list[i].routingStateName;
+          return title;
+        }
+      }
+    }
+
+
+
 
     //This function is use to delete exercise belong to a patient.
     $scope.delete = function (peid, index) {
       console.log("Delete called")
-      var confirmPopup = $ionicPopup.confirm({
-        title: 'Delete exercise',
-        template: 'Are you sure you want to delete this exercise ?'
-      });
 
       confirmPopup.then(function (res) {
         if (res) {
@@ -2422,6 +2421,7 @@ if(data.length >= 3){
         }
       });
 
+
     }
 
 
@@ -2429,39 +2429,6 @@ if(data.length >= 3){
       $scope.subNavList = !$scope.subNavList;
     }
 
-
-    $scope.pages = [
-      {
-        id: 0,
-        title: "Page 1"
-      },
-      {
-        id: 1,
-        title: "Page 2"
-      },
-      {
-        id: 2,
-        title: "Page 3"
-      },
-      {
-        id: 3,
-        title: "Page 4"
-      },
-      {
-        id: 4,
-        title: "Page 5"
-      }
-    ];
-
-    $scope.selectedPage = $scope.pages[0].id;
-
-    $scope.showNext = function (pageNo) {
-      var list = angular.copy(exerciseList);
-      var offset = (pageNo - 1) * pageSize;
-      $scope.exerciseList = list.splice(offset, pageSize);
-      $scope.selectedPage = $scope.pages[pageNo - 1].id;
-    }
-    $scope.showNext(1);
 
 
 
@@ -2490,28 +2457,31 @@ if(data.length >= 3){
     }
 
 
-
     init = function () {
       console.log($stateParams.patientId)
     }
     init();
 
     $scope.addss = function () {
-      $state.transitionTo('AddExcercisePopup', {}, { reload: true });
-    }
 
+      $ionicPopup.show({
+        template: '<div style="background: #121516; color: #fff;"> <button class="button button-block btn-yellow">My Mobile Device</button><button class="button button-block btn-yellow">My Library</button><button class="button button-block btn-yellow">Create New</button></div>',
+        title: 'Add Exercise',
+        subTitle: 'Choose a Source',
+        scope: $scope,
+        buttons: [
+          { text: 'Cancel' }
+        ]
+      });
+
+    }
 
 
     function getListOfExerciseProgramme() {
       SetExerciseProgramService.listOfExercise($rootScope.UID).then(function (data) {
-
         $scope.exerciseList = data.exercises;
-        console.log($scope.exerciseList + 'inside controller');
-
+        exerciseListBackup = data.exercises;
       });
-
-
-
     }
     //  $scope.day;
 
@@ -2828,6 +2798,19 @@ if(data.length >= 3){
         $scope.input.message = '';
         $scope.messages.push(message);
 
+
+        $timeout(function () {
+          keepKeyboardOpen();
+          viewScroll.scrollBottom(true);
+        }, 0);
+
+        // $timeout(function () {
+        //   //   $scope.messages.push(MockService.getMockMessage());
+        //   keepKeyboardOpen();
+        //   viewScroll.scrollBottom(true);
+        // }, 2000);
+
+
         $timeout(function () {
           keepKeyboardOpen();
           viewScroll.scrollBottom(true);
@@ -2838,8 +2821,6 @@ if(data.length >= 3){
           keepKeyboardOpen();
           viewScroll.scrollBottom(true);
         }, 2000);
-
-
       }, function (error) {
 
       })
