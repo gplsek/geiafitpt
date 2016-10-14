@@ -101,22 +101,32 @@ angular.module('geiaFitApp')
 
         AuthService.forgetPassword($scope.data.email)
         .then(function(res){
+          if(res.data ==null){
+            $ionicPopup.alert({
+            title: 'Password reset',
+            template: 'Unable to connect to server.'
+          });
+          }
           if(res.data.success == 0){
          $ionicPopup.alert({
             title: 'Password reset',
             template: res.data.message
           });
-
           }
           if(res.data.Status == 1){
             $ionicPopup.alert({
             title: 'Password reset',
-            template: 'Please check your email for your password."'
+            template: 'Please check your email for your password.'
           });
+          $scope.data.email = "";
           }
           console.log(res)
         },function(error){
-          
+          console.log(err);
+          $ionicPopup.alert({
+            title: 'Password reset',
+            template: 'Unable to connect to server.'
+          });
         })        
           
       }
@@ -1116,29 +1126,6 @@ if(data.length >= 3){
         $scope.doSort("1",'myE');
         console.log(myExerList)
         console.log(webExerciseList)
-
-        var myExercisePages = Math.ceil(myExerciseList.length / pageSize);
-        $scope.webExercisePages = Math.ceil(webExerciseList.length / pageSize);
-
-        console.log(myExerciseList.length + "" + myExercisePages);
-        console.log(webExerciseList.length + "" + $scope.webExercisePages);
-
-        for (i = 0; i < myExercisePages; i++) {
-          var page = {
-            id: i + 1,
-            title: "page " + (i + 1)
-          }
-          $scope.pages.push(page);
-        }
-
-        for (i = 0; i < $scope.webExercisePages; i++) {
-          var page = {
-            id: i + 1,
-            title: "page " + (i + 1)
-          }
-          $scope.webExPages.push(page);
-        }
-
       }, function (error) {
 
 
@@ -1254,7 +1241,7 @@ if(data.length >= 3){
     $scope.editEnabled = false;
 
     $scope.testFunction = function (file) {
-      console.log(file)
+      if(file != null || file != undefined){
       var fileReader = new FileReader();
       fileReader.readAsDataURL(file);
       fileReader.onload = function (e) {
@@ -1268,12 +1255,13 @@ if(data.length >= 3){
 
         MyAccount.uploadImage(data).then(function (success) {
           console.log(success)
+          init();
         }, function (error) {
           console.log(error)
         })
 
       };
-
+      }
       //     //  $scope.src = "https://trip101.com/assets/default_profile_pic-9c5d869a996318867438aa3ccf9a9607daee021047c1088645fbdfbbed0e2aec.jpg"
     }
 

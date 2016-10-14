@@ -70,11 +70,11 @@ angular.module('geiaFitApp')
         url: ApiEndpoint.url + '/user/login',
         data: form
       }).then(function (response) {
+        $rootScope.cookieValue = response.data.session_name+"="+response.data.sessid;
         var token = response.data.token
         storeUserCredentials(token, isChecked);
         $rootScope.token = token;
         $rootScope.loggedInUserUid = response.data.user.uid;
-        console.log("UID " + $rootScope.loggedInUserUid);
       });
       return promise;
       /*
@@ -126,7 +126,8 @@ angular.module('geiaFitApp')
       }).then(function (response) {
         return response;
       }, function (err) {
-        console.log(err);
+        //console.log(err);
+        return err;
       });
 
     };
@@ -341,12 +342,16 @@ angular.module('geiaFitApp')
     }
 
     var uploadProfileImage = function (params) {
-      console.log(params)
       var ProfileImage = $http({
+        headers: {
+                'X-CSRF-Token': $rootScope.token,
+                //'cookie': $rootScope.cookieValue
+              },
         method: "POST",
         url: ApiEndpoint.url + "/profile/profileimage/" + $rootScope.loggedInUserUid,
         data: params
       }).then(function (response) {
+        console.log(response)
         return response.data;
       }, function (err) {
         console.log(err);
