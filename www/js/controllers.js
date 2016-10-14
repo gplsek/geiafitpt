@@ -1361,6 +1361,7 @@ if(data.length >= 3){
     var patientData;
     var ActivityData;
     var complianceData;
+    var weekDates = [];
     var activityDataForWeek = [];
     var complianceDataForWeek = [];
     var activityDataForMonth = [];
@@ -1454,19 +1455,23 @@ if(data.length >= 3){
     }
 
     getWeekDates = function () {
-      var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').startOf('day').format('L');
+      var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').format('L');
       var startDate = moment(TstartDate)
       var TendDate = moment().utcOffset('-07:00').format('L');
       var endDate = moment(TendDate)
 
-      var dateList = [];
+      var weekDates = [];
       var date = startDate;
       while (date.diff(endDate) < 0) {
-        dateList.push(date)
+        weekDates.push(date)
         var tempDate = startDate.add(1, 'days').startOf('day').format('L');
         date = moment(tempDate);
       }
-      return dateList;
+  
+      for(var x in weekDates){
+        console.log(weekDates[x].date())
+      }
+      return weekDates;
     }
 
     getActivityDataForWeek = function (successData) {
@@ -1507,9 +1512,10 @@ if(data.length >= 3){
       var totalWeekMid = 0;
       var totalWeekHigh = 0;
 
-      var dates = getWeekDates();
+      var weekDates = getWeekDates();
+      //console.log(weekDates)
 
-      for (var d in dates) {
+      for (var d in weekDates) {
         var total_exercise_goal = 0
         var total_exercise = 0
         var total_steps_goal = 0
@@ -1526,7 +1532,7 @@ if(data.length >= 3){
           var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
           var tempDate = moment(Tdate)
 
-          if (tempDate.diff(dates[d]) == 0) {
+          if (tempDate.diff(weekDates[d]) == 0) {
             var temp = activityDataForWeek[x];
 
             if (temp.total_exercise_goal != null && temp.total_exercise != null) {
@@ -1612,9 +1618,10 @@ if(data.length >= 3){
       var dataWeekCompliance = [];
       var totalWeekCompliance = 0;
 
-      var dates = getWeekDates();
+       var weekDates = getWeekDates();
+      //console.log(weekDates)
 
-      for (var d in dates) {
+      for (var d in weekDates) {
         var total_compliance_goal = 0
         var total_compliance = 0
 
@@ -1623,7 +1630,7 @@ if(data.length >= 3){
           var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
           var tempDate = moment(Tdate)
 
-          if (tempDate.diff(dates[d]) == 0) {
+          if (tempDate.diff(weekDates[d]) == 0) {
             var temp = complianceDataForWeek[x];
             if (temp.daily_challenge != null && temp.daily_points != null) {
               total_compliance_goal = parseInt(temp.daily_challenge)
@@ -1654,6 +1661,10 @@ if(data.length >= 3){
         dateList.push(startDate)
         var tempDate = startDate.add(1, 'days').format('L')
         startDate = moment(tempDate)
+      }
+      
+      for(var x in dateList){
+        console.log(dateList[x].date())
       }
       return dateList;
     }
@@ -1950,6 +1961,7 @@ if(data.length >= 3){
           $scope.selectedView = 'week';
           /*chartConfigForWeek();
           chartConfigForComplianceWeek();*/
+          getWeekDates();
           getActivityDataForWeek(ActivityData);
           getComplianceDataForWeek(complianceData);
 
@@ -2177,24 +2189,27 @@ if(data.length >= 3){
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
       ];
 
-      var endDate = new Date();
-      var startDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() - 7,
-        endDate.getHours(), endDate.getMinutes(), endDate.getSeconds(), endDate.getMilliseconds())
+      var TstartDate = moment().utcOffset('-07:00').subtract(6, 'days').format('L');
+      var startDate = moment(TstartDate)
+      var TendDate = moment().utcOffset('-07:00').format('L');
+      var endDate = moment(TendDate)
+
       var dateList = [];
-      var date = startDate;
+      var tempDate = startDate;
       var i = 0;
-      while (date < endDate) {
+      while (tempDate.diff(endDate) <= 0) {
         if (i == 0) {
-          dateList.push(monthNames[date.getMonth()] + " " + date.getDate())
+          dateList.push(monthNames[tempDate.month()] + " " + tempDate.date())
           i++;
         }
         else {
-          dateList.push(date.getDate())
+          dateList.push(tempDate.date())
+
         }
-        var tempDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1,
-          date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds())
-        date = tempDate;
+        var Tdate = startDate.add(1, 'days').startOf('day').format('L');
+        tempDate = moment(Tdate);
       }
+
 
       var chartConfig = {
         options: {
