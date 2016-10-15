@@ -5,25 +5,26 @@
 			<div class="title title-center header-item" ng-click="gotoHome()">{{patientName}}</div>
 		</ion-nav-buttons>
 		<ion-nav-buttons side="right">
-			<span  menu-toggle="right" class="icon ion-ios-plus-outline" ng-click="addss()"></span>
+			<span menu-toggle="right" class="icon ion-ios-plus-outline" ng-click="addss()"></span>
 		</ion-nav-buttons>
 	</ion-nav-bar>
 	<ion-content>
 
- <div class="sortedBy text-center">
-		    <!--<select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select> -->
-		     <!--temp code-->
-<input type="button" class="itemdropdown" ng-click="showList();" value="{{title}}"/>
-<ion-list ng-show="subNavList" class="ddlistitems">
-  <ion-item ng-repeat="item in sortedByList" ng-click="gotoAction(item.id)">
-    <h2>{{item.title}}</h2>
-  </ion-item>
-</ion-list>
+		<div class="sortedBy text-center">
+			<!--<select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select> -->
+			<!--temp code-->
+			<input type="button" class="itemdropdown" ng-click="showList();" value="{{title}}" />
+			<ion-list ng-show="subNavList" class="ddlistitems">
+				<ion-item ng-repeat="item in sortedByList" ng-click="gotoAction(item.id)">
+					<h2>{{item.title}}</h2>
+				</ion-item>
+			</ion-list>
 
-<!--temp code-->
- </div>
+			<!--temp code-->
+		</div>
 
 		<div class="search">
+<<<<<<< HEAD
 	      <input type="text" placeholder="Search" ng-model="searchPatient" />
 	      <span class="icon ion-ios-search-strong pull-right"></span>
 	    </div>
@@ -36,6 +37,24 @@
 		<ul class="exerciseList">
 			<li ng-repeat="item in exerciseList" class="gieafitListItem group" >
 			<div ui-sref="setExerciseProgram(
+=======
+			<input type="text" placeholder="Search" ng-model="searchExercise" />
+			<span class="icon ion-ios-search-strong pull-right"></span>
+		</div>
+		<p class="text-center" 
+   sylte="margin-top: 10px;"><small >Sorted By:</small></p>
+		<div class="sortedBy text-center">
+			<input type="button" class="itemdropdown" ng-click="showListSortList();" value="{{sortedBy}}" />
+			<ion-list ng-show="sortList" class="ddlistitems">
+				<ion-item ng-repeat="item in exerciseSortedByList" ng-model="sortedBy" ng-click="sortPatients({{item.id}})">
+					<h2>{{item.title}}</h2>
+				</ion-item>
+			</ion-list>
+		</div>
+		<ul class="exerciseList">
+			<li ng-repeat="item in exerciseList  | filter: searchExercise" class="gieafitListItem group">
+				<div ui-sref="setExerciseProgram(
+>>>>>>> feature/development
        {
 peid: item.peid,
 title: item.title,
@@ -63,21 +82,27 @@ thumb1: item.thumb1,
 thumb2: item.thumb2
 }
 
+<<<<<<< HEAD
 )">	<span class="pull-left"><span class="marginR5">{{$index+1}}.</span><span>{{item.title}}</span>
 		<span>{{item.weekly.sun === 1 ?"S":""}}{{item.weekly.mon === 1 ?"M":""}}{{item.weekly.tue === 1 ?"T":""}}{{item.weekly.wed === 1 ?"W":""}}{{item.weekly.thu === 1 ?"T":""}}{{item.weekly.fri === 1 ? "F":""}}{{item.weekly.sat === 1 ?"S":""}}</span></span> </div>
 				<span class="pull-right trash-icon" ng-click="delete(item.peid,$index)">
+=======
+        )"> <span class="pull-left"><span class="marginR5">{{$index+1}}.</span><span>{{item.title}}</span>
+					<span>{{item.weekly.sun === 1 ?"S":""}}{{item.weekly.mon === 1 ?"M":""}}{{item.weekly.tue === 1 ?"T":""}}{{item.weekly.wed === 1 ?"W":""}}{{item.weekly.thu === 1 ?"T":""}}{{item.weekly.fri === 1 ? "F":""}}{{item.weekly.sat === 1 ?"S":""}}</span></span>
+				</div>
+
+				<span class="pull-right trash-icon" ng-click="delete(item.peid,$index)">
+<<<<<<< HEAD
+>>>>>>> feature/development
 
 					<span class="pos-rel">
+=======
+>>>>>>> 5ac8413326c89330f74f141d29afafb7d8372957
 						<i class="icon ion-ios-trash-outline" ></i>
 						<!-- <i class="icon ion-ios-close-outline"></i> -->
-					</span>
 				</span>
 			</li>
 		</ul>
-		
-		<section class="pagination">
-			<select ng-model="selectedPage" ng-options="page.id as page.title for page in pages" class="customSelect" ng-change="showNext(selectedPage + 1)"></select>
-			<span class="pull-right next" ng-click="showNext(selectedPage + 2)">Next <i class="icon ion-chevron-right"></i></span>
-		</section>
+
 	</ion-content>
 </ion-view>

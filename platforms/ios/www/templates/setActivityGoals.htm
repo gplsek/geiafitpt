@@ -58,15 +58,15 @@
 				<div>
 					<div class="col-xs-4">
 						<span>Light</span>
-						<select class="customSelect" ng-options="item.id as item.title for item in lightMins" ng-model="lightMinsSelected"></select>
+						<select class="customSelect" ng-options="item.id as item.title for item in lightMins" ng-model="setActivityGoals.lightMinsSelected"></select>
 					</div>
 					<div class="col-xs-4">
 						<span>Moderate</span>
-						<select class="customSelect" ng-options="item.id as item.title for item in moderateMins" ng-model="moderateMinsSelected"></select>
+						<select class="customSelect" ng-options="item.id as item.title for item in moderateMins" ng-model="setActivityGoals.moderateMinsSelected"></select>
 					</div>
 					<div class="col-xs-4">
 						<span>Vigorous</span>
-						<select class="customSelect" ng-options="item.id as item.title for item in vigorousMins" ng-model="vigorousMinsSelected"></select>
+						<select class="customSelect" ng-options="item.id as item.title for item in vigorousMins" ng-model="setActivityGoals.vigorousMinsSelected"></select>
 					</div>
 				</div>
 			</div>
@@ -105,7 +105,7 @@
 				</div>
 			</div>
 
-			<button class="button button-block btn-yellow">Submit</button>
+			<button class="button button-block btn-yellow" ng-click="setActivityGoals()">Submit</button>
 
 			
 		</section>

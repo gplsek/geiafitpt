@@ -1,7 +1,13 @@
 <ion-view view-title="Exercise Library" class="exerciseLibrary activity">
 	<ion-nav-bar class="group">
+		<!--<div  ng-show="MyExerciseIcon">
 		<ion-nav-buttons side="left">
 			<span class="icon ion-ios-plus-outline" ui-sref="addExercise"></span>
+		</ion-nav-buttons>
+		</div>-->
+		<!--for Web Exercise-->
+		<ion-nav-buttons side="left" >
+			<span class="icon ion-ios-plus-outline" ng-click="showWebexMessage()"></span>
 		</ion-nav-buttons>
 		<ion-nav-buttons side="right">
 			<a menu-toggle="right" class="icon ion-navicon"></a>
@@ -13,7 +19,7 @@
 	      <span class="icon ion-ios-search-strong pull-right"></span>
 	    </div>
 		
-		<div class="sortedBy text-center">
+		<div class="sortedBy1 text-center">
 <div class="main">
 <ul class="selectionTab group">
 	<li ng-class="{'active': selectedTab == 'My Exercises'}" ng-click="changeView(1)">My Exercises</li>
@@ -41,22 +47,17 @@
 	      <select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select>
 	       
 	    </div>-->
-		<ul class="exerciseList">
-			<!--<li ng-repeat="item in exerciseList" class="gieafitListItem group">-->
-				<!--<li ng-repeat="item in filteredExerciseList = (arrayList | filter: filterPatient | orderBy: sortType : sortOrder)" class="gieafitListItem group">-->
-				<li ng-repeat="item in filteredExerciseList = (myExerciseList | filter:{title : filterPatient} )" class="gieafitListItem group">
-				<span class="pull-left">
-					<span class="marginR5">{{item.id}}</span>
-					<span>{{item.title}}&nbsp;&nbsp; :</span>
-					<i><span>{{item.tags[0]}}&nbsp;{{item.tags[1]}}&nbsp;{{item.tags[2]}}</span></i>
-				</span>
-				<span class="pull-right trash-icon" ng-click="delete($index)">
-					<span class="pos-rel">
+		<ul class="exerciseList">		
+			<li ng-repeat="item in filteredExerciseList = (myExerciseList | filter:{title : filterPatient} )" class="gieafitListItem group">
+					<span class="">{{item.id}}</span>
+					<span class="limitSpan" ui-sref="addExercise({exerciseObject : item})">{{item.title}} :</span>
+					<span class="limitSpan">{{item.tags[0]}}&nbsp;{{item.tags[1]}}&nbsp;{{item.tags[2]}}</span>
+					<span class="pull-right trash-icon" ng-click="delete($index)">
 						<i class="icon ion-ios-trash-outline" ></i>
 						<!-- <i class="icon ion-ios-close-outline"></i> -->
 					</span>
-				</span>
-			</li>
+				</li>	
+
 		</ul>
 		
 		<!--<section class="pagination">
@@ -97,18 +98,14 @@
 			<!--<li ng-repeat="item in webExercise" class="gieafitListItem group">-->
 				<!--<li ng-repeat="item in filteredWebExList = ( webExercise | filter: filterPatient | orderBy: sortType : sortOrder)" class="gieafitListItem group">-->
 				<li ng-repeat="item in filteredWebExList = (webExercise | filter:{title : filterPatient} )" class="gieafitListItem group">
-				<span class="pull-left">
-					<span class="marginR5">{{item.id}}</span>
-					<span>{{item.title}} :</span>
-					<i><span>{{item.tags[0]}}&nbsp;{{item.tags[1]}}&nbsp;{{item.tags[2]}}</span></i>
-				</span>
-				<span class="pull-right trash-icon" ng-click="delete($index)">
-					<span class="pos-rel">
+					<span class="" >{{item.id}}</span>
+					<span class="limitSpan" ui-sref="addExercise({exerciseObject : item})">{{item.title}} :</span>
+					<span class="limitSpan">{{item.tags[0]}}&nbsp;{{item.tags[1]}}&nbsp;{{item.tags[2]}}</span>
+					<span class="pull-right trash-icon" ng-click="delete($index)">
 						<i class="icon ion-ios-trash-outline" ></i>
 						<!-- <i class="icon ion-ios-close-outline"></i> -->
 					</span>
-				</span>
-			</li>
+				</li>	
 		</ul>
 		
 		<!--<section class="pagination">
