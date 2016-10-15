@@ -1199,8 +1199,27 @@ if(data.length >= 3){
     }
 
   }])
-  .controller('AddExerciseCtrl', ['$scope', function ($scope) {
+  .controller('AddExerciseCtrl', ['$scope','$state', '$stateParams', function ($scope,$state,$stateParams) {
 
+  $scope.addExercise = {
+    name : "",
+    comments : "",
+    tags : "",
+    thumbnail : "", 
+  }
+  init = function(){
+    console.log($stateParams.exerciseObject)
+    var exercise = $stateParams.exerciseObject;
+    $scope.addExercise.name = exercise.title
+    $scope.addExercise.comments= exercise.comments
+    $scope.addExercise.tags= exercise.categories
+    $scope.addExercise.thumbnail= exercise.image1
+  }
+  init();
+
+  $scope.gotoExerciseProgram = function(){
+    $state.transitionTo("main.exerciseLibrary", {}, { reload: true });
+  }
 
   }])
   .controller('AddExercisePopupCtrl', ['$scope', '$state', function ($scope, $state) {

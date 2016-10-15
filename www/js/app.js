@@ -62,6 +62,10 @@ angular.module('geiaFitApp', ['ionic', 'rzModule','ngCordova','highcharts-ng','n
       high: null
     };
 
+    var exerCiseLibraryParams={
+      exerciseObject : null,
+    }
+
 
   var exerciseprogram=  {
 peid: null,
@@ -124,6 +128,7 @@ thumb2: null
   })
   .state('addExercise', {
     url: 'addExercise', 
+    params : exerCiseLibraryParams,
     templateUrl: "templates/addExercise.htm",
     controller: "AddExerciseCtrl"
   })

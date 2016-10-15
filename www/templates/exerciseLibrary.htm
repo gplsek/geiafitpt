@@ -44,7 +44,7 @@
 		<ul class="exerciseList">		
 			<li ng-repeat="item in filteredExerciseList = (myExerciseList | filter:{title : filterPatient} )" class="gieafitListItem group">
 					<span class="">{{item.id}}</span>
-					<span class="limitSpan">{{item.title}} :</span>
+					<span class="limitSpan" ui-sref="addExercise({exerciseObject : item})">{{item.title}} :</span>
 					<span class="limitSpan">{{item.tags[0]}}&nbsp;{{item.tags[1]}}&nbsp;{{item.tags[2]}}</span>
 					<span class="pull-right trash-icon" ng-click="delete($index)">
 						<i class="icon ion-ios-trash-outline" ></i>
@@ -92,8 +92,8 @@
 			<!--<li ng-repeat="item in webExercise" class="gieafitListItem group">-->
 				<!--<li ng-repeat="item in filteredWebExList = ( webExercise | filter: filterPatient | orderBy: sortType : sortOrder)" class="gieafitListItem group">-->
 				<li ng-repeat="item in filteredWebExList = (webExercise | filter:{title : filterPatient} )" class="gieafitListItem group">
-					<span class="">{{item.id}}</span>
-					<span class="limitSpan">{{item.title}} :</span>
+					<span class="" >{{item.id}}</span>
+					<span class="limitSpan" ui-sref="addExercise({exerciseObject : item})">{{item.title}} :</span>
 					<span class="limitSpan">{{item.tags[0]}}&nbsp;{{item.tags[1]}}&nbsp;{{item.tags[2]}}</span>
 					<span class="pull-right trash-icon" ng-click="delete($index)">
 						<i class="icon ion-ios-trash-outline" ></i>
