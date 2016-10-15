@@ -685,16 +685,23 @@ angular.module('geiaFitApp')
       $scope.subNavList = !$scope.subNavList;
     }
 
+    // $scope.gotoHome = function () {
+    //   console.log("-------------------")
+    //   console.log("Activity =Go TO HOME")
+    //   console.log("-------------------")
+    //   $state.transitionTo('main.dash', {}, { reload: false });
+    // }
+
     $scope.$on("slideEnded", function () {
       console.log($scope.slider.min + 'slider max: ' + $scope.slider.max);
       console.log($scope.slider2.min + 'slider2 max: ' + $scope.slider2.max);
     });
   
-     $scope.back = function () {
-     console.log("BACK called==")
-      console.log($ionicHistory.viewHistory());
-      $ionicHistory.goBack();
-    }
+    //  $scope.back = function () {
+    //  console.log("BACK called==")
+    //   console.log($ionicHistory.viewHistory());
+    //   $ionicHistory.goBack();
+    // }
 
     var stepList = [];
     (function steps() {
@@ -2319,11 +2326,11 @@ console.log($scope.addExercise.tags);
 
     }
 
-    $scope.back = function () {
-     console.log("BACK called==")
-      console.log($ionicHistory.viewHistory());
-      $ionicHistory.goBack();
-    }
+    // $scope.back = function () {
+    //  console.log("BACK called==")
+    //   console.log($ionicHistory.viewHistory());
+    //   $ionicHistory.goBack();
+    // }
 
   }])
 
@@ -2744,12 +2751,12 @@ console.log($scope.addExercise.tags);
 
     $scope.showPrevious(-1);
 
-    $scope.back = function () {
-      //alert("hiiii");
-      $ionicHistory.goBack();
-      console.log($ionicHistory.viewHistory());
+    // $scope.back = function () {
+    //   //alert("hiiii");
+    //   $ionicHistory.goBack();
+    //   console.log($ionicHistory.viewHistory());
 
-    }
+    // }
   }])
 
   .controller('MessageCtrl', ['$scope', 'sortedByList', '$state', '$http', '$ionicPopup', 'ChatApp', '$timeout', '$stateParams', '$rootScope', 'AppService', '$ionicScrollDelegate', function ($scope, sortedByList, $state, $http, $ionicPopup, ChatApp, $timeout, $stateParams, $rootScope, AppService, $ionicScrollDelegate) {
@@ -2893,10 +2900,10 @@ console.log($scope.addExercise.tags);
       });
     }
 
-    $scope.back = function () {
-      console.log($ionicHistory.viewHistory());
-      $ionicHistory.goBack();
-    }
+    // $scope.back = function () {
+    //   console.log($ionicHistory.viewHistory());
+    //   $ionicHistory.goBack();
+    // }
 
 
     function keepKeyboardOpen() {
