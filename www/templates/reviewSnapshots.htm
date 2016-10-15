@@ -1,9 +1,8 @@
 <ion-view  class="reviewSnapshots">
 	<ion-nav-bar class="group">
 		<ion-nav-buttons side="left">
-			<!--<span class="icon ion-ios-arrow-back" ng-click="back()"></span>-->
-			<div class="icon ion-ios-arrow-back" ng-click="back()"></div>
-			<div class="title title-center header-item" ng-click="gotoHome()">{{patientName}}</div>
+			<span class="icon ion-ios-arrow-back" ng-click="back()"></span>
+			<div class="title title-center header-item" style="z-index: -200" ng-click="gotoHome()">{{patientName}}</div>
 		</ion-nav-buttons>
 		<ion-nav-buttons side="right">
 			<span  menu-toggle="right" class="icon ion-ios-plus-outline" ng-click="adds()"></span>

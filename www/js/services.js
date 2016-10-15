@@ -536,6 +536,27 @@ angular.module('geiaFitApp')
 
   }])
 
+  .service('AddExerciseService', ['$rootScope', '$http', 'ApiEndpoint', function ($rootScope, $http, ApiEndpoint) {
+
+    var addExercise = function(params){
+        var exerciseData = $http({
+        method: "PUT",
+        data:params,
+        url: ApiEndpoint.url + "/ptexlib/" + $rootScope.loggedInUserUid
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      });
+      return exerciseData;
+    }
+    
+    return {
+      saveExercise: addExercise
+    }
+
+  }])
+
   .service('Flash', ['$timeout', '$rootScope', function ($timeout, $rootScope) {
 
     var showFlash = function (obj) {

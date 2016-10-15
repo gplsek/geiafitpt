@@ -1,7 +1,13 @@
 <ion-view view-title="Exercise Library" class="exerciseLibrary activity">
 	<ion-nav-bar class="group">
+		<!--<div  ng-show="MyExerciseIcon">
 		<ion-nav-buttons side="left">
 			<span class="icon ion-ios-plus-outline" ui-sref="addExercise"></span>
+		</ion-nav-buttons>
+		</div>-->
+		<!--for Web Exercise-->
+		<ion-nav-buttons side="left" >
+			<span class="icon ion-ios-plus-outline" ng-click="showWebexMessage()"></span>
 		</ion-nav-buttons>
 		<ion-nav-buttons side="right">
 			<a menu-toggle="right" class="icon ion-navicon"></a>
