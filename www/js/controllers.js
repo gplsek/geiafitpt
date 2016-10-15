@@ -706,8 +706,9 @@ angular.module('geiaFitApp')
       console.log($scope.slider2.min + 'slider2 max: ' + $scope.slider2.max);
     });
   
-    $scope.back = function () {
-      //console.log($ionicHistory.viewHistory());
+     $scope.back = function () {
+     console.log("BACK called==")
+      console.log($ionicHistory.viewHistory());
       $ionicHistory.goBack();
     }
 
@@ -1240,6 +1241,7 @@ if(data.length >= 3){
     comments : "",
     tags : "",
     thumbnail : "", 
+    video:""
   }
   init = function(){
     console.log($stateParams.exerciseObject)
@@ -1247,15 +1249,21 @@ if(data.length >= 3){
     $scope.addExercise.name = exercise.title
     $scope.addExercise.comments= exercise.comments
     $scope.addExercise.tags= exercise.categories
-    $scope.addExercise.thumbnail= exercise.image1
+    $scope.addExercise.thumbnail= exercise.image
+    $scope.addExercise.video = exercise.mp4
   }
   init();
-
+console.log($scope.addExercise.tags);
   $scope.gotoExerciseProgram = function(){
     $state.transitionTo("main.exerciseLibrary", {}, { reload: true });
   }
 
   }])
+   .filter('trusted', ['$sce', function ($sce) {
+    return function(url) {
+        return $sce.trustAsResourceUrl(url);
+    };
+}])
   .controller('AddExercisePopupCtrl', ['$scope', '$state', function ($scope, $state) {
 
   }])
@@ -2325,6 +2333,12 @@ if(data.length >= 3){
         $state.transitionTo(state, { name: $stateParams.name, patientId: $stateParams.uid }, { reload: true });
       }
 
+    }
+
+    $scope.back = function () {
+     console.log("BACK called==")
+      console.log($ionicHistory.viewHistory());
+      $ionicHistory.goBack();
     }
 
   }])
