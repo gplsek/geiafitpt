@@ -510,7 +510,9 @@ angular.module('geiaFitApp')
           "thu": $scope.exerciseprogram.weekly.thu,
           "fri": $scope.exerciseprogram.weekly.fri,
           "sat": $scope.exerciseprogram.weekly.sat
-        }
+        },
+        "video_name": $scope.exerciseprogram.videoname,
+        "video_data": $scope.exerciseprogram.videodata 
       };
       // var exercise = {
       //   "exid": $scope.exerciseprogram.peid,
@@ -573,16 +575,33 @@ angular.module('geiaFitApp')
 
     $scope.clip = '';
 
-    $scope.captureVideo = function () {
-      $cordovaCapture.captureVideo().then(function (videoData) {
-        saveVideo(videoData).success(function (data) {
-          $scope.clip = data;
-          $scope.$apply();
-        }).error(function (data) {
-          console.log('ERROR: ' + data);
-        });
-      });
+    $scope.captureVideo = function (file) {
+      if(file != null || file != undefined){
+      var fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+      fileReader.onload = function (e) {
+        var dataUrl = e.target.result;
+        var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
+
+        // var data = {
+        //   image_name: file.$ngfName,
+        //   image: base64Data
+        // }
+
+      };
+      }
     };
+
+    // $scope.captureVideo = function () {
+    //   $cordovaCapture.captureVideo().then(function (videoData) {
+    //     saveVideo(videoData).success(function (data) {
+    //       $scope.clip = data;
+    //       $scope.$apply();
+    //     }).error(function (data) {
+    //       console.log('ERROR: ' + data);
+    //     });
+    //   });
+    // };
 
 
 
