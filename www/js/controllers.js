@@ -973,11 +973,12 @@ angular.module('geiaFitApp')
 
     }])
 
-  .controller('ExerciseLibraryCtrl', ['$scope', 'sortedByList', '$ionicPopup', 'ExerciseLibraryService', function ($scope, sortedByList, $ionicPopup, ExerciseLibraryService) {
+  .controller('ExerciseLibraryCtrl', ['$scope', 'sortedByList', '$ionicPopup', 'ExerciseLibraryService','$state', function ($scope, sortedByList, $ionicPopup, ExerciseLibraryService,$state) {
 
     var pageSize = 10;
     $scope.pages = [];
     $scope.webExPages = [];
+    
 
     $scope.title = 'Exercise Name';
 
@@ -991,7 +992,19 @@ angular.module('geiaFitApp')
    // $scope.sortReverse = false;  // set the default sort order
     $scope.searchName = '';     // set the default search/filter term
     //$scope.sortOrder = false;
-
+  
+  $scope.showWebexMessage = function(){
+    if($scope.WebExerciseIcon){
+    var alertPopup = $ionicPopup.alert({
+        title: 'Web Exercise add',
+        template: 'To add new WebEx exercises, please go to the PT Portal (https://app.geiafit.com/)'
+      });
+    }
+    else{
+      $state.transitionTo("addExercise", {}, { reload: true });
+    }
+    
+  }
 
 
  function compare(a,b) {
@@ -1129,7 +1142,8 @@ if(data.length >= 3){
       $scope.exerciseView = true;
       $scope.webExView = false;
       $scope.tempWebExList = "";
-
+      $scope.WebExerciseIcon = false;
+      $scope.MyExerciseIcon = true;
 
       var myExerList = [];
       var webExerciseList = [];
@@ -1166,27 +1180,33 @@ if(data.length >= 3){
 
     // function to tab between MyExercise and Web Exercise.
     $scope.changeView = function (view) {
-      
       switch (view) {
+        
         case 1:
+        
           $scope.selectedTab = 'My Exercises';
           $scope.webExView = false;
           $scope.exerciseView = true;
           $scope.doSort("1",'myE');
+          $scope.WebExerciseIcon = false;
+          $scope.MyExerciseIcon = true;
           break;
         case 2:
           $scope.selectedTab = 'WebEx Exercises';
           $scope.webExView = true;
           $scope.exerciseView = false;
           $scope.doSort("1",'webE');
+          $scope.WebExerciseIcon = true
+          $scope.MyExerciseIcon = false;
           break;
         default:
           $scope.selectedTab = 'My Exercises';
           $scope.exerciseView = true;
           $scope.doSort("1",'myE');
+          $scope.WebExerciseIcon = false;
+          $scope.MyExerciseIcon = true;
       }
       this.filterPatient = undefined;
-
     }
 
     $scope.data = {
@@ -1225,7 +1245,7 @@ if(data.length >= 3){
     }
 
   }])
-  .controller('AddExerciseCtrl', ['$scope','$state', '$stateParams', function ($scope,$state,$stateParams) {
+  .controller('AddExerciseCtrl', ['$scope','$state', '$stateParams','AddExerciseService', function ($scope,$state,$stateParams,AddExerciseService) {
 
   $scope.addExercise = {
     name : "",
@@ -1243,8 +1263,34 @@ if(data.length >= 3){
     $scope.addExercise.thumbnail= exercise.image
     $scope.addExercise.video = exercise.mp4
   }
-  init();
-console.log($scope.addExercise.tags);
+  if($stateParams.exerciseObject!=null){
+    init();
+  }
+
+  $scope.updateExercise = function(){
+    
+     var data = {
+       "exid":$stateParams.exerciseObject.exid,
+       "video_title": "",
+       "video_name": "",
+       "video_data": "",
+       "video_image_name": "",
+       "video_image":"",
+       "notes":"",
+       "comments": $scope.addExercise.comments, 
+       "categories": $stateParams.exerciseObject.categories
+     }
+
+      // var editExerciseList = AddExerciseService.saveExercise(data).then(function (success) {
+      //   console.log("Success")
+      //   console.log(success)
+      // }, function (error) {
+      //   console.log("Error")
+      //   console.log(error)
+      // })
+  }
+  
+//console.log($scope.addExercise.tags);
   $scope.gotoExerciseProgram = function(){
     $state.transitionTo("main.exerciseLibrary", {}, { reload: true });
   }
