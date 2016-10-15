@@ -174,7 +174,7 @@ templateUrl:'templates/vitalSuccess.htm'
     }
   })*/
   .state('setActivityGoals', {
-    url: '/setActivityGoals/:patientId',
+    url: '/setActivityGoals',
     params: {
       name: null
     },
@@ -184,11 +184,11 @@ templateUrl:'templates/vitalSuccess.htm'
       sortedByList: function(AppService, $stateParams){
         return AppService.sortedByList();
       },
-      threshold: function(AppService){
+      /*threshold: function(AppService){
         return AppService.getThreshold().then(function(data){
           return data.data;
         });
-      }
+      }*/
     }
   })
   .state('activity', {

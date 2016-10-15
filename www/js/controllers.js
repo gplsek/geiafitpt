@@ -671,94 +671,48 @@ angular.module('geiaFitApp')
 
   }])
 
-  .controller('SetActivityGoalsCtrl', ['$scope', '$state', 'sortedByList', '$ionicHistory', 'threshold', '$window', '$stateParams', function ($scope, $state, sortedByList, $ionicHistory, threshold, $window, $stateParams) {
-    $scope.setActivityGoals = {};
-    /* $scope.activityGoals = {
-       selectedSteps : '',
-       lightMinsSelected:'',
-       moderateMinsSelected:'',
-       vigorousMinsSelected:'',
-       instructions:'',
-     };*/
+  .controller('SetActivityGoalsCtrl', ['$scope', '$state', 'sortedByList', '$ionicHistory','$rootScope','Flash', '$window', '$stateParams', 'AppService',
+        function ($scope, $state, sortedByList, $ionicHistory,$rootScope,Flash, $window, $stateParams, AppService) {
+    //$scope.setActivityGoals = {};
+    
+    
     $scope.patientData = $stateParams.name;
     $scope.sortedByList = sortedByList;
-    // $scope.sortedBy = $scope.sortedByList[1].id;
-    $scope.threshold = threshold;
     $scope.title = 'Set Activity Goals';
-
     $scope.subNavList = false;
 
     $scope.showList = function () {
       $scope.subNavList = !$scope.subNavList;
     }
 
-    $scope.slider = {
-      min: 40,
-      max: 220,
-      options: {
-        floor: 40,
-        ceil: 220
-      }
-    };
-    $scope.slider2 = {
-      min: 40,
-      max: 160,
-      options: {
-        floor: 40,
-        ceil: 160
-      }
-    }
     $scope.$on("slideEnded", function () {
-      // user finished sliding a handle
       console.log($scope.slider.min + 'slider max: ' + $scope.slider.max);
+      console.log($scope.slider2.min + 'slider2 max: ' + $scope.slider2.max);
     });
-    // $scope.stepsPerMinVal = threshold.steps_min;
-    // $scope.heartRatePerminVal  = 0;
-
-    // var mainSectionWidth = ($window.innerWidth - 30);
-    // $scope.optimumBarlength =  Number(threshold.steps_high) - Number(threshold.steps_low);
-    // $scope.highThreshBar = mainSectionWidth - Number(threshold.steps_high);
-
-    // //for heart rate 
-    // $scope.optimumHeartBarLength = Number(threshold.hr_high) - Number(threshold.hr_low); 
-    // $scope.highHeartRateBar = mainSectionWidth - Number(threshold.hr_high);
-
-    // $scope.lowThreshIndicator = Number(threshold.steps_low) - (35/2);  // 35 is the width of the popover
-    // $scope.highThreshIndicator = Number(threshold.steps_low) + $scope.optimumBarlength - (35/2);
-
-    // $scope.lowHeartRateIndicator = Number(threshold.hr_low) - (35/2);
-    // $scope.highHeartRateIndicator = Number(threshold.hr_low) + $scope.optimumHeartBarLength - (35/2);
-
-
-    /*  $scope.back = function(){
-        $ionicHistory.goBack();
-      }*/
-
+  
     $scope.back = function () {
-      console.log($ionicHistory.viewHistory());
+      //console.log($ionicHistory.viewHistory());
       $ionicHistory.goBack();
     }
 
     var stepList = [];
-
     (function steps() {
       var value = 0;
       for (var i = 1; i <= 40; i++) {
         stepList.push({ id: i, steps: value + 500 });
         value += 500;
       }
-      console.log(stepList);
+      //console.log(stepList);
     })();
 
     $scope.stepsList = stepList;
-
     $scope.selectedSteps = $scope.stepsList[0].id;
 
     $scope.myFunc = function () {
-      console.log($scope.stepspermin);
+      //console.log($scope.stepspermin);
     }
-    var minsArray = [];
 
+    var minsArray = [];
     (function mins() {
       for (var i = 1; i <= 180; i++) {
         minsArray.push({ id: i, title: i + " mins" });
@@ -767,15 +721,35 @@ angular.module('geiaFitApp')
 
 
     $scope.lightMins = minsArray;
-    $scope.lightMinsSelected = $scope.lightMins[0].id;
-
-
+    //$scope.setActivityGoals.lightMinsSelected = $scope.lightMins[0].id,
     $scope.moderateMins = minsArray;
-
-    $scope.moderateMinsSelected = $scope.moderateMins[0].id;
-
+    //$scope.setActivityGoals.moderateMinsSelected = $scope.moderateMins[0].id;
     $scope.vigorousMins = minsArray;
-    $scope.vigorousMinsSelected = $scope.vigorousMins[0].id;
+    //$scope.setActivityGoals.vigorousMinsSelected = $scope.vigorousMins[0].id;
+    $scope.setActivityGoals = {
+      lightMinsSelected : $scope.lightMins[0].id,
+      moderateMinsSelected : $scope.moderateMins[0].id,
+      vigorousMinsSelected : $scope.vigorousMins[0].id
+    }
+
+    $scope.slider = {
+        min: 40,
+        max: 220,
+        options: {
+          floor: 40,
+          ceil: 220
+        }
+      },
+      $scope.slider2 = {
+        min: 40,
+        max: 160,
+        options: {
+          floor: 40,
+          ceil: 160
+        }
+      },
+      $scope.setActivityGoals.instructions='';
+
 
 
     function getStateTitle(id) {
@@ -798,15 +772,59 @@ angular.module('geiaFitApp')
       }
     }
 
+    getTreshold = function () {
+
+      AppService.getThreshold($rootScope.UID).then(
+        function (success) {
+          console.log("getThreshold")
+          console.log(success)
+          var tresholdData = success.data;
+
+          var minId = tresholdData.steps_min - 1;
+          $scope.setActivityGoals.lightMinsSelected = $scope.lightMins[minId].id
+          var modId = tresholdData.steps_low - 1;
+          $scope.setActivityGoals.moderateMinsSelected = $scope.moderateMins[modId].id;
+          var higId = tresholdData.steps_high - 1;
+          $scope.setActivityGoals.vigorousMinsSelected = $scope.vigorousMins[higId].id;
+          $scope.slider2.min = tresholdData.hr_low;
+          $scope.slider2.max = tresholdData.hr_high;
+
+          console.log($scope.slider2)
+        },
+        function (error) {
+          console.log(error)
+        });
+    }
+
     init = function () {
-      console.log($stateParams.patientId)
+      console.log($rootScope.UID)
+      getTreshold();
+
     }
     init();
 
-    /*$scope.setActivityGoals = function(data){
-        console.log($scope.activityGoals)
-        console.log(data)
-    }  */
+    $scope.setActivityGoals = function () {
+      var data = {
+        "steps_min": $scope.setActivityGoals.lightMinsSelected,
+        "steps_low": $scope.setActivityGoals.moderateMinsSelected,
+        "steps_high": $scope.setActivityGoals.vigorousMinsSelected,
+        "hr_low": $scope.slider2.min,
+        "hr_high": $scope.slider2.max,
+      }
+      console.log(data)
+      console.log($scope.setActivityGoals.instructions)
+
+      AppService.setThreshold(data, $rootScope.UID).then(
+        function (success) {
+          Flash.showFlash({ type: 'success', message: "Success !" });
+          console.log("SUCCESS")
+          getTreshold();
+        },
+        function (error) {
+          Flash.showFlash({ type: 'error', message: "Login Failed !" });
+          console.log("ERROR")
+        });
+    } 
 
 
   }])
@@ -2300,7 +2318,7 @@ if(data.length >= 3){
   .controller('ExerciseProgramCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', '$rootScope', '$ionicPopup', 'SetExerciseProgramService', function ($scope, $stateParams, sortedByList, $state, $rootScope, $ionicPopup, SetExerciseProgramService) {
     console.log($stateParams);
     console.log($rootScope.UID)
-
+    $scope.searchExercise;
     $scope.title = 'Exercise Program';
     $scope.subNavList = false;
     $scope.sortList = false;
@@ -2728,6 +2746,7 @@ if(data.length >= 3){
     $scope.sortedByList = sortedByList;
     $scope.title = 'Messages';
     $scope.subNavList = false;
+    $stateParams.uid = $rootScope.UID;
 
     $scope.showList = function () {
       console.log($scope.subNavList)
@@ -2849,7 +2868,7 @@ if(data.length >= 3){
 
     function getMessages() {
       // the service is mock but you would probably pass the toUser's GUID here
-      ChatApp.getUserMessages($stateParams.uid, uid).then(function (data) {
+      ChatApp.getUserMessages($rootScope.UID, uid).then(function (data) {
         $scope.doneLoading = true;
         $scope.messages = data;
         //   alert(JSON.stringify(data));

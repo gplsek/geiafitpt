@@ -261,7 +261,7 @@
 				LastUpgradeCheck = 510;
 				TargetAttributes = {
 					1D6058900D05DD3D006BFB54 = {
-						DevelopmentTeam = Q3A788QAWU;
+						DevelopmentTeam = 68A48FD95H;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -383,7 +383,7 @@
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "geiafit/geiafit-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.rspl.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = biz.wellnesslinks.GeiaFitApp;
 				PRODUCT_NAME = geiafit;
 			};
 			name = Debug;
@@ -406,7 +406,7 @@
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "geiafit/geiafit-Info.plist";
-				PRODUCT_BUNDLE_IDENTIFIER = com.rspl.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = biz.wellnesslinks.GeiaFitApp;
 				PRODUCT_NAME = geiafit;
 			};
 			name = Release;

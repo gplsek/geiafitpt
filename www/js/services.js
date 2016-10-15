@@ -301,7 +301,24 @@ angular.module('geiaFitApp')
     var getThreshold = function (uid) {
       var promise = $http({
         method: "GET",
-        url: ApiEndpoint.url + "/goals/tresholds/37" // Hardcoded needs to be replaced
+        url: ApiEndpoint.url + "/goals/tresholds/"+ uid // Hardcoded needs to be replaced
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      });
+      return promise;
+    }
+
+    var setThreshold = function (request_params,uid) {
+      var promise = $http({
+         headers: {
+          'X-CSRF-Token': $rootScope.token,
+          'Access-Control-Allow-Origin': '*'
+        },
+        method: "PUT",
+        data: request_params,
+        url: ApiEndpoint.url + "/goals/tresholds/"+ uid // Hardcoded needs to be replaced
       }).then(function (response) {
         return response.data;
       }, function (err) {
@@ -319,7 +336,8 @@ angular.module('geiaFitApp')
       addPatient: addPatient,
       profile: getProfile,
       sortedByList: getSortedList,
-      getThreshold: getThreshold
+      getThreshold: getThreshold,
+      setThreshold:setThreshold
     }
 
   }])

@@ -24,11 +24,12 @@
 		</div>
 
 		<div class="search">
-			<input type="text" placeholder="Search" ng-model="searchPatient" />
+			<input type="text" placeholder="Search" ng-model="searchExercise" />
 			<span class="icon ion-ios-search-strong pull-right"></span>
 		</div>
+		<p class="text-center" 
+   sylte="margin-top: 10px;"><small >Sorted By:</small></p>
 		<div class="sortedBy text-center">
-			<p><small >Sorted By:</small></p>
 			<input type="button" class="itemdropdown" ng-click="showListSortList();" value="{{sortedBy}}" />
 			<ion-list ng-show="sortList" class="ddlistitems">
 				<ion-item ng-repeat="item in exerciseSortedByList" ng-model="sortedBy" ng-click="sortPatients({{item.id}})">
@@ -37,7 +38,7 @@
 			</ion-list>
 		</div>
 		<ul class="exerciseList">
-			<li ng-repeat="item in exerciseList" class="gieafitListItem group">
+			<li ng-repeat="item in exerciseList  | filter: searchExercise" class="gieafitListItem group">
 				<div ui-sref="setExerciseProgram(
        {
 peid: item.peid,
@@ -71,12 +72,10 @@ thumb2: item.thumb2
 				</div>
 
 				<span class="pull-right trash-icon" ng-click="delete(item.peid,$index)">
-
-					<span class="pos-rel">
+					
 						<i class="icon ion-ios-trash-outline" ></i>
 						<!-- <i class="icon ion-ios-close-outline"></i> -->
-					</span>
-				</span>
+
 			</li>
 		</ul>
 
