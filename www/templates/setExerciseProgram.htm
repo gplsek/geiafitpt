@@ -40,7 +40,10 @@
 				</span>
 			</div>
 			<div class="video-container">
-                <iframe src="https://www.youtube.com/embed/rdzS43Pff1w" frameborder="0"></iframe>
+            <!--<iframe ng-hide="edit" src={{exerciseprogram.thumb1}} frameborder="0"></iframe>-->
+             <iframe  ng-hide="edit" frameborder="0" ng-src="{{exerciseprogram.thumb1| trusted}}" scrolling="no" ng-init="resizeIframe(this)"></iframe>
+            
+            <div ng-hide="submit" class="video-container-inner"><div class="video-container-text">+ Add Video</div></div>
       </div>
 		
     	<div class="exerciseSchedule">
