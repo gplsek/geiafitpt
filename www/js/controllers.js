@@ -264,8 +264,10 @@ angular.module('geiaFitApp')
 
   })
 
+
   .controller('SetExerciseProgramCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', 'SetExerciseProgramService', '$rootScope','$cordovaCapture','$q', function ($scope, $state, $stateParams,
     sortedByList, SetExerciseProgramService, $rootScope,$cordovaCapture,$q) {
+
     $scope.submit = true;
     $scope.edit = false;
     $scope.uid = $stateParams.uid;
@@ -305,6 +307,12 @@ angular.module('geiaFitApp')
         $state.transitionTo(state, { name: $stateParams.name, patientId: $stateParams.uid }, { reload: true });
       }
     }
+
+    $scope.resizeIframe = function(obj) {
+ //   alert(""+ obj.style.height);
+  //  obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+    //  alert(""+ JSON.stringify(obj));
+  }
 
 
 
@@ -577,14 +585,14 @@ angular.module('geiaFitApp')
     };
 
 
+
     $scope.urlForClipThumb = function (clipUrl) {
       var name = clipUrl.substr(clipUrl.lastIndexOf('/') + 1);
       var trueOrigin = cordova.file.dataDirectory + name;
       var sliced = trueOrigin.slice(0, -4);
       return sliced + '.png';
     }
-
-    $scope.showClip = function (clip) {
+ $scope.showClip = function (clip) {
       console.log('show clip: ' + clip);
     }
 
@@ -671,6 +679,14 @@ angular.module('geiaFitApp')
 
   }])
 
+
+  .filter('trusted', ['$sce', function ($sce) {
+    return function(url) {
+        return $sce.trustAsResourceUrl(url);
+    };
+}])
+
+  
   .controller('SetActivityGoalsCtrl', ['$scope', '$state', 'sortedByList', '$ionicHistory','$rootScope','Flash', '$window', '$stateParams', 'AppService',
         function ($scope, $state, sortedByList, $ionicHistory,$rootScope,Flash, $window, $stateParams, AppService) {
     //$scope.setActivityGoals = {};
@@ -2817,52 +2833,41 @@ if(data.length >= 3){
 
     $scope.sendMessage = function () {
 
-      // alert("Sendmessage"+$scope.input.message);
-      var data = {
-        "message": $scope.input.message
-      };
-
-      ChatApp.sendPatientMessage(data, $stateParams.uid, uid).then(function (success) {
-        //  alert("success"+JSON.stringify(success));
-        var message = {
-          "message_id": success.message_id,
-          "uid1": uid,
-          "uid2": $stateParams.uid,
-          "message": $scope.input.message,
-          "timestamp": success.timestamp
-
+      if (/\S/.test($scope.input.message)) {
+        var data = {
+          "message": $scope.input.message
         };
-        keepKeyboardOpen();
-        $scope.input.message = '';
+
+        ChatApp.sendPatientMessage(data, $stateParams.uid, uid).then(function (success) {
+          //  alert("success"+JSON.stringify(success));
+          var message = {
+            "message_id": success.message_id,
+            "uid1": uid,
+            "uid2": $stateParams.uid,
+            "message": $scope.input.message,
+            "timestamp": success.timestamp
+
+          };
+
         $scope.messages.push(message);
-
-
         $timeout(function () {
           keepKeyboardOpen();
           viewScroll.scrollBottom(true);
         }, 0);
 
-        // $timeout(function () {
-        //   //   $scope.messages.push(MockService.getMockMessage());
-        //   keepKeyboardOpen();
-        //   viewScroll.scrollBottom(true);
-        // }, 2000);
+      
+          $scope.input.message = '';
+          // $timeout(function () {
+          //   //   $scope.messages.push(MockService.getMockMessage());
+          //   keepKeyboardOpen();
+          //   viewScroll.scrollBottom(true);
+          // }, 2000);
 
 
-        $timeout(function () {
-          keepKeyboardOpen();
-          viewScroll.scrollBottom(true);
-        }, 0);
+        }, function (error) {
 
-        $timeout(function () {
-          //   $scope.messages.push(MockService.getMockMessage());
-          keepKeyboardOpen();
-          viewScroll.scrollBottom(true);
-        }, 2000);
-      }, function (error) {
-
-      })
-
+        })
+      }
 
     };
 

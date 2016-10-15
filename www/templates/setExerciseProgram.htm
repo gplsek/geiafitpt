@@ -40,9 +40,9 @@
 				</span>
 			</div>
 			<div class="video-container">
-				<!--<iframe src="https://www.youtube.com/embed/rdzS43Pff1w" frameborder="0"></iframe>-->
+				<iframe ng-hide="edit" frameborder="0" ng-src="{{exerciseprogram.thumb1| trusted}}" scrolling="no" ng-init="resizeIframe(this)"></iframe>
 
-				<div class="list">
+				<!--<div class="list">
 					<div class="item item-divider">
 						<i class="ion-videocamera"></i> Current clip
 					</div>
@@ -52,12 +52,18 @@
 					<button class="button button-positive" ng-click="captureVideo()">
 			  Capture a video
 		  </button>
+				</div>-->
+
+			<div class="exerciseSchedule" ng-hide="submit">
+				<div ng-hide="submit" class="video-container-inner">
+					<div class="video-container-text" ng-click="captureVideo()">+ Add Video</div>
 				</div>
 			</div>
-
-			<div class="exerciseSchedule">
-
 			</div>
+
+		
+
+			
 			<div class="row">
 				<!--<div  class = "col col-30">
             	      <label class="expiry">Reps
