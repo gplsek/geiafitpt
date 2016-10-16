@@ -2916,9 +2916,16 @@ if(data.length >= 3){
 
     $scope.sendMessage = function () {
 
-      if (/\S/.test($scope.input.message)) {
+      var messageInput = $scope.input.message; 
+      $scope.input.message = '';
+
+      // if (/\S/.test($scope.input.message)) {
+      //   var data = {
+      //     "message": messageInput
+      //   };
+      if (/\S/.test(messageInput)) {
         var data = {
-          "message": $scope.input.message
+          "message": messageInput
         };
 
         ChatApp.sendPatientMessage(data, $stateParams.uid, uid).then(function (success) {
@@ -2927,7 +2934,8 @@ if(data.length >= 3){
             "message_id": success.message_id,
             "uid1": uid,
             "uid2": $stateParams.uid,
-            "message": $scope.input.message,
+          //  "message": $scope.input.message,
+            "message": messageInput,
             "timestamp": success.timestamp
 
           };
@@ -2939,7 +2947,7 @@ if(data.length >= 3){
         }, 0);
 
       
-          $scope.input.message = '';
+          //$scope.input.message = '';
           // $timeout(function () {
           //   //   $scope.messages.push(MockService.getMockMessage());
           //   keepKeyboardOpen();
@@ -2948,7 +2956,7 @@ if(data.length >= 3){
 
 
         }, function (error) {
-
+          $scope.input.message = messageInput;
         })
       }
 
