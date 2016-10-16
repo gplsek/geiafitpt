@@ -145,16 +145,6 @@ angular.module('geiaFitApp')
       Flash.showFlash({ type: 'error', message: "Login Failed !" });
   })
 }
-      if (validateFields($scope.data)) {
-        AuthService.login($scope.data.email, $scope.data.password, $scope.data.checked).
-          then(function (authenticated) {
-            Flash.showFlash({ type: 'success', message: "Success !" });
-            $state.go('main.dash', {}, { reload: true });
-            //$scope.setCurrentUsername(data.username);
-          }, function (err) {
-            Flash.showFlash({ type: 'error', message: "Login Failed !" });
-          })
-      }
 
     }
 
