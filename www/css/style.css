@@ -333,3 +333,12 @@ progress[value]::-webkit-progress-bar {
 
 .actvity .left-title img, .actvity .right-title img {width:20px; margin-top:10px; height:20px;}
 
+.exerciseLibrary .exerciseList li span {
+    max-width: none;
+}
+.exerciseLibrary .exerciseList .exercise-list-row {
+    width: 90%;
+}
+.exerciseLibrary .exerciseList .exercise-name {
+    width: 80%;
+}
