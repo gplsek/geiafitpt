@@ -2838,8 +2838,15 @@ if(data.length >= 3){
     $scope.sortedByList = sortedByList;
     $scope.title = 'Messages';
     $scope.subNavList = false;
+    if($stateParams.uid == null || $stateParams.uid == undefined || $stateParams.uid == ""){
     $stateParams.uid = $rootScope.UID;
-
+    }else{
+        $rootScope.UID = $stateParams.uid;
+      $rootScope.patientName = $stateParams.name
+    }
+    
+    
+    
     $scope.showList = function () {
       console.log($scope.subNavList)
       $scope.subNavList = !$scope.subNavList;
