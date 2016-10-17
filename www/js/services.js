@@ -378,9 +378,27 @@ angular.module('geiaFitApp')
       return ProfileImage;
     }
 
+    var saveProfile = function(params){
+        var profileData = $http({
+            headers: {
+                    'X-CSRF-Token': $rootScope.token,
+                    //'cookie': $rootScope.cookieValue
+                  },
+            method: "PUT",
+            data:params,
+            url: ApiEndpoint.url + "/profile/" + $rootScope.loggedInUserUid
+        }).then(function (response) {
+            return response.data;
+        }, function (err) {
+            console.log(err);
+        });
+        return profileData;
+    }
+
     return {
       myAccountDetails: getAdminProfile,
-      uploadImage: uploadProfileImage
+      uploadImage: uploadProfileImage,
+      saveProfile: saveProfile,
     }
 
   }])
