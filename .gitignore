@@ -3,4 +3,9 @@ _
 .codekit-cache
 .sass-cache
 config.codekit
+<<<<<<< HEAD
 TODO
+=======
+TODO
+node_modules
+>>>>>>> feature/development

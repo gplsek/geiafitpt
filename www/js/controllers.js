@@ -138,6 +138,7 @@ angular.module('geiaFitApp')
       if(validateFields($scope.data)){
       AuthService.login($scope.data.email,$scope.data.password,$scope.data.checked).
       then(function(authenticated){
+          $rootScope.currentPassword = $scope.data.password;
       Flash.showFlash({ type: 'success', message: "Success !" });
       $state.go('main.dash', {}, { reload: true });
       //$scope.setCurrentUsername(data.username);
@@ -145,16 +146,6 @@ angular.module('geiaFitApp')
       Flash.showFlash({ type: 'error', message: "Login Failed !" });
   })
 }
-      if (validateFields($scope.data)) {
-        AuthService.login($scope.data.email, $scope.data.password, $scope.data.checked).
-          then(function (authenticated) {
-            Flash.showFlash({ type: 'success', message: "Success !" });
-            $state.go('main.dash', {}, { reload: true });
-            //$scope.setCurrentUsername(data.username);
-          }, function (err) {
-            Flash.showFlash({ type: 'error', message: "Login Failed !" });
-          })
-      }
 
     }
 
@@ -1369,7 +1360,9 @@ if(data.length >= 3){
     }
     init();
 
-    $scope.showCP = false;
+    $scope.config = {
+        showCP: false
+    };
     // $scope.profile = profileData;
     $scope.editEnabled = false;
 
@@ -1413,13 +1406,21 @@ if(data.length >= 3){
         console.log(err);
       });
     }
-    function checkEmptyFields() {
+    $scope.checkEmptyFields = function(){
       var isEmpty = false;
-      var data = data;
+      var data = $scope.profile;
+      var keys = [
+        'name',
+        'email'
+      ];
       for (var property in data) {
+          if(keys.indexOf(property) == -1){
+              continue;
+          }
         if (data.hasOwnProperty(property)) {
           if (!data[property]) {
             isEmpty = true;
+            break;
           }
         }
       }
@@ -1436,13 +1437,43 @@ if(data.length >= 3){
     $scope.save = function (data) {
 
       if (!(Object.keys(data).length === 0 && data.constructor === Object)) {
-        if (!checkEmptyFields()) {
-
-          if (checkEmail(data.email)) {
-            Flash.showFlash({ type: 'success', message: "Success !" });
-          } else {
+        if (!$scope.checkEmptyFields()) {
+            var names = $scope.profile.name.split(" ");
+            var params = {
+                email: $scope.profile.email,
+                first_name: names ? names[0] : "",
+                last_name: names ? names[1] : "",
+                phone: $scope.profile.phone,
+            };
+            console.log($rootScope.currentPassword);
+            if($scope.config.showCP){
+                if($rootScope.currentPassword != $scope.profile.password){
+                    Flash.showFlash({ type: 'error', message: "The old password is incorrect!" });
+                    return;
+                }
+                if(!$scope.profile.newPassword){
+                    Flash.showFlash({ type: 'error', message: "Please fill the password!" });
+                    return;
+                }
+                if($scope.profile.passwordRepeat != $scope.profile.newPassword){
+                    Flash.showFlash({ type: 'error', message: "Password & confirm password do not match!" });
+                    return;
+                }
+                if (!checkEmail(data.email)) {
             Flash.showFlash({ type: 'error', message: "Email is not valid !" });
+                    return;
           }
+                params.password = $scope.profile.newPassword;
+            }
+            console.log($scope.config.showCP);
+            console.log(params);
+          
+            MyAccount.saveProfile(params).then(function (response) {
+                console.log(response)
+                Flash.showFlash({ type: 'success', message: "Success !" });
+            }, function (error) {
+                Flash.showFlash({ type: 'error', message: "Failed to save profile" });
+            })
         }
         else {
           Flash.showFlash({ type: 'error', message: "Please fill in all fields !" });
@@ -2604,7 +2635,8 @@ if(data.length >= 3){
     $scope.addss = function () {
 
       $ionicPopup.show({
-        template: '<div style="background: #121516; color: #fff;"> <button class="button button-block btn-yellow">My Mobile Device</button><button class="button button-block btn-yellow">My Library</button><button class="button button-block btn-yellow">Create New</button></div>',
+        template: '<div style="font-weight:bold;"> <button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;">My Mobile Device</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;">My Library</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;">Create New</button></div>',
+        // template: '<div style="background: #121516; color: #fff;"> <button class="button button-block btn-yellow" style="background: #121516; color: #fff;">My Mobile Device</button><button class="button button-block btn-yellow">My Library</button><button class="button button-block btn-yellow">Create New</button></div>',
         title: 'Add Exercise',
         subTitle: 'Choose a Source',
         scope: $scope,
@@ -2848,8 +2880,15 @@ if(data.length >= 3){
     $scope.sortedByList = sortedByList;
     $scope.title = 'Messages';
     $scope.subNavList = false;
+    if($stateParams.uid == null || $stateParams.uid == undefined || $stateParams.uid == ""){
     $stateParams.uid = $rootScope.UID;
-
+    }else{
+        $rootScope.UID = $stateParams.uid;
+      $rootScope.patientName = $stateParams.name
+    }
+    
+    
+    
     $scope.showList = function () {
       console.log($scope.subNavList)
       $scope.subNavList = !$scope.subNavList;
@@ -2919,9 +2958,16 @@ if(data.length >= 3){
 
     $scope.sendMessage = function () {
 
-      if (/\S/.test($scope.input.message)) {
+      var messageInput = $scope.input.message; 
+      $scope.input.message = '';
+
+      // if (/\S/.test($scope.input.message)) {
+      //   var data = {
+      //     "message": messageInput
+      //   };
+      if (/\S/.test(messageInput)) {
         var data = {
-          "message": $scope.input.message
+          "message": messageInput
         };
 
         ChatApp.sendPatientMessage(data, $stateParams.uid, uid).then(function (success) {
@@ -2930,7 +2976,8 @@ if(data.length >= 3){
             "message_id": success.message_id,
             "uid1": uid,
             "uid2": $stateParams.uid,
-            "message": $scope.input.message,
+          //  "message": $scope.input.message,
+            "message": messageInput,
             "timestamp": success.timestamp
 
           };
@@ -2942,7 +2989,7 @@ if(data.length >= 3){
         }, 0);
 
       
-          $scope.input.message = '';
+          //$scope.input.message = '';
           // $timeout(function () {
           //   //   $scope.messages.push(MockService.getMockMessage());
           //   keepKeyboardOpen();
@@ -2951,7 +2998,7 @@ if(data.length >= 3){
 
 
         }, function (error) {
-
+          $scope.input.message = messageInput;
         })
       }
 
