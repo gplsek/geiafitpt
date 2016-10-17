@@ -29,14 +29,16 @@
 		</div>
 		<p class="text-center" 
    sylte="margin-top: 10px;"><small >Sorted By:</small></p>
+   <!-- sorting value-->
 		<div class="sortedBy text-center">
-			<input type="button" class="itemdropdown" ng-click="showListSortList();" value="{{sortedBy}}" />
-			<ion-list ng-show="sortList" class="ddlistitems">
-				<ion-item ng-repeat="item in exerciseSortedByList" ng-model="sortedBy" ng-click="sortPatients({{item.id}})">
-					<h2>{{item.title}}</h2>
-				</ion-item>
-			</ion-list>
-		</div>
+            
+            <input type="button" class="itemdropdown" ng-click="showListSortList();" value="{{sortedBy}}" />
+            <ion-list ng-show="sortList" class="ddlistitems">
+                <ion-item ng-repeat="item in exerciseSortedByList" ng-model="sortedBy" ng-click="sortPatients(item.id,item.title)">
+                    <h2>{{item.title}}</h2>
+                </ion-item>
+            </ion-list>
+        </div>
 		<ul class="exerciseList">
 			<li ng-repeat="item in exerciseList  | filter: searchExercise" class="gieafitListItem group">
 				<div ui-sref="setExerciseProgram(
