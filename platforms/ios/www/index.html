@@ -29,11 +29,11 @@
   
   <!--<script src="lib/ng-file-upload-shim/ng-file-upload-shim.min.js"></script> -->
 
-
+ 
 
 </head>
 
-<body ng-app="geiaFitApp" ng-controller="AppCtrl" class="platform-ios platform-cordova platform-webview">
+<body ng-app="geiaFitApp" ng-controller="AppCtrl">
   <!-- <ion-nav-bar class="bar-balanced">
     </ion-nav-bar> -->
   <div class="flash" ng-show="flash.show" ng-class="{'success': flash.type == 'success', 'error': flash.type == 'error'}">{{flash.message}}</div>
@@ -57,6 +57,6 @@
 <script src="js/dropdown.js"></script>
 
 
-<!-- <script src="lib/angular-mocks.js"></script> -->
+ <script src="lib/angular-sanitize.js"></script> 
 
 </html>

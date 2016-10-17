@@ -70,11 +70,11 @@ angular.module('geiaFitApp')
         url: ApiEndpoint.url + '/user/login',
         data: form
       }).then(function (response) {
+        $rootScope.cookieValue = response.data.session_name+"="+response.data.sessid;
         var token = response.data.token
         storeUserCredentials(token, isChecked);
         $rootScope.token = token;
         $rootScope.loggedInUserUid = response.data.user.uid;
-        console.log("UID " + $rootScope.loggedInUserUid);
       });
       return promise;
       /*
@@ -114,6 +114,24 @@ angular.module('geiaFitApp')
       return (isAuthenticated && authorizedRoles.indexOf(role) !== -1);
     };
 
+    var resetPassword = function(email){
+
+     var params = {
+       "email" : email
+     }
+     return $http({
+        method: 'POST',
+        data:params,
+        url: ApiEndpoint.url + "/profile/pwdreset "
+      }).then(function (response) {
+        return response;
+      }, function (err) {
+        //console.log(err);
+        return err;
+      });
+
+    };
+
     console.log("---loadUserCredentials");
     loadUserCredentials();
     console.log("--- end loadUserCredentials");
@@ -123,9 +141,11 @@ angular.module('geiaFitApp')
       isAuthorized: isAuthorized,
       isAuthenticated: function () { return isAuthenticated; },
       username: function () { return username; },
-      role: function () { return role; }
+      role: function () { return role; },
+      forgetPassword : resetPassword
     };
   }])
+
   .factory('AuthInterceptor', function ($rootScope, $q, AUTH_EVENTS) {
     return {
       responseError: function (response) {
@@ -137,9 +157,11 @@ angular.module('geiaFitApp')
       }
     };
   })
+
   .config(function ($httpProvider) {
     $httpProvider.interceptors.push('AuthInterceptor');
   })
+
   .service('AppService', ['$http', 'AuthService', '$q', 'ApiEndpoint', '$rootScope', function ($http, AuthService, $q, ApiEndpoint, $rootScope) {
 
 
@@ -279,7 +301,7 @@ angular.module('geiaFitApp')
     var getThreshold = function (uid) {
       var promise = $http({
         method: "GET",
-        url: ApiEndpoint.url + "/goals/tresholds/37" // Hardcoded needs to be replaced
+        url: ApiEndpoint.url + "/goals/tresholds/"+ uid // Hardcoded needs to be replaced
       }).then(function (response) {
         return response.data;
       }, function (err) {
@@ -288,16 +310,66 @@ angular.module('geiaFitApp')
       return promise;
     }
 
+    var setThreshold = function (request_params,uid) {
+      var promise = $http({
+         headers: {
+          'X-CSRF-Token': $rootScope.token,
+          'Access-Control-Allow-Origin': '*'
+        },
+        method: "PUT",
+        data: request_params,
+        url: ApiEndpoint.url + "/goals/tresholds/"+ uid // Hardcoded needs to be replaced
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      });
+      return promise;
+    }
+
+    var getActivityGoal = function (uid) {
+      console.log(uid)
+      var prom = $http({
+        method: "GET",
+        url: ApiEndpoint.url + '/goals/activity/' + uid
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      })
+      return prom;
+    }
+
+    var setActivityGoal = function (request_params,uid) {
+      var prom = $http({
+         headers: {
+          'X-CSRF-Token': $rootScope.token,
+          'Access-Control-Allow-Origin': '*'
+        },
+        method: "PUT",
+        data: request_params,
+        url: ApiEndpoint.url + '/goals/activity/' + uid
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      })
+      return prom;
+    }
+
 
     return {
       patientsData: getPatientsData,
       getActivity: getActivity,
+      setActivityGoal:setActivityGoal,
+      getActivityGoal: getActivityGoal,
       getHealthPoint : getHealthPoint,
       getVitals: getVitals,
       addPatient: addPatient,
       profile: getProfile,
       sortedByList: getSortedList,
-      getThreshold: getThreshold
+      getThreshold: getThreshold,
+      setThreshold:setThreshold
     }
 
   }])
@@ -320,12 +392,16 @@ angular.module('geiaFitApp')
     }
 
     var uploadProfileImage = function (params) {
-      console.log(params)
       var ProfileImage = $http({
+        headers: {
+                'X-CSRF-Token': $rootScope.token,
+                //'cookie': $rootScope.cookieValue
+              },
         method: "POST",
         url: ApiEndpoint.url + "/profile/profileimage/" + $rootScope.loggedInUserUid,
         data: params
       }).then(function (response) {
+        console.log(response)
         return response.data;
       }, function (err) {
         console.log(err);
@@ -334,9 +410,27 @@ angular.module('geiaFitApp')
       return ProfileImage;
     }
 
+    var saveProfile = function(params){
+        var profileData = $http({
+            headers: {
+                    'X-CSRF-Token': $rootScope.token,
+                    //'cookie': $rootScope.cookieValue
+                  },
+            method: "PUT",
+            data:params,
+            url: ApiEndpoint.url + "/profile/" + $rootScope.loggedInUserUid
+        }).then(function (response) {
+            return response.data;
+        }, function (err) {
+            console.log(err);
+        });
+        return profileData;
+    }
+
     return {
       myAccountDetails: getAdminProfile,
-      uploadImage: uploadProfileImage
+      uploadImage: uploadProfileImage,
+      saveProfile: saveProfile,
     }
 
   }])
@@ -488,6 +582,27 @@ angular.module('geiaFitApp')
 
     return {
       exerciseData: getExerciseList
+    }
+
+  }])
+
+  .service('AddExerciseService', ['$rootScope', '$http', 'ApiEndpoint', function ($rootScope, $http, ApiEndpoint) {
+
+    var addExercise = function(params){
+        var exerciseData = $http({
+        method: "PUT",
+        data:params,
+        url: ApiEndpoint.url + "/ptexlib/" + $rootScope.loggedInUserUid
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      });
+      return exerciseData;
+    }
+    
+    return {
+      saveExercise: addExercise
     }
 
   }])
