@@ -1,10 +1,10 @@
 <ion-view class="setActivityGoals">
 	<ion-nav-bar class="group">
+			
 		<ion-nav-buttons side="left">
 			<span class="icon ion-ios-arrow-back" ng-click="back()"></span>
-			<!--<div class="title title-center header-item" ng-click="gotoHome()">{{patientProfile.name}}</div>-->
-			<div class="title title-center header-item" ng-click="gotoHome()">{{patientName}}</div>
-		</ion-nav-buttons>
+			<div class="title title-center header-item" style="z-index: -200" ng-click="gotoHome()">{{patientName}}</div>
+		</ion-nav-buttons>-->
 		
 	</ion-nav-bar>
 	<ion-content>
@@ -58,15 +58,15 @@
 				<div>
 					<div class="col-xs-4">
 						<span>Light</span>
-						<select class="customSelect" ng-options="item.id as item.title for item in lightMins" ng-model="lightMinsSelected"></select>
+						<select class="customSelect" ng-options="item.id as item.title for item in lightMins" ng-model="setActivityGoals.lightMinsSelected"></select>
 					</div>
 					<div class="col-xs-4">
 						<span>Moderate</span>
-						<select class="customSelect" ng-options="item.id as item.title for item in moderateMins" ng-model="moderateMinsSelected"></select>
+						<select class="customSelect" ng-options="item.id as item.title for item in moderateMins" ng-model="setActivityGoals.moderateMinsSelected"></select>
 					</div>
 					<div class="col-xs-4">
 						<span>Vigorous</span>
-						<select class="customSelect" ng-options="item.id as item.title for item in vigorousMins" ng-model="vigorousMinsSelected"></select>
+						<select class="customSelect" ng-options="item.id as item.title for item in vigorousMins" ng-model="setActivityGoals.vigorousMinsSelected"></select>
 					</div>
 				</div>
 			</div>
@@ -105,7 +105,7 @@
 				</div>
 			</div>
 
-			<button class="button button-block btn-yellow">Submit</button>
+			<button class="button button-block btn-yellow" ng-click="setActivityGoals()">Submit</button>
 
 			
 		</section>

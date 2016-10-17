@@ -13,7 +13,7 @@ angular.module('geiaFitApp', ['ionic', 'rzModule','ngCordova','highcharts-ng','n
     if(window.cordova && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
 
       // Don't remove this line unless you know what you are doing. It stops the viewport
       // from snapping when text inputs are focused. Ionic handles this internally for
@@ -61,6 +61,10 @@ angular.module('geiaFitApp', ['ionic', 'rzModule','ngCordova','highcharts-ng','n
       medium: null,
       high: null
     };
+
+    var exerCiseLibraryParams={
+      exerciseObject : null,
+    }
 
 
   var exerciseprogram=  {
@@ -124,6 +128,7 @@ thumb2: null
   })
   .state('addExercise', {
     url: 'addExercise', 
+    params : exerCiseLibraryParams,
     templateUrl: "templates/addExercise.htm",
     controller: "AddExerciseCtrl"
   })
@@ -169,7 +174,7 @@ templateUrl:'templates/vitalSuccess.htm'
     }
   })*/
   .state('setActivityGoals', {
-    url: '/setActivityGoals/:patientId',
+    url: '/setActivityGoals',
     params: {
       name: null
     },
@@ -179,11 +184,11 @@ templateUrl:'templates/vitalSuccess.htm'
       sortedByList: function(AppService, $stateParams){
         return AppService.sortedByList();
       },
-      threshold: function(AppService){
+      /*threshold: function(AppService){
         return AppService.getThreshold().then(function(data){
           return data.data;
         });
-      }
+      }*/
     }
   })
   .state('activity', {

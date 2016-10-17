@@ -17,14 +17,6 @@ module.exports = [
         ]
     },
     {
-        "id": "cordova-plugin-device.device",
-        "file": "plugins/cordova-plugin-device/www/device.js",
-        "pluginId": "cordova-plugin-device",
-        "clobbers": [
-            "device"
-        ]
-    },
-    {
         "id": "cordova-plugin-splashscreen.SplashScreen",
         "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
         "pluginId": "cordova-plugin-splashscreen",
@@ -221,6 +213,8 @@ module.exports = [
             "cordova"
         ],
         "runs": true
+<<<<<<< HEAD
+=======
     },
     {
         "id": "cordova-plugin-photokandy-video-thumbnail.PKVideoThumbnail",
@@ -291,21 +285,25 @@ module.exports = [
         "clobbers": [
             "navigator.device.capture"
         ]
+>>>>>>> feature/development
     }
 ];
 module.exports.metadata = 
 // TOP OF METADATA
 {
     "cordova-plugin-console": "1.0.4",
-    "cordova-plugin-device": "1.1.3",
     "cordova-plugin-splashscreen": "4.0.0",
     "cordova-plugin-statusbar": "2.2.0",
     "cordova-plugin-whitelist": "1.3.0",
     "ionic-plugin-keyboard": "2.2.1",
     "cordova-plugin-compat": "1.0.0",
+<<<<<<< HEAD
+    "cordova-plugin-file": "4.3.0"
+=======
     "cordova-plugin-file": "4.3.0",
     "cordova-plugin-photokandy-video-thumbnail": "2.1.0",
     "cordova-plugin-media-capture": "1.4.0"
+>>>>>>> feature/development
 };
 // BOTTOM OF METADATA
 });

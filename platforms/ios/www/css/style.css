@@ -320,6 +320,10 @@ progress[value]::-webkit-progress-bar {
     position: relative;
     display:inline-block;
 }
+<<<<<<< HEAD
+.actvity .left-title img, .actvity .right-title img {width:20px; margin-top:10px; height:20px;}
+.badge {background-image: url(img/badge.png); height:76px; width:76px; z-index:9999;}
+=======
 
 
 /*.limitSpan {
@@ -333,3 +337,4 @@ progress[value]::-webkit-progress-bar {
 
 .actvity .left-title img, .actvity .right-title img {width:20px; margin-top:10px; height:20px;}
 
+>>>>>>> feature/development

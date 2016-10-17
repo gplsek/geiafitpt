@@ -10,9 +10,6 @@
         "cordova-plugin-console": {
             "PACKAGE_NAME": "com.ionicframework.geiafit309210"
         },
-        "cordova-plugin-device": {
-            "PACKAGE_NAME": "com.ionicframework.geiafit309210"
-        },
         "cordova-plugin-splashscreen": {
             "PACKAGE_NAME": "com.ionicframework.geiafit309210"
         },
@@ -37,10 +34,17 @@
     },
     "dependent_plugins": {
         "cordova-plugin-compat": {
+<<<<<<< HEAD
+            "PACKAGE_NAME": "com.ionicframework.geiafit309210"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "com.ionicframework.geiafit309210"
+=======
             "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
         },
         "cordova-plugin-file": {
             "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
+>>>>>>> feature/development
         }
     }
 }

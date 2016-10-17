@@ -41,12 +41,26 @@
 	      <select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select>
 	       
 	    </div>-->
+<<<<<<< HEAD
+		<ul class="exerciseList">
+			<!--<li ng-repeat="item in exerciseList" class="gieafitListItem group">-->
+				<!--<li ng-repeat="item in filteredExerciseList = (arrayList | filter: filterPatient | orderBy: sortType : sortOrder)" class="gieafitListItem group">-->
+				<li ng-repeat="item in filteredExerciseList = (myExerciseList | filter:{title : filterPatient} )" class="gieafitListItem group">
+				<span class="pull-left">
+					<span class="marginR5">{{item.id}}</span>
+					<span>{{item.title}}&nbsp;&nbsp; :</span>
+					<i><span>{{item.tags[0]}}&nbsp;{{item.tags[1]}}&nbsp;{{item.tags[2]}}</span></i>
+				</span>
+				<span class="pull-right trash-icon" ng-click="delete($index)">
+					<span class="pos-rel">
+=======
 		<ul class="exerciseList">		
 			<li ng-repeat="item in filteredExerciseList = (myExerciseList | filter:{title : filterPatient} )" class="gieafitListItem group">
 					<span class="">{{item.id}}</span>
 					<span class="limitSpan">{{item.title}} :</span>
 					<span class="limitSpan">{{item.tags[0]}}&nbsp;{{item.tags[1]}}&nbsp;{{item.tags[2]}}</span>
 					<span class="pull-right trash-icon" ng-click="delete($index)">
+>>>>>>> feature/development
 						<i class="icon ion-ios-trash-outline" ></i>
 						<!-- <i class="icon ion-ios-close-outline"></i> -->
 					</span>
@@ -92,10 +106,20 @@
 			<!--<li ng-repeat="item in webExercise" class="gieafitListItem group">-->
 				<!--<li ng-repeat="item in filteredWebExList = ( webExercise | filter: filterPatient | orderBy: sortType : sortOrder)" class="gieafitListItem group">-->
 				<li ng-repeat="item in filteredWebExList = (webExercise | filter:{title : filterPatient} )" class="gieafitListItem group">
+<<<<<<< HEAD
+				<span class="pull-left">
+					<span class="marginR5">{{item.id}}</span>
+					<span>{{item.title}} :</span>
+					<i><span>{{item.tags[0]}}&nbsp;{{item.tags[1]}}&nbsp;{{item.tags[2]}}</span></i>
+				</span>
+				<span class="pull-right trash-icon" ng-click="delete($index)">
+					<span class="pos-rel">
+=======
 					<span class="">{{item.id}}</span>
 					<span class="limitSpan">{{item.title}} :</span>
 					<span class="limitSpan">{{item.tags[0]}}&nbsp;{{item.tags[1]}}&nbsp;{{item.tags[2]}}</span>
 					<span class="pull-right trash-icon" ng-click="delete($index)">
+>>>>>>> feature/development
 						<i class="icon ion-ios-trash-outline" ></i>
 						<!-- <i class="icon ion-ios-close-outline"></i> -->
 					</span>

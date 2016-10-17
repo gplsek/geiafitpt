@@ -70,7 +70,10 @@ angular.module('geiaFitApp')
         url: ApiEndpoint.url + '/user/login',
         data: form
       }).then(function (response) {
+<<<<<<< HEAD
+=======
         $rootScope.cookieValue = response.data.session_name+"="+response.data.sessid;
+>>>>>>> feature/development
         var token = response.data.token
         storeUserCredentials(token, isChecked);
         $rootScope.token = token;
@@ -301,6 +304,9 @@ angular.module('geiaFitApp')
     var getThreshold = function (uid) {
       var promise = $http({
         method: "GET",
+<<<<<<< HEAD
+        url: ApiEndpoint.url + "/goals/tresholds/37" // Hardcoded needs to be replaced
+=======
         url: ApiEndpoint.url + "/goals/tresholds/"+ uid // Hardcoded needs to be replaced
       }).then(function (response) {
         return response.data;
@@ -319,6 +325,7 @@ angular.module('geiaFitApp')
         method: "PUT",
         data: request_params,
         url: ApiEndpoint.url + "/goals/tresholds/"+ uid // Hardcoded needs to be replaced
+>>>>>>> feature/development
       }).then(function (response) {
         return response.data;
       }, function (err) {
