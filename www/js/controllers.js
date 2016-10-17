@@ -1359,17 +1359,13 @@ if(data.length >= 3){
   }
 
     $scope.availableOptions= [
-      { id: '1', name: 'Exercise Name', show: 'true' },
-      { id: '2', name: 'Category', show: 'false' },
-      { id: '3', name: 'Upper Extremity', show: 'false' },
-      { id: '4', name: 'Shoulder', show: 'true' },
-      { id: '5', name: 'Elbow', show: 'true' },
-      { id: '6', name: 'Wrist', show: 'true' },
-      { id: '7', name: 'Hand', show: 'true' },
-      { id: '8', name: 'Lower Extemity', show: 'false' },
-      { id: '9', name: 'Hip', show: 'true' },
-      { id: '10', name: 'Knee', show: 'true' },
-      { id: '11', name: 'Foot', show: 'true' }
+      { id: '1', name: 'Shoulder', show: 'true' },
+      { id: '2', name: 'Elbow', show: 'true' },
+      { id: '3', name: 'Wrist', show: 'true' },
+      { id: '4', name: 'Hand', show: 'true' },
+      { id: '5', name: 'Hip', show: 'true' },
+      { id: '6', name: 'Knee', show: 'true' },
+      { id: '7', name: 'Foot', show: 'true' }
     ]
 
   
