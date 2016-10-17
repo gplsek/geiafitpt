@@ -300,6 +300,10 @@ angular.module('geiaFitApp')
 
     var getThreshold = function (uid) {
       var promise = $http({
+         headers: {
+          'X-CSRF-Token': $rootScope.token,
+          'Access-Control-Allow-Origin': '*'
+        },
         method: "GET",
         url: ApiEndpoint.url + "/goals/tresholds/"+ uid // Hardcoded needs to be replaced
       }).then(function (response) {
