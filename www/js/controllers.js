@@ -3007,8 +3007,7 @@ if(data.length >= 3){
         // as long as entries are consecutive, move end forward
         if (arr[i] == (arr[i - 1] + 1)) {
           end = arr[i];
-          console.log("END" + end);
-
+    
         }
         else {
           // when no longer consecutive, add group to result
@@ -3030,13 +3029,6 @@ if(data.length >= 3){
       else {
         result += start + "-" + end;
       }
-
-
-
-      console.log("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-      console.log("Resulr=" + result);
-
-
 
       for (var x = 0; x < result.length; x++) // Convert string array to integer array
       {
@@ -3068,8 +3060,6 @@ if(data.length >= 3){
         }
 
       }
-      console.log("........................................");
-      console.log("Resulr=" + result);
       return result;
       }
       else
