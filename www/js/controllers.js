@@ -2938,6 +2938,123 @@ if(data.length >= 3){
         exerciseListBackup = data.exercises;
       });
     }
+
+    $scope.days = function (weekly) {
+      var log = [];
+      angular.forEach(weekly, function (value, key) {
+        if (value === 1) {
+          switch (key) {
+            case "mon":
+              this.push(1);
+              break;
+            case "tue":
+              this.push(2);
+              break;
+            case "wed":
+              this.push(3);
+              break;
+            case "thu":
+              this.push(4);
+              break;
+            case "fri":
+              this.push(5);
+              break;
+            case "sat":
+              this.push(6);
+              break;
+            case "sun":
+              this.push(7);
+          }
+        }
+
+      }, log);
+
+     log=log.sort(function(a, b){return a-b});
+
+      var arr = log;
+      var result = '';
+      var start, end;  // track start and end
+
+      if(arr.length > 0)
+      {
+            end = start = arr[0];
+      
+      for (var i = 1; i < arr.length; i++) {
+        // as long as entries are consecutive, move end forward
+        if (arr[i] == (arr[i - 1] + 1)) {
+          end = arr[i];
+          console.log("END" + end);
+
+        }
+        else {
+          // when no longer consecutive, add group to result
+          // depending on whether start=end (single item) or not
+          if (start == end) {
+            result += start + ",";
+          }
+          else {
+            result += start + "-" + end + ",";
+          }
+          start = end = arr[i];
+        }
+      }
+
+      // handle the final group
+      if (start == end) {
+        result += start;
+      }
+      else {
+        result += start + "-" + end;
+      }
+
+
+
+      console.log("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+      console.log("Resulr=" + result);
+
+
+
+      for (var x = 0; x < result.length; x++) // Convert string array to integer array
+      {
+        var str = result.charAt(x);
+        console.log("" + str)
+        switch (str) {
+          case "2":
+            result = result.replace("2", "T");
+            break;
+          case "3":
+            result = result.replace("3", "W");
+            break;
+          case "4":
+            result = result.replace("4", "T");
+            break;
+          case "5":
+            result = result.replace("5", "F");
+            break;
+          case "6":
+            result = result.replace("6", "S");
+            break;
+          case "7":
+            result = result.replace("7", "S");
+            break;
+          case "1":
+            result = result.replace("1", "M");
+            console.log("replave" + str)
+            break;
+        }
+
+      }
+      console.log("........................................");
+      console.log("Resulr=" + result);
+      return result;
+      }
+      else
+      {
+        result = "";
+        return result;
+      }
+      
+    }
     //  $scope.day;
 
     //         console.log($scope.exerciseList + 'inside controller'+day);
