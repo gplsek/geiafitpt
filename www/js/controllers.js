@@ -1358,7 +1358,6 @@ if(data.length >= 3){
     video:""
   }
 
-  loadData = function(){
     $scope.availableOptions= [
       { id: '1', name: 'Exercise Name', show: 'true' },
       { id: '2', name: 'Category', show: 'false' },
@@ -1372,7 +1371,7 @@ if(data.length >= 3){
       { id: '10', name: 'Knee', show: 'true' },
       { id: '11', name: 'Foot', show: 'true' }
     ]
-  }
+
   
 
   $scope.loadTags = function($query) {
@@ -1383,7 +1382,6 @@ if(data.length >= 3){
   }
 
   init = function(){
-    loadData();
     console.log($stateParams.exerciseObject)
     var exercise = $stateParams.exerciseObject;
     $scope.addExercise.name = exercise.title
