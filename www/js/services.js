@@ -590,6 +590,10 @@ angular.module('geiaFitApp')
 
     var addExercise = function(params){
         var exerciseData = $http({
+          headers: {
+            'X-CSRF-Token': $rootScope.token,
+            //'cookie': $rootScope.cookieValue
+          },
         method: "PUT",
         data:params,
         url: ApiEndpoint.url + "/ptexlib/" + $rootScope.loggedInUserUid
@@ -602,7 +606,7 @@ angular.module('geiaFitApp')
     }
     
     return {
-      saveExercise: addExercise
+      addExercise: addExercise
     }
 
   }])

@@ -236,7 +236,7 @@ angular.module('geiaFitApp')
           $scope.title = 'Emotion Level'
           break;
         case 2:
-          $scope.title = 'New Message',
+          $scope.title = 'New Messages',
             $scope.sortType = 'unread_messages';
           $scope.sortOrder = true;
           break;
@@ -1348,7 +1348,7 @@ if(data.length >= 3){
     }
 
   }])
-  .controller('AddExerciseCtrl', ['$scope','$state', '$stateParams','AddExerciseService', function ($scope,$state,$stateParams,AddExerciseService) {
+  .controller('AddExerciseCtrl', ['$scope','$state', '$stateParams','AddExerciseService','Flash', function ($scope,$state,$stateParams,AddExerciseService,Flash) {
 
   $scope.addExercise = {
     name : "",
@@ -1357,40 +1357,71 @@ if(data.length >= 3){
     thumbnail : "", 
     video:""
   }
+
+  loadData = function(){
+    $scope.availableOptions= [
+      { id: '1', name: 'Exercise Name', show: 'true' },
+      { id: '2', name: 'Category', show: 'false' },
+      { id: '3', name: 'Upper Extremity', show: 'false' },
+      { id: '4', name: 'Shoulder', show: 'true' },
+      { id: '5', name: 'Elbow', show: 'true' },
+      { id: '6', name: 'Wrist', show: 'true' },
+      { id: '7', name: 'Hand', show: 'true' },
+      { id: '8', name: 'Lower Extemity', show: 'false' },
+      { id: '9', name: 'Hip', show: 'true' },
+      { id: '10', name: 'Knee', show: 'true' },
+      { id: '11', name: 'Foot', show: 'true' }
+    ]
+  }
+  
+
+  $scope.loadTags = function($query) {
+      var data = $scope.availableOptions;
+      return data.filter(function(tempData) {
+        return tempData.name.indexOf($query.toLowerCase()) != -1;
+      });
+  }
+
   init = function(){
+    loadData();
     console.log($stateParams.exerciseObject)
     var exercise = $stateParams.exerciseObject;
     $scope.addExercise.name = exercise.title
     $scope.addExercise.comments= exercise.comments
     $scope.addExercise.tags= exercise.categories
-    $scope.addExercise.thumbnail= exercise.image
+    $scope.addExercise.thumbnail= exercise.image1
     $scope.addExercise.video = exercise.mp4
+    console.log($scope.addExercise.tags)
   }
   if($stateParams.exerciseObject!=null){
     init();
   }
 
   $scope.updateExercise = function(){
-    
+    var categoryList = [];
+    for(var x in $scope.addExercise.tags){
+      categoryList.push($scope.addExercise.tags[x].name)
+    }
+
      var data = {
        "exid":$stateParams.exerciseObject.exid,
-       "video_title": "",
-       "video_name": "",
-       "video_data": "",
+       "video_title": $scope.addExercise.name,
+       "video_name": $scope.addExercise.name,
+       "video_data": $scope.addExercise.video,
        "video_image_name": "",
-       "video_image":"",
+       "video_image":$scope.addExercise.thumbnail,
        "notes":"",
        "comments": $scope.addExercise.comments, 
-       "categories": $stateParams.exerciseObject.categories
+       "categories": categoryList
      }
-
-      // var editExerciseList = AddExerciseService.saveExercise(data).then(function (success) {
-      //   console.log("Success")
-      //   console.log(success)
-      // }, function (error) {
-      //   console.log("Error")
-      //   console.log(error)
-      // })
+     console.log(data)
+       var editExerciseList = AddExerciseService.addExercise(data).then(function (success) {
+         console.log("Success")
+         Flash.showFlash({ type: 'success', message: "Success!" });
+       }, function (error) {
+         console.log("Error")
+         Flash.showFlash({ type: 'error', message: "Failure!" });
+       })
   }
   
 //console.log($scope.addExercise.tags);
