@@ -58,8 +58,8 @@ angular.module('geiaFitApp')
 
     $scope.data = {
 
-      email: "",
-      password: ""
+      email: "admin@geiafit.com",
+      password: "FitGeia1!"
     };
 
     function validateFields(data) {
@@ -2632,9 +2632,12 @@ if(data.length >= 3){
     }
     init();
 
+   
+    var addPopup;
+
     $scope.addss = function () {
 
-      $ionicPopup.show({
+      addPopup=$ionicPopup.show({
         template: '<div style="font-weight:bold;"> <button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;">My Mobile Device</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;">My Library</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;">Create New</button></div>',
         // template: '<div style="background: #121516; color: #fff;"> <button class="button button-block btn-yellow" style="background: #121516; color: #fff;">My Mobile Device</button><button class="button button-block btn-yellow">My Library</button><button class="button button-block btn-yellow">Create New</button></div>',
         title: 'Add Exercise',
@@ -2645,6 +2648,15 @@ if(data.length >= 3){
         ]
       });
 
+    }
+
+    $scope.gotoHome = function () {
+      if(addPopup  != undefined || addPopup != null)
+      {
+      addPopup.close();
+      }
+      console.log("ExerciseProgramHome")
+      $state.transitionTo('main.dash', {}, { reload: false });
     }
 
 
