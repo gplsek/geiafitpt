@@ -739,9 +739,6 @@ angular.module('geiaFitApp')
       //console.log(stepList);
     })();
 
-    $scope.stepsList = stepList;
-    $scope.selectedSteps = $scope.stepsList[0].id;
-
     $scope.myFunc = function () {
       //console.log($scope.stepspermin);
     }
@@ -753,7 +750,8 @@ angular.module('geiaFitApp')
       }
     })();
 
-
+    $scope.stepsList = stepList;
+    //$scope.setActivityGoals.selectedSteps = $scope.stepsList[0].id;
     $scope.lightMins = minsArray;
     //$scope.setActivityGoals.lightMinsSelected = $scope.lightMins[0].id,
     $scope.moderateMins = minsArray;
@@ -763,7 +761,9 @@ angular.module('geiaFitApp')
     $scope.setActivityGoals = {
       lightMinsSelected : $scope.lightMins[0].id,
       moderateMinsSelected : $scope.moderateMins[0].id,
-      vigorousMinsSelected : $scope.vigorousMins[0].id
+      vigorousMinsSelected : $scope.vigorousMins[0].id,
+      selectedSteps : $scope.stepsList[0].id,
+      instructions : ''
     }
 
     $scope.slider = {
@@ -807,23 +807,64 @@ angular.module('geiaFitApp')
     }
 
     getTreshold = function () {
-
       AppService.getThreshold($rootScope.UID).then(
         function (success) {
           console.log("getThreshold")
           console.log(success)
           var tresholdData = success.data;
 
-          var minId = tresholdData.steps_min - 1;
-          $scope.setActivityGoals.lightMinsSelected = $scope.lightMins[minId].id
-          var modId = tresholdData.steps_low - 1;
-          $scope.setActivityGoals.moderateMinsSelected = $scope.moderateMins[modId].id;
-          var higId = tresholdData.steps_high - 1;
-          $scope.setActivityGoals.vigorousMinsSelected = $scope.vigorousMins[higId].id;
+          $scope.slider.min = tresholdData.steps_low;
+          $scope.slider.max = tresholdData.steps_high;
+
           $scope.slider2.min = tresholdData.hr_low;
           $scope.slider2.max = tresholdData.hr_high;
 
+          console.log($scope.slider)
           console.log($scope.slider2)
+        },
+        function (error) {
+          console.log(error)
+        });
+    }
+
+    getActivityGoal = function () {
+      AppService.getActivityGoal($rootScope.UID).then(
+        function (success) {
+          console.log("getActivity")
+          console.log(success)
+          var activityData;
+          var tempData = success.data;
+
+          var Tdate = moment().utcOffset('-07:00').format('L');
+          var today = moment(Tdate)
+
+          for (var x in tempData) {
+            var unixDate = tempData[x].goal_date
+            var newDate = moment.unix(unixDate).utcOffset('-07:00').format('L');
+            var NnewDate = moment(newDate)
+            if(NnewDate.diff(today) == 0){
+              activityData = success.data;
+            }
+          }
+          console.log(activityData)
+          if (activityData == undefined || activityData == null) {
+            $scope.setActivityGoals.lightMinsSelected = $scope.lightMins[0].id
+            $scope.setActivityGoals.moderateMinsSelected = $scope.moderateMins[0].id
+            $scope.setActivityGoals.vigorousMinsSelected = $scope.vigorousMins[0].id
+            $scope.setActivityGoals.selectedSteps = $scope.stepsList[0].id
+            $scope.setActivityGoals.instructions = ''
+          }
+          else {
+            var minId = activityData.time_active_low;
+            $scope.setActivityGoals.lightMinsSelected = $scope.lightMins[minId].id
+            var modId = activityData.time_active_medium;
+            $scope.setActivityGoals.moderateMinsSelected = $scope.moderateMins[modId].id;
+            var higId = activityData.time_active_high;
+            $scope.setActivityGoals.vigorousMinsSelected = $scope.vigorousMins[higId].id;
+            var steps = activityData.total_steps;
+            $scope.setActivityGoals.selectedSteps = $scope.stepsList[steps].id;
+            $scope.setActivityGoals.instructions = activityData.instructions
+          }
         },
         function (error) {
           console.log(error)
@@ -833,31 +874,59 @@ angular.module('geiaFitApp')
     init = function () {
       console.log($rootScope.UID)
       getTreshold();
+      getActivityGoal();
 
     }
     init();
 
     $scope.setActivityGoals = function () {
-      var data = {
-        "steps_min": $scope.setActivityGoals.lightMinsSelected,
-        "steps_low": $scope.setActivityGoals.moderateMinsSelected,
-        "steps_high": $scope.setActivityGoals.vigorousMinsSelected,
+      var success = true;
+
+      var tresholdData = {
+        "steps_min": '5',
+        "steps_low": $scope.slider.min,
+        "steps_high": $scope.slider.max,
         "hr_low": $scope.slider2.min,
         "hr_high": $scope.slider2.max,
       }
-      console.log(data)
-      console.log($scope.setActivityGoals.instructions)
-
-      AppService.setThreshold(data, $rootScope.UID).then(
+      console.log(tresholdData)
+      AppService.setThreshold(tresholdData, $rootScope.UID).then(
         function (success) {
-          Flash.showFlash({ type: 'success', message: "Success !" });
           console.log("SUCCESS")
           getTreshold();
         },
         function (error) {
-          Flash.showFlash({ type: 'error', message: "Login Failed !" });
           console.log("ERROR")
+          success = false;
         });
+
+      var activityData = {
+        "goal_date": null,
+        "total_steps": $scope.setActivityGoals.selectedSteps,
+        "time_active_low": $scope.setActivityGoals.lightMinsSelected,
+        "time_active_medium": $scope.setActivityGoals.moderateMinsSelected,
+        "time_active_high": $scope.setActivityGoals.vigorousMinsSelected,
+        "instructions": $scope.setActivityGoals.instructions,
+        "exercise": null,
+      }
+      console.log(activityData)
+     /* AppService.setActivityGoal(activityData, $rootScope.UID).then(
+        function (success) {
+          console.log("SUCCESS")
+          getActivityGoal();
+        },
+        function (error) {
+          console.log("ERROR")
+          success = false;
+        });*/
+
+      if (success) {
+        Flash.showFlash({ type: 'success', message: "Success !" });
+      }
+      else {
+        Flash.showFlash({ type: 'error', message: "Failed !" });
+      }
+
     } 
 
 
@@ -2180,6 +2249,12 @@ if(data.length >= 3){
       if (data > 999) {
         data = 999;
       }
+      if(data >= 100){
+        marker = 'circle'
+      }
+      else{
+        marker = ''
+      }
       var chartConfig = {
         options: {
           chart: {
@@ -2253,6 +2328,9 @@ if(data.length >= 3){
             innerRadius: '100%',
             y: utilityService.round(data, 1) // one number after decimal
           }],
+          marker: {
+                symbol: marker
+          },
           dataLabels: {
             format: '<div style="text-align:center"><span style="font-size:24px;font-weight:normal;color:' +
             ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'white') + '">{y}</span>' +

@@ -327,10 +327,42 @@ angular.module('geiaFitApp')
       return promise;
     }
 
+    var getActivityGoal = function (uid) {
+      console.log(uid)
+      var prom = $http({
+        method: "GET",
+        url: ApiEndpoint.url + '/goals/activity/' + uid
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      })
+      return prom;
+    }
+
+    var setActivityGoal = function (request_params,uid) {
+      var prom = $http({
+         headers: {
+          'X-CSRF-Token': $rootScope.token,
+          'Access-Control-Allow-Origin': '*'
+        },
+        method: "PUT",
+        data: request_params,
+        url: ApiEndpoint.url + '/goals/activity/' + uid
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      })
+      return prom;
+    }
+
 
     return {
       patientsData: getPatientsData,
       getActivity: getActivity,
+      setActivityGoal:setActivityGoal,
+      getActivityGoal: getActivityGoal,
       getHealthPoint : getHealthPoint,
       getVitals: getVitals,
       addPatient: addPatient,
