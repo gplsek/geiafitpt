@@ -1086,50 +1086,58 @@ $scope.sortByGroup = function(categoryName,exerciseType) {
         case "1":
           $scope.sortByGroup("title",service)
           $scope.title = 'Exercise Name'
+          $scope.subNavList = false;
           break;
         case "2":
-          $scope.title = 'Category'
+          //$scope.title = 'Category'
           break;
         case "3":
-        $scope.title = 'Upper Extremity';
+        //$scope.title = 'Upper Extremity';
         break;
         case "4":
         $scope.title = 'Shoulder'
         $scope.sortByGroup("shoulder",service)
+        $scope.subNavList = false;
         break;
         case "5":
         $scope.title = 'Elbow'
         $scope.sortByGroup("elbow",service)
+        $scope.subNavList = false;
         break;
         case "6":
         $scope.title = 'Wrist'
         $scope.sortByGroup("wrist",service)
+        $scope.subNavList = false;
         break;
         case "7":
         $scope.title = 'Hand'
         $scope.sortByGroup("hand",service)
+        $scope.subNavList = false;
         break;
         case "8":
-        $scope.title = 'Lower Extremity'
+        //$scope.title = 'Lower Extremity'
         break;
         case "9":
         $scope.title = 'Hip'
         $scope.sortByGroup("hip",service)
+        $scope.subNavList = false;
         break;
         case "10":
         $scope.title = 'Knee'
         $scope.sortByGroup("knee",service)
+        $scope.subNavList = false;
         break;
         case "11":
         $scope.title = 'Foot'
         $scope.sortByGroup("foot",service)
+        $scope.subNavList = false;
         break;
         default:
           $scope.sortType = 'title';
           $scope.sortOrder = true;
           break;
       }
- $scope.subNavList = false;
+ //$scope.subNavList = false;
  }
 
  setTags = function(data){
@@ -1238,17 +1246,17 @@ if(data.length >= 3){
       model: null,
       availableOptions: [
 
-        { id: '1', name: 'Exercise Name',show : 'true' },
-        { id: '2', name: 'Category', show : 'false'},
-        { id: '3', name: 'Upper Extremity', show : 'false' },
-        { id: '4', name: 'Shoulder', show : 'true' },
-        { id: '5', name: 'Elbow', show : 'true' },
-        { id: '6', name: 'Wrist', show : 'true' },
-        { id: '7', name: 'Hand', show : 'true' },
-        { id: '8', name: 'Lower Extemity', show : 'false' },
-        { id: '9', name: 'Hip', show : 'true' },
-        { id: '10', name: 'Knee', show : 'true' },
-        { id: '11', name: 'Foot', show : 'true' }
+        { id: '1', name: 'Exercise Name',classValue : '' },
+        { id: '2', name: 'Category', classValue : 'disabledClass'},
+        { id: '3', name: 'Upper Extremity', classValue : 'disabledClass' },
+        { id: '4', name: 'Shoulder', classValue : '' },
+        { id: '5', name: 'Elbow', classValue : '' },
+        { id: '6', name: 'Wrist', classValue : '' },
+        { id: '7', name: 'Hand', classValue : '' },
+        { id: '8', name: 'Lower Extemity', classValue : 'disabledClass' },
+        { id: '9', name: 'Hip', classValue : '' },
+        { id: '10', name: 'Knee', classValue : '' },
+        { id: '11', name: 'Foot', classValue : '' }
       ]
     };
 
