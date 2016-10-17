@@ -262,3 +262,9 @@ line-height: 35px !important ;
 {
   background-color:#444;border:none; padding:7px;
 }
+
+.edit_button
+{
+ width: 304px !important;
+ margin-top: 30px  !important;
+}
