@@ -910,7 +910,7 @@ angular.module('geiaFitApp')
         "exercise": null,
       }
       console.log(activityData)
-     /* AppService.setActivityGoal(activityData, $rootScope.UID).then(
+      AppService.setActivityGoal(activityData, $rootScope.UID).then(
         function (success) {
           console.log("SUCCESS")
           getActivityGoal();
@@ -918,7 +918,7 @@ angular.module('geiaFitApp')
         function (error) {
           console.log("ERROR")
           success = false;
-        });*/
+        });
 
       if (success) {
         Flash.showFlash({ type: 'success', message: "Success !" });
@@ -1665,12 +1665,30 @@ if(data.length >= 3){
       var endDate = moment(TendDate)
 
       var weekDates = [];
-      var date = startDate;
-      while (date.diff(endDate) < 0) {
-        weekDates.push(date)
-        var tempDate = startDate.add(1, 'days').startOf('day').format('L');
-        date = moment(tempDate);
+      //var date = startDate;
+      while (startDate.diff(endDate) < 0) {
+        weekDates.push(startDate)
+        var tempDate = startDate.add(1, 'days').format('L');
+        startDate = moment(tempDate);
       }
+
+
+      
+      /*var TstartDate = moment().utcOffset('-07:00').subtract(6, 'days').format('L');
+      var startDate = moment(TstartDate)
+      var TendDate = moment().utcOffset('-07:00').format('L');
+      var endDate = moment(TendDate)
+
+      var dateList = [];
+      var tempDate = startDate;
+      var i = 0;
+
+      while (tempDate.diff(endDate) <= 0) {
+        dateList.push(tempDate)
+        var Tdate = startDate.add(1, 'days').startOf('day').format('L');
+        tempDate = moment(Tdate);
+      }*/
+
       return weekDates;
     }
 
@@ -1719,8 +1737,11 @@ if(data.length >= 3){
       var totalWeekHigh = 0;
 
       var weekDates = getWeekDates();
+      var onlyDates = [];
 
       for (var d in weekDates) {
+        console.log(weekDates[d])
+        onlyDates.push(weekDates[d].date())
         var total_exercise_goal = 0
         var total_exercise = 0
         var total_exercise_exceed = 0
@@ -1865,11 +1886,11 @@ if(data.length >= 3){
       $scope.totalWeekMid = (totalWeekMid == null) ? 0 : totalWeekMid;
       $scope.totalWeekHigh = (totalWeekHigh == null) ? 0 : totalWeekHigh;
 
-      $scope.chartConfigWeekViewExercise = getChartConfigForWeek(dataWeekExerciseGoal, dataWeekExerciseComp, dataWeekExerciseExce,"#009CDB")
-      $scope.chartConfigWeekViewSteps = getChartConfigForWeek(dataWeekStepsGoal, dataWeekStepsComp, dataWeekStepsExce, "#009CDB")
-      $scope.chartConfigWeekViewLow = getChartConfigForWeek(dataWeekLightGoal, dataWeekLightComp,dataWeekLightExce,"#E0FBC6")
-      $scope.chartConfigWeekViewMid = getChartConfigForWeek(dataWeekModerateGoal, dataWeekModerateComp,dataWeekModerateExce,"#009CDB")
-      $scope.chartConfigWeekViewHigh = getChartConfigForWeek(dataWeekVigorousGoal, dataWeekVigorousComp, dataWeekVigorousExce, "#184370")
+      $scope.chartConfigWeekViewExercise = getChartConfigForWeek(dataWeekExerciseGoal, dataWeekExerciseComp, dataWeekExerciseExce,"#009CDB",onlyDates)
+      $scope.chartConfigWeekViewSteps = getChartConfigForWeek(dataWeekStepsGoal, dataWeekStepsComp, dataWeekStepsExce, "#009CDB",onlyDates)
+      $scope.chartConfigWeekViewLow = getChartConfigForWeek(dataWeekLightGoal, dataWeekLightComp,dataWeekLightExce,"#E0FBC6",onlyDates)
+      $scope.chartConfigWeekViewMid = getChartConfigForWeek(dataWeekModerateGoal, dataWeekModerateComp,dataWeekModerateExce,"#009CDB",onlyDates)
+      $scope.chartConfigWeekViewHigh = getChartConfigForWeek(dataWeekVigorousGoal, dataWeekVigorousComp, dataWeekVigorousExce, "#184370",onlyDates)
     }
 
     getComplianceDataForWeek = function (successData) {
@@ -1898,8 +1919,11 @@ if(data.length >= 3){
       var totalWeekCompliance = 0;
 
        var weekDates = getWeekDates();
+       var onlyDates = []
 
       for (var d in weekDates) {
+       onlyDates.push(weekDates[d].date())
+        
         var total_compliance_goal = 0
         var total_compliance = 0
         var total_compliance_exce = 0
@@ -1935,7 +1959,7 @@ if(data.length >= 3){
         dataWeekCompliance.push(total_compliance);
         dataWeekComplianceExce.push(total_compliance_exce)
       }
-      $scope.chartConfigWeekViewComp = getChartConfigForWeek(dataWeekComplianceGoal, dataWeekCompliance, dataWeekComplianceExce, "#009CDB")
+      $scope.chartConfigWeekViewComp = getChartConfigForWeek(dataWeekComplianceGoal, dataWeekCompliance, dataWeekComplianceExce, "#009CDB",onlyDates)
     }
 
 
@@ -2531,7 +2555,7 @@ if(data.length >= 3){
     }
 
 
-    function getChartConfigForWeek(dataGoal, dataAchived, dataExceed, colorcode) {
+    function getChartConfigForWeek(dataGoal, dataAchived, dataExceed, colorcode,dates) {
       var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
       ];
@@ -2547,7 +2571,7 @@ if(data.length >= 3){
 
       while (tempDate.diff(endDate) <= 0) {
         if (i == 0) {
-          dateList.push(monthNames[tempDate.month()] + " " + tempDate.date())
+          dateList.push(monthNames[startDate.month()] + " " + startDate.date())
           i++;
         }
         else {
@@ -2937,6 +2961,113 @@ if(data.length >= 3){
         $scope.exerciseList = data.exercises;
         exerciseListBackup = data.exercises;
       });
+    }
+
+    $scope.days = function (weekly) {
+      var log = [];
+      angular.forEach(weekly, function (value, key) {
+        if (value === 1) {
+          switch (key) {
+            case "mon":
+              this.push(1);
+              break;
+            case "tue":
+              this.push(2);
+              break;
+            case "wed":
+              this.push(3);
+              break;
+            case "thu":
+              this.push(4);
+              break;
+            case "fri":
+              this.push(5);
+              break;
+            case "sat":
+              this.push(6);
+              break;
+            case "sun":
+              this.push(7);
+          }
+        }
+
+      }, log);
+
+     log=log.sort(function(a, b){return a-b});
+
+      var arr = log;
+      var result = '';
+      var start, end;  // track start and end
+
+      if(arr.length > 0)
+      {
+            end = start = arr[0];
+      
+      for (var i = 1; i < arr.length; i++) {
+        // as long as entries are consecutive, move end forward
+        if (arr[i] == (arr[i - 1] + 1)) {
+          end = arr[i];
+    
+        }
+        else {
+          // when no longer consecutive, add group to result
+          // depending on whether start=end (single item) or not
+          if (start == end) {
+            result += start + ",";
+          }
+          else {
+            result += start + "-" + end + ",";
+          }
+          start = end = arr[i];
+        }
+      }
+
+      // handle the final group
+      if (start == end) {
+        result += start;
+      }
+      else {
+        result += start + "-" + end;
+      }
+
+      for (var x = 0; x < result.length; x++) // Convert string array to integer array
+      {
+        var str = result.charAt(x);
+        console.log("" + str)
+        switch (str) {
+          case "2":
+            result = result.replace("2", "T");
+            break;
+          case "3":
+            result = result.replace("3", "W");
+            break;
+          case "4":
+            result = result.replace("4", "T");
+            break;
+          case "5":
+            result = result.replace("5", "F");
+            break;
+          case "6":
+            result = result.replace("6", "S");
+            break;
+          case "7":
+            result = result.replace("7", "S");
+            break;
+          case "1":
+            result = result.replace("1", "M");
+            console.log("replave" + str)
+            break;
+        }
+
+      }
+      return result;
+      }
+      else
+      {
+        result = "";
+        return result;
+      }
+      
     }
     //  $scope.day;
 
