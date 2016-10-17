@@ -11230,19 +11230,21 @@ input[type=range]::-webkit-slider-runnable-track {
     width: 300px;
     height: 7.8px;
     /*background:#EEE71F;*/
-    background: -webkit-linear-gradient(left, #FAFF4B, #FEFFD4) !important;
+/*    background: -webkit-linear-gradient(left, #FAFF4B, #FEFFD4) !important;*/
+    background: -webkit-linear-gradient(90deg, #FEFFD5  , #FAFF05  );
     border: none;
     border-radius: 3px;
     margin-right: 10%;
 }
 input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none;
+/*    -webkit-appearance: none;*/
     border: none;
     height: 62px;
     width: 62px;
     border-radius: 127%;
      /*background: ion-hapy;*/
     background: url('../img/Happy.png');
+/*    background: url('../img/Happy.png') -webkit-linear-gradient(90deg, #FAD33A, #F3A81B);*/
     background-repeat: no-repeat;
    /* background-size:74px;*/
     background-size:65px;

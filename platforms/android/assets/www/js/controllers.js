@@ -138,6 +138,7 @@ angular.module('geiaFitApp')
       if(validateFields($scope.data)){
       AuthService.login($scope.data.email,$scope.data.password,$scope.data.checked).
       then(function(authenticated){
+          $rootScope.currentPassword = $scope.data.password;
       Flash.showFlash({ type: 'success', message: "Success !" });
       $state.go('main.dash', {}, { reload: true });
       //$scope.setCurrentUsername(data.username);
@@ -738,9 +739,6 @@ angular.module('geiaFitApp')
       //console.log(stepList);
     })();
 
-    $scope.stepsList = stepList;
-    $scope.selectedSteps = $scope.stepsList[0].id;
-
     $scope.myFunc = function () {
       //console.log($scope.stepspermin);
     }
@@ -752,7 +750,8 @@ angular.module('geiaFitApp')
       }
     })();
 
-
+    $scope.stepsList = stepList;
+    //$scope.setActivityGoals.selectedSteps = $scope.stepsList[0].id;
     $scope.lightMins = minsArray;
     //$scope.setActivityGoals.lightMinsSelected = $scope.lightMins[0].id,
     $scope.moderateMins = minsArray;
@@ -762,7 +761,9 @@ angular.module('geiaFitApp')
     $scope.setActivityGoals = {
       lightMinsSelected : $scope.lightMins[0].id,
       moderateMinsSelected : $scope.moderateMins[0].id,
-      vigorousMinsSelected : $scope.vigorousMins[0].id
+      vigorousMinsSelected : $scope.vigorousMins[0].id,
+      selectedSteps : $scope.stepsList[0].id,
+      instructions : ''
     }
 
     $scope.slider = {
@@ -806,23 +807,64 @@ angular.module('geiaFitApp')
     }
 
     getTreshold = function () {
-
       AppService.getThreshold($rootScope.UID).then(
         function (success) {
           console.log("getThreshold")
           console.log(success)
           var tresholdData = success.data;
 
-          var minId = tresholdData.steps_min - 1;
-          $scope.setActivityGoals.lightMinsSelected = $scope.lightMins[minId].id
-          var modId = tresholdData.steps_low - 1;
-          $scope.setActivityGoals.moderateMinsSelected = $scope.moderateMins[modId].id;
-          var higId = tresholdData.steps_high - 1;
-          $scope.setActivityGoals.vigorousMinsSelected = $scope.vigorousMins[higId].id;
+          $scope.slider.min = tresholdData.steps_low;
+          $scope.slider.max = tresholdData.steps_high;
+
           $scope.slider2.min = tresholdData.hr_low;
           $scope.slider2.max = tresholdData.hr_high;
 
+          console.log($scope.slider)
           console.log($scope.slider2)
+        },
+        function (error) {
+          console.log(error)
+        });
+    }
+
+    getActivityGoal = function () {
+      AppService.getActivityGoal($rootScope.UID).then(
+        function (success) {
+          console.log("getActivity")
+          console.log(success)
+          var activityData;
+          var tempData = success.data;
+
+          var Tdate = moment().utcOffset('-07:00').format('L');
+          var today = moment(Tdate)
+
+          for (var x in tempData) {
+            var unixDate = tempData[x].goal_date
+            var newDate = moment.unix(unixDate).utcOffset('-07:00').format('L');
+            var NnewDate = moment(newDate)
+            if(NnewDate.diff(today) == 0){
+              activityData = success.data;
+            }
+          }
+          console.log(activityData)
+          if (activityData == undefined || activityData == null) {
+            $scope.setActivityGoals.lightMinsSelected = $scope.lightMins[0].id
+            $scope.setActivityGoals.moderateMinsSelected = $scope.moderateMins[0].id
+            $scope.setActivityGoals.vigorousMinsSelected = $scope.vigorousMins[0].id
+            $scope.setActivityGoals.selectedSteps = $scope.stepsList[0].id
+            $scope.setActivityGoals.instructions = ''
+          }
+          else {
+            var minId = activityData.time_active_low;
+            $scope.setActivityGoals.lightMinsSelected = $scope.lightMins[minId].id
+            var modId = activityData.time_active_medium;
+            $scope.setActivityGoals.moderateMinsSelected = $scope.moderateMins[modId].id;
+            var higId = activityData.time_active_high;
+            $scope.setActivityGoals.vigorousMinsSelected = $scope.vigorousMins[higId].id;
+            var steps = activityData.total_steps;
+            $scope.setActivityGoals.selectedSteps = $scope.stepsList[steps].id;
+            $scope.setActivityGoals.instructions = activityData.instructions
+          }
         },
         function (error) {
           console.log(error)
@@ -832,31 +874,59 @@ angular.module('geiaFitApp')
     init = function () {
       console.log($rootScope.UID)
       getTreshold();
+      getActivityGoal();
 
     }
     init();
 
     $scope.setActivityGoals = function () {
-      var data = {
-        "steps_min": $scope.setActivityGoals.lightMinsSelected,
-        "steps_low": $scope.setActivityGoals.moderateMinsSelected,
-        "steps_high": $scope.setActivityGoals.vigorousMinsSelected,
+      var success = true;
+
+      var tresholdData = {
+        "steps_min": '5',
+        "steps_low": $scope.slider.min,
+        "steps_high": $scope.slider.max,
         "hr_low": $scope.slider2.min,
         "hr_high": $scope.slider2.max,
       }
-      console.log(data)
-      console.log($scope.setActivityGoals.instructions)
-
-      AppService.setThreshold(data, $rootScope.UID).then(
+      console.log(tresholdData)
+      AppService.setThreshold(tresholdData, $rootScope.UID).then(
         function (success) {
-          Flash.showFlash({ type: 'success', message: "Success !" });
           console.log("SUCCESS")
           getTreshold();
         },
         function (error) {
-          Flash.showFlash({ type: 'error', message: "Login Failed !" });
           console.log("ERROR")
+          success = false;
         });
+
+      var activityData = {
+        "goal_date": null,
+        "total_steps": $scope.setActivityGoals.selectedSteps,
+        "time_active_low": $scope.setActivityGoals.lightMinsSelected,
+        "time_active_medium": $scope.setActivityGoals.moderateMinsSelected,
+        "time_active_high": $scope.setActivityGoals.vigorousMinsSelected,
+        "instructions": $scope.setActivityGoals.instructions,
+        "exercise": null,
+      }
+      console.log(activityData)
+     /* AppService.setActivityGoal(activityData, $rootScope.UID).then(
+        function (success) {
+          console.log("SUCCESS")
+          getActivityGoal();
+        },
+        function (error) {
+          console.log("ERROR")
+          success = false;
+        });*/
+
+      if (success) {
+        Flash.showFlash({ type: 'success', message: "Success !" });
+      }
+      else {
+        Flash.showFlash({ type: 'error', message: "Failed !" });
+      }
+
     } 
 
 
@@ -1359,7 +1429,9 @@ if(data.length >= 3){
     }
     init();
 
-    $scope.showCP = false;
+    $scope.config = {
+        showCP: false
+    };
     // $scope.profile = profileData;
     $scope.editEnabled = false;
 
@@ -1403,13 +1475,21 @@ if(data.length >= 3){
         console.log(err);
       });
     }
-    function checkEmptyFields() {
+    $scope.checkEmptyFields = function(){
       var isEmpty = false;
-      var data = data;
+      var data = $scope.profile;
+      var keys = [
+        'name',
+        'email'
+      ];
       for (var property in data) {
+          if(keys.indexOf(property) == -1){
+              continue;
+          }
         if (data.hasOwnProperty(property)) {
           if (!data[property]) {
             isEmpty = true;
+            break;
           }
         }
       }
@@ -1426,13 +1506,43 @@ if(data.length >= 3){
     $scope.save = function (data) {
 
       if (!(Object.keys(data).length === 0 && data.constructor === Object)) {
-        if (!checkEmptyFields()) {
-
-          if (checkEmail(data.email)) {
-            Flash.showFlash({ type: 'success', message: "Success !" });
-          } else {
+        if (!$scope.checkEmptyFields()) {
+            var names = $scope.profile.name.split(" ");
+            var params = {
+                email: $scope.profile.email,
+                first_name: names ? names[0] : "",
+                last_name: names ? names[1] : "",
+                phone: $scope.profile.phone,
+            };
+            console.log($rootScope.currentPassword);
+            if($scope.config.showCP){
+                if($rootScope.currentPassword != $scope.profile.password){
+                    Flash.showFlash({ type: 'error', message: "The old password is incorrect!" });
+                    return;
+                }
+                if(!$scope.profile.newPassword){
+                    Flash.showFlash({ type: 'error', message: "Please fill the password!" });
+                    return;
+                }
+                if($scope.profile.passwordRepeat != $scope.profile.newPassword){
+                    Flash.showFlash({ type: 'error', message: "Password & confirm password do not match!" });
+                    return;
+                }
+                if (!checkEmail(data.email)) {
             Flash.showFlash({ type: 'error', message: "Email is not valid !" });
+                    return;
           }
+                params.password = $scope.profile.newPassword;
+            }
+            console.log($scope.config.showCP);
+            console.log(params);
+          
+            MyAccount.saveProfile(params).then(function (response) {
+                console.log(response)
+                Flash.showFlash({ type: 'success', message: "Success !" });
+            }, function (error) {
+                Flash.showFlash({ type: 'error', message: "Failed to save profile" });
+            })
         }
         else {
           Flash.showFlash({ type: 'error', message: "Please fill in all fields !" });
@@ -1590,11 +1700,17 @@ if(data.length >= 3){
       var dataWeekModerateGoal = [];
       var dataWeekVigorousGoal = [];
 
-      var dataWeekExercise = [];
-      var dataWeekSteps = [];
-      var dataWeekLight = [];
-      var dataWeekModerate = [];
-      var dataWeekVigorous = [];
+      var dataWeekExerciseComp = [];
+      var dataWeekStepsComp = [];
+      var dataWeekLightComp = [];
+      var dataWeekModerateComp = [];
+      var dataWeekVigorousComp = [];
+
+      var dataWeekExerciseExce = [];
+      var dataWeekStepsExce = [];
+      var dataWeekLightExce = [];
+      var dataWeekModerateExce = [];
+      var dataWeekVigorousExce = [];
 
       var totalWeekExe = 0;
       var totalWeekSteps = 0;
@@ -1607,14 +1723,19 @@ if(data.length >= 3){
       for (var d in weekDates) {
         var total_exercise_goal = 0
         var total_exercise = 0
+        var total_exercise_exceed = 0
         var total_steps_goal = 0
         var total_steps = 0
+        var total_steps_exceed = 0
         var time_active_low_goal = 0
         var time_active_low = 0
+        var time_active_low_exceed = 0
         var time_active_medium_goal = 0
         var time_active_medium = 0
+        var time_active_medium_exceed = 0
         var time_active_high_goal = 0
         var time_active_high = 0
+        var time_active_high_exceed = 0
 
         for (var x in activityDataForWeek) {
           var unixDate = activityDataForWeek[x].created
@@ -1626,28 +1747,89 @@ if(data.length >= 3){
             var temp = activityDataForWeek[x];
 
             if (temp.total_exercise_goal != null && temp.total_exercise != null) {
-              total_exercise_goal = parseInt(temp.total_exercise_goal)
-              total_exercise = parseInt(temp.total_exercise)
+              var goal = parseInt(temp.total_exercise_goal)
+              var done = parseInt(temp.total_exercise)
+
+              if(goal > done){
+                total_exercise_goal = goal - done 
+                total_exercise = done
+              }
+              if(goal < done){
+                total_exercise_exceed = done - goal
+                total_exercise = goal 
+              }
+              if(goal == done){
+                 total_exercise = done 
+              }
+              
             }
 
             if (temp.total_steps_goal != null && temp.total_steps != null) {
-              total_steps_goal = parseInt(temp.total_steps_goal)
-              total_steps = parseInt(temp.total_steps)
+              var goal = parseInt(temp.total_steps_goal)
+              var done = parseInt(temp.total_steps)
+
+              if(goal > done){
+                total_steps_goal = goal - done 
+                total_steps = done
+              }
+              if(goal < done){
+                total_steps_exceed = done - goal
+                total_steps = goal 
+              }
+              if(goal == done){
+                total_steps = done
+              }
             }
 
             if (temp.time_active_low_goal != null && temp.time_active_low != null) {
-              time_active_low_goal = parseInt(temp.time_active_low_goal)
-              time_active_low = parseInt(temp.time_active_low)
+              var goal = parseInt(temp.time_active_low_goal)
+              var done = parseInt(temp.time_active_low)
+
+              if(goal > done){
+                time_active_low_goal = goal - done 
+                time_active_low = done
+              }
+              if(goal < done){
+                time_active_low_exceed = done - goal
+                time_active_low = goal 
+              }
+              if(goal == done){
+                time_active_low = done
+              }
             }
 
             if (temp.time_active_medium_goal != null && temp.time_active_medium != null) {
-              time_active_medium_goal = parseInt(temp.time_active_medium_goal)
-              time_active_medium = parseInt(temp.time_active_medium)
+              var goal = parseInt(temp.time_active_medium_goal)
+              var done = parseInt(temp.time_active_medium)
+
+              if(goal > done){
+                time_active_medium_goal = goal - done 
+                time_active_medium = done
+              }
+              if(goal < done){
+                time_active_medium_exceed = done - goal
+                time_active_medium = goal 
+              }
+              if(goal == done){
+                time_active_medium = done 
+              }
             }
 
             if (temp.time_active_high_goal != null && temp.time_active_high != null) {
-              time_active_high_goal = parseInt(temp.time_active_high_goal)
-              time_active_high = parseInt(temp.time_active_high)
+              var goal = parseInt(temp.time_active_high_goal)
+              var done = parseInt(temp.time_active_high)
+
+              if(goal > done){
+                time_active_high_goal = goal - done 
+                time_active_high = done
+              }
+              if(goal < done){
+                time_active_high_exceed = done - goal
+                time_active_high = goal 
+              }
+              if(goal == done){
+                time_active_high = done 
+              }
             }
 
             totalWeekExe = totalWeekExe + total_exercise;
@@ -1664,11 +1846,17 @@ if(data.length >= 3){
         dataWeekModerateGoal.push(time_active_medium_goal);
         dataWeekVigorousGoal.push(time_active_high_goal);
 
-        dataWeekExercise.push(total_exercise);
-        dataWeekSteps.push(total_steps);
-        dataWeekLight.push(time_active_low);
-        dataWeekModerate.push(time_active_medium);
-        dataWeekVigorous.push(time_active_high);
+        dataWeekExerciseComp.push(total_exercise);
+        dataWeekStepsComp.push(total_steps);
+        dataWeekLightComp.push(time_active_low);
+        dataWeekModerateComp.push(time_active_medium);
+        dataWeekVigorousComp.push(time_active_high);
+
+        dataWeekExerciseExce.push(total_exercise_exceed);
+        dataWeekStepsExce.push(total_steps_exceed);
+        dataWeekLightExce.push(time_active_low_exceed);
+        dataWeekModerateExce.push(time_active_medium_exceed);
+        dataWeekVigorousExce.push(time_active_high_exceed);
       }
 
       $scope.totalWeekExe = (totalWeekExe == null) ? 0 : totalWeekExe;
@@ -1677,11 +1865,11 @@ if(data.length >= 3){
       $scope.totalWeekMid = (totalWeekMid == null) ? 0 : totalWeekMid;
       $scope.totalWeekHigh = (totalWeekHigh == null) ? 0 : totalWeekHigh;
 
-      $scope.chartConfigWeekViewExercise = getChartConfigForWeek(dataWeekExerciseGoal, dataWeekExercise)
-      $scope.chartConfigWeekViewSteps = getChartConfigForWeek(dataWeekStepsGoal, dataWeekSteps)
-      $scope.chartConfigWeekViewLow = getChartConfigForWeek(dataWeekLightGoal, dataWeekLight)
-      $scope.chartConfigWeekViewMid = getChartConfigForWeek(dataWeekModerateGoal, dataWeekModerate)
-      $scope.chartConfigWeekViewHigh = getChartConfigForWeek(dataWeekVigorousGoal, dataWeekVigorous)
+      $scope.chartConfigWeekViewExercise = getChartConfigForWeek(dataWeekExerciseGoal, dataWeekExerciseComp, dataWeekExerciseExce,"#009CDB")
+      $scope.chartConfigWeekViewSteps = getChartConfigForWeek(dataWeekStepsGoal, dataWeekStepsComp, dataWeekStepsExce, "#009CDB")
+      $scope.chartConfigWeekViewLow = getChartConfigForWeek(dataWeekLightGoal, dataWeekLightComp,dataWeekLightExce,"#E0FBC6")
+      $scope.chartConfigWeekViewMid = getChartConfigForWeek(dataWeekModerateGoal, dataWeekModerateComp,dataWeekModerateExce,"#009CDB")
+      $scope.chartConfigWeekViewHigh = getChartConfigForWeek(dataWeekVigorousGoal, dataWeekVigorousComp, dataWeekVigorousExce, "#184370")
     }
 
     getComplianceDataForWeek = function (successData) {
@@ -1706,6 +1894,7 @@ if(data.length >= 3){
     chartConfigForComplianceWeek = function () {
       var dataWeekComplianceGoal = [];
       var dataWeekCompliance = [];
+      var dataWeekComplianceExce = [];
       var totalWeekCompliance = 0;
 
        var weekDates = getWeekDates();
@@ -1713,6 +1902,7 @@ if(data.length >= 3){
       for (var d in weekDates) {
         var total_compliance_goal = 0
         var total_compliance = 0
+        var total_compliance_exce = 0
 
         for (var x in complianceDataForWeek) {
           var unixDate = complianceDataForWeek[x].created
@@ -1723,16 +1913,29 @@ if(data.length >= 3){
 
             var temp = complianceDataForWeek[x];
             if (temp.daily_challenge != null && temp.daily_points != null) {
-              total_compliance_goal = parseInt(temp.daily_challenge)
-              total_compliance = parseInt(temp.daily_points)
+              var goal = parseInt(temp.total_compliance_goal)
+              var done = parseInt(temp.total_compliance)
+
+              if(goal > done){
+                total_compliance_goal = goal - done 
+                total_compliance = done
+              }
+              if(goal < done){
+                total_compliance_exce = done - goal
+                total_compliance = goal 
+              }
+              if(goal == done){
+                total_compliance = done 
+              }
             }
             break;
           }
         }
         dataWeekComplianceGoal.push(total_compliance_goal);
         dataWeekCompliance.push(total_compliance);
+        dataWeekComplianceExce.push(total_compliance_exce)
       }
-      $scope.chartConfigWeekViewComp = getChartConfigForWeek(dataWeekComplianceGoal, dataWeekCompliance)
+      $scope.chartConfigWeekViewComp = getChartConfigForWeek(dataWeekComplianceGoal, dataWeekCompliance, dataWeekComplianceExce, "#009CDB")
     }
 
 
@@ -1799,11 +2002,17 @@ if(data.length >= 3){
       var dataMonthModerateGoal = [];
       var dataMonthVigorousGoal = [];
 
-      var dataMonthExercise = [];
-      var dataMonthSteps = [];
-      var dataMonthLight = [];
-      var dataMonthModerate = [];
-      var dataMonthVigorous = [];
+      var dataMonthExerciseComp = [];
+      var dataMonthStepsComp = [];
+      var dataMonthLightComp = [];
+      var dataMonthModerateComp = [];
+      var dataMonthVigorousComp = [];
+
+      var dataMonthExerciseExce = [];
+      var dataMonthStepsExce = [];
+      var dataMonthLightExce = [];
+      var dataMonthModerateExce = [];
+      var dataMonthVigorousExce = [];
 
       var totalMonthExe = 0;
       var totalMonthSteps = 0;
@@ -1818,14 +2027,19 @@ if(data.length >= 3){
         onlyDates.push(dates[d].date())
         var total_exercise_goal = 0
         var total_exercise = 0
+        var total_exercise_exceed = 0
         var total_steps_goal = 0
         var total_steps = 0
+        var total_steps_exceed = 0
         var time_active_low_goal = 0
         var time_active_low = 0
+        var time_active_low_exceed = 0
         var time_active_medium_goal = 0
         var time_active_medium = 0
+        var time_active_medium_exceed = 0
         var time_active_high_goal = 0
         var time_active_high = 0
+        var time_active_high_exceed = 0
 
         for (var x in activityDataForMonth) {
           var unixDate = activityDataForMonth[x].date
@@ -1836,29 +2050,90 @@ if(data.length >= 3){
 
             var temp = activityDataForMonth[x];
 
-            if (temp.total_exercise_goal != null && temp.total_exercise != null) {
-              total_exercise_goal = parseInt(temp.total_exercise_goal)
-              total_exercise = parseInt(temp.total_exercise)
+             if (temp.total_exercise_goal != null && temp.total_exercise != null) {
+              var goal = parseInt(temp.total_exercise_goal)
+              var done = parseInt(temp.total_exercise)
+
+              if(goal > done){
+                total_exercise_goal = goal - done 
+                total_exercise = done
+              }
+              if(goal < done){
+                total_exercise_exceed = done - goal
+                total_exercise = goal 
+              }
+              if(goal == done){
+                 total_exercise = done 
+              }
+              
             }
 
             if (temp.total_steps_goal != null && temp.total_steps != null) {
-              total_steps_goal = parseInt(temp.total_steps_goal)
-              total_steps = parseInt(temp.total_steps)
+              var goal = parseInt(temp.total_steps_goal)
+              var done = parseInt(temp.total_steps)
+
+              if(goal > done){
+                total_steps_goal = goal - done 
+                total_steps = done
+              }
+              if(goal < done){
+                total_steps_exceed = done - goal
+                total_steps = goal 
+              }
+              if(goal == done){
+                total_steps = done
+              }
             }
 
             if (temp.time_active_low_goal != null && temp.time_active_low != null) {
-              time_active_low_goal = parseInt(temp.time_active_low_goal)
-              time_active_low = parseInt(temp.time_active_low)
+              var goal = parseInt(temp.time_active_low_goal)
+              var done = parseInt(temp.time_active_low)
+
+              if(goal > done){
+                time_active_low_goal = goal - done 
+                time_active_low = done
+              }
+              if(goal < done){
+                time_active_low_exceed = done - goal
+                time_active_low = goal 
+              }
+              if(goal == done){
+                time_active_low = done
+              }
             }
 
             if (temp.time_active_medium_goal != null && temp.time_active_medium != null) {
-              time_active_medium_goal = parseInt(temp.time_active_medium_goal)
-              time_active_medium = parseInt(temp.time_active_medium)
+              var goal = parseInt(temp.time_active_medium_goal)
+              var done = parseInt(temp.time_active_medium)
+
+              if(goal > done){
+                time_active_medium_goal = goal - done 
+                time_active_medium = done
+              }
+              if(goal < done){
+                time_active_medium_exceed = done - goal
+                time_active_medium = goal 
+              }
+              if(goal == done){
+                time_active_medium = done 
+              }
             }
 
             if (temp.time_active_high_goal != null && temp.time_active_high != null) {
-              time_active_high_goal = parseInt(temp.time_active_high_goal)
-              time_active_high = parseInt(temp.time_active_high)
+              var goal = parseInt(temp.time_active_high_goal)
+              var done = parseInt(temp.time_active_high)
+
+              if(goal > done){
+                time_active_high_goal = goal - done 
+                time_active_high = done
+              }
+              if(goal < done){
+                time_active_high_exceed = done - goal
+                time_active_high = goal 
+              }
+              if(goal == done){
+                time_active_high = done 
+              }
             }
 
 
@@ -1877,11 +2152,17 @@ if(data.length >= 3){
         dataMonthModerateGoal.push(time_active_medium_goal);
         dataMonthVigorousGoal.push(time_active_high_goal);
 
-        dataMonthExercise.push(total_exercise);
-        dataMonthSteps.push(total_steps);
-        dataMonthLight.push(time_active_low);
-        dataMonthModerate.push(time_active_medium);
-        dataMonthVigorous.push(time_active_high);
+        dataMonthExerciseComp.push(total_exercise);
+        dataMonthStepsComp.push(total_steps);
+        dataMonthLightComp.push(time_active_low);
+        dataMonthModerateComp.push(time_active_medium);
+        dataMonthVigorousComp.push(time_active_high);
+
+        dataMonthExerciseExce.push(total_exercise_exceed);
+        dataMonthStepsExce.push(total_steps_exceed);
+        dataMonthLightExce.push(time_active_low_exceed);
+        dataMonthModerateExce.push(time_active_medium_exceed);
+        dataMonthVigorousExce.push(time_active_high_exceed);
       }
 
       $scope.totalMonthExe = (totalMonthExe == null) ? 0 : totalMonthExe;
@@ -1905,11 +2186,11 @@ if(data.length >= 3){
 
       onlyDates.reverse();*/
 
-      $scope.chartConfigMonthViewExercise = getChartConfigForMonth(dataMonthExerciseGoal, dataMonthExercise, onlyDates)
-      $scope.chartConfigMonthViewSteps = getChartConfigForMonth(dataMonthStepsGoal, dataMonthSteps, onlyDates)
-      $scope.chartConfigMonthViewLow = getChartConfigForMonth(dataMonthLightGoal, dataMonthLight, onlyDates)
-      $scope.chartConfigMonthViewMid = getChartConfigForMonth(dataMonthModerateGoal, dataMonthModerate, onlyDates)
-      $scope.chartConfigMonthViewHigh = getChartConfigForMonth(dataMonthVigorousGoal, dataMonthVigorous, onlyDates)
+      $scope.chartConfigMonthViewExercise = getChartConfigForMonth(dataMonthExerciseGoal, dataMonthExerciseComp,dataMonthExerciseExce,"#009CDB", onlyDates)
+      $scope.chartConfigMonthViewSteps = getChartConfigForMonth(dataMonthStepsGoal, dataMonthStepsComp,dataMonthStepsExce,"#009CDB", onlyDates)
+      $scope.chartConfigMonthViewLow = getChartConfigForMonth(dataMonthLightGoal, dataMonthLightComp,dataMonthLightExce, "#E0FBC6",onlyDates)
+      $scope.chartConfigMonthViewMid = getChartConfigForMonth(dataMonthModerateGoal, dataMonthModerateComp,dataMonthModerateExce,"#009CDB", onlyDates)
+      $scope.chartConfigMonthViewHigh = getChartConfigForMonth(dataMonthVigorousGoal, dataMonthVigorousComp,dataMonthVigorousExce, "#184370",onlyDates)
 
     }
 
@@ -1937,6 +2218,7 @@ if(data.length >= 3){
     chartConfigForComplianceMonth = function () {
       var dataMonthComplianceGoal = [];
       var dataMonthCompliance = [];
+      var dataMonthComplianceExce = [];
       var dates = getMonthDates($scope.DATE);
       var onlyDates = []
 
@@ -1944,6 +2226,7 @@ if(data.length >= 3){
         onlyDates.push(dates[d].date())
         var total_compliance_goal = 0
         var total_compliance = 0
+        var total_compliance_exceed = 0;
         
         for (var x in complianceDataForMonth) {
           var unixDate = complianceDataForMonth[x].created
@@ -1954,8 +2237,20 @@ if(data.length >= 3){
             var temp = complianceDataForMonth[x];
 
             if (temp.daily_challenge != null && temp.daily_points != null) {
-              total_compliance_goal = parseInt(temp.daily_challenge)
-              total_compliance = parseInt(temp.daily_points)
+              var goal = parseInt(temp.daily_challenge)
+              var done = parseInt(temp.daily_points)
+
+              if(goal > done){
+                total_compliance_goal = goal - done 
+                total_compliance = done
+              }
+              if(goal < done){
+                total_compliance_exceed = done - goal
+                total_compliance = goal 
+              }
+              if(goal == done){
+                total_compliance = done 
+              }
             }
 
             break;
@@ -1964,10 +2259,11 @@ if(data.length >= 3){
 
         dataMonthComplianceGoal.push(total_compliance_goal);
         dataMonthCompliance.push(total_compliance);
+        dataMonthComplianceExce.push(total_compliance_exceed);
       }
 
       $scope.lastDateOfMonth = Math.max(...onlyDates);
-      $scope.chartConfigMonthViewComp = getChartConfigForMonth(dataMonthComplianceGoal, dataMonthCompliance, onlyDates)
+      $scope.chartConfigMonthViewComp = getChartConfigForMonth(dataMonthComplianceGoal, dataMonthCompliance,dataMonthComplianceExce, "#009CDB",onlyDates)
 
     }
 
@@ -2139,6 +2435,12 @@ if(data.length >= 3){
       if (data > 999) {
         data = 999;
       }
+      if(data >= 100){
+        marker = 'circle'
+      }
+      else{
+        marker = ''
+      }
       var chartConfig = {
         options: {
           chart: {
@@ -2212,6 +2514,9 @@ if(data.length >= 3){
             innerRadius: '100%',
             y: utilityService.round(data, 1) // one number after decimal
           }],
+          marker: {
+                symbol: marker
+          },
           dataLabels: {
             format: '<div style="text-align:center"><span style="font-size:24px;font-weight:normal;color:' +
             ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'white') + '">{y}</span>' +
@@ -2226,7 +2531,7 @@ if(data.length >= 3){
     }
 
 
-    function getChartConfigForWeek(dataGoal, dataAchived) {
+    function getChartConfigForWeek(dataGoal, dataAchived, dataExceed, colorcode) {
       var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
       ];
@@ -2297,13 +2602,17 @@ if(data.length >= 3){
         },
         series: [{
           data: dataGoal,
+          color: "#999999",
+          //color: color,
+          borderColor: 'transparent'
+        },{
+          data: dataExceed,
           color: "#F3A81B",
           //color: color,
           borderColor: 'transparent'
-        },
-        {
+        },{
           data: dataAchived,
-          color: "#009CDB",
+          color:colorcode,
           borderColor: 'transparent'
         }],
         func: function (chart) {
@@ -2314,7 +2623,7 @@ if(data.length >= 3){
     }
 
 
-    function getChartConfigForMonth(dataGoal, dataAchived, dates) {
+    function getChartConfigForMonth(dataGoal, dataAchived, dataExceed ,colorcode, dates) {
       var chartConfig = {
         options: {
           chart: {
@@ -2359,11 +2668,15 @@ if(data.length >= 3){
         },
         series: [{
           data: dataGoal,
+          color: "#999999",
+          borderColor: 'transparent'
+        },{
+          data: dataExceed,
           color: "#F3A81B",
           borderColor: 'transparent'
-        }, {
+        },{
           data: dataAchived,
-          color: "#009CDB",
+          color:colorcode,
           borderColor: 'transparent'
         }],
         func: function (chart) {
@@ -2591,9 +2904,12 @@ if(data.length >= 3){
     }
     init();
 
+   
+    var addPopup;
+
     $scope.addss = function () {
 
-      $ionicPopup.show({
+      addPopup=$ionicPopup.show({
         template: '<div style="font-weight:bold;"> <button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;">My Mobile Device</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;">My Library</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;">Create New</button></div>',
         // template: '<div style="background: #121516; color: #fff;"> <button class="button button-block btn-yellow" style="background: #121516; color: #fff;">My Mobile Device</button><button class="button button-block btn-yellow">My Library</button><button class="button button-block btn-yellow">Create New</button></div>',
         title: 'Add Exercise',
@@ -2604,6 +2920,15 @@ if(data.length >= 3){
         ]
       });
 
+    }
+
+    $scope.gotoHome = function () {
+      if(addPopup  != undefined || addPopup != null)
+      {
+      addPopup.close();
+      }
+      console.log("ExerciseProgramHome")
+      $state.transitionTo('main.dash', {}, { reload: false });
     }
 
 

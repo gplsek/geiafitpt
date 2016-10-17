@@ -70,10 +70,7 @@ angular.module('geiaFitApp')
         url: ApiEndpoint.url + '/user/login',
         data: form
       }).then(function (response) {
-<<<<<<< HEAD
-=======
         $rootScope.cookieValue = response.data.session_name+"="+response.data.sessid;
->>>>>>> feature/development
         var token = response.data.token
         storeUserCredentials(token, isChecked);
         $rootScope.token = token;
@@ -304,9 +301,6 @@ angular.module('geiaFitApp')
     var getThreshold = function (uid) {
       var promise = $http({
         method: "GET",
-<<<<<<< HEAD
-        url: ApiEndpoint.url + "/goals/tresholds/37" // Hardcoded needs to be replaced
-=======
         url: ApiEndpoint.url + "/goals/tresholds/"+ uid // Hardcoded needs to be replaced
       }).then(function (response) {
         return response.data;
@@ -325,7 +319,6 @@ angular.module('geiaFitApp')
         method: "PUT",
         data: request_params,
         url: ApiEndpoint.url + "/goals/tresholds/"+ uid // Hardcoded needs to be replaced
->>>>>>> feature/development
       }).then(function (response) {
         return response.data;
       }, function (err) {
@@ -334,10 +327,42 @@ angular.module('geiaFitApp')
       return promise;
     }
 
+    var getActivityGoal = function (uid) {
+      console.log(uid)
+      var prom = $http({
+        method: "GET",
+        url: ApiEndpoint.url + '/goals/activity/' + uid
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      })
+      return prom;
+    }
+
+    var setActivityGoal = function (request_params,uid) {
+      var prom = $http({
+         headers: {
+          'X-CSRF-Token': $rootScope.token,
+          'Access-Control-Allow-Origin': '*'
+        },
+        method: "PUT",
+        data: request_params,
+        url: ApiEndpoint.url + '/goals/activity/' + uid
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      })
+      return prom;
+    }
+
 
     return {
       patientsData: getPatientsData,
       getActivity: getActivity,
+      setActivityGoal:setActivityGoal,
+      getActivityGoal: getActivityGoal,
       getHealthPoint : getHealthPoint,
       getVitals: getVitals,
       addPatient: addPatient,
@@ -385,9 +410,27 @@ angular.module('geiaFitApp')
       return ProfileImage;
     }
 
+    var saveProfile = function(params){
+        var profileData = $http({
+            headers: {
+                    'X-CSRF-Token': $rootScope.token,
+                    //'cookie': $rootScope.cookieValue
+                  },
+            method: "PUT",
+            data:params,
+            url: ApiEndpoint.url + "/profile/" + $rootScope.loggedInUserUid
+        }).then(function (response) {
+            return response.data;
+        }, function (err) {
+            console.log(err);
+        });
+        return profileData;
+    }
+
     return {
       myAccountDetails: getAdminProfile,
-      uploadImage: uploadProfileImage
+      uploadImage: uploadProfileImage,
+      saveProfile: saveProfile,
     }
 
   }])
@@ -539,6 +582,27 @@ angular.module('geiaFitApp')
 
     return {
       exerciseData: getExerciseList
+    }
+
+  }])
+
+  .service('AddExerciseService', ['$rootScope', '$http', 'ApiEndpoint', function ($rootScope, $http, ApiEndpoint) {
+
+    var addExercise = function(params){
+        var exerciseData = $http({
+        method: "PUT",
+        data:params,
+        url: ApiEndpoint.url + "/ptexlib/" + $rootScope.loggedInUserUid
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      });
+      return exerciseData;
+    }
+    
+    return {
+      saveExercise: addExercise
     }
 
   }])
