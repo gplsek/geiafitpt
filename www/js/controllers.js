@@ -2866,20 +2866,24 @@ if(data.length >= 3){
     $scope.delete = function (peid, index) {
       console.log("Delete called")
 
+      var confirmPopup = $ionicPopup.confirm({
+        title: 'Delete exercise',
+        template: 'Are you sure you want to delete this exercise ?'
+      });
+
       confirmPopup.then(function (res) {
         if (res) {
-          console.log("delete")
           SetExerciseProgramService.deleteExercise($rootScope.loggedInUserUid, peid).then(function (success) {
-            //  alert("success" + JSON.stringify(success));
-            $scope.exerciseList.splice(index, 1);
-            //  if(success.success == true)
-            //  {
-            //   $scope.exerciseList.splice(index, 1);
-            //  }
-            //  else
-            //  {
-            //    console.log("unable to delete");
-            //  }
+         
+             if(success.success == true)
+             {
+              $scope.exerciseList.splice(index, 1);
+             }
+             else
+             {
+               console.log("unable to delete");
+               alert("Unable to delete the eercise ");
+             }
           }, function (error) { })
 
         } else {
