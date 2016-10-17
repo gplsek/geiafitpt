@@ -1400,14 +1400,18 @@ if(data.length >= 3){
     for(var x in $scope.addExercise.tags){
       categoryList.push($scope.addExercise.tags[x].name)
     }
+    var xid = null
+    if($stateParams.exerciseObject!=null){
+      xid = $stateParams.exerciseObject.exid
+    }
 
      var data = {
-       "exid":$stateParams.exerciseObject.exid,
+       "exid":xid,
        "video_title": $scope.addExercise.name,
-       "video_name": $scope.addExercise.name,
-       "video_data": $scope.addExercise.video,
+       //"video_name": $scope.addExercise.name,
+       //"video_data": $scope.addExercise.video,
        "video_image_name": "",
-       "video_image":$scope.addExercise.thumbnail,
+       //"video_image":$scope.addExercise.thumbnail,
        "notes":"",
        "comments": $scope.addExercise.comments, 
        "categories": categoryList
