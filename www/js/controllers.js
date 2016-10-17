@@ -3033,7 +3033,6 @@ if(data.length >= 3){
       for (var x = 0; x < result.length; x++) // Convert string array to integer array
       {
         var str = result.charAt(x);
-        console.log("" + str)
         switch (str) {
           case "2":
             result = result.replace("2", "T");
@@ -3055,7 +3054,6 @@ if(data.length >= 3){
             break;
           case "1":
             result = result.replace("1", "M");
-            console.log("replave" + str)
             break;
         }
 
