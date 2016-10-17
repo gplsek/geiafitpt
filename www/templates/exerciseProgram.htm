@@ -40,42 +40,46 @@
 		<ul class="exerciseList">
 			<li ng-repeat="item in exerciseList  | filter: searchExercise" class="gieafitListItem group">
 				<div ui-sref="setExerciseProgram(
-       {
-peid: item.peid,
-title: item.title,
-comments: item.comments,
-code: item.code,
-reps: item.reps,
-sets: item.sets,
-rest: item.rest,
-daily:item.daily,
-today: item.today,
-alldays:item.alldays,
-weekly: {
-sun: item.weekly.sun,
-mon: item.weekly.mon,
-tue: item.weekly.tue,
-wed: item.weekly.wed,
-thu: item.weekly.thu,
-fri: item.weekly.fri,
-sat: item.weekly.sat,
-},
-mp4: item.mp4,
-webm: item.webm,
-mov: item.mov,
-thumb1: item.thumb1,
-thumb2: item.thumb2
-}
+				{
+					peid: item.peid,
+					title: item.title,
+					comments: item.comments,
+					code: item.code,
+					reps: item.reps,
+					sets: item.sets,
+					rest: item.rest,
+					daily:item.daily,
+					today: item.today,
+					alldays:item.alldays,
+					weekly: {
+						sun: item.weekly.sun,
+						mon: item.weekly.mon,
+						tue: item.weekly.tue,
+						wed: item.weekly.wed,
+						thu: item.weekly.thu,
+						fri: item.weekly.fri,
+						sat: item.weekly.sat,
+					},
+					mp4: item.mp4,
+					webm: item.webm,
+					mov: item.mov,
+					thumb1: item.thumb1,
+					thumb2: item.thumb2
+				}
 
-        )"> <span class="pull-left"><span class="marginR5">{{$index+1}}.</span><span>{{item.title}}</span>
-					<span>{{item.weekly.sun === 1 ?"S":""}}{{item.weekly.mon === 1 ?"M":""}}{{item.weekly.tue === 1 ?"T":""}}{{item.weekly.wed === 1 ?"W":""}}{{item.weekly.thu === 1 ?"T":""}}{{item.weekly.fri === 1 ? "F":""}}{{item.weekly.sat === 1 ?"S":""}}</span></span>
+		        )"> 
+        			<span class="pull-left exercise-list-row">
+	        			<span class="marginR5">{{$index+1}}.</span>
+	        			<span class="exercise-name">{{item.title}}</span>
+						<span>{{item.weekly.sun === 1 ?"S":""}}{{item.weekly.mon === 1 ?"M":""}}{{item.weekly.tue === 1 ?"T":""}}{{item.weekly.wed === 1 ?"W":""}}{{item.weekly.thu === 1 ?"T":""}}{{item.weekly.fri === 1 ? "F":""}}{{item.weekly.sat === 1 ?"S":""}}</span>
+					</span>
 				</div>
 
 				<span class="pull-right trash-icon" ng-click="delete(item.peid,$index)">
 					
 						<i class="icon ion-ios-trash-outline" ></i>
 						<!-- <i class="icon ion-ios-close-outline"></i> -->
-
+				</span>
 			</li>
 		</ul>
 
