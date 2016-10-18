@@ -1125,7 +1125,7 @@ $scope.sortByGroup = function(categoryName,exerciseType) {
             var flag = false;
             if(angular.isArray(value.categories) && value.categories.length > 0) {
               for(var index=0; index<value.categories.length; index++) {
-                if(value.categories[index] == categoryName) {
+                if(value.categories[index].toLowerCase() == categoryName.toLowerCase()) {
                   flag = true;
                   break;
                 }

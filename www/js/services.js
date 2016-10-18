@@ -593,12 +593,18 @@ angular.module('geiaFitApp')
   .service('AddExerciseService', ['$rootScope', '$http', 'ApiEndpoint', function ($rootScope, $http, ApiEndpoint) {
 
     var addExercise = function(params){
+      var methodType = "";
+      if(params.exid == null){
+        methodType = "POST";
+      }else{
+        methodType = "PUT";
+      }
         var exerciseData = $http({
           headers: {
             'X-CSRF-Token': $rootScope.token,
             //'cookie': $rootScope.cookieValue
           },
-        method: "PUT",
+        method: methodType,
         data:params,
         url: ApiEndpoint.url + "/ptexlib/" + $rootScope.loggedInUserUid
       }).then(function (response) {
