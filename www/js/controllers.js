@@ -1423,7 +1423,7 @@ if(data.length >= 3){
       confirmPopup.then(function (res) {
         if (res) {
            
-           .deleteExercise($rootScope.loggedInUserUid, $scope.myExerciseList[index].id).then(function (success) {
+            SetExerciseProgramService.deleteExercise($rootScope.loggedInUserUid, $scope.myExerciseList[index].id).then(function (success) {
                $scope.myExerciseList.splice(index, 1);
             }, function (error) {
                                                                                                                     
