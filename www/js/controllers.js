@@ -3011,6 +3011,21 @@ if(data.length >= 3){
 
     }
 
+    $scope.onMessageHold = function(event, index, message) {
+      // the service is mock but you would probably pass the toUser's GUID here
+      var data = {
+        "id": index
+      }
+
+      AppService.onMessageHold(data, $rootScope.UID).then(
+        function (success) {
+          console.log("SUCCESS")
+        },
+        function (error) {
+          console.log("ERROR");
+        });
+    }
+
   }])
 
   // fitlers

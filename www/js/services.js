@@ -327,6 +327,53 @@ angular.module('geiaFitApp')
       return promise;
     }
 
+    var getActivityGoal = function (uid) {
+      console.log(uid)
+      var prom = $http({
+        method: "GET",
+        url: ApiEndpoint.url + '/goals/activity/' + uid
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      })
+      return prom;
+    }
+
+    var setActivityGoal = function (request_params,uid) {
+      var prom = $http({
+         headers: {
+          'X-CSRF-Token': $rootScope.token,
+          'Access-Control-Allow-Origin': '*'
+        },
+        method: "PUT",
+        data: request_params,
+        url: ApiEndpoint.url + '/goals/activity/' + uid
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      })
+      return prom;
+    }
+
+    var onMessageHold = function (request_params,uid) {
+      var promise = $http({
+         headers: {
+          'X-CSRF-Token': $rootScope.token,
+          'Access-Control-Allow-Origin': '*'
+        },
+        method: "POST",
+        data: request_params,
+        url: ApiEndpoint.url + "/ptmessages/read/"+ uid // Hardcoded needs to be replaced
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      });
+      return promise;
+    }
+
 
     return {
       patientsData: getPatientsData,
@@ -337,7 +384,8 @@ angular.module('geiaFitApp')
       profile: getProfile,
       sortedByList: getSortedList,
       getThreshold: getThreshold,
-      setThreshold:setThreshold
+      setThreshold: setThreshold,
+      onMessageHold: onMessageHold
     }
 
   }])
