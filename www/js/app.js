@@ -149,9 +149,6 @@ thumb2: null
 
 
  .state('AddExcercisePopup', {
-    url: 'AddExcercisePopup', 
-    templateUrl: 'templates/addExerciseInExerciseProgram.htm',
-    controller: 'AddExercisePopupCtrl'
   })
   //
   
