@@ -394,13 +394,19 @@ angular.module('geiaFitApp')
     $scope.selectedDaily = $scope.repsDaily[1];
 
       $scope.saveExercise = function () {
-         var exercise = {
-        "name": $scope.exerciseprogram.title,
-        "comments": $scope.exerciseprogram.comments,
-        "reps": "" + $scope.exerciseprogram.reps,
-        "sets": "" + $scope.exerciseprogram.sets,
-        "daily": "" + $scope.exerciseprogram.daily,
-       "week_days": [
+      
+  
+    var exercise={
+"name":$scope.exerciseprogram.title,
+"video_data":"(see attached for example)",
+"video_name": "george6.mp4 888",
+"video_image_name":"george.jpg",
+"video_image":"AAAAFGZ0eXBxdCAgAAAAAHF0ICAAAAAId2lkZQASLJ1tZGF0AMxABwDom+7Mmy5PA4TVKBYzFJXz.....",
+"reps": "" + $scope.exerciseprogram.reps,
+"sets": "" + $scope.exerciseprogram.sets,
+"rest":"75",
+"daily":"" + $scope.exerciseprogram.daily,
+ "week_days": [
            {
              "day": "0",
              "on": $scope.exerciseprogram.weekly.sun
@@ -431,9 +437,8 @@ angular.module('geiaFitApp')
           }
 
         ],
-        "video_name": $scope.exerciseprogram.videoname,
-        "video_data": $scope.exerciseprogram.videodata 
-      };
+"comments":$scope.exerciseprogram.comments
+};
       SetExerciseProgramService.saveExercise(exercise).then(function (success) {
          Flash.showFlash({ type: 'success', message: "Success !" });
 
