@@ -5569,7 +5569,8 @@ ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs
     max-width: 100%;
     max-height: 90%;
     border-radius: 0px;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color:#222222;
+    border: 1px solid #333333;
     display: -webkit-box;
     display: -webkit-flex;
     display: -moz-box;
@@ -5588,8 +5589,10 @@ ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs
 
 .popup-head {
   padding: 15px 10px;
-  border-bottom: 1px solid #eee;
-  text-align: center; }
+  /* border-bottom: 1px solid #eee; */
+  text-align: center;
+  color: #fff;
+  }
 
 .popup-title {
   margin: 0;
@@ -5600,7 +5603,9 @@ ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs
   margin: 5px 0 0 0;
   padding: 0;
   font-weight: normal;
-  font-size: 11px; }
+  font-size: 11px;
+  color: #fff;
+  }
 
 .popup-body {
   padding: 10px;
@@ -5630,7 +5635,7 @@ ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs
     flex: 1;
     display: block;
     min-height: 45px;
-    border-radius: 2px;
+    border-radius: 24px;
     line-height: 20px;
     margin-right: 5px; }
     .popup-buttons .button:last-child {
@@ -10018,7 +10023,8 @@ input[type=range]::-ms-thumb {
   cursor: pointer; }
 
 .popup, .popup-title {
-  color: #000; }
+  color: #fff;
+  }
 
 .ion-ios-arrow-back {
   width: 40px;
@@ -10257,7 +10263,7 @@ ion-header-bar {
   text-align: center; }
 
 .sortedBy {
-  height: 80px;
+  /*height: 80px;*/
   line-height: 20px;
   background: #121516;
   color: #fff;
@@ -10797,7 +10803,25 @@ textarea {
 .exerciseLibrary .exerciseList li {
   padding: 0 15px;
   font-size: 14px;
-  font-weight: 300; }
+  font-weight: 300;
+  width: 100%;
+  float: left;
+   }
+
+  .exerciseLibrary .exerciseList li span{  
+     max-width: 40%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    vertical-align: middle; 
+  }
+.exerciseLibrary .exerciseList li span i{    
+   display: block;
+   vertical-align: middle;
+   margin-top: 8px;
+   line-height: 30px;
+}
   .exerciseLibrary .exerciseList li .ion-ios-trash-outline:before {
     font-size: 34px; }
   .exerciseLibrary .exerciseList li .trash-icon span {
@@ -10881,7 +10905,7 @@ textarea {
   padding: 15px; }
 
 .activity .patientProfile {
-  height: 100px;
+  /*height: 100px;*/
   background: #22282C;
   color: #fff;
   padding: 10px;
@@ -10894,7 +10918,7 @@ textarea {
   .activity .patientProfile svg {
     position: relative;
     top: -5px;
-    right: 25px; }
+    right: 25px;  max-height: 80px;}
     .activity .patientProfile svg circle {
       stroke: #009CDB;
       stroke-width: 4px;
@@ -10905,16 +10929,18 @@ textarea {
       font-size: 21px;
       letter-spacing: 1px; }
 
-      .activity .patientProfile svg text tspan {
 
-      /*.activity .patientProfile svg text tspan{text-align:center }*/
-      /*.activity .patientProfile svg text tspan:last-child {*/
+      /*.activity .patientProfile svg text tspan {*/
+
+      .activity .patientProfile svg text tspan{text-align:center }
+      .activity .patientProfile svg text tspan:last-child {
+
         stroke: #009CDB;
         stroke-width: 1.3;
-        font-size: 15px; }
+        font-size: 10px; }
 
 .activity .sortedBy {
-  background: #2A2C2D;
+  /*background: #2A2C2D;*/
   height: 60px;
   line-height: 60px; }
 
@@ -10932,7 +10958,7 @@ textarea {
     width: 33.33%;
     text-align: center;
     color: #616060;
-    margin-top: -39px;
+   /* margin-top: -39px; */
     height: 43px;
     font-size: 18px;
     line-height: 44px; }
@@ -10942,7 +10968,7 @@ textarea {
       border-radius: 22px; }
 
 .activity.exerciseLibrary .main .selectionTab li{margin-top: 0; width: 50%;}
-.activity.exerciseLibrary .sortedBy{ height: auto; padding: 15px 0; line-height: 20px; background: #121516 }
+.activity.exerciseLibrary .sortedBy1{ height: auto; padding: 15px 0; line-height: 20px; background: #121516 }
 .activity.exerciseLibrary .main .selectionTab{ margin-top: 0}
 
 .activity .main .totalActivity {
@@ -11204,19 +11230,21 @@ input[type=range]::-webkit-slider-runnable-track {
     width: 300px;
     height: 7.8px;
     /*background:#EEE71F;*/
-    background: -webkit-linear-gradient(left, #FAFF4B, #FEFFD4) !important;
+/*    background: -webkit-linear-gradient(left, #FAFF4B, #FEFFD4) !important;*/
+    background: -webkit-linear-gradient(90deg, #FEFFD5  , #FAFF05  );
     border: none;
     border-radius: 3px;
     margin-right: 10%;
 }
 input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none;
+/*    -webkit-appearance: none;*/
     border: none;
     height: 62px;
     width: 62px;
     border-radius: 127%;
      /*background: ion-hapy;*/
     background: url('../img/Happy.png');
+/*    background: url('../img/Happy.png') -webkit-linear-gradient(90deg, #FAD33A, #F3A81B);*/
     background-repeat: no-repeat;
    /* background-size:74px;*/
     background-size:65px;

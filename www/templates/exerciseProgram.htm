@@ -29,52 +29,53 @@
 		</div>
 		<p class="text-center" 
    sylte="margin-top: 10px;"><small >Sorted By:</small></p>
+   <!-- sorting value-->
 		<div class="sortedBy text-center">
-			<input type="button" class="itemdropdown" ng-click="showListSortList();" value="{{sortedBy}}" />
-			<ion-list ng-show="sortList" class="ddlistitems">
-				<ion-item ng-repeat="item in exerciseSortedByList" ng-model="sortedBy" ng-click="sortPatients({{item.id}})">
-					<h2>{{item.title}}</h2>
-				</ion-item>
-			</ion-list>
-		</div>
+            
+            <input type="button" class="itemdropdown" ng-click="showListSortList();" value="{{sortedBy}}" />
+            <ion-list ng-show="sortList" class="ddlistitems">
+                <ion-item ng-repeat="item in exerciseSortedByList" ng-model="sortedBy" ng-click="sortPatients(item.id,item.title)">
+                    <h2>{{item.title}}</h2>
+                </ion-item>
+            </ion-list>
+        </div>
 		<ul class="exerciseList">
 			<li ng-repeat="item in exerciseList  | filter: searchExercise" class="gieafitListItem group">
-				<div ui-sref="setExerciseProgram(
-				{
-					peid: item.peid,
-					title: item.title,
-					comments: item.comments,
-					code: item.code,
-					reps: item.reps,
-					sets: item.sets,
-					rest: item.rest,
-					daily:item.daily,
-					today: item.today,
-					alldays:item.alldays,
-					weekly: {
-						sun: item.weekly.sun,
-						mon: item.weekly.mon,
-						tue: item.weekly.tue,
-						wed: item.weekly.wed,
-						thu: item.weekly.thu,
-						fri: item.weekly.fri,
-						sat: item.weekly.sat,
-					},
-					mp4: item.mp4,
-					webm: item.webm,
-					mov: item.mov,
-					thumb1: item.thumb1,
-					thumb2: item.thumb2
-				}
+				<div style="width:92%; float:left" ui-sref="setExerciseProgram(
+       {
+peid: item.peid,
+title: item.title,
+comments: item.comments,
+code: item.code,
+reps: item.reps,
+sets: item.sets,
+rest: item.rest,
+daily:item.daily,
+today: item.today,
+alldays:item.alldays,
+weekly: {
+sun: item.weekly.sun,
+mon: item.weekly.mon,
+tue: item.weekly.tue,
+wed: item.weekly.wed,
+thu: item.weekly.thu,
+fri: item.weekly.fri,
+sat: item.weekly.sat,
+},
+mp4: item.mp4,
+webm: item.webm,
+mov: item.mov,
+thumb1: item.thumb1,
+thumb2: item.thumb2
+}
 
-		        )"> 
-        			<span class="pull-left exercise-list-row">
-	        			<span class="marginR5">{{$index+1}}.</span>
-	        			<span class="exercise-name">{{item.title}}</span>
-						<span>{{item.weekly.sun === 1 ?"S":""}}{{item.weekly.mon === 1 ?"M":""}}{{item.weekly.tue === 1 ?"T":""}}{{item.weekly.wed === 1 ?"W":""}}{{item.weekly.thu === 1 ?"T":""}}{{item.weekly.fri === 1 ? "F":""}}{{item.weekly.sat === 1 ?"S":""}}</span>
-					</span>
-				</div>
+        )">
 
+			<span class="marginR5" style="width:10%">{{$index+1}}.</span>
+			<span style="width:45%; max-width:45%;">{{item.title}}</span>
+			<span style="width:40%; text-align:center">{{days(item.weekly)}}</span>
+			</div>
+			
 				<span class="pull-right trash-icon" ng-click="delete(item.peid,$index)">
 					
 						<i class="icon ion-ios-trash-outline" ></i>

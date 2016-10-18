@@ -300,6 +300,10 @@ angular.module('geiaFitApp')
 
     var getThreshold = function (uid) {
       var promise = $http({
+         headers: {
+          'X-CSRF-Token': $rootScope.token,
+          'Access-Control-Allow-Origin': '*'
+        },
         method: "GET",
         url: ApiEndpoint.url + "/goals/tresholds/"+ uid // Hardcoded needs to be replaced
       }).then(function (response) {
@@ -374,10 +378,11 @@ angular.module('geiaFitApp')
       return promise;
     }
 
-
     return {
       patientsData: getPatientsData,
       getActivity: getActivity,
+      setActivityGoal:setActivityGoal,
+      getActivityGoal: getActivityGoal,
       getHealthPoint : getHealthPoint,
       getVitals: getVitals,
       addPatient: addPatient,
@@ -426,9 +431,27 @@ angular.module('geiaFitApp')
       return ProfileImage;
     }
 
+    var saveProfile = function(params){
+        var profileData = $http({
+            headers: {
+                    'X-CSRF-Token': $rootScope.token,
+                    //'cookie': $rootScope.cookieValue
+                  },
+            method: "PUT",
+            data:params,
+            url: ApiEndpoint.url + "/profile/" + $rootScope.loggedInUserUid
+        }).then(function (response) {
+            return response.data;
+        }, function (err) {
+            console.log(err);
+        });
+        return profileData;
+    }
+
     return {
       myAccountDetails: getAdminProfile,
-      uploadImage: uploadProfileImage
+      uploadImage: uploadProfileImage,
+      saveProfile: saveProfile,
     }
 
   }])
@@ -588,6 +611,10 @@ angular.module('geiaFitApp')
 
     var addExercise = function(params){
         var exerciseData = $http({
+          headers: {
+            'X-CSRF-Token': $rootScope.token,
+            //'cookie': $rootScope.cookieValue
+          },
         method: "PUT",
         data:params,
         url: ApiEndpoint.url + "/ptexlib/" + $rootScope.loggedInUserUid
@@ -600,7 +627,7 @@ angular.module('geiaFitApp')
     }
     
     return {
-      saveExercise: addExercise
+      addExercise: addExercise
     }
 
   }])
