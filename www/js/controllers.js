@@ -58,8 +58,8 @@ angular.module('geiaFitApp')
 
     $scope.data = {
 
-      email: "admin@geiafit.com",
-      password: "FitGeia1!"
+      email: "",
+      password: ""
     };
 
     function validateFields(data) {
@@ -900,7 +900,6 @@ angular.module('geiaFitApp')
       AppService.getActivityGoal($rootScope.UID).then(
         function (success) {
           console.log("getActivity")
-          console.log(success)
           var activityData;
           var tempData = success.data;
 
@@ -912,7 +911,10 @@ angular.module('geiaFitApp')
             var newDate = moment.unix(unixDate).utcOffset('-07:00').format('L');
             var NnewDate = moment(newDate)
             if(NnewDate.diff(today) == 0){
-              activityData = success.data;
+              //activityData = success.data;
+              activityData = tempData[x];
+              break;
+
             }
           }
           console.log(activityData)
@@ -925,13 +927,13 @@ angular.module('geiaFitApp')
           }
           else {
             var minId = activityData.time_active_low;
-            $scope.setActivityGoals.lightMinsSelected = $scope.lightMins[minId].id
+            $scope.setActivityGoals.lightMinsSelected = $scope.lightMins[minId-1].id
             var modId = activityData.time_active_medium;
-            $scope.setActivityGoals.moderateMinsSelected = $scope.moderateMins[modId].id;
+            $scope.setActivityGoals.moderateMinsSelected = $scope.moderateMins[modId-1].id;
             var higId = activityData.time_active_high;
-            $scope.setActivityGoals.vigorousMinsSelected = $scope.vigorousMins[higId].id;
+            $scope.setActivityGoals.vigorousMinsSelected = $scope.vigorousMins[higId-1].id;
             var steps = activityData.total_steps;
-            $scope.setActivityGoals.selectedSteps = $scope.stepsList[steps].id;
+            $scope.setActivityGoals.selectedSteps = $scope.stepsList[steps-1].id;
             $scope.setActivityGoals.instructions = activityData.instructions
           }
         },
@@ -970,7 +972,7 @@ angular.module('geiaFitApp')
         });
 
       var activityData = {
-        "goal_date": null,
+        "goal_date": null,//"1476822144",
         "total_steps": $scope.setActivityGoals.selectedSteps,
         "time_active_low": $scope.setActivityGoals.lightMinsSelected,
         "time_active_medium": $scope.setActivityGoals.moderateMinsSelected,
