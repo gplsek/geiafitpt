@@ -1339,10 +1339,14 @@ if(data.length >= 3){
 
       confirmPopup.then(function (res) {
         if (res) {
-          console.log("delete")
-          $scope.exerciseList.splice(index, 1);
+           
+           .deleteExercise($rootScope.loggedInUserUid, $scope.myExerciseList[index].id).then(function (success) {
+               $scope.myExerciseList.splice(index, 1);
+            }, function (error) {
+                                                                                                                    
+            });
         } else {
-          console.log("cancel")
+          console.log("cancelform you")
         }
       });
     }
@@ -2781,7 +2785,7 @@ if(data.length >= 3){
 
 
 
-  .controller('ExerciseProgramCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', '$rootScope', '$ionicPopup', 'SetExerciseProgramService', function ($scope, $stateParams, sortedByList, $state, $rootScope, $ionicPopup, SetExerciseProgramService) {
+  .controller('ExerciseLibraryCtrl', ['$rootScope', '$scope', 'sortedByList', '$ionicPopup', 'ExerciseLibraryService','$state','SetExerciseProgramService', function ($rootScope, $scope, sortedByList, $ionicPopup, ExerciseLibraryService,$state,SetExerciseProgramService) {
     console.log($stateParams);
     console.log($rootScope.UID)
     $scope.searchExercise;
