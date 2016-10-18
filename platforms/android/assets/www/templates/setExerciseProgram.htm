@@ -41,7 +41,12 @@
 			</div>
 			<div class="video-container">
 				<iframe ng-hide="edit" frameborder="0" ng-src="{{exerciseprogram.mp4| trusted}}" scrolling="no" ng-init="resizeIframe(this)"></iframe>
-<!--<iframe src="https://www.youtube.com/embed/rdzS43Pff1w" frameborder="0"></iframe>-->
+				<iframe ng-hide="submit" frameborder="0" ng-src="{{videoURI| trusted}}" scrolling="no" ng-init="resizeIframe(this)"></iframe>
+
+				<button ng-hide="submit" class="button button-positive" ng-click="captureVideo()">
+						Add Video
+				</button>
+		<!--<iframe src="https://www.youtube.com/embed/rdzS43Pff1w" frameborder="0"></iframe>-->
 				<!--<div class="list">
 					<div class="item item-divider">
 						<i class="ion-videocamera"></i> Current clip
@@ -53,8 +58,8 @@
 			  Capture a video
 		  </button>
 				</div>-->
-                <a ngf-select="captureVideo($file)" ng-model="picFile" name="file" ngf-pattern="'video/*'"
-                    ngf-accept="'video/*'" ngf-max-size="20MB" ngf-min-height="100" ngf-resize="{width: 100, height: 100}">Change</a>
+                <!--<a ngf-select="captureVideo($file)" ng-model="picFile" name="file" ngf-pattern="'video/*'"
+                    ngf-accept="'video/*'" ngf-max-size="20MB" ngf-min-height="100" ngf-resize="{width: 100, height: 100}">Change</a>-->
 			<div class="exerciseSchedule" ng-hide="submit">
 				<div ng-hide="submit" class="video-container-inner">
 					<div class="video-container-text" ng-click="captureVideo()">+ Add Video</div>
@@ -120,7 +125,7 @@
 				<textarea placeholder="Be Safe when doing this exercise" ng-model="exerciseprogram.comments" ng-disabled="submit"> </textarea>
 			</div>
 
-        <span ng-hide="submit"><button id="button1" class="button button-block btn-yellow" ng-click="saveExercise()">Submit</button></span>
+        <span ng-hide="submit"><button id="button1" class="button button-block btn-yellow submit_button" ng-click="saveExercise()">Submit</button></span>
          <span ng-hide="edit"><button id="button1" class="button button-block btn-yellow edit_button" ng-click="editExercise()">Edit</button></span>
 
 		</section>

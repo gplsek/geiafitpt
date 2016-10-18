@@ -265,6 +265,9 @@ line-height: 35px !important ;
 
 .edit_button
 {
- width: 304px !important;
+ margin-top: 30px  !important;
+}
+.submit_button
+{
  margin-top: 30px  !important;
 }

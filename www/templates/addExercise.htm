@@ -17,7 +17,14 @@
 				<!--<iframe  ng-hide="edit" frameborder="0" height="400px" width="400px" ng-src="{{addExercise.thumbnail| trusted}}" scrolling="no" ng-init="resizeIframe(this)"
 				 onerror="this.onerror=null;this.ng-src='img/profile_icon.png'"></iframe>-->
                  <iframe src="{{addExercise.video | trusted}}" frameborder="0" width="560" height="315"></iframe>
-
+				<button ng-hide="submit" class="button button-positive" ng-click="captureVideo()">
+						Add Video
+				</button>
+				<div class="exerciseSchedule" ng-hide="submit">
+				<div ng-hide="submit" class="video-container-inner" style="height:120px;">
+					<div class="video-container-text" ng-click="captureVideo()"></div>
+				</div>
+				</div>
                 <!--<div class="video-container-inner"><div class="video-container-text">+ Add Video</div>-->
 				</div>
             <!--</div>-->

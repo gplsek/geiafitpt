@@ -7,6 +7,9 @@
         "files": {}
     },
     "installed_plugins": {
+        "cordova-plugin-camera": {
+            "PACKAGE_NAME": "com.ionicframework.geiafit309210"
+        },
         "cordova-plugin-console": {
             "PACKAGE_NAME": "com.ionicframework.geiafit309210"
         },

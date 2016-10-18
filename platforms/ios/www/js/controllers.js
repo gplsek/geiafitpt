@@ -236,7 +236,7 @@ angular.module('geiaFitApp')
           $scope.title = 'Emotion Level'
           break;
         case 2:
-          $scope.title = 'New Message',
+          $scope.title = 'New Messages',
             $scope.sortType = 'unread_messages';
           $scope.sortOrder = true;
           break;
@@ -256,29 +256,23 @@ angular.module('geiaFitApp')
   })
 
 
-  .controller('SetExerciseProgramCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', 'SetExerciseProgramService', '$rootScope','$cordovaCapture','$q', function ($scope, $state, $stateParams,
-    sortedByList, SetExerciseProgramService, $rootScope,$cordovaCapture,$q) {
+  .controller('SetExerciseProgramCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', 'SetExerciseProgramService', '$rootScope','$cordovaCapture','$q','Flash', function ($scope, $state, $stateParams,
+    sortedByList, SetExerciseProgramService, $rootScope,$cordovaCapture,$q,Flash) {
+    var success = true;
+      console.log("StateParam"+JSON.stringify($stateParams));
 
-    $scope.submit = true;
-    $scope.edit = false;
     $scope.uid = $stateParams.uid;
     $scope.patientData = $rootScope.patientName;
     $scope.sortedByList = sortedByList;
-    //$scope.sortedBy = $scope.sortedByList[2].id;
-
     $scope.title = 'Add Custom Exercise';
-
     $scope.subNavList = false;
 
+    //This method for sub navigation.
     $scope.showList = function () {
       $scope.subNavList = !$scope.subNavList;
     }
 
-    $scope.closePatient = function () {
-      $state.go('exerciseProgram');
-    }
-
-
+ 
     function getStateTitle(id) {
       var title = '';
       var list = $scope.sortedByList;
@@ -290,6 +284,7 @@ angular.module('geiaFitApp')
       }
     }
 
+  //This method is to change state as per title.
     $scope.gotoAction = function (id) {
       if (id == 3) {
         $scope.subNavList = false
@@ -299,14 +294,167 @@ angular.module('geiaFitApp')
       }
     }
 
-    $scope.resizeIframe = function(obj) {
- //   alert(""+ obj.style.height);
-  //  obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
-    //  alert(""+ JSON.stringify(obj));
+    //This method for close the exercise view and goto exercise program. 
+    $scope.closePatient = function () {
+      $state.go('exerciseProgram');
+    }
+
+
+
+ //<!-----------------This is to intialize drop downs.------------------------------------------!>
+    var repsList = [];
+
+    (function steps() {
+      var value = 0;
+      for (var i = 1; i <= 180; i++) {
+        repsList[i] = i;
+        //  value += 500;
+      }
+      console.log(repsList);
+    })();
+
+    $scope.stepsList = repsList;
+ //   $scope.selectedReps = parseInt($scope.exerciseprogram.reps);
+
+    var repsSet = [];
+
+    (function steps() {
+      var value = 0;
+      for (var i = 1; i <= 180; i++) {
+        repsSet[i] = i;
+
+      }
+      console.log(repsSet);
+    })();
+
+    $scope.repsSet = repsSet;
+  // $scope.selectedSet = parseInt($scope.exerciseprogram.sets);
+
+    var repsDaily = [];
+
+    (function steps() {
+      var value = 0;
+      for (var i = 1; i <= 180; i++) {
+        repsDaily[i] = i;
+      }
+      console.log(repsDaily);
+    })();
+
+    $scope.repsDaily = repsDaily;
+
+   // $scope.selectedDaily = parseInt($scope.exerciseprogram.daily);
+
+    // //<!-----------------------------------------------------------!> 
+
+     $scope.gotoExerciseProgram = function () {
+      $state.transitionTo('exerciseProgram', {
+        uid: $rootScope.patientId,
+        name: '',
+        age: '',
+        gender: '',
+        email: '',
+        profile_url: '',
+        low: '',
+        medium: '',
+        high: ''
+      }, { reload: false });
+    }
+
+    if($stateParams.peid === 0)
+    {
+    //  alert("inside if");
+        $scope.submit = false;
+        $scope.edit = true;
+
+      $scope.exerciseprogram =
+      {
+        title: '',
+        comments: '',
+        reps: 1,
+        sets: 1,
+        daily: 1,
+        weekly: {
+          sun: 0,
+          mon: 0,
+          tue: 0,
+          wed: 0,
+          thu: 0,
+          fri: 0,
+          sat: 0,
+        },
+        mp4: $stateParams.mp4,
+        webm: $stateParams.webm,
+        mov: $stateParams.mov,
+        thumb1: $stateParams.thumb1,
+        thumb2: $stateParams.thumb2
+      };
+
+    $scope.selectedReps = $scope.stepsList[1]; 
+    $scope.selectedSet = $scope.repsSet[1];
+    $scope.selectedDaily = $scope.repsDaily[1];
+
+      $scope.saveExercise = function () {
+      
+  
+    var exercise={
+"name":$scope.exerciseprogram.title,
+"video_data":"(see attached for example)",
+"video_name": "george6.mp4 888",
+"video_image_name":"george.jpg",
+"video_image":"AAAAFGZ0eXBxdCAgAAAAAHF0ICAAAAAId2lkZQASLJ1tZGF0AMxABwDom+7Mmy5PA4TVKBYzFJXz.....",
+"reps": "" + $scope.exerciseprogram.reps,
+"sets": "" + $scope.exerciseprogram.sets,
+"rest":"75",
+"daily":"" + $scope.exerciseprogram.daily,
+ "week_days": [
+           {
+             "day": "0",
+             "on": $scope.exerciseprogram.weekly.sun
+           },
+          {
+            "day": "1",
+            "on": $scope.exerciseprogram.weekly.mon
+          },
+          {
+            "day": "2",
+            "on": $scope.exerciseprogram.weekly.tue
+          },
+          {
+            "day": "3",
+            "on": $scope.exerciseprogram.weekly.wed
+          },
+          {
+            "day": "4",
+            "on": $scope.exerciseprogram.weekly.thu
+          },
+          {
+            "day": "5",
+            "on": $scope.exerciseprogram.weekly.fri
+          },
+          {
+            "day": "6",
+            "on": $scope.exerciseprogram.weekly.sat
+          }
+
+        ],
+"comments":$scope.exerciseprogram.comments
+};
+      SetExerciseProgramService.saveExercise(exercise).then(function (success) {
+         Flash.showFlash({ type: 'success', message: "Success !" });
+
+      }, function (error) {
+         Flash.showFlash({ type: 'error', message: "Failed !" });
+      })
+
   }
 
+    }
+    else
+    {
 
-
+    $scope.submit = true;
+    $scope.edit = false;
+   
     $scope.exerciseprogram =
       {
         peid: $stateParams.peid,
@@ -335,37 +483,10 @@ angular.module('geiaFitApp')
         thumb2: $stateParams.thumb2
       };
 
-    console.log("<nnnnnnnnnnnnnnnnnnnnnnnnnn");
-    console.log("" + JSON.stringify($scope.exerciseprogram));
-
-    $scope.enableButtonMon = function () {
-      $scope.exerciseprogram.weekly.mon == 1 ? $scope.exerciseprogram.weekly.mon = 0 : $scope.exerciseprogram.weekly.mon = 1;
-    };
-
-    $scope.enableButtonTue = function () {
-      $scope.exerciseprogram.weekly.tue == 1 ? $scope.exerciseprogram.weekly.tue = 0 : $scope.exerciseprogram.weekly.tue = 1;
-    };
-
-    $scope.enableButtonWed = function () {
-      $scope.exerciseprogram.weekly.wed == 1 ? $scope.exerciseprogram.weekly.wed = 0 : $scope.exerciseprogram.weekly.wed = 1;
-
-    };
-
-    $scope.enableButtonThu = function () {
-      $scope.exerciseprogram.weekly.thu == 1 ? $scope.exerciseprogram.weekly.thu = 0 : $scope.exerciseprogram.weekly.thu = 1;
-    };
-
-    $scope.enableButtonFri = function () {
-      $scope.exerciseprogram.weekly.fri == 1 ? $scope.exerciseprogram.weekly.fri = 0 : $scope.exerciseprogram.weekly.fri = 1;
-    };
-
-    $scope.enableButtonSat = function () {
-      $scope.exerciseprogram.weekly.sat == 1 ? $scope.exerciseprogram.weekly.sat = 0 : $scope.exerciseprogram.weekly.sat = 1;
-    };
-
-    $scope.enableButtonSun = function () {
-      $scope.exerciseprogram.weekly.sun == 1 ? $scope.exerciseprogram.weekly.sun = 0 : $scope.exerciseprogram.weekly.sun = 1;
-    };
+    $scope.selectedReps = parseInt($scope.exerciseprogram.reps); 
+    $scope.selectedSet = parseInt($scope.exerciseprogram.sets);
+    $scope.selectedDaily = parseInt($scope.exerciseprogram.daily);
+    
 
     $scope.editExercise = function () {
       $scope.submit = false;
@@ -401,7 +522,102 @@ angular.module('geiaFitApp')
     };
 
 
+    $scope.deleteExercise = function () {
 
+      SetExerciseProgramService.deleteExercise($rootScope.loggedInUserUid, $scope.exerciseprogram.peid).then(function (success) {
+        Flash.showFlash({ type: 'success', message: "Success !" });
+      }, function (error) {
+         Flash.showFlash({ type: 'error', message: "Failed !" });
+      })
+
+    };
+
+  
+    $scope.saveExercise = function () {
+      // alert("ex" + $scope.selectedReps);
+      var exercise = {
+        "peid": $scope.exerciseprogram.peid,
+        "title": $scope.exerciseprogram.title,
+        "comments": $scope.exerciseprogram.comments,
+        "reps": "" + $scope.exerciseprogram.reps,
+        "sets": "" + $scope.exerciseprogram.sets,
+        "daily": "" + $scope.exerciseprogram.daily,
+       "week_days": [
+           {
+             "day": "0",
+             "on": $scope.exerciseprogram.weekly.sun
+           },
+          {
+            "day": "1",
+            "on": $scope.exerciseprogram.weekly.mon
+          },
+          {
+            "day": "2",
+            "on": $scope.exerciseprogram.weekly.tue
+          },
+          {
+            "day": "3",
+            "on": $scope.exerciseprogram.weekly.wed
+          },
+          {
+            "day": "4",
+            "on": $scope.exerciseprogram.weekly.thu
+          },
+          {
+            "day": "5",
+            "on": $scope.exerciseprogram.weekly.fri
+          },
+          {
+            "day": "6",
+            "on": $scope.exerciseprogram.weekly.sat
+          }
+
+        ],
+        "video_name": $scope.exerciseprogram.videoname,
+        "video_data": $scope.exerciseprogram.videodata 
+      };
+     
+      console.log("editEx" + JSON.stringify(exercise));
+
+      SetExerciseProgramService.editExercise(exercise, $scope.uid).then(function (success) {
+      Flash.showFlash({ type: 'success', message: "Success !" });
+      }, function (error) {
+         Flash.showFlash({ type: 'error', message: "Failed !" });
+      })
+
+    };
+
+    }
+
+    //<!_________________________________________ This method is use to enable or disable the button _____________!>
+    $scope.enableButtonMon = function () {
+      $scope.exerciseprogram.weekly.mon == 1 ? $scope.exerciseprogram.weekly.mon = 0 : $scope.exerciseprogram.weekly.mon = 1;
+    };
+
+    $scope.enableButtonTue = function () {
+      $scope.exerciseprogram.weekly.tue == 1 ? $scope.exerciseprogram.weekly.tue = 0 : $scope.exerciseprogram.weekly.tue = 1;
+    };
+
+    $scope.enableButtonWed = function () {
+      $scope.exerciseprogram.weekly.wed == 1 ? $scope.exerciseprogram.weekly.wed = 0 : $scope.exerciseprogram.weekly.wed = 1;
+
+    };
+
+    $scope.enableButtonThu = function () {
+      $scope.exerciseprogram.weekly.thu == 1 ? $scope.exerciseprogram.weekly.thu = 0 : $scope.exerciseprogram.weekly.thu = 1;
+    };
+
+    $scope.enableButtonFri = function () {
+      $scope.exerciseprogram.weekly.fri == 1 ? $scope.exerciseprogram.weekly.fri = 0 : $scope.exerciseprogram.weekly.fri = 1;
+    };
+
+    $scope.enableButtonSat = function () {
+      $scope.exerciseprogram.weekly.sat == 1 ? $scope.exerciseprogram.weekly.sat = 0 : $scope.exerciseprogram.weekly.sat = 1;
+    };
+
+    $scope.enableButtonSun = function () {
+      $scope.exerciseprogram.weekly.sun == 1 ? $scope.exerciseprogram.weekly.sun = 0 : $scope.exerciseprogram.weekly.sun = 1;
+    };
 
     $scope.setReps = function (reps) {
       $scope.exerciseprogram.reps = reps;
@@ -413,188 +629,130 @@ angular.module('geiaFitApp')
       $scope.exerciseprogram.daily = daily;
     };
 
-    $scope.deleteExercise = function () {
-
-      SetExerciseProgramService.deleteExercise($rootScope.loggedInUserUid, $scope.exerciseprogram.peid).then(function (success) {
-        alert("success" + JSON.stringify(success));
-
-      }, function (error) {
-
-      })
-
-    };
-
-    $scope.gotoExerciseProgram = function () {
-      $state.transitionTo('exerciseProgram', {
-        uid: $rootScope.patientId,
-        name: '',
-        age: '',
-        gender: '',
-        email: '',
-        profile_url: '',
-        low: '',
-        medium: '',
-        high: ''
-      }, { reload: false });
-    }
-    //<!-----------------------------------------------------------!>
-    var repsList = [];
-
-    (function steps() {
-      var value = 0;
-      for (var i = 1; i <= 180; i++) {
-        repsList[i] = i;
-        //  value += 500;
-      }
-      console.log(repsList);
-    })();
-
-    $scope.stepsList = repsList;
-    $scope.selectedReps = parseInt($scope.exerciseprogram.reps);
-
-    var repsSet = [];
-
-    (function steps() {
-      var value = 0;
-      for (var i = 1; i <= 180; i++) {
-        repsSet[i] = i;
-
-      }
-      console.log(repsSet);
-    })();
-
-    $scope.repsSet = repsSet;
-
-    $scope.selectedSet = parseInt($scope.exerciseprogram.sets);
-
-    var repsDaily = [];
-
-    (function steps() {
-      var value = 0;
-      for (var i = 1; i <= 180; i++) {
-        repsDaily[i] = i;
-      }
-      console.log(repsDaily);
-    })();
-
-    $scope.repsDaily = repsDaily;
-
-    $scope.selectedDaily = parseInt($scope.exerciseprogram.daily);
-
-    // //<!-----------------------------------------------------------!> 
+  //<!_________________________________________ This method is use to enable or disable the button _____________!>
 
 
-    $scope.saveExercise = function () {
-      // alert("ex" + $scope.selectedReps);
-      var exercise = {
-        "peid": $scope.exerciseprogram.peid,
-        "title": $scope.exerciseprogram.title,
-        "comments": $scope.exerciseprogram.comments,
-        "reps": "" + $scope.exerciseprogram.reps,
-        "sets": "" + $scope.exerciseprogram.sets,
-        "daily": "" + $scope.exerciseprogram.daily,
-        "weekly": {
-          "sun": $scope.exerciseprogram.weekly.sun,
-          "mon": $scope.exerciseprogram.weekly.mon,
-          "tue": $scope.exerciseprogram.weekly.tue,
-          "wed": $scope.exerciseprogram.weekly.wed,
-          "thu": $scope.exerciseprogram.weekly.thu,
-          "fri": $scope.exerciseprogram.weekly.fri,
-          "sat": $scope.exerciseprogram.weekly.sat
-        },
-        "video_name": $scope.exerciseprogram.videoname,
-        "video_data": $scope.exerciseprogram.videodata 
-      };
-      // var exercise = {
-      //   "exid": $scope.exerciseprogram.peid,
-      //   "title": $scope.exerciseprogram.title,
-      //   "video_title": "",
-      //   "video_name": "",
-      //   "video_data": "",
-      //   "video_image_name": "",
-      //   "video_image": "",
-      //   "comments": "send me some commetns and here we are again",
-      //   "reps": "" + $scope.exerciseprogram.reps,
-      //   "sets": "" + $scope.exerciseprogram.sets,
-      //   "daily": "" + $scope.exerciseprogram.daily,
-      //   "week_days": [
-      //     {
-      //       "day": "0",
-      //       "on": $scope.exerciseprogram.weekly.sun
-      //     },
-      //     {
-      //       "day": "1",
-      //       "on": $scope.exerciseprogram.weekly.mon
-      //     },
-      //     {
-      //       "day": "2",
-      //       "on": $scope.exerciseprogram.weekly.tue
-      //     },
-      //     {
-      //       "day": "3",
-      //       "on": $scope.exerciseprogram.weekly.wed
-      //     },
-      //     {
-      //       "day": "4",
-      //       "on": $scope.exerciseprogram.weekly.thu
-      //     },
-      //     {
-      //       "day": "5",
-      //       "on": $scope.exerciseprogram.weekly.fri
-      //     },
-      //     {
-      //       "day": "6",
-      //       "on": $scope.exerciseprogram.weekly.sat
-      //     }
+    $scope.resizeIframe = function(obj) {
+ //   alert(""+ obj.style.height);
+  //  obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+    //  alert(""+ JSON.stringify(obj));
+  }
 
-      //   ]
-      // };
-
-      console.log("editEx" + JSON.stringify(exercise));
-
-      SetExerciseProgramService.saveExercise(exercise, $scope.uid).then(function (success) {
-        //   alert("success" + JSON.stringify(success));
-
-      }, function (error) {
-
-      })
-
-
-    };
-
-    // Code for upload video 
+  // Code for upload video 
 
     $scope.clip = '';
 
-    $scope.captureVideo = function (file) {
-      if(file != null || file != undefined){
-      var fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
-      fileReader.onload = function (e) {
-        var dataUrl = e.target.result;
-        var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
+    // $scope.captureVideo = function (file) {
+    //   if(file != null || file != undefined){
+    //   var fileReader = new FileReader();
+    //   fileReader.readAsDataURL(file);
+    //   fileReader.onload = function (e) {
+    //     var dataUrl = e.target.result;
+    //     var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
 
-        // var data = {
-        //   image_name: file.$ngfName,
-        //   image: base64Data
-        // }
+    //     // var data = {
+    //     //   image_name: file.$ngfName,
+    //     //   image: base64Data
+    //     // }
 
-      };
-      }
-    };
-
-    // $scope.captureVideo = function () {
-    //   $cordovaCapture.captureVideo().then(function (videoData) {
-    //     saveVideo(videoData).success(function (data) {
-    //       $scope.clip = data;
-    //       $scope.$apply();
-    //     }).error(function (data) {
-    //       console.log('ERROR: ' + data);
-    //     });
-    //   });
+    //   };
+    //   }
     // };
 
 
+var setExcpopup;
+     $scope.captureVideo = function () {
+
+       setExcpopup = $ionicPopup.show({
+         template: '<div style="font-weight:bold;"> <button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="captureVideoFromCamera()">From camera</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="captureVideoFromGallery()">From gallery</button></div>',
+         // template: '<div style="background: #121516; color: #fff;"> <button class="button button-block btn-yellow" style="background: #121516; color: #fff;">My Mobile Device</button><button class="button button-block btn-yellow">My Library</button><button class="button button-block btn-yellow">Create New</button></div>',
+         title: 'Add a video',
+         scope: $scope,
+         buttons: [
+           { text: 'Cancel' }
+         ]
+       });
+
+
+     };
+
+      $scope.captureVideoFromGallery = function () {
+        setExcpopup.close();
+        navigator.camera.getPicture($scope.uploadVideo,onFail,
+            {
+              destinationType: Camera.DestinationType.DATA_URL,
+              mediaType:2,
+              sourceType: 2,      // 0:Photo Library, 1=Camera, 2=Saved Photo Album
+              //encodingType: 0, // 0=JPG 1=PNG
+              allowEdit : true
+            }
+        );
+      };
+
+      $scope.uploadVideo=function (videoURI) {
+        setExcpopup.close();
+        $scope.videoURI = videoURI;
+
+        var newvideoURI = "file:///"+videoURI;
+
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(){
+
+          // alert('success requestFileSystem');
+
+        }, function(){
+          //error
+
+        });
+
+        window.resolveLocalFileSystemURL(newvideoURI, function(fileEntry){
+
+
+          fileEntry.file(function(file){
+
+            // alert(JSON.stringify(file)); //view full metadata
+            var type = file.type;
+            var nameoffile = file.name;
+
+
+            if(file != null || file != undefined){
+              var fileReader = new FileReader();
+              fileReader.readAsDataURL(file);
+              fileReader.onload = function (e) {
+                var dataUrl = e.target.result;
+                var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
+
+                console.log("base64" + base64Data);
+
+              };
+            }
+
+
+          }, function(){
+
+            //error
+          });
+
+        },function(){
+
+          // error
+        } );
+
+
+      };
+
+
+      function onFail(e) {};
+
+      $scope.captureVideoFromCamera = function  () {
+        $cordovaCapture.captureVideo().then(function (videoData) {
+          saveVideo(videoData).success(function (data) {
+            $scope.clip = data;
+            $scope.$apply();
+          }).error(function (data) {
+            console.log('ERROR: ' + data);
+          });
+        });
+      };
 
     $scope.urlForClipThumb = function (clipUrl) {
       var name = clipUrl.substr(clipUrl.lastIndexOf('/') + 1);
@@ -602,11 +760,12 @@ angular.module('geiaFitApp')
       var sliced = trueOrigin.slice(0, -4);
       return sliced + '.png';
     }
- $scope.showClip = function (clip) {
+    $scope.showClip = function (clip) {
       console.log('show clip: ' + clip);
     }
 
     function createFileEntry(fileURI) {
+      $scope.videoURI = fileURI;
       window.resolveLocalFileSystemURL(fileURI, function (entry) {
         return copyFile(entry);
       }, fail);
@@ -679,13 +838,11 @@ angular.module('geiaFitApp')
     // The object and functions returned from the Service
 
     function saveVideo(data) {
-      createFileEntry(data[0].localURL);
-      return promise;
+     createFileEntry(data[0].localURL);
+    return promise;
     }
 
     ////// End
-
-
 
   }])
 
@@ -910,7 +1067,7 @@ angular.module('geiaFitApp')
         "exercise": null,
       }
       console.log(activityData)
-     /* AppService.setActivityGoal(activityData, $rootScope.UID).then(
+      AppService.setActivityGoal(activityData, $rootScope.UID).then(
         function (success) {
           console.log("SUCCESS")
           getActivityGoal();
@@ -918,7 +1075,7 @@ angular.module('geiaFitApp')
         function (error) {
           console.log("ERROR")
           success = false;
-        });*/
+        });
 
       if (success) {
         Flash.showFlash({ type: 'success', message: "Success !" });
@@ -1125,7 +1282,7 @@ $scope.sortByGroup = function(categoryName,exerciseType) {
             var flag = false;
             if(angular.isArray(value.categories) && value.categories.length > 0) {
               for(var index=0; index<value.categories.length; index++) {
-                if(value.categories[index] == categoryName) {
+                if(value.categories[index].toLowerCase() == categoryName.toLowerCase()) {
                   flag = true;
                   break;
                 }
@@ -1156,50 +1313,58 @@ $scope.sortByGroup = function(categoryName,exerciseType) {
         case "1":
           $scope.sortByGroup("title",service)
           $scope.title = 'Exercise Name'
+          $scope.subNavList = false;
           break;
         case "2":
-          $scope.title = 'Category'
+          //$scope.title = 'Category'
           break;
         case "3":
-        $scope.title = 'Upper Extremity';
+        //$scope.title = 'Upper Extremity';
         break;
         case "4":
         $scope.title = 'Shoulder'
         $scope.sortByGroup("shoulder",service)
+        $scope.subNavList = false;
         break;
         case "5":
         $scope.title = 'Elbow'
         $scope.sortByGroup("elbow",service)
+        $scope.subNavList = false;
         break;
         case "6":
         $scope.title = 'Wrist'
         $scope.sortByGroup("wrist",service)
+        $scope.subNavList = false;
         break;
         case "7":
         $scope.title = 'Hand'
         $scope.sortByGroup("hand",service)
+        $scope.subNavList = false;
         break;
         case "8":
-        $scope.title = 'Lower Extremity'
+        //$scope.title = 'Lower Extremity'
         break;
         case "9":
         $scope.title = 'Hip'
         $scope.sortByGroup("hip",service)
+        $scope.subNavList = false;
         break;
         case "10":
         $scope.title = 'Knee'
         $scope.sortByGroup("knee",service)
+        $scope.subNavList = false;
         break;
         case "11":
         $scope.title = 'Foot'
         $scope.sortByGroup("foot",service)
+        $scope.subNavList = false;
         break;
         default:
           $scope.sortType = 'title';
           $scope.sortOrder = true;
           break;
       }
- $scope.subNavList = false;
+ //$scope.subNavList = false;
  }
 
  setTags = function(data){
@@ -1308,17 +1473,17 @@ if(data.length >= 3){
       model: null,
       availableOptions: [
 
-        { id: '1', name: 'Exercise Name',show : 'true' },
-        { id: '2', name: 'Category', show : 'false'},
-        { id: '3', name: 'Upper Extremity', show : 'false' },
-        { id: '4', name: 'Shoulder', show : 'true' },
-        { id: '5', name: 'Elbow', show : 'true' },
-        { id: '6', name: 'Wrist', show : 'true' },
-        { id: '7', name: 'Hand', show : 'true' },
-        { id: '8', name: 'Lower Extemity', show : 'false' },
-        { id: '9', name: 'Hip', show : 'true' },
-        { id: '10', name: 'Knee', show : 'true' },
-        { id: '11', name: 'Foot', show : 'true' }
+        { id: '1', name: 'Exercise Name',classValue : '' },
+        { id: '2', name: 'Category', classValue : 'disabledClass'},
+        { id: '3', name: 'Upper Extremity', classValue : 'disabledClass' },
+        { id: '4', name: 'Shoulder', classValue : '' },
+        { id: '5', name: 'Elbow', classValue : '' },
+        { id: '6', name: 'Wrist', classValue : '' },
+        { id: '7', name: 'Hand', classValue : '' },
+        { id: '8', name: 'Lower Extemity', classValue : 'disabledClass' },
+        { id: '9', name: 'Hip', classValue : '' },
+        { id: '10', name: 'Knee', classValue : '' },
+        { id: '11', name: 'Foot', classValue : '' }
       ]
     };
 
@@ -1340,7 +1505,7 @@ if(data.length >= 3){
     }
 
   }])
-  .controller('AddExerciseCtrl', ['$scope','$state', '$stateParams','AddExerciseService', function ($scope,$state,$stateParams,AddExerciseService) {
+  .controller('AddExerciseCtrl', ['$scope','$state', '$stateParams','AddExerciseService','Flash', function ($scope,$state,$stateParams,AddExerciseService,Flash) {
 
   $scope.addExercise = {
     name : "",
@@ -1349,40 +1514,69 @@ if(data.length >= 3){
     thumbnail : "", 
     video:""
   }
+
+    $scope.availableOptions= [
+      { id: '1', name: 'Shoulder', show: 'true' },
+      { id: '2', name: 'Elbow', show: 'true' },
+      { id: '3', name: 'Wrist', show: 'true' },
+      { id: '4', name: 'Hand', show: 'true' },
+      { id: '5', name: 'Hip', show: 'true' },
+      { id: '6', name: 'Knee', show: 'true' },
+      { id: '7', name: 'Foot', show: 'true' }
+    ]
+
+  
+
+  $scope.loadTags = function($query) {
+      var data = $scope.availableOptions;
+      return data.filter(function(tempData) {
+        return tempData.name.indexOf($query.toLowerCase()) != -1;
+      });
+  }
+
   init = function(){
     console.log($stateParams.exerciseObject)
     var exercise = $stateParams.exerciseObject;
     $scope.addExercise.name = exercise.title
     $scope.addExercise.comments= exercise.comments
     $scope.addExercise.tags= exercise.categories
-    $scope.addExercise.thumbnail= exercise.image
+    $scope.addExercise.thumbnail= exercise.image1
     $scope.addExercise.video = exercise.mp4
+    console.log($scope.addExercise.tags)
   }
   if($stateParams.exerciseObject!=null){
     init();
   }
 
   $scope.updateExercise = function(){
-    
+    var categoryList = [];
+    for(var x in $scope.addExercise.tags){
+      categoryList.push($scope.addExercise.tags[x].name)
+    }
+    var xid = null
+    if($stateParams.exerciseObject!=null){
+      xid = $stateParams.exerciseObject.exid
+    }
+
      var data = {
-       "exid":$stateParams.exerciseObject.exid,
-       "video_title": "",
-       "video_name": "",
-       "video_data": "",
+       "exid":xid,
+       "video_title": $scope.addExercise.name,
+       //"video_name": $scope.addExercise.name,
+       //"video_data": $scope.addExercise.video,
        "video_image_name": "",
-       "video_image":"",
+       //"video_image":$scope.addExercise.thumbnail,
        "notes":"",
        "comments": $scope.addExercise.comments, 
-       "categories": $stateParams.exerciseObject.categories
+       "categories": categoryList
      }
-
-      // var editExerciseList = AddExerciseService.saveExercise(data).then(function (success) {
-      //   console.log("Success")
-      //   console.log(success)
-      // }, function (error) {
-      //   console.log("Error")
-      //   console.log(error)
-      // })
+     console.log(data)
+       var editExerciseList = AddExerciseService.addExercise(data).then(function (success) {
+         console.log("Success")
+         Flash.showFlash({ type: 'success', message: "Success!" });
+       }, function (error) {
+         console.log("Error")
+         Flash.showFlash({ type: 'error', message: "Failure!" });
+       })
   }
   
 //console.log($scope.addExercise.tags);
@@ -1396,7 +1590,9 @@ if(data.length >= 3){
         return $sce.trustAsResourceUrl(url);
     };
 }])
-  .controller('AddExercisePopupCtrl', ['$scope', '$state', function ($scope, $state) {
+ 
+ 
+  .controller('AddExercisePopupCtrl', ['$scope', '$state', 'SetExerciseProgramService',function ($scope, $state,SetExerciseProgramService) {
 
   }])
 
@@ -1665,12 +1861,30 @@ if(data.length >= 3){
       var endDate = moment(TendDate)
 
       var weekDates = [];
-      var date = startDate;
-      while (date.diff(endDate) < 0) {
-        weekDates.push(date)
-        var tempDate = startDate.add(1, 'days').startOf('day').format('L');
-        date = moment(tempDate);
+      //var date = startDate;
+      while (startDate.diff(endDate) < 0) {
+        weekDates.push(startDate)
+        var tempDate = startDate.add(1, 'days').format('L');
+        startDate = moment(tempDate);
       }
+
+
+      
+      /*var TstartDate = moment().utcOffset('-07:00').subtract(6, 'days').format('L');
+      var startDate = moment(TstartDate)
+      var TendDate = moment().utcOffset('-07:00').format('L');
+      var endDate = moment(TendDate)
+
+      var dateList = [];
+      var tempDate = startDate;
+      var i = 0;
+
+      while (tempDate.diff(endDate) <= 0) {
+        dateList.push(tempDate)
+        var Tdate = startDate.add(1, 'days').startOf('day').format('L');
+        tempDate = moment(Tdate);
+      }*/
+
       return weekDates;
     }
 
@@ -1682,7 +1896,7 @@ if(data.length >= 3){
       var endDate = moment(TendDate);
 
       for (var x in successData) {
-        var unixDate = successData[x].updated
+        var unixDate = successData[x].created
         var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
         var date = moment(Tdate)
 
@@ -1719,8 +1933,11 @@ if(data.length >= 3){
       var totalWeekHigh = 0;
 
       var weekDates = getWeekDates();
+      var onlyDates = [];
 
       for (var d in weekDates) {
+        console.log(weekDates[d])
+        onlyDates.push(weekDates[d].date())
         var total_exercise_goal = 0
         var total_exercise = 0
         var total_exercise_exceed = 0
@@ -1865,11 +2082,11 @@ if(data.length >= 3){
       $scope.totalWeekMid = (totalWeekMid == null) ? 0 : totalWeekMid;
       $scope.totalWeekHigh = (totalWeekHigh == null) ? 0 : totalWeekHigh;
 
-      $scope.chartConfigWeekViewExercise = getChartConfigForWeek(dataWeekExerciseGoal, dataWeekExerciseComp, dataWeekExerciseExce,"#009CDB")
-      $scope.chartConfigWeekViewSteps = getChartConfigForWeek(dataWeekStepsGoal, dataWeekStepsComp, dataWeekStepsExce, "#009CDB")
-      $scope.chartConfigWeekViewLow = getChartConfigForWeek(dataWeekLightGoal, dataWeekLightComp,dataWeekLightExce,"#E0FBC6")
-      $scope.chartConfigWeekViewMid = getChartConfigForWeek(dataWeekModerateGoal, dataWeekModerateComp,dataWeekModerateExce,"#009CDB")
-      $scope.chartConfigWeekViewHigh = getChartConfigForWeek(dataWeekVigorousGoal, dataWeekVigorousComp, dataWeekVigorousExce, "#184370")
+      $scope.chartConfigWeekViewExercise = getChartConfigForWeek(dataWeekExerciseGoal, dataWeekExerciseComp, dataWeekExerciseExce,"#009CDB",onlyDates)
+      $scope.chartConfigWeekViewSteps = getChartConfigForWeek(dataWeekStepsGoal, dataWeekStepsComp, dataWeekStepsExce, "#009CDB",onlyDates)
+      $scope.chartConfigWeekViewLow = getChartConfigForWeek(dataWeekLightGoal, dataWeekLightComp,dataWeekLightExce,"#E0FBC6",onlyDates)
+      $scope.chartConfigWeekViewMid = getChartConfigForWeek(dataWeekModerateGoal, dataWeekModerateComp,dataWeekModerateExce,"#009CDB",onlyDates)
+      $scope.chartConfigWeekViewHigh = getChartConfigForWeek(dataWeekVigorousGoal, dataWeekVigorousComp, dataWeekVigorousExce, "#184370",onlyDates)
     }
 
     getComplianceDataForWeek = function (successData) {
@@ -1898,8 +2115,11 @@ if(data.length >= 3){
       var totalWeekCompliance = 0;
 
        var weekDates = getWeekDates();
+       var onlyDates = []
 
       for (var d in weekDates) {
+       onlyDates.push(weekDates[d].date())
+        
         var total_compliance_goal = 0
         var total_compliance = 0
         var total_compliance_exce = 0
@@ -1935,7 +2155,7 @@ if(data.length >= 3){
         dataWeekCompliance.push(total_compliance);
         dataWeekComplianceExce.push(total_compliance_exce)
       }
-      $scope.chartConfigWeekViewComp = getChartConfigForWeek(dataWeekComplianceGoal, dataWeekCompliance, dataWeekComplianceExce, "#009CDB")
+      $scope.chartConfigWeekViewComp = getChartConfigForWeek(dataWeekComplianceGoal, dataWeekCompliance, dataWeekComplianceExce, "#009CDB",onlyDates)
     }
 
 
@@ -1984,7 +2204,7 @@ if(data.length >= 3){
       var endDate = dates[1]
 
       for (var x in successData) {
-        var unixDate = successData[x].updated
+        var unixDate = successData[x].created
         var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
         var date = moment(Tdate)
         if (date.diff(startDate) > 0 && date.diff(endDate) < 0) {
@@ -2042,7 +2262,7 @@ if(data.length >= 3){
         var time_active_high_exceed = 0
 
         for (var x in activityDataForMonth) {
-          var unixDate = activityDataForMonth[x].date
+          var unixDate = activityDataForMonth[x].created
           var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
           var date = moment(Tdate)
 
@@ -2531,7 +2751,7 @@ if(data.length >= 3){
     }
 
 
-    function getChartConfigForWeek(dataGoal, dataAchived, dataExceed, colorcode) {
+    function getChartConfigForWeek(dataGoal, dataAchived, dataExceed, colorcode,dates) {
       var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
       ];
@@ -2547,7 +2767,7 @@ if(data.length >= 3){
 
       while (tempDate.diff(endDate) <= 0) {
         if (i == 0) {
-          dateList.push(monthNames[tempDate.month()] + " " + tempDate.date())
+          dateList.push(monthNames[startDate.month()] + " " + startDate.date())
           i++;
         }
         else {
@@ -2842,20 +3062,24 @@ if(data.length >= 3){
     $scope.delete = function (peid, index) {
       console.log("Delete called")
 
+      var confirmPopup = $ionicPopup.confirm({
+        title: 'Delete exercise',
+        template: 'Are you sure you want to delete this exercise ?'
+      });
+
       confirmPopup.then(function (res) {
         if (res) {
-          console.log("delete")
           SetExerciseProgramService.deleteExercise($rootScope.loggedInUserUid, peid).then(function (success) {
-            //  alert("success" + JSON.stringify(success));
-            $scope.exerciseList.splice(index, 1);
-            //  if(success.success == true)
-            //  {
-            //   $scope.exerciseList.splice(index, 1);
-            //  }
-            //  else
-            //  {
-            //    console.log("unable to delete");
-            //  }
+         
+             if(success.success == true)
+             {
+              $scope.exerciseList.splice(index, 1);
+             }
+             else
+             {
+               console.log("unable to delete");
+               alert("Unable to delete the eercise ");
+             }
           }, function (error) { })
 
         } else {
@@ -2870,10 +3094,6 @@ if(data.length >= 3){
     $scope.showList = function () {
       $scope.subNavList = !$scope.subNavList;
     }
-
-
-
-
 
     $scope.sortedByList = sortedByList;
     //  $scope.sortedBy =  $scope.sortedByList[0].id;
@@ -2898,19 +3118,17 @@ if(data.length >= 3){
 
     }
 
-
     init = function () {
       console.log($stateParams.patientId)
     }
     init();
-
    
     var addPopup;
 
     $scope.addss = function () {
 
       addPopup=$ionicPopup.show({
-        template: '<div style="font-weight:bold;"> <button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;">My Mobile Device</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;">My Library</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;">Create New</button></div>',
+        template: '<div style="font-weight:bold;"> <button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;">My Mobile Device</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;">My Library</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="newExercise()">Create New</button></div>',
         // template: '<div style="background: #121516; color: #fff;"> <button class="button button-block btn-yellow" style="background: #121516; color: #fff;">My Mobile Device</button><button class="button button-block btn-yellow">My Library</button><button class="button button-block btn-yellow">Create New</button></div>',
         title: 'Add Exercise',
         subTitle: 'Choose a Source',
@@ -2920,6 +3138,12 @@ if(data.length >= 3){
         ]
       });
 
+    }
+
+    $scope.newExercise = function()
+    {
+    addPopup.close();
+    $state.transitionTo('setExerciseProgram', {}, { reload: true });
     }
 
     $scope.gotoHome = function () {
@@ -2937,6 +3161,111 @@ if(data.length >= 3){
         $scope.exerciseList = data.exercises;
         exerciseListBackup = data.exercises;
       });
+    }
+
+    $scope.days = function (weekly) {
+      var log = [];
+      angular.forEach(weekly, function (value, key) {
+        if (value === 1) {
+          switch (key) {
+            case "mon":
+              this.push(1);
+              break;
+            case "tue":
+              this.push(2);
+              break;
+            case "wed":
+              this.push(3);
+              break;
+            case "thu":
+              this.push(4);
+              break;
+            case "fri":
+              this.push(5);
+              break;
+            case "sat":
+              this.push(6);
+              break;
+            case "sun":
+              this.push(7);
+          }
+        }
+
+      }, log);
+
+     log=log.sort(function(a, b){return a-b});
+
+      var arr = log;
+      var result = '';
+      var start, end;  // track start and end
+
+      if(arr.length > 0)
+      {
+            end = start = arr[0];
+      
+      for (var i = 1; i < arr.length; i++) {
+        // as long as entries are consecutive, move end forward
+        if (arr[i] == (arr[i - 1] + 1)) {
+          end = arr[i];
+    
+        }
+        else {
+          // when no longer consecutive, add group to result
+          // depending on whether start=end (single item) or not
+          if (start == end) {
+            result += start + ",";
+          }
+          else {
+            result += start + "-" + end + ",";
+          }
+          start = end = arr[i];
+        }
+      }
+
+      // handle the final group
+      if (start == end) {
+        result += start;
+      }
+      else {
+        result += start + "-" + end;
+      }
+
+      for (var x = 0; x < result.length; x++) // Convert string array to integer array
+      {
+        var str = result.charAt(x);
+        switch (str) {
+          case "2":
+            result = result.replace("2", "T");
+            break;
+          case "3":
+            result = result.replace("3", "W");
+            break;
+          case "4":
+            result = result.replace("4", "T");
+            break;
+          case "5":
+            result = result.replace("5", "F");
+            break;
+          case "6":
+            result = result.replace("6", "S");
+            break;
+          case "7":
+            result = result.replace("7", "S");
+            break;
+          case "1":
+            result = result.replace("1", "M");
+            break;
+        }
+
+      }
+      return result;
+      }
+      else
+      {
+        result = "";
+        return result;
+      }
+      
     }
     //  $scope.day;
 
@@ -3334,6 +3663,21 @@ if(data.length >= 3){
         $state.transitionTo(state, { name: $stateParams.name, patientId: $stateParams.uid }, { reload: true });
       }
 
+    }
+
+    $scope.onMessageHold = function(event, index, message) {
+      // the service is mock but you would probably pass the toUser's GUID here
+      var data = {
+        "id": index
+      }
+
+      AppService.onMessageHold(data, $rootScope.UID).then(
+        function (success) {
+          console.log("SUCCESS")
+        },
+        function (error) {
+          console.log("ERROR");
+        });
     }
 
   }])

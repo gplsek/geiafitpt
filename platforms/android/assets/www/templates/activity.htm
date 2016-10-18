@@ -55,10 +55,10 @@
             <div ng-show="DefaultView">DEFAULT VIEW</div>
 
             <div ng-show="DayView">
-                <div class="group marginT30 totalActivity">
-                    <div class="col-xs-6">
+                <div class="group  totalActivity">
+                    <div class="col-xs-4 col-xs-offset-2">
                         <highchart id="container1" config="chartConfig"></highchart>
-                        <div class="text-center chartbottomtitle">Total Exercise<br>{{DayExeDone}}/{{DayExeGoal}}</div>
+                        <div class="text-center chartbottomtitle small">Total Exercise<br><b>{{DayExeDone}}/{{DayExeGoal}}</b></div>
                         <!--<svg style="margin-left: 22.33%;">
 						<g>
 							
@@ -69,9 +69,9 @@
 						</g>
 					</svg>-->
                     </div>
-                    <div class="col-xs-6">
+                    <div class="col-xs-4">
                         <highchart id="container1" config="chartConfig1"></highchart>
-                        <div class="text-center chartbottomtitle">Total Steps<br>{{DayStepsDone}}/{{DayStepsGoal}}</div>
+                        <div class="text-center chartbottomtitle small">Total Steps<br><b>{{DayStepsDone}}/{{DayStepsGoal}}</b></div>
                         <!--<svg style="margin-left: 5.33%;">
                         <g>
                             <circle class="circle-bg" cx="80" cy="80" r="60"></circle>

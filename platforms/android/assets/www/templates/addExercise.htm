@@ -17,10 +17,17 @@
 				<!--<iframe  ng-hide="edit" frameborder="0" height="400px" width="400px" ng-src="{{addExercise.thumbnail| trusted}}" scrolling="no" ng-init="resizeIframe(this)"
 				 onerror="this.onerror=null;this.ng-src='img/profile_icon.png'"></iframe>-->
                  <iframe src="{{addExercise.video | trusted}}" frameborder="0" width="560" height="315"></iframe>
-
+				<button ng-hide="submit" class="button button-positive" ng-click="captureVideo()">
+						Add Video
+				</button>
+				<div class="exerciseSchedule" ng-hide="submit">
+				<div ng-hide="submit" class="video-container-inner" style="height:120px;">
+					<div class="video-container-text" ng-click="captureVideo()"></div>
+				</div>
+				</div>
                 <!--<div class="video-container-inner"><div class="video-container-text">+ Add Video</div>-->
 				</div>
-            </div>
+            <!--</div>-->
             <div class="form-group marginT10">
             	<label>Comments/Instructions</label>
             	<textarea rows="7" ng-model="addExercise.comments" placeholder="Enter comments or instructions">
@@ -30,7 +37,20 @@
             <div class="form-group  marginT10 textarea" >
             	<label>Exercise Tags</label>
 				<div rows="7">
-					<label ng-repeat="tag in addExercise.tags">{{tag}} </label>
+					<!--<label ng-repeat="tag in addExercise.tags">{{tag}} </label>-->
+					<tags-input ng-model="addExercise.tags" display-property="name" placeholder="Select your tags" replace-spaces-with-dashes="false">
+						<auto-complete source="loadTags($query)"
+							min-length="0"
+							load-on-focus="true"
+							load-on-empty="true"
+							max-results-to-show="32"
+							template="my-custom-template"></auto-complete>
+					</tags-input>
+					<script type="text/ng-template" id="my-custom-template">
+						<div>
+							<span ng-bind-html="$getDisplayText()"></span>
+						</div>
+					</script>
 				</div>
             	<!--<div class="input-group group">
 					<select id="multi-select" class="ui fluid dropdown" multiple="">
