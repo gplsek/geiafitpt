@@ -361,6 +361,22 @@ angular.module('geiaFitApp')
       return prom;
     }
 
+    var onMessageHold = function (request_params,uid) {
+      var promise = $http({
+         headers: {
+          'X-CSRF-Token': $rootScope.token,
+          'Access-Control-Allow-Origin': '*'
+        },
+        method: "POST",
+        data: request_params,
+        url: ApiEndpoint.url + "/ptmessages/read/"+ uid // Hardcoded needs to be replaced
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      });
+      return promise;
+    }
 
     return {
       patientsData: getPatientsData,
@@ -373,7 +389,8 @@ angular.module('geiaFitApp')
       profile: getProfile,
       sortedByList: getSortedList,
       getThreshold: getThreshold,
-      setThreshold:setThreshold
+      setThreshold: setThreshold,
+      onMessageHold: onMessageHold
     }
 
   }])
@@ -518,7 +535,9 @@ angular.module('geiaFitApp')
       });
       return deleteExercise;
     }
-    var saveExercise = function(exercise,ptId)
+
+
+    var editExercise = function(exercise,ptId)
     {
        var exerciseData = $http({
       headers: {
@@ -538,9 +557,30 @@ angular.module('geiaFitApp')
       return exerciseData;
     }
 
+     var saveExercise = function(exercise)
+    {
+       var exerciseData = $http({
+      headers: {
+                'X-CSRF-Token': $rootScope.token,
+                'Access-Control-Allow-Origin': '*'
+              },
+        method: "POST", 
+        url: ApiEndpoint.url +"/webex/"+$rootScope.patientId,
+    data: exercise,
+      }).then(function (response) {
+      //  alert("SERVICE SUCCESS" + JSON.stringify(response.data));
+        return response.data;
+      }, function (err) {
+        alert("SERVICE ERROR" + JSON.stringify(err.data));
+        console.log(err);
+      });
+      return exerciseData;
+    }
+
     return {
       listOfExercise: getExerciseList,
       saveExercise : saveExercise,
+      editExercise : editExercise,
       deleteExercise : deleteExercise
 
     }
