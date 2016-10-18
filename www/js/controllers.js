@@ -370,12 +370,9 @@ angular.module('geiaFitApp')
       {
         title: '',
         comments: '',
-        code: '',
-        reps: '',
-        sets: $stateParams.sets,
-        daily: $stateParams.daily,
-        today: $stateParams.today,
-        alldays: $stateParams.alldays,
+        reps: 1,
+        sets: 1,
+        daily: 1,
         weekly: {
           sun: 0,
           mon: 0,
@@ -517,15 +514,6 @@ angular.module('geiaFitApp')
 
     };
 
-    $scope.setReps = function (reps) {
-      $scope.exerciseprogram.reps = reps;
-    };
-    $scope.setSets = function (sets) {
-      $scope.exerciseprogram.sets = sets;
-    };
-    $scope.setDaily = function (daily) {
-      $scope.exerciseprogram.daily = daily;
-    };
 
     $scope.deleteExercise = function () {
 
@@ -747,7 +735,18 @@ angular.module('geiaFitApp')
       $scope.exerciseprogram.weekly.sun == 1 ? $scope.exerciseprogram.weekly.sun = 0 : $scope.exerciseprogram.weekly.sun = 1;
     };
 
+    $scope.setReps = function (reps) {
+      $scope.exerciseprogram.reps = reps;
+    };
+    $scope.setSets = function (sets) {
+      $scope.exerciseprogram.sets = sets;
+    };
+    $scope.setDaily = function (daily) {
+      $scope.exerciseprogram.daily = daily;
+    };
+
   //<!_________________________________________ This method is use to enable or disable the button _____________!>
+
 
     $scope.resizeIframe = function(obj) {
  //   alert(""+ obj.style.height);
