@@ -1030,49 +1030,51 @@ angular.module('geiaFitApp')
           });
       }
 
-      getActivityGoal = function () {
-        AppService.getActivityGoal($rootScope.UID).then(
-          function (success) {
-            console.log("getActivity")
-            console.log(success)
-            var activityData;
-            var tempData = success.data;
+    getActivityGoal = function () {
+      AppService.getActivityGoal($rootScope.UID).then(
+        function (success) {
+          console.log("getActivity")
+          var activityData;
+          var tempData = success.data;
 
-            var Tdate = moment().utcOffset('-07:00').format('L');
-            var today = moment(Tdate)
+          var Tdate = moment().utcOffset('-07:00').format('L');
+          var today = moment(Tdate)
 
-            for (var x in tempData) {
-              var unixDate = tempData[x].goal_date
-              var newDate = moment.unix(unixDate).utcOffset('-07:00').format('L');
-              var NnewDate = moment(newDate)
-              if (NnewDate.diff(today) == 0) {
-                activityData = success.data;
-              }
+          for (var x in tempData) {
+            var unixDate = tempData[x].goal_date
+            var newDate = moment.unix(unixDate).utcOffset('-07:00').format('L');
+            var NnewDate = moment(newDate)
+            if(NnewDate.diff(today) == 0){
+              //activityData = success.data;
+              activityData = tempData[x];
+              break;
+
             }
-            console.log(activityData)
-            if (activityData == undefined || activityData == null) {
-              $scope.setActivityGoals.lightMinsSelected = $scope.lightMins[0].id
-              $scope.setActivityGoals.moderateMinsSelected = $scope.moderateMins[0].id
-              $scope.setActivityGoals.vigorousMinsSelected = $scope.vigorousMins[0].id
-              $scope.setActivityGoals.selectedSteps = $scope.stepsList[0].id
-              $scope.setActivityGoals.instructions = ''
-            }
-            else {
-              var minId = activityData.time_active_low;
-              $scope.setActivityGoals.lightMinsSelected = $scope.lightMins[minId].id
-              var modId = activityData.time_active_medium;
-              $scope.setActivityGoals.moderateMinsSelected = $scope.moderateMins[modId].id;
-              var higId = activityData.time_active_high;
-              $scope.setActivityGoals.vigorousMinsSelected = $scope.vigorousMins[higId].id;
-              var steps = activityData.total_steps;
-              $scope.setActivityGoals.selectedSteps = $scope.stepsList[steps].id;
-              $scope.setActivityGoals.instructions = activityData.instructions
-            }
-          },
-          function (error) {
-            console.log(error)
-          });
-      }
+          }
+          console.log(activityData)
+          if (activityData == undefined || activityData == null) {
+            $scope.setActivityGoals.lightMinsSelected = $scope.lightMins[0].id
+            $scope.setActivityGoals.moderateMinsSelected = $scope.moderateMins[0].id
+            $scope.setActivityGoals.vigorousMinsSelected = $scope.vigorousMins[0].id
+            $scope.setActivityGoals.selectedSteps = $scope.stepsList[0].id
+            $scope.setActivityGoals.instructions = ''
+          }
+          else {
+            var minId = activityData.time_active_low;
+            $scope.setActivityGoals.lightMinsSelected = $scope.lightMins[minId-1].id
+            var modId = activityData.time_active_medium;
+            $scope.setActivityGoals.moderateMinsSelected = $scope.moderateMins[modId-1].id;
+            var higId = activityData.time_active_high;
+            $scope.setActivityGoals.vigorousMinsSelected = $scope.vigorousMins[higId-1].id;
+            var steps = activityData.total_steps;
+            $scope.setActivityGoals.selectedSteps = $scope.stepsList[steps-1].id;
+            $scope.setActivityGoals.instructions = activityData.instructions
+          }
+        },
+        function (error) {
+          console.log(error)
+        });
+    }
 
       init = function () {
         console.log($rootScope.UID)
@@ -3514,7 +3516,7 @@ angular.module('geiaFitApp')
               result = result.replace("3", "W");
               break;
             case "4":
-              result = result.replace("4", "T");
+              result = result.replace("4", "Th");
               break;
             case "5":
               result = result.replace("5", "F");
@@ -3523,7 +3525,7 @@ angular.module('geiaFitApp')
               result = result.replace("6", "S");
               break;
             case "7":
-              result = result.replace("7", "S");
+              result = result.replace("7", "Su");
               break;
             case "1":
               result = result.replace("1", "M");
