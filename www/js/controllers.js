@@ -256,8 +256,8 @@ angular.module('geiaFitApp')
   })
 
 
-  .controller('SetExerciseProgramCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', 'SetExerciseProgramService', '$rootScope','$cordovaCapture','$q','Flash', function ($scope, $state, $stateParams,
-    sortedByList, SetExerciseProgramService, $rootScope,$cordovaCapture,$q,Flash) {
+  .controller('SetExerciseProgramCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', 'SetExerciseProgramService', '$rootScope','$cordovaCamera','$q','Flash', function ($scope, $state, $stateParams,
+    sortedByList, SetExerciseProgramService, $rootScope,$cordovaCamera,$q,Flash) {
     var success = true;
       console.log("StateParam"+JSON.stringify($stateParams));
 
@@ -394,13 +394,19 @@ angular.module('geiaFitApp')
     $scope.selectedDaily = $scope.repsDaily[1];
 
       $scope.saveExercise = function () {
-         var exercise = {
-        "name": $scope.exerciseprogram.title,
-        "comments": $scope.exerciseprogram.comments,
-        "reps": "" + $scope.exerciseprogram.reps,
-        "sets": "" + $scope.exerciseprogram.sets,
-        "daily": "" + $scope.exerciseprogram.daily,
-       "week_days": [
+      
+  
+    var exercise={
+"name":$scope.exerciseprogram.title,
+"video_data":"(see attached for example)",
+"video_name": "george6.mp4 888",
+"video_image_name":"george.jpg",
+"video_image":"AAAAFGZ0eXBxdCAgAAAAAHF0ICAAAAAId2lkZQASLJ1tZGF0AMxABwDom+7Mmy5PA4TVKBYzFJXz.....",
+"reps": "" + $scope.exerciseprogram.reps,
+"sets": "" + $scope.exerciseprogram.sets,
+"rest":"75",
+"daily":"" + $scope.exerciseprogram.daily,
+ "week_days": [
            {
              "day": "0",
              "on": $scope.exerciseprogram.weekly.sun
@@ -431,9 +437,8 @@ angular.module('geiaFitApp')
           }
 
         ],
-        "video_name": $scope.exerciseprogram.videoname,
-        "video_data": $scope.exerciseprogram.videodata 
-      };
+"comments":$scope.exerciseprogram.comments
+};
       SetExerciseProgramService.saveExercise(exercise).then(function (success) {
          Flash.showFlash({ type: 'success', message: "Success !" });
 
@@ -603,16 +608,25 @@ angular.module('geiaFitApp')
       }
     };
 
-    // $scope.captureVideo = function () {
-    //   $cordovaCapture.captureVideo().then(function (videoData) {
-    //     saveVideo(videoData).success(function (data) {
-    //       $scope.clip = data;
-    //       $scope.$apply();
-    //     }).error(function (data) {
-    //       console.log('ERROR: ' + data);
-    //     });
-    //   });
-    // };
+    $scope.captureVideo = function () {
+      var options = {
+        quality: 75,
+        destinationType: Camera.DestinationType.DATA_URL,
+        sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+        allowEdit: true,
+        encodingType: Camera.EncodingType.JPEG,
+        targetWidth: 300,
+        targetHeight: 300,
+        popoverOptions: CameraPopoverOptions,
+        saveToPhotoAlbum: false
+      };
+
+      $cordovaCamera.getPicture(options).then(function (imageData) {
+          $scope.imgURI = "data:image/jpeg;base64," + imageData;
+      }, function (err) {
+          // An error occured. Show a message to the user
+      });
+    }
 
 
 
@@ -1410,10 +1424,14 @@ if(data.length >= 3){
 
       confirmPopup.then(function (res) {
         if (res) {
-          console.log("delete")
-          $scope.exerciseList.splice(index, 1);
+           
+            SetExerciseProgramService.deleteExercise($rootScope.loggedInUserUid, $scope.myExerciseList[index].id).then(function (success) {
+               $scope.myExerciseList.splice(index, 1);
+            }, function (error) {
+                                                                                                                    
+            });
         } else {
-          console.log("cancel")
+          console.log("cancelform you")
         }
       });
     }
@@ -2304,7 +2322,8 @@ if(data.length >= 3){
       $scope.totalMonthLow = (totalMonthLow == null) ? 0 : totalMonthLow;
       $scope.totalMonthMid = (totalMonthMid == null) ? 0 : totalMonthMid;
       $scope.totalMonthHigh = (totalMonthHigh == null) ? 0 : totalMonthHigh;
-      $scope.lastDateOfMonth = Math.max(...onlyDates);
+      // $scope.lastDateOfMonth = Math.max(...onlyDates);
+      $scope.lastDateOfMonth = Math.max.apply(null, onlyDates);
 
       /*dataMonthExerciseGoal.reverse();
       dataMonthStepsGoal.reverse();
@@ -2396,7 +2415,8 @@ if(data.length >= 3){
         dataMonthComplianceExce.push(total_compliance_exceed);
       }
 
-      $scope.lastDateOfMonth = Math.max(...onlyDates);
+      $scope.lastDateOfMonth = Math.max.apply(null, onlyDates);
+      // $scope.lastDateOfMonth = Math.max(...onlyDates);
       $scope.chartConfigMonthViewComp = getChartConfigForMonth(dataMonthComplianceGoal, dataMonthCompliance,dataMonthComplianceExce, "#009CDB",onlyDates)
 
     }
@@ -2854,7 +2874,7 @@ if(data.length >= 3){
 
 
 
-  .controller('ExerciseProgramCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', '$rootScope', '$ionicPopup', 'SetExerciseProgramService', function ($scope, $stateParams, sortedByList, $state, $rootScope, $ionicPopup, SetExerciseProgramService) {
+  .controller('ExerciseLibraryCtrl', ['$rootScope', '$scope', 'sortedByList', '$ionicPopup', 'ExerciseLibraryService','$state','SetExerciseProgramService', function ($rootScope, $scope, sortedByList, $ionicPopup, ExerciseLibraryService,$state,SetExerciseProgramService) {
     console.log($stateParams);
     console.log($rootScope.UID)
     $scope.searchExercise;

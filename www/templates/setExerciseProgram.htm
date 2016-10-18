@@ -55,11 +55,12 @@
 				</div>-->
                 <a ngf-select="captureVideo($file)" ng-model="picFile" name="file" ngf-pattern="'video/*'"
                     ngf-accept="'video/*'" ngf-max-size="20MB" ngf-min-height="100" ngf-resize="{width: 100, height: 100}">Change</a>
-			<div class="exerciseSchedule" ng-hide="submit">
-				<div ng-hide="submit" class="video-container-inner">
-					<div class="video-container-text" ng-click="captureVideo()">+ Add Video</div>
+				<div class="exerciseSchedule" ng-hide="submit">
+					<div ng-hide="submit" class="video-container-inner">
+						<div class="video-container-text" ng-click="captureVideo()">+ Add Video</div>
+					</div>
+					<!-- <img ng-show="imgURI !== undefined" ng-src="{{imgURI}}" style="text-align: center"> -->
 				</div>
-			</div>
 			</div>
 
 		
