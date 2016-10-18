@@ -256,9 +256,9 @@ angular.module('geiaFitApp')
   })
 
 
-  .controller('SetExerciseProgramCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', 'SetExerciseProgramService', '$rootScope','$cordovaCapture','$q', function ($scope, $state, $stateParams,
-    sortedByList, SetExerciseProgramService, $rootScope,$cordovaCapture,$q) {
-
+  .controller('SetExerciseProgramCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', 'SetExerciseProgramService', '$rootScope','$cordovaCapture','$q','Flash', function ($scope, $state, $stateParams,
+    sortedByList, SetExerciseProgramService, $rootScope,$cordovaCapture,$q,Flash) {
+    var success = true;
       console.log("StateParam"+JSON.stringify($stateParams));
 
     $scope.uid = $stateParams.uid;
@@ -435,11 +435,13 @@ angular.module('geiaFitApp')
         "video_data": $scope.exerciseprogram.videodata 
       };
       SetExerciseProgramService.saveExercise(exercise).then(function (success) {
-         alert("Exercise Save Successfully");
-      }, function (error) {
+         Flash.showFlash({ type: 'success', message: "Success !" });
 
+      }, function (error) {
+         Flash.showFlash({ type: 'error', message: "Failed !" });
       })
-        }
+
+  }
 
     }
     else
@@ -518,9 +520,9 @@ angular.module('geiaFitApp')
     $scope.deleteExercise = function () {
 
       SetExerciseProgramService.deleteExercise($rootScope.loggedInUserUid, $scope.exerciseprogram.peid).then(function (success) {
-        alert("success" + JSON.stringify(success));
+        Flash.showFlash({ type: 'success', message: "Success !" });
       }, function (error) {
-
+         Flash.showFlash({ type: 'error', message: "Failed !" });
       })
 
     };
@@ -573,9 +575,9 @@ angular.module('geiaFitApp')
       console.log("editEx" + JSON.stringify(exercise));
 
       SetExerciseProgramService.editExercise(exercise, $scope.uid).then(function (success) {
-        alert("Exercise Save Successfully");
+      Flash.showFlash({ type: 'success', message: "Success !" });
       }, function (error) {
-
+         Flash.showFlash({ type: 'error', message: "Failed !" });
       })
 
     };
