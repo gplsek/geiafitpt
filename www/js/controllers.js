@@ -256,8 +256,8 @@ angular.module('geiaFitApp')
   })
 
 
-  .controller('SetExerciseProgramCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', 'SetExerciseProgramService', '$rootScope','$cordovaCapture','$q','Flash', function ($scope, $state, $stateParams,
-    sortedByList, SetExerciseProgramService, $rootScope,$cordovaCapture,$q,Flash) {
+  .controller('SetExerciseProgramCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', 'SetExerciseProgramService', '$rootScope','$cordovaCamera','$q','Flash', function ($scope, $state, $stateParams,
+    sortedByList, SetExerciseProgramService, $rootScope,$cordovaCamera,$q,Flash) {
     var success = true;
       console.log("StateParam"+JSON.stringify($stateParams));
 
@@ -608,16 +608,25 @@ angular.module('geiaFitApp')
       }
     };
 
-    // $scope.captureVideo = function () {
-    //   $cordovaCapture.captureVideo().then(function (videoData) {
-    //     saveVideo(videoData).success(function (data) {
-    //       $scope.clip = data;
-    //       $scope.$apply();
-    //     }).error(function (data) {
-    //       console.log('ERROR: ' + data);
-    //     });
-    //   });
-    // };
+    $scope.captureVideo = function () {
+      var options = {
+        quality: 75,
+        destinationType: Camera.DestinationType.DATA_URL,
+        sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+        allowEdit: true,
+        encodingType: Camera.EncodingType.JPEG,
+        targetWidth: 300,
+        targetHeight: 300,
+        popoverOptions: CameraPopoverOptions,
+        saveToPhotoAlbum: false
+      };
+
+      $cordovaCamera.getPicture(options).then(function (imageData) {
+          $scope.imgURI = "data:image/jpeg;base64," + imageData;
+      }, function (err) {
+          // An error occured. Show a message to the user
+      });
+    }
 
 
 
@@ -2311,7 +2320,8 @@ if(data.length >= 3){
       $scope.totalMonthLow = (totalMonthLow == null) ? 0 : totalMonthLow;
       $scope.totalMonthMid = (totalMonthMid == null) ? 0 : totalMonthMid;
       $scope.totalMonthHigh = (totalMonthHigh == null) ? 0 : totalMonthHigh;
-      $scope.lastDateOfMonth = Math.max(...onlyDates);
+      // $scope.lastDateOfMonth = Math.max(...onlyDates);
+      $scope.lastDateOfMonth = Math.max.apply(null, onlyDates);
 
       /*dataMonthExerciseGoal.reverse();
       dataMonthStepsGoal.reverse();
@@ -2403,7 +2413,8 @@ if(data.length >= 3){
         dataMonthComplianceExce.push(total_compliance_exceed);
       }
 
-      $scope.lastDateOfMonth = Math.max(...onlyDates);
+      $scope.lastDateOfMonth = Math.max.apply(null, onlyDates);
+      // $scope.lastDateOfMonth = Math.max(...onlyDates);
       $scope.chartConfigMonthViewComp = getChartConfigForMonth(dataMonthComplianceGoal, dataMonthCompliance,dataMonthComplianceExce, "#009CDB",onlyDates)
 
     }
