@@ -58,8 +58,8 @@ angular.module('geiaFitApp')
 
     $scope.data = {
 
-      email: "admin@geiafit.com",
-      password: "FitGeia1!"
+      email: "",
+      password: ""
     };
 
     function validateFields(data) {
