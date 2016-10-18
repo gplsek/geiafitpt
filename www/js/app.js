@@ -204,7 +204,7 @@ templateUrl:'templates/vitalSuccess.htm'
     url: '/exerciseProgram/:patientId', 
     params: patientParams,
     templateUrl: 'templates/exerciseProgram.htm',
-    controller: 'ExerciseProgramCtrl',
+    controller: 'SetExerciseProgramCtrl',
      resolve: {
       sortedByList: function(AppService){
         return AppService.sortedByList();
