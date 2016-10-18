@@ -380,7 +380,7 @@ angular.module('geiaFitApp')
             wed: 0,
             thu: 0,
             fri: 0,
-            sat: 0,
+            sat: 0
           },
           mp4: $stateParams.mp4,
           webm: $stateParams.webm,
@@ -473,7 +473,7 @@ angular.module('geiaFitApp')
             wed: $stateParams.weekly.wed,
             thu: $stateParams.weekly.thu,
             fri: $stateParams.weekly.fri,
-            sat: $stateParams.weekly.sat,
+            sat: $stateParams.weekly.sat
           },
           mp4: $stateParams.mp4,
           webm: $stateParams.webm,
@@ -509,7 +509,7 @@ angular.module('geiaFitApp')
               wed: $scope.exerciseprogram.weekly.wed,
               thu: $scope.exerciseprogram.weekly.thu,
               fri: $scope.exerciseprogram.weekly.fri,
-              sat: $scope.exerciseprogram.weekly.sat,
+              sat: $scope.exerciseprogram.weekly.sat
             },
             mp4: $scope.exerciseprogram.mp4,
             webm: $scope.exerciseprogram.webm,
@@ -1551,7 +1551,7 @@ angular.module('geiaFitApp')
     }
 
   }])
-  .controller('AddExerciseCtrl', ['$scope', '$state', '$stateParams', 'AddExerciseService', 'Flash','ionicPopup','$cordovaCapture', '$q', function ($scope, $state, $stateParams, AddExerciseService, Flash,ionicPopup,$cordovaCapture, $q) {
+  .controller('AddExerciseCtrl', ['$scope', '$state', '$stateParams', 'AddExerciseService', 'Flash','$ionicPopup','$cordovaCapture', '$q', function ($scope, $state, $stateParams, AddExerciseService, Flash,$ionicPopup,$cordovaCapture, $q) {
 
     $scope.addExercise = {
       name: "",
@@ -3221,8 +3221,7 @@ angular.module('geiaFitApp')
 
 
 
-  .controller('ExerciseLibraryCtrl', ['$rootScope', '$scope', 'sortedByList', '$ionicPopup', 'ExerciseLibraryService','$state','SetExerciseProgramService', function ($rootScope, $scope, sortedByList, $ionicPopup, ExerciseLibraryService,$state,SetExerciseProgramService) {
-    console.log($stateParams);
+  .controller('ExerciseProgramCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', '$rootScope', '$ionicPopup', 'SetExerciseProgramService', function ($scope, $stateParams, sortedByList, $state, $rootScope, $ionicPopup, SetExerciseProgramService) {    console.log($stateParams);
     console.log($rootScope.UID)
     $scope.searchExercise;
     $scope.title = 'Exercise Program';
