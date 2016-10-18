@@ -1737,7 +1737,7 @@ if(data.length >= 3){
       var endDate = moment(TendDate);
 
       for (var x in successData) {
-        var unixDate = successData[x].updated
+        var unixDate = successData[x].created
         var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
         var date = moment(Tdate)
 
@@ -2045,7 +2045,7 @@ if(data.length >= 3){
       var endDate = dates[1]
 
       for (var x in successData) {
-        var unixDate = successData[x].updated
+        var unixDate = successData[x].created
         var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
         var date = moment(Tdate)
         if (date.diff(startDate) > 0 && date.diff(endDate) < 0) {
@@ -2103,7 +2103,7 @@ if(data.length >= 3){
         var time_active_high_exceed = 0
 
         for (var x in activityDataForMonth) {
-          var unixDate = activityDataForMonth[x].date
+          var unixDate = activityDataForMonth[x].created
           var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
           var date = moment(Tdate)
 
