@@ -936,11 +936,11 @@ angular.module('geiaFitApp')
       (function steps() {
         var value = 0;
         for (var i = 1; i <= 40; i++) {
-          stepList.push({ id: i, steps: value + 500 });
           value += 500;
+          stepList.push(value);
         }
-        //console.log(stepList);
       })();
+
 
       $scope.myFunc = function () {
         //console.log($scope.stepspermin);
@@ -961,11 +961,14 @@ angular.module('geiaFitApp')
       //$scope.setActivityGoals.moderateMinsSelected = $scope.moderateMins[0].id;
       $scope.vigorousMins = minsArray;
       //$scope.setActivityGoals.vigorousMinsSelected = $scope.vigorousMins[0].id;
+      var unixDateToday = moment().utcOffset("-07:00").unix();
       $scope.setActivityGoals = {
+        id : null,
+        goalDate : unixDateToday, 
         lightMinsSelected: $scope.lightMins[0].id,
         moderateMinsSelected: $scope.moderateMins[0].id,
         vigorousMinsSelected: $scope.vigorousMins[0].id,
-        selectedSteps: $scope.stepsList[0].id,
+        selectedSteps: $scope.stepsList[0],
         instructions: ''
       }
 
@@ -1056,8 +1059,10 @@ angular.module('geiaFitApp')
             $scope.setActivityGoals.lightMinsSelected = $scope.lightMins[0].id
             $scope.setActivityGoals.moderateMinsSelected = $scope.moderateMins[0].id
             $scope.setActivityGoals.vigorousMinsSelected = $scope.vigorousMins[0].id
-            $scope.setActivityGoals.selectedSteps = $scope.stepsList[0].id
+            $scope.setActivityGoals.selectedSteps = $scope.stepsList[0]
             $scope.setActivityGoals.instructions = ''
+            $scope.setActivityGoals.id = null
+            $scope.setActivityGoals.goalDate = $scope.setActivityGoals.goalDate
           }
           else {
             var minId = activityData.time_active_low;
@@ -1067,9 +1072,12 @@ angular.module('geiaFitApp')
             var higId = activityData.time_active_high;
             $scope.setActivityGoals.vigorousMinsSelected = $scope.vigorousMins[higId-1].id;
             var steps = activityData.total_steps;
-            var index = (steps/500)
-            $scope.setActivityGoals.selectedSteps = $scope.stepsList[index-1].steps;
+            //var index = (steps/500)
+            //$scope.setActivityGoals.selectedSteps = $scope.stepsList[index-1].steps;
+            $scope.setActivityGoals.selectedSteps = parseInt(steps);
             $scope.setActivityGoals.instructions = activityData.instructions
+            $scope.setActivityGoals.id = activityData.id
+            $scope.setActivityGoals.goalDate = activityData.goal_date 
           }
         },
         function (error) {
@@ -1107,7 +1115,8 @@ angular.module('geiaFitApp')
           });
 
         var activityData = {
-          "goal_date": null,
+          "id":$scope.setActivityGoals.id,
+          "goal_date": $scope.setActivityGoals.goalDate,
           "total_steps": $scope.setActivityGoals.selectedSteps,
           "time_active_low": $scope.setActivityGoals.lightMinsSelected,
           "time_active_medium": $scope.setActivityGoals.moderateMinsSelected,
@@ -1115,6 +1124,7 @@ angular.module('geiaFitApp')
           "instructions": $scope.setActivityGoals.instructions,
           "exercise": null,
         }
+        console.log(activityData)
         AppService.setActivityGoal(activityData, $rootScope.UID).then(
           function (success) {
             console.log("SUCCESS")

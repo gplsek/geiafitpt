@@ -22,7 +22,7 @@
 			<div class="dailySteps">
 				<h3>Set Total Daily Steps</h3>
 				<!--<select class="customSelect" ng-options="item.id as item.steps for item in stepsList" ng-model="setActivityGoals.selectedSteps"></select>-->
-				<select class="customSelect" ng-options="item.steps as item.steps for item in stepsList" ng-model="setActivityGoals.selectedSteps"></select>
+				<select class="customSelect" ng-options="item for item in stepsList" ng-model="setActivityGoals.selectedSteps"></select>
 			</div>
 			<div class="stepspermin group">
 				<h3>Set Steps per minute</h3>
