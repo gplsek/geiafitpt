@@ -1288,6 +1288,7 @@ angular.module('geiaFitApp')
     var pageSize = 10;
     $scope.pages = [];
     $scope.webExPages = [];
+    $scope.chosenCategory = "";
 
 
     $scope.title = 'Exercise Name';
@@ -1324,6 +1325,22 @@ angular.module('geiaFitApp')
         return 1;
       return 0;
     }
+    $scope.filterbyType = function (value) {
+      var flag = false;
+      if ($scope.chosenCategory !== "") {
+        if(angular.isArray(value.categories) && value.categories.length > 0) {
+          for(var index=0; index<value.categories.length; index++) {
+            if(value.categories[index] == $scope.chosenCategory) {
+              flag = true;
+             break;
+            }
+          }
+        }
+         return flag;
+      }
+                                        
+      return true;
+     }
 
     $scope.sortByGroup = function (categoryName, exerciseType) {
       var categoryArrayList = [];
