@@ -256,8 +256,9 @@ angular.module('geiaFitApp')
   })
 
 
-  .controller('SetExerciseProgramCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', 'SetExerciseProgramService', '$rootScope', '$cordovaCapture', '$q', 'Flash', '$ionicPopup', function ($scope, $state, $stateParams,
-    sortedByList, SetExerciseProgramService, $rootScope, $cordovaCapture, $q, Flash, $ionicPopup) {
+  .controller('SetExerciseProgramCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', 'SetExerciseProgramService', '$rootScope', '$cordovaCapture', '$q', 'Flash', '$ionicPopup','$cordovaCamera', function ($scope, $state, $stateParams,
+    sortedByList, SetExerciseProgramService, $rootScope, $cordovaCapture, $q, Flash, $ionicPopup,$cordovaCamera) {
+
     var success = true;
     console.log("StateParam" + JSON.stringify($stateParams));
 
@@ -508,7 +509,7 @@ angular.module('geiaFitApp')
               wed: $scope.exerciseprogram.weekly.wed,
               thu: $scope.exerciseprogram.weekly.thu,
               fri: $scope.exerciseprogram.weekly.fri,
-              sat: $scope.exerciseprogram.weekly.sat,
+              sat: $scope.exerciseprogram.weekly.sat
             },
             mp4: $scope.exerciseprogram.mp4,
             webm: $scope.exerciseprogram.webm,
@@ -671,7 +672,6 @@ angular.module('geiaFitApp')
     };
 
     $scope.uploadVideo = function (videoURI) {
-      setExcpopup.close();
       $scope.videoURI = videoURI;
 
       var newvideoURI = "file:///" + videoURI;
@@ -720,9 +720,31 @@ angular.module('geiaFitApp')
     };
 
 
+   /* $scope.captureVideo = function () {
+      var options = {
+        quality: 75,
+        destinationType: Camera.DestinationType.DATA_URL,
+        sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+        allowEdit: true,
+        encodingType: Camera.EncodingType.JPEG,
+        targetWidth: 300,
+        targetHeight: 300,
+        popoverOptions: CameraPopoverOptions,
+        saveToPhotoAlbum: false
+      };
+
+      $cordovaCamera.getPicture(options).then(function (imageData) {
+          $scope.imgURI = "data:image/jpeg;base64," + imageData;
+      }, function (err) {
+          // An error occured. Show a message to the user
+      });
+    }*/
+
     function onFail(e) { };
 
     $scope.captureVideoFromCamera = function () {
+      setExcpopup.close();
+
       $cordovaCapture.captureVideo().then(function (videoData) {
         saveVideo(videoData).success(function (data) {
           $scope.clip = data;
@@ -1008,49 +1030,51 @@ angular.module('geiaFitApp')
           });
       }
 
-      getActivityGoal = function () {
-        AppService.getActivityGoal($rootScope.UID).then(
-          function (success) {
-            console.log("getActivity")
-            console.log(success)
-            var activityData;
-            var tempData = success.data;
+    getActivityGoal = function () {
+      AppService.getActivityGoal($rootScope.UID).then(
+        function (success) {
+          console.log("getActivity")
+          var activityData;
+          var tempData = success.data;
 
-            var Tdate = moment().utcOffset('-07:00').format('L');
-            var today = moment(Tdate)
+          var Tdate = moment().utcOffset('-07:00').format('L');
+          var today = moment(Tdate)
 
-            for (var x in tempData) {
-              var unixDate = tempData[x].goal_date
-              var newDate = moment.unix(unixDate).utcOffset('-07:00').format('L');
-              var NnewDate = moment(newDate)
-              if (NnewDate.diff(today) == 0) {
-                activityData = success.data;
-              }
+          for (var x in tempData) {
+            var unixDate = tempData[x].goal_date
+            var newDate = moment.unix(unixDate).utcOffset('-07:00').format('L');
+            var NnewDate = moment(newDate)
+            if(NnewDate.diff(today) == 0){
+              //activityData = success.data;
+              activityData = tempData[x];
+              break;
+
             }
-            console.log(activityData)
-            if (activityData == undefined || activityData == null) {
-              $scope.setActivityGoals.lightMinsSelected = $scope.lightMins[0].id
-              $scope.setActivityGoals.moderateMinsSelected = $scope.moderateMins[0].id
-              $scope.setActivityGoals.vigorousMinsSelected = $scope.vigorousMins[0].id
-              $scope.setActivityGoals.selectedSteps = $scope.stepsList[0].id
-              $scope.setActivityGoals.instructions = ''
-            }
-            else {
-              var minId = activityData.time_active_low;
-              $scope.setActivityGoals.lightMinsSelected = $scope.lightMins[minId].id
-              var modId = activityData.time_active_medium;
-              $scope.setActivityGoals.moderateMinsSelected = $scope.moderateMins[modId].id;
-              var higId = activityData.time_active_high;
-              $scope.setActivityGoals.vigorousMinsSelected = $scope.vigorousMins[higId].id;
-              var steps = activityData.total_steps;
-              $scope.setActivityGoals.selectedSteps = $scope.stepsList[steps].id;
-              $scope.setActivityGoals.instructions = activityData.instructions
-            }
-          },
-          function (error) {
-            console.log(error)
-          });
-      }
+          }
+          console.log(activityData)
+          if (activityData == undefined || activityData == null) {
+            $scope.setActivityGoals.lightMinsSelected = $scope.lightMins[0].id
+            $scope.setActivityGoals.moderateMinsSelected = $scope.moderateMins[0].id
+            $scope.setActivityGoals.vigorousMinsSelected = $scope.vigorousMins[0].id
+            $scope.setActivityGoals.selectedSteps = $scope.stepsList[0].id
+            $scope.setActivityGoals.instructions = ''
+          }
+          else {
+            var minId = activityData.time_active_low;
+            $scope.setActivityGoals.lightMinsSelected = $scope.lightMins[minId-1].id
+            var modId = activityData.time_active_medium;
+            $scope.setActivityGoals.moderateMinsSelected = $scope.moderateMins[modId-1].id;
+            var higId = activityData.time_active_high;
+            $scope.setActivityGoals.vigorousMinsSelected = $scope.vigorousMins[higId-1].id;
+            var steps = activityData.total_steps;
+            $scope.setActivityGoals.selectedSteps = $scope.stepsList[steps-1].id;
+            $scope.setActivityGoals.instructions = activityData.instructions
+          }
+        },
+        function (error) {
+          console.log(error)
+        });
+    }
 
       init = function () {
         console.log($rootScope.UID)
@@ -1504,7 +1528,7 @@ angular.module('geiaFitApp')
         { id: '5', name: 'Elbow', classValue: '' },
         { id: '6', name: 'Wrist', classValue: '' },
         { id: '7', name: 'Hand', classValue: '' },
-        { id: '8', name: 'Lower Extemity', classValue: 'disabledClass' },
+        { id: '8', name: 'Lower Extremity', classValue: 'disabledClass' },
         { id: '9', name: 'Hip', classValue: '' },
         { id: '10', name: 'Knee', classValue: '' },
         { id: '11', name: 'Foot', classValue: '' }
@@ -1644,7 +1668,6 @@ angular.module('geiaFitApp')
     };
 
     $scope.uploadVideo = function (videoURI) {
-
       $scope.addExercise.video = videoURI;
 
       var newvideoURI = "file:///" + videoURI;
@@ -1674,7 +1697,6 @@ angular.module('geiaFitApp')
             fileReader.onload = function (e) {
               var dataUrl = e.target.result;
               var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
-              console.log("base64data"+base64Data);
               $scope.addExercise.videodata = base64Data;
             };
           }
@@ -1697,7 +1719,7 @@ angular.module('geiaFitApp')
     function onFail(e) { };
 
     $scope.captureVideoFromCamera = function () {
-      setExcpopup.close();
+     setExcpopup.close();
       $cordovaCapture.captureVideo().then(function (videoData) {
         saveVideo(videoData).success(function (data) {
           $scope.clip = data;
@@ -1771,7 +1793,6 @@ angular.module('geiaFitApp')
             fileReader.onload = function (e) {
               var dataUrl = e.target.result;
               var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
-              console.log("base64data"+base64Data);
               $scope.addExercise.videodata = base64Data;
             };
           }
@@ -2650,7 +2671,8 @@ angular.module('geiaFitApp')
       $scope.totalMonthLow = (totalMonthLow == null) ? 0 : totalMonthLow;
       $scope.totalMonthMid = (totalMonthMid == null) ? 0 : totalMonthMid;
       $scope.totalMonthHigh = (totalMonthHigh == null) ? 0 : totalMonthHigh;
-      $scope.lastDateOfMonth = Math.max(...onlyDates);
+      // $scope.lastDateOfMonth = Math.max(...onlyDates);
+      $scope.lastDateOfMonth = Math.max.apply(null, onlyDates);
 
       /*dataMonthExerciseGoal.reverse();
       dataMonthStepsGoal.reverse();
@@ -2741,9 +2763,10 @@ angular.module('geiaFitApp')
         dataMonthCompliance.push(total_compliance);
         dataMonthComplianceExce.push(total_compliance_exceed);
       }
-
-      $scope.lastDateOfMonth = Math.max(...onlyDates);
-      $scope.chartConfigMonthViewComp = getChartConfigForMonth(dataMonthComplianceGoal, dataMonthCompliance, dataMonthComplianceExce, "#009CDB", onlyDates)
+     
+      $scope.lastDateOfMonth = Math.max.apply(null, onlyDates);
+      // $scope.lastDateOfMonth = Math.max(...onlyDates);
+      $scope.chartConfigMonthViewComp = getChartConfigForMonth(dataMonthComplianceGoal, dataMonthCompliance,dataMonthComplianceExce, "#009CDB",onlyDates)
 
     }
 
@@ -3200,8 +3223,7 @@ angular.module('geiaFitApp')
 
 
 
-  .controller('ExerciseProgramCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', '$rootScope', '$ionicPopup', 'SetExerciseProgramService', function ($scope, $stateParams, sortedByList, $state, $rootScope, $ionicPopup, SetExerciseProgramService) {
-    console.log($stateParams);
+  .controller('ExerciseProgramCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', '$rootScope', '$ionicPopup', 'SetExerciseProgramService', function ($scope, $stateParams, sortedByList, $state, $rootScope, $ionicPopup, SetExerciseProgramService) {    console.log($stateParams);
     console.log($rootScope.UID)
     $scope.searchExercise;
     $scope.title = 'Exercise Program';
@@ -3494,7 +3516,7 @@ angular.module('geiaFitApp')
               result = result.replace("3", "W");
               break;
             case "4":
-              result = result.replace("4", "T");
+              result = result.replace("4", "Th");
               break;
             case "5":
               result = result.replace("5", "F");
@@ -3503,7 +3525,7 @@ angular.module('geiaFitApp')
               result = result.replace("6", "S");
               break;
             case "7":
-              result = result.replace("7", "S");
+              result = result.replace("7", "Su");
               break;
             case "1":
               result = result.replace("1", "M");

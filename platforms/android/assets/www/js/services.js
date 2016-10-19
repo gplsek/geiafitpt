@@ -90,7 +90,7 @@ angular.module('geiaFitApp')
     };
 
     var logout = function () {
-      var logoutToken = localStorage.getItem(('LOCAL_TOKEN_KEY'))
+      var logoutToken = localStorage.getItem('LOCAL_TOKEN_KEY')
       destroyUserCredentials()
       return $http({
         headers: {
@@ -275,16 +275,16 @@ angular.module('geiaFitApp')
             title: "Add Custom Exercise",
             routingStateName: "setExerciseProgram"
           },
-          {
-            id: 4,
-            title: "Review Snapshots",
-            routingStateName: "reviewSnapshots"
-          },
-          {
-            id: 5,
-            title: "Vitals",
-            routingStateName: "vitals"
-          },
+          // {
+          //   id: 4,
+          //   title: "Review Snapshots",
+          //   routingStateName: "reviewSnapshots"
+          // },
+          // {
+          //   id: 5,
+          //   title: "Vitals",
+          //   routingStateName: "vitals"
+          // },
           {
             id: 6,
             title: "Messages",

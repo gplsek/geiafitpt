@@ -1528,7 +1528,7 @@ angular.module('geiaFitApp')
         { id: '5', name: 'Elbow', classValue: '' },
         { id: '6', name: 'Wrist', classValue: '' },
         { id: '7', name: 'Hand', classValue: '' },
-        { id: '8', name: 'Lower Extemity', classValue: 'disabledClass' },
+        { id: '8', name: 'Lower Extremity', classValue: 'disabledClass' },
         { id: '9', name: 'Hip', classValue: '' },
         { id: '10', name: 'Knee', classValue: '' },
         { id: '11', name: 'Foot', classValue: '' }
