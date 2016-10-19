@@ -123,6 +123,9 @@ thumb2: null
   })
   .state('main.exerciseLibrary', {
     url: 'exerciseLibrary',
+    params: {
+        isAdd: null
+    },
     templateUrl: "templates/exerciseLibrary.htm",
     controller: "ExerciseLibraryCtrl"
   })

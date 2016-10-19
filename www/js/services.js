@@ -521,7 +521,6 @@ angular.module('geiaFitApp')
     }
 
  var deleteExercise = function (ptId,exId) {
-   console.log(ptId+" : "+exId)
       var deleteExercise = $http({
           headers: {
                 'X-CSRF-Token': $rootScope.token,
