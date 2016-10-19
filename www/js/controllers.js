@@ -3599,7 +3599,7 @@ angular.module('geiaFitApp')
     $scope.addss = function () {
 
       addPopup = $ionicPopup.show({
-        template: '<div style="font-weight:bold;"> <button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;">My Mobile Device</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;">My Library</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="newExercise()">Create New</button></div>',
+        template: '<div style="font-weight:bold;"> <button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;">My Mobile Device</button><button class="button button-block btn-yellow" ng-click="addFromLibrary()"  style="color: #fff;font-weight:bold;">My Library</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="newExercise()">Create New</button></div>',
         // template: '<div style="background: #121516; color: #fff;"> <button class="button button-block btn-yellow" style="background: #121516; color: #fff;">My Mobile Device</button><button class="button button-block btn-yellow">My Library</button><button class="button button-block btn-yellow">Create New</button></div>',
         title: 'Add Exercise',
         subTitle: 'Choose a Source',
@@ -3609,6 +3609,11 @@ angular.module('geiaFitApp')
         ]
       });
 
+    }
+
+    $scope.addFromLibrary = function(){
+        addPopup.close();
+        $state.transitionTo('main.exerciseLibrary', {isAdd: true}, {reload: true});
     }
 
     $scope.newExercise = function () {
