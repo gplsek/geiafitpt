@@ -1283,7 +1283,8 @@ angular.module('geiaFitApp')
 
     }])
 
- .controller('ExerciseLibraryCtrl', ['$rootScope', '$scope', 'sortedByList', '$ionicPopup', 'ExerciseLibraryService','$state', function ($rootScope, $scope, sortedByList, $ionicPopup, ExerciseLibraryService,$state) {
+ .controller('ExerciseLibraryCtrl', ['$rootScope', '$scope', 'sortedByList', '$ionicPopup', 'ExerciseLibraryService','$state','$q','$cordovaCapture', 
+    function ($rootScope, $scope, sortedByList, $ionicPopup, ExerciseLibraryService,$state, $q, $cordovaCapture) {
 
     var pageSize = 10;
     $scope.pages = [];
@@ -1304,7 +1305,7 @@ angular.module('geiaFitApp')
     $scope.searchName = '';     // set the default search/filter term
     //$scope.sortOrder = false;
 
-    $scope.showWebexMessage = function () {
+    /*$scope.showWebexMessage = function () {
       if ($scope.WebExerciseIcon) {
         var alertPopup = $ionicPopup.alert({
           title: 'Web Exercise add',
@@ -1315,7 +1316,175 @@ angular.module('geiaFitApp')
         $state.transitionTo("addExercise", {}, { reload: true });
       }
 
+    }*/
+
+    $scope.showWebexMessage = function () {
+      if ($scope.WebExerciseIcon) {
+        var alertPopup = $ionicPopup.alert({
+          title: 'Web Exercise add',
+          template: 'To add new WebEx exercises, please go to the PT Portal (https://app.geiafit.com/)'
+        });
+      }
+      else {
+        captureVideo();
+      }
     }
+    var setExcpopup;
+    var Video;
+    var VideoData;
+    var VideoFileName;
+
+    function captureVideo() {
+      setExcpopup = $ionicPopup.show({
+        template: '<div style="font-weight:bold;"> <button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="captureVideoFromCamera()">From camera</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="captureVideoFromGallery()">From gallery</button></div>',
+        // template: '<div style="background: #121516; color: #fff;"> <button class="button button-block btn-yellow" style="background: #121516; color: #fff;">My Mobile Device</button><button class="button button-block btn-yellow">My Library</button><button class="button button-block btn-yellow">Create New</button></div>',
+        title: 'Add a video',
+        scope: $scope,
+        buttons: [
+          { text: 'Cancel' }
+        ]
+      });
+    };
+
+
+    $scope.captureVideoFromGallery = function () {
+      setExcpopup.close();
+      navigator.camera.getPicture($scope.uploadVideo, onFail, {
+        destinationType: Camera.DestinationType.DATA_URL,
+        mediaType: 2,
+        sourceType: 2,      // 0:Photo Library, 1=Camera, 2=Saved Photo Album
+        //encodingType: 0, // 0=JPG 1=PNG
+        allowEdit: true
+      }
+      );
+    };
+
+    $scope.uploadVideo = function (videoURI) {
+      Video = videoURI;
+      var newvideoURI = "file:///" + videoURI;
+      window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function () {
+        // alert('success requestFileSystem');
+      }, function () {
+        //error
+      });
+      window.resolveLocalFileSystemURL(newvideoURI, function (fileEntry) {
+        fileEntry.file(function (file) {
+          // alert(JSON.stringify(file)); //view full metadata
+          var type = file.type;
+          var nameoffile = file.name;
+          VideoFileName = file.name;
+
+          if (file != null || file != undefined) {
+            var fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+            fileReader.onload = function (e) {
+              var dataUrl = e.target.result;
+              var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
+              VideoData = base64Data;
+            };
+          }
+
+          //Redirect
+          $state.transitionTo("addExercise", {Video: Video, videoData:VideoData, VideoFileName:VideoFileName}, { reload: true });
+
+        }, function () {
+          //error
+        });
+      }, function () {
+        // error
+      });
+    };
+
+    function onFail(e) { };
+
+    $scope.captureVideoFromCamera = function () {
+      setExcpopup.close();
+      $cordovaCapture.captureVideo().then(function (data) {
+        saveVideo(data).success(function (data) {
+          $scope.clip = data;
+          $scope.$apply();
+
+          //Redirect
+          $state.transitionTo("addExercise", {Video: Video, videoData:VideoData, VideoFileName:VideoFileName}, { reload: true });
+
+        }).error(function (data) {
+          console.log('ERROR: ' + data);
+        });
+      });
+    };
+
+    function saveVideo(data) {
+      createFileEntry(data[0].localURL);
+      return promise;
+    }
+    
+    function createFileEntry(fileURI) {
+      window.resolveLocalFileSystemURL(fileURI, function (entry) {
+        return copyFile(entry);
+      }, fail);
+    }
+
+    // Create a unique name for the videofile
+    // Copy the recorded video to the app dir
+    function copyFile(fileEntry) {
+      var name = fileEntry.fullPath.substr(fileEntry.fullPath.lastIndexOf('/') + 1);
+      var newName = makeid() + name;
+      window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function (fileSystem2) {
+        fileEntry.copyTo(fileSystem2, newName, function (succ) {
+          return onCopySuccess(succ);
+        }, fail);
+      },
+        fail
+      );
+    }
+
+    // Called on successful copy process
+    // Creates a thumbnail from the movie
+    // The name is the moviename but with .png instead of .mov
+    function onCopySuccess(entry) {
+      Video = entry.nativeURL;
+      window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function () {
+        // alert('success requestFileSystem');
+      }, function () {
+        //error
+      });
+      window.resolveLocalFileSystemURL($scope.addExercise.video, function (fileEntry) {
+        fileEntry.file(function (file) {
+          // alert(JSON.stringify(file)); //view full metadata
+          var type = file.type;
+          var nameoffile = file.name;
+          VideoFileName = file.name;
+          if (file != null || file != undefined) {
+            var fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+            fileReader.onload = function (e) {
+              var dataUrl = e.target.result;
+              var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
+              VideoData = base64Data;
+            };
+          }
+        }, function () {
+          //error
+        });
+      }, function () {
+        // error
+      });
+      var name = entry.nativeURL.slice(0, -4);
+      window.PKVideoThumbnail.createThumbnail(entry.nativeURL, name + '.png', function (prevSucc) {
+        return prevImageSuccess(prevSucc);
+      }, fail);
+    }
+
+    // Called on thumbnail creation success
+    // Generates the currect URL to the local moviefile
+    // Finally resolves the promies and returns the name
+    function prevImageSuccess(succ) {
+      var correctUrl = succ.slice(0, -4);
+      correctUrl += '.MOV';
+      deferred.resolve(correctUrl);
+    }
+
+
 
 
     function compare(a, b) {
@@ -1597,6 +1766,12 @@ angular.module('geiaFitApp')
   }])
   .controller('AddExerciseCtrl', ['$scope', '$state', '$stateParams', 'AddExerciseService', 'Flash','$ionicPopup','$cordovaCapture', '$q', function ($scope, $state, $stateParams, AddExerciseService, Flash,$ionicPopup,$cordovaCapture, $q) {
 
+    console.log("AddExerciseCtrl")
+    console.log($stateParams)
+    $scope.addExercise.video = $stateParams.Video
+    $scope.addExercise.videoname = $stateParams.VideoFileName
+    $scope.addExercise.videodata = $stateParams.VideoData
+    
     $scope.addExercise = {
       name: "",
       comments: "",
@@ -1682,7 +1857,7 @@ angular.module('geiaFitApp')
 
 
     var setExcpopup;
-    $scope.captureVideo = function () {
+    /*$scope.captureVideo = function () {
 
       setExcpopup = $ionicPopup.show({
         template: '<div style="font-weight:bold;"> <button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="captureVideoFromCamera()">From camera</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="captureVideoFromGallery()">From gallery</button></div>',
@@ -1695,12 +1870,11 @@ angular.module('geiaFitApp')
       });
 
 
-    };
+    };*/
 
     $scope.captureVideoFromGallery = function () {
       setExcpopup.close();
-      navigator.camera.getPicture($scope.uploadVideo, onFail,
-        {
+      navigator.camera.getPicture($scope.uploadVideo, onFail,{
           destinationType: Camera.DestinationType.DATA_URL,
           mediaType: 2,
           sourceType: 2,      // 0:Photo Library, 1=Camera, 2=Saved Photo Album
@@ -1712,23 +1886,14 @@ angular.module('geiaFitApp')
 
     $scope.uploadVideo = function (videoURI) {
       $scope.addExercise.video = videoURI;
-
       var newvideoURI = "file:///" + videoURI;
-
       window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function () {
-
         // alert('success requestFileSystem');
-
       }, function () {
         //error
-
       });
-
       window.resolveLocalFileSystemURL(newvideoURI, function (fileEntry) {
-
-
         fileEntry.file(function (file) {
-
           // alert(JSON.stringify(file)); //view full metadata
           var type = file.type;
           var nameoffile = file.name;
@@ -1743,19 +1908,12 @@ angular.module('geiaFitApp')
               $scope.addExercise.videodata = base64Data;
             };
           }
-
-
         }, function () {
-
           //error
         });
-
       }, function () {
-
         // error
       });
-
-
     };
 
 
