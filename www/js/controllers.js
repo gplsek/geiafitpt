@@ -1273,7 +1273,7 @@ angular.module('geiaFitApp')
 
     }])
 
- .controller('ExerciseLibraryCtrl', ['$rootScope', '$scope', 'sortedByList', '$ionicPopup', 'ExerciseLibraryService','$state','SetExerciseProgramService', function ($rootScope, $scope, sortedByList, $ionicPopup, ExerciseLibraryService,$state,SetExerciseProgramService) {
+ .controller('ExerciseLibraryCtrl', ['$rootScope', '$scope', 'sortedByList', '$ionicPopup', 'ExerciseLibraryService','$state', function ($rootScope, $scope, sortedByList, $ionicPopup, ExerciseLibraryService,$state) {
 
     var pageSize = 10;
     $scope.pages = [];
@@ -1542,17 +1542,21 @@ angular.module('geiaFitApp')
         template: 'Are you sure you want to delete this exercise ?'
       });
 
-                                      confirmPopup.then(function (res) {
-                                                        if (res) {
-                                                        SetExerciseProgramService.deleteExercise($rootScope.loggedInUserUid, $scope.myExerciseList[index].id).then(function (success) {
-                                                                                                                                                                   $scope.myExerciseList.splice(index, 1);
-                                                                                                                                                                   }, function (error) {
-                                                                                                                                                                   
-                                                                                                                                                                   });
-                                                        } else {
-                                                        console.log("cancelform you")
-                                                        }
-                                                        });
+      confirmPopup.then(function (res) {
+        if (res) {
+          var ptId = $rootScope.loggedInUserUid
+          var exId =  $scope.myExerciseList[index].exid
+          ExerciseLibraryService.deleteExercise(ptId,exId).then(
+          function (success) {
+            $scope.myExerciseList.splice(index, 1);
+          }, 
+          function (error) {
+
+          });
+        } else {
+          console.log("cancelform you")
+        }
+      });
     }
 
   }])
@@ -1624,6 +1628,7 @@ angular.module('geiaFitApp')
       var editExerciseList = AddExerciseService.addExercise(data).then(function (success) {
         console.log("Success")
         Flash.showFlash({ type: 'success', message: "Success!" });
+         $scope.gotoExerciseProgram();
       }, function (error) {
         console.log("Error")
         Flash.showFlash({ type: 'error', message: "Failure!" });

@@ -521,6 +521,7 @@ angular.module('geiaFitApp')
     }
 
  var deleteExercise = function (ptId,exId) {
+   console.log(ptId+" : "+exId)
       var deleteExercise = $http({
           headers: {
                 'X-CSRF-Token': $rootScope.token,
@@ -624,8 +625,27 @@ angular.module('geiaFitApp')
       return exerciseData;
     }
 
+  var deleteExercise = function (ptId,exId) {
+   console.log(ptId+" : "+exId)
+      var deleteExercise = $http({
+          headers: {
+                'X-CSRF-Token': $rootScope.token,
+                'Access-Control-Allow-Origin': '*'
+              },
+        method: "DELETE",
+        url:  ApiEndpoint.url +"/ptexlib/"+ptId+"/"+exId
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      });
+      return deleteExercise;
+    }
+
+
     return {
-      exerciseData: getExerciseList
+      exerciseData: getExerciseList,
+      deleteExercise:deleteExercise
     }
 
   }])

@@ -47,19 +47,20 @@
 	      <select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select>
 	       
 	    </div>-->
-		<ul class="exerciseList">		
-			<li ng-repeat="item in filteredExerciseList = (myExerciseList | filter:{title : filterPatient} )" class="gieafitListItem group">
-					<span class="">{{item.id}}</span>
-					<span style="width:40%" ui-sref="addExercise({exerciseObject : item})">{{item.title}} :</span>
-					<span style="margin-left:15px"> {{item.tags[0]}}&nbsp;{{item.tags[1]}}&nbsp;{{item.tags[2]}}</span>
+			<ul class="exerciseList">
+				<li ng-repeat="item in filteredExerciseList = (myExerciseList | filter:{title : filterPatient} )" class="gieafitListItem group">
+					<span ui-sref="addExercise({exerciseObject : item})">
+						<span class="">{{item.id}}</span>
+						<span style="width:40%">{{item.title}} :</span>
+						<span style="margin-left:15px"> {{item.tags[0]}}&nbsp;{{item.tags[1]}}&nbsp;{{item.tags[2]}}</span>
 					<!--<span class="limitSpan">{{item.tags[0]}}</span><span class="limitSpan">{{item.tags[1]}}</span><span class="limitSpan">{{item.tags[2]}}</span>-->
+					</span>
 					<span class="pull-right trash-icon" ng-click="delete($index)">
 						<i class="icon ion-ios-trash-outline" ></i>
-						<!-- <i class="icon ion-ios-close-outline"></i> -->
+									<!-- <i class="icon ion-ios-close-outline"></i> -->
 					</span>
-				</li>	
-
-		</ul>
+				</li>
+			</ul>
 		
 		<!--<section class="pagination">
 			<select ng-model="selectedPage" ng-options="page.id as page.title for page in pages" class="customSelect" ng-change="showNext(selectedPage + 1)"></select>
