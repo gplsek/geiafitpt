@@ -1273,7 +1273,7 @@ angular.module('geiaFitApp')
 
     }])
 
-  .controller('ExerciseLibraryCtrl', ['$scope', 'sortedByList', '$ionicPopup', 'ExerciseLibraryService', '$state', function ($scope, sortedByList, $ionicPopup, ExerciseLibraryService, $state) {
+ .controller('ExerciseLibraryCtrl', ['$rootScope', '$scope', 'sortedByList', '$ionicPopup', 'ExerciseLibraryService','$state','SetExerciseProgramService', function ($rootScope, $scope, sortedByList, $ionicPopup, ExerciseLibraryService,$state,SetExerciseProgramService) {
 
     var pageSize = 10;
     $scope.pages = [];
@@ -1542,14 +1542,17 @@ angular.module('geiaFitApp')
         template: 'Are you sure you want to delete this exercise ?'
       });
 
-      confirmPopup.then(function (res) {
-        if (res) {
-          console.log("delete")
-          $scope.exerciseList.splice(index, 1);
-        } else {
-          console.log("cancel")
-        }
-      });
+                                      confirmPopup.then(function (res) {
+                                                        if (res) {
+                                                        SetExerciseProgramService.deleteExercise($rootScope.loggedInUserUid, $scope.myExerciseList[index].id).then(function (success) {
+                                                                                                                                                                   $scope.myExerciseList.splice(index, 1);
+                                                                                                                                                                   }, function (error) {
+                                                                                                                                                                   
+                                                                                                                                                                   });
+                                                        } else {
+                                                        console.log("cancelform you")
+                                                        }
+                                                        });
     }
 
   }])
