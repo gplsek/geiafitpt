@@ -1551,9 +1551,7 @@ angular.module('geiaFitApp')
 
     }
 
-
     $scope.doSort = function (id, service) {
-      $scope.chosenCategory = "";
       switch (id) {
         case "1":
           $scope.sortByGroup("title", service)
@@ -1568,25 +1566,21 @@ angular.module('geiaFitApp')
           break;
         case "4":
           $scope.title = 'Shoulder'
-          $scope.chosenCategory = "shoulder";
           $scope.sortByGroup("shoulder", service)
           $scope.subNavList = false;
           break;
         case "5":
           $scope.title = 'Elbow'
-          $scope.chosenCategory = "elbow";
           $scope.sortByGroup("elbow", service)
           $scope.subNavList = false;
           break;
         case "6":
           $scope.title = 'Wrist'
-          $scope.chosenCategory = "wrist";
           $scope.sortByGroup("wrist", service)
           $scope.subNavList = false;
           break;
         case "7":
           $scope.title = 'Hand'
-          $scope.chosenCategory = "hand";
           $scope.sortByGroup("hand", service)
           $scope.subNavList = false;
           break;
@@ -1595,19 +1589,16 @@ angular.module('geiaFitApp')
           break;
         case "9":
           $scope.title = 'Hip'
-          $scope.chosenCategory = "hip";
           $scope.sortByGroup("hip", service)
           $scope.subNavList = false;
           break;
         case "10":
           $scope.title = 'Knee'
-          $scope.chosenCategory = "knee";
           $scope.sortByGroup("knee", service)
           $scope.subNavList = false;
           break;
         case "11":
           $scope.title = 'Foot'
-          $scope.chosenCategory = "foot";
           $scope.sortByGroup("foot", service)
           $scope.subNavList = false;
           break;
@@ -1618,6 +1609,7 @@ angular.module('geiaFitApp')
       }
       //$scope.subNavList = false;
     }
+
 
     setTags = function (data) {
       var tag = [];
