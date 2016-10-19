@@ -48,7 +48,7 @@
 	       
 	    </div>-->
 			<ul class="exerciseList">
-				<li ng-repeat="item in filteredExerciseList = (myExerciseList | filter:{title : filterPatient} )" class="gieafitListItem group">
+				<li ng-repeat="item in filteredExerciseList = (myExerciseList | filter:{title : filterPatient} ) | filter: filterbyType | orderBy: {title: true} )" class="gieafitListItem group">
 					<span ui-sref="addExercise({exerciseObject : item})">
 						<span class="">{{item.id}}</span>
 						<span style="width:40%">{{item.title}} :</span>
