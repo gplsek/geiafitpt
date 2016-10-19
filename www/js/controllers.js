@@ -936,11 +936,11 @@ angular.module('geiaFitApp')
       (function steps() {
         var value = 0;
         for (var i = 1; i <= 40; i++) {
-          stepList.push({ id: i, steps: value + 500 });
           value += 500;
+          stepList.push(value);
         }
-        //console.log(stepList);
       })();
+
 
       $scope.myFunc = function () {
         //console.log($scope.stepspermin);
@@ -961,11 +961,14 @@ angular.module('geiaFitApp')
       //$scope.setActivityGoals.moderateMinsSelected = $scope.moderateMins[0].id;
       $scope.vigorousMins = minsArray;
       //$scope.setActivityGoals.vigorousMinsSelected = $scope.vigorousMins[0].id;
+      var unixDateToday = moment().utcOffset("-07:00").unix();
       $scope.setActivityGoals = {
+        id : null,
+        goalDate : unixDateToday, 
         lightMinsSelected: $scope.lightMins[0].id,
         moderateMinsSelected: $scope.moderateMins[0].id,
         vigorousMinsSelected: $scope.vigorousMins[0].id,
-        selectedSteps: $scope.stepsList[0].id,
+        selectedSteps: $scope.stepsList[0],
         instructions: ''
       }
 
@@ -1056,8 +1059,10 @@ angular.module('geiaFitApp')
             $scope.setActivityGoals.lightMinsSelected = $scope.lightMins[0].id
             $scope.setActivityGoals.moderateMinsSelected = $scope.moderateMins[0].id
             $scope.setActivityGoals.vigorousMinsSelected = $scope.vigorousMins[0].id
-            $scope.setActivityGoals.selectedSteps = $scope.stepsList[0].id
+            $scope.setActivityGoals.selectedSteps = $scope.stepsList[0]
             $scope.setActivityGoals.instructions = ''
+            $scope.setActivityGoals.id = null
+            $scope.setActivityGoals.goalDate = $scope.setActivityGoals.goalDate
           }
           else {
             var minId = activityData.time_active_low;
@@ -1067,9 +1072,12 @@ angular.module('geiaFitApp')
             var higId = activityData.time_active_high;
             $scope.setActivityGoals.vigorousMinsSelected = $scope.vigorousMins[higId-1].id;
             var steps = activityData.total_steps;
-            var index = (steps/500)
-            $scope.setActivityGoals.selectedSteps = $scope.stepsList[index-1].steps;
+            //var index = (steps/500)
+            //$scope.setActivityGoals.selectedSteps = $scope.stepsList[index-1].steps;
+            $scope.setActivityGoals.selectedSteps = parseInt(steps);
             $scope.setActivityGoals.instructions = activityData.instructions
+            $scope.setActivityGoals.id = activityData.id
+            $scope.setActivityGoals.goalDate = activityData.goal_date 
           }
         },
         function (error) {
@@ -1107,7 +1115,8 @@ angular.module('geiaFitApp')
           });
 
         var activityData = {
-          "goal_date": null,
+          "id":$scope.setActivityGoals.id,
+          "goal_date": $scope.setActivityGoals.goalDate,
           "total_steps": $scope.setActivityGoals.selectedSteps,
           "time_active_low": $scope.setActivityGoals.lightMinsSelected,
           "time_active_medium": $scope.setActivityGoals.moderateMinsSelected,
@@ -1115,6 +1124,7 @@ angular.module('geiaFitApp')
           "instructions": $scope.setActivityGoals.instructions,
           "exercise": null,
         }
+        console.log(activityData)
         AppService.setActivityGoal(activityData, $rootScope.UID).then(
           function (success) {
             console.log("SUCCESS")
@@ -1273,11 +1283,13 @@ angular.module('geiaFitApp')
 
     }])
 
-  .controller('ExerciseLibraryCtrl', ['$scope', 'sortedByList', '$ionicPopup', 'ExerciseLibraryService', '$state', function ($scope, sortedByList, $ionicPopup, ExerciseLibraryService, $state) {
+ .controller('ExerciseLibraryCtrl', ['$rootScope', '$scope', 'sortedByList', '$ionicPopup', 'ExerciseLibraryService','$state','$q','$cordovaCapture', 
+    function ($rootScope, $scope, sortedByList, $ionicPopup, ExerciseLibraryService,$state, $q, $cordovaCapture) {
 
     var pageSize = 10;
     $scope.pages = [];
     $scope.webExPages = [];
+    $scope.chosenCategory = "";
 
 
     $scope.title = 'Exercise Name';
@@ -1293,7 +1305,7 @@ angular.module('geiaFitApp')
     $scope.searchName = '';     // set the default search/filter term
     //$scope.sortOrder = false;
 
-    $scope.showWebexMessage = function () {
+    /*$scope.showWebexMessage = function () {
       if ($scope.WebExerciseIcon) {
         var alertPopup = $ionicPopup.alert({
           title: 'Web Exercise add',
@@ -1304,7 +1316,175 @@ angular.module('geiaFitApp')
         $state.transitionTo("addExercise", {}, { reload: true });
       }
 
+    }*/
+
+    $scope.showWebexMessage = function () {
+      if ($scope.WebExerciseIcon) {
+        var alertPopup = $ionicPopup.alert({
+          title: 'Web Exercise add',
+          template: 'To add new WebEx exercises, please go to the PT Portal (https://app.geiafit.com/)'
+        });
+      }
+      else {
+        captureVideo();
+      }
     }
+    var setExcpopup;
+    var Video;
+    var VideoData;
+    var VideoFileName;
+
+    function captureVideo() {
+      setExcpopup = $ionicPopup.show({
+        template: '<div style="font-weight:bold;"> <button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="captureVideoFromCamera()">From camera</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="captureVideoFromGallery()">From gallery</button></div>',
+        // template: '<div style="background: #121516; color: #fff;"> <button class="button button-block btn-yellow" style="background: #121516; color: #fff;">My Mobile Device</button><button class="button button-block btn-yellow">My Library</button><button class="button button-block btn-yellow">Create New</button></div>',
+        title: 'Add a video',
+        scope: $scope,
+        buttons: [
+          { text: 'Cancel' }
+        ]
+      });
+    };
+
+
+    $scope.captureVideoFromGallery = function () {
+      setExcpopup.close();
+      navigator.camera.getPicture($scope.uploadVideo, onFail, {
+        destinationType: Camera.DestinationType.DATA_URL,
+        mediaType: 2,
+        sourceType: 2,      // 0:Photo Library, 1=Camera, 2=Saved Photo Album
+        //encodingType: 0, // 0=JPG 1=PNG
+        allowEdit: true
+      }
+      );
+    };
+
+    $scope.uploadVideo = function (videoURI) {
+      Video = videoURI;
+      var newvideoURI = "file:///" + videoURI;
+      window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function () {
+        // alert('success requestFileSystem');
+      }, function () {
+        //error
+      });
+      window.resolveLocalFileSystemURL(newvideoURI, function (fileEntry) {
+        fileEntry.file(function (file) {
+          // alert(JSON.stringify(file)); //view full metadata
+          var type = file.type;
+          var nameoffile = file.name;
+          VideoFileName = file.name;
+
+          if (file != null || file != undefined) {
+            var fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+            fileReader.onload = function (e) {
+              var dataUrl = e.target.result;
+              var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
+              VideoData = base64Data;
+            };
+          }
+
+          //Redirect
+          $state.transitionTo("addExercise", {Video: Video, videoData:VideoData, VideoFileName:VideoFileName}, { reload: true });
+
+        }, function () {
+          //error
+        });
+      }, function () {
+        // error
+      });
+    };
+
+    function onFail(e) { };
+
+    $scope.captureVideoFromCamera = function () {
+      setExcpopup.close();
+      $cordovaCapture.captureVideo().then(function (data) {
+        saveVideo(data).success(function (data) {
+          $scope.clip = data;
+          $scope.$apply();
+
+          //Redirect
+          $state.transitionTo("addExercise", {Video: Video, videoData:VideoData, VideoFileName:VideoFileName}, { reload: true });
+
+        }).error(function (data) {
+          console.log('ERROR: ' + data);
+        });
+      });
+    };
+
+    function saveVideo(data) {
+      createFileEntry(data[0].localURL);
+      return promise;
+    }
+    
+    function createFileEntry(fileURI) {
+      window.resolveLocalFileSystemURL(fileURI, function (entry) {
+        return copyFile(entry);
+      }, fail);
+    }
+
+    // Create a unique name for the videofile
+    // Copy the recorded video to the app dir
+    function copyFile(fileEntry) {
+      var name = fileEntry.fullPath.substr(fileEntry.fullPath.lastIndexOf('/') + 1);
+      var newName = makeid() + name;
+      window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function (fileSystem2) {
+        fileEntry.copyTo(fileSystem2, newName, function (succ) {
+          return onCopySuccess(succ);
+        }, fail);
+      },
+        fail
+      );
+    }
+
+    // Called on successful copy process
+    // Creates a thumbnail from the movie
+    // The name is the moviename but with .png instead of .mov
+    function onCopySuccess(entry) {
+      Video = entry.nativeURL;
+      window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function () {
+        // alert('success requestFileSystem');
+      }, function () {
+        //error
+      });
+      window.resolveLocalFileSystemURL($scope.addExercise.video, function (fileEntry) {
+        fileEntry.file(function (file) {
+          // alert(JSON.stringify(file)); //view full metadata
+          var type = file.type;
+          var nameoffile = file.name;
+          VideoFileName = file.name;
+          if (file != null || file != undefined) {
+            var fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+            fileReader.onload = function (e) {
+              var dataUrl = e.target.result;
+              var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
+              VideoData = base64Data;
+            };
+          }
+        }, function () {
+          //error
+        });
+      }, function () {
+        // error
+      });
+      var name = entry.nativeURL.slice(0, -4);
+      window.PKVideoThumbnail.createThumbnail(entry.nativeURL, name + '.png', function (prevSucc) {
+        return prevImageSuccess(prevSucc);
+      }, fail);
+    }
+
+    // Called on thumbnail creation success
+    // Generates the currect URL to the local moviefile
+    // Finally resolves the promies and returns the name
+    function prevImageSuccess(succ) {
+      var correctUrl = succ.slice(0, -4);
+      correctUrl += '.MOV';
+      deferred.resolve(correctUrl);
+    }
+
+
 
 
     function compare(a, b) {
@@ -1314,6 +1494,22 @@ angular.module('geiaFitApp')
         return 1;
       return 0;
     }
+    $scope.filterbyType = function (value) {
+      var flag = false;
+      if ($scope.chosenCategory !== "") {
+        if(angular.isArray(value.categories) && value.categories.length > 0) {
+          for(var index=0; index<value.categories.length; index++) {
+            if(value.categories[index] == $scope.chosenCategory) {
+              flag = true;
+             break;
+            }
+          }
+        }
+         return flag;
+      }
+                                        
+      return true;
+     }
 
     $scope.sortByGroup = function (categoryName, exerciseType) {
       var categoryArrayList = [];
@@ -1357,6 +1553,7 @@ angular.module('geiaFitApp')
 
 
     $scope.doSort = function (id, service) {
+      $scope.chosenCategory = "";
       switch (id) {
         case "1":
           $scope.sortByGroup("title", service)
@@ -1371,21 +1568,25 @@ angular.module('geiaFitApp')
           break;
         case "4":
           $scope.title = 'Shoulder'
+          $scope.chosenCategory = "shoulder";
           $scope.sortByGroup("shoulder", service)
           $scope.subNavList = false;
           break;
         case "5":
           $scope.title = 'Elbow'
+          $scope.chosenCategory = "elbow";
           $scope.sortByGroup("elbow", service)
           $scope.subNavList = false;
           break;
         case "6":
           $scope.title = 'Wrist'
+          $scope.chosenCategory = "wrist";
           $scope.sortByGroup("wrist", service)
           $scope.subNavList = false;
           break;
         case "7":
           $scope.title = 'Hand'
+          $scope.chosenCategory = "hand";
           $scope.sortByGroup("hand", service)
           $scope.subNavList = false;
           break;
@@ -1394,16 +1595,19 @@ angular.module('geiaFitApp')
           break;
         case "9":
           $scope.title = 'Hip'
+          $scope.chosenCategory = "hip";
           $scope.sortByGroup("hip", service)
           $scope.subNavList = false;
           break;
         case "10":
           $scope.title = 'Knee'
+          $scope.chosenCategory = "knee";
           $scope.sortByGroup("knee", service)
           $scope.subNavList = false;
           break;
         case "11":
           $scope.title = 'Foot'
+          $scope.chosenCategory = "foot";
           $scope.sortByGroup("foot", service)
           $scope.subNavList = false;
           break;
@@ -1544,10 +1748,17 @@ angular.module('geiaFitApp')
 
       confirmPopup.then(function (res) {
         if (res) {
-          console.log("delete")
-          $scope.exerciseList.splice(index, 1);
+          var ptId = $rootScope.loggedInUserUid
+          var exId =  $scope.myExerciseList[index].exid
+          ExerciseLibraryService.deleteExercise(ptId,exId).then(
+          function (success) {
+            $scope.myExerciseList.splice(index, 1);
+          }, 
+          function (error) {
+
+          });
         } else {
-          console.log("cancel")
+          console.log("cancelform you")
         }
       });
     }
@@ -1555,6 +1766,12 @@ angular.module('geiaFitApp')
   }])
   .controller('AddExerciseCtrl', ['$scope', '$state', '$stateParams', 'AddExerciseService', 'Flash','$ionicPopup','$cordovaCapture', '$q', function ($scope, $state, $stateParams, AddExerciseService, Flash,$ionicPopup,$cordovaCapture, $q) {
 
+    console.log("AddExerciseCtrl")
+    console.log($stateParams)
+    $scope.addExercise.video = $stateParams.Video
+    $scope.addExercise.videoname = $stateParams.VideoFileName
+    $scope.addExercise.videodata = $stateParams.VideoData
+    
     $scope.addExercise = {
       name: "",
       comments: "",
@@ -1621,6 +1838,7 @@ angular.module('geiaFitApp')
       var editExerciseList = AddExerciseService.addExercise(data).then(function (success) {
         console.log("Success")
         Flash.showFlash({ type: 'success', message: "Success!" });
+         $scope.gotoExerciseProgram();
       }, function (error) {
         console.log("Error")
         Flash.showFlash({ type: 'error', message: "Failure!" });
@@ -1639,7 +1857,7 @@ angular.module('geiaFitApp')
 
 
     var setExcpopup;
-    $scope.captureVideo = function () {
+    /*$scope.captureVideo = function () {
 
       setExcpopup = $ionicPopup.show({
         template: '<div style="font-weight:bold;"> <button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="captureVideoFromCamera()">From camera</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="captureVideoFromGallery()">From gallery</button></div>',
@@ -1652,12 +1870,11 @@ angular.module('geiaFitApp')
       });
 
 
-    };
+    };*/
 
     $scope.captureVideoFromGallery = function () {
       setExcpopup.close();
-      navigator.camera.getPicture($scope.uploadVideo, onFail,
-        {
+      navigator.camera.getPicture($scope.uploadVideo, onFail,{
           destinationType: Camera.DestinationType.DATA_URL,
           mediaType: 2,
           sourceType: 2,      // 0:Photo Library, 1=Camera, 2=Saved Photo Album
@@ -1669,23 +1886,14 @@ angular.module('geiaFitApp')
 
     $scope.uploadVideo = function (videoURI) {
       $scope.addExercise.video = videoURI;
-
       var newvideoURI = "file:///" + videoURI;
-
       window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function () {
-
         // alert('success requestFileSystem');
-
       }, function () {
         //error
-
       });
-
       window.resolveLocalFileSystemURL(newvideoURI, function (fileEntry) {
-
-
         fileEntry.file(function (file) {
-
           // alert(JSON.stringify(file)); //view full metadata
           var type = file.type;
           var nameoffile = file.name;
@@ -1700,19 +1908,12 @@ angular.module('geiaFitApp')
               $scope.addExercise.videodata = base64Data;
             };
           }
-
-
         }, function () {
-
           //error
         });
-
       }, function () {
-
         // error
       });
-
-
     };
 
 
