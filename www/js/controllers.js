@@ -715,6 +715,12 @@ angular.module('geiaFitApp')
     $scope.uploadVideo = function (videoURI) {
       $scope.videoURI = videoURI;
 
+      // var name = videoURI.slice(0, -4);
+      // window.PKVideoThumbnail.createThumbnail(videoURI, name + '.png', function (prevSucc) {
+      //   $rootScope.thumbnail = prevSucc;
+      //   return prevImageSuccess(prevSucc);
+      // }, fail);
+
       var newvideoURI = "file:///" + videoURI;
 
       window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function () {
