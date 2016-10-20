@@ -3937,9 +3937,12 @@ angular.module('geiaFitApp')
 
 
     
-    $scope.showList = function () {
-      $scope.sortList = false;
+   $scope.showList = function () {
+     $scope.sortList =false;
+      $scope.subNavList = !$scope.subNavList;
+
     }
+
 
     $scope.showListSortList = function () {
       $scope.subNavList = false;
