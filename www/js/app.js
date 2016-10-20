@@ -68,6 +68,7 @@ angular.module('geiaFitApp', ['ionic', 'rzModule','ngCordova','highcharts-ng','n
 
 
   var exerciseprogram=  {
+fromLibrary: false,
 peid: 0,
 title:null,
 comments:null,

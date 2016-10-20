@@ -1,4 +1,5 @@
-<ion-view view-title="Exercise Library" class="exerciseLibrary activity">
+
+<ion-view view-title="{{config.title}}" class="exerciseLibrary activity">
 	<ion-nav-bar class="group">
 		<!--<div  ng-show="MyExerciseIcon">
 		<ion-nav-buttons side="left">
@@ -7,10 +8,11 @@
 		</div>-->
 		<!--for Web Exercise-->
 		<ion-nav-buttons side="left" >
-			<span class="icon ion-ios-plus-outline" ng-click="showWebexMessage()"></span>
+			<span class="icon ion-close-round" ng-click="goBack()"></span>
 		</ion-nav-buttons>
 		<ion-nav-buttons side="right">
-			<a menu-toggle="right" class="icon ion-navicon"></a>
+            <span ng-if="!isAdd" class="icon {{config.rightIcon}}" ng-click="showWebexMessage()"></span>
+			<span ng-if="isAdd" class="icon {{config.rightIcon}}" ng-click="addFromLibrary()"></span>
 		</ion-nav-buttons>
 	</ion-nav-bar>
 	<ion-content>
@@ -56,7 +58,11 @@
 						<span style="margin-left:15px"> {{item.tags[0]}}&nbsp;{{item.tags[1]}}&nbsp;{{item.tags[2]}}</span>
 					<!--<span class="limitSpan">{{item.tags[0]}}</span><span class="limitSpan">{{item.tags[1]}}</span><span class="limitSpan">{{item.tags[2]}}</span>-->
 					</span>
-					<span class="pull-right trash-icon" ng-click="delete($index)">
+                    <span ng-if="isAdd" class="pull-right trash-icon" ng-click="add($index)">
+                        <img class="icon check-mark" src="img/check.png" ng-if="item.selected" alt="">
+                        <i  class="icon ion-ios-plus-outline" ng-if="!item.selected"></i>
+                    </span>
+					<span ng-if="!isAdd" class="pull-right trash-icon" ng-click="delete($index)">
 						<i class="icon ion-ios-trash-outline" ></i>
 									<!-- <i class="icon ion-ios-close-outline"></i> -->
 					</span>

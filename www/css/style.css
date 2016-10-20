@@ -342,3 +342,7 @@ progress[value]::-webkit-progress-bar {
 .exerciseLibrary .exerciseList .exercise-name {
     width: 80%;
 }
+.exerciseLibrary img.check-mark{
+    width: 30px;
+    margin-top: 10px;
+}

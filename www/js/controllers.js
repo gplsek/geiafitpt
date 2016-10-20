@@ -38,6 +38,9 @@ angular.module('geiaFitApp')
     $scope.gotoHome = function () {
       $state.transitionTo('main.dash', {}, { reload: false });
     }
+    $scope.gotoExerciseLibrary = function () {
+      $state.transitionTo('main.exerciseLibrary', {}, { reload: false });
+    }
     $scope.back = function () {
       console.log($ionicHistory.viewHistory());
       $ionicHistory.goBack();
@@ -311,7 +314,6 @@ angular.module('geiaFitApp')
         repsList[i] = i;
         //  value += 500;
       }
-      console.log(repsList);
     })();
 
     $scope.stepsList = repsList;
@@ -363,13 +365,13 @@ angular.module('geiaFitApp')
 
     if ($stateParams.peid === 0) {
       //  alert("inside if");
+        console.log("$stateParams", $stateParams);
       $scope.submit = false;
       $scope.edit = true;
-
       $scope.exerciseprogram =
         {
-          title: '',
-          comments: '',
+          title: $stateParams.title,
+          comments: $stateParams.comments,
           reps: 1,
           sets: 1,
           daily: 1,
@@ -395,17 +397,19 @@ angular.module('geiaFitApp')
 
       $scope.saveExercise = function () {
 
-
         var exercise = {
+          "fromLibrary": $stateParams.fromLibrary,
           "name": $scope.exerciseprogram.title,
           "video_data": $scope.exerciseprogram.videodata,
           "video_name": $scope.exerciseprogram.videoname,
           "video_image_name": "george.jpg",
-          "video_image": "AAAAFGZ0eXBxdCAgAAAAAHF0ICAAAAAId2lkZQASLJ1tZGF0AMxABwDom+7Mmy5PA4TVKBYzFJXz.....",
+          "video_image": $scope.exerciseprogram.thumb1,
           "reps": "" + $scope.exerciseprogram.reps,
           "sets": "" + $scope.exerciseprogram.sets,
           "rest": "75",
           "daily": "" + $scope.exerciseprogram.daily,
+          "code": $stateParams.code,
+          
           "week_days": [
             {
               "day": "0",
@@ -487,38 +491,6 @@ angular.module('geiaFitApp')
       $scope.selectedDaily = parseInt($scope.exerciseprogram.daily);
 
 
-      $scope.editExercise = function () {
-        $scope.submit = false;
-        $scope.edit = true;
-        $state.transitionTo('setExerciseProgram',
-          {
-            peid: $scope.exerciseprogram.peid,
-            title: $scope.exerciseprogram.title,
-            comments: $scope.exerciseprogram.comments,
-            code: $scope.exerciseprogram.code,
-            reps: $scope.exerciseprogram.reps,
-            sets: $scope.exerciseprogram.sets,
-            rest: $scope.exerciseprogram.rest,
-            daily: $scope.exerciseprogram.daily,
-            today: $scope.exerciseprogram.today,
-            alldays: $scope.exerciseprogram.alldays,
-            weekly: {
-              sun: $scope.exerciseprogram.weekly.sun,
-              mon: $scope.exerciseprogram.weekly.mon,
-              tue: $scope.exerciseprogram.weekly.tue,
-              wed: $scope.exerciseprogram.weekly.wed,
-              thu: $scope.exerciseprogram.weekly.thu,
-              fri: $scope.exerciseprogram.weekly.fri,
-              sat: $scope.exerciseprogram.weekly.sat
-            },
-            mp4: $scope.exerciseprogram.mp4,
-            webm: $scope.exerciseprogram.webm,
-            mov: $scope.exerciseprogram.mov,
-            thumb1: $scope.exerciseprogram.thumb1,
-            thumb2: $scope.exerciseprogram.thumb2
-          }, { reload: false });
-
-      };
 
 
       $scope.deleteExercise = function () {
@@ -536,7 +508,7 @@ angular.module('geiaFitApp')
         // alert("ex" + $scope.selectedReps);
         var exercise = {
           "peid": $scope.exerciseprogram.peid,
-          "title": $scope.exerciseprogram.title,
+          "video_title": $scope.exerciseprogram.title,
           "comments": $scope.exerciseprogram.comments,
           "reps": "" + $scope.exerciseprogram.reps,
           "sets": "" + $scope.exerciseprogram.sets,
@@ -587,6 +559,38 @@ angular.module('geiaFitApp')
       };
 
     }
+      $scope.editExercise = function () {
+        $scope.submit = false;
+        $scope.edit = true;
+//        $state.transitionTo('setExerciseProgram',
+//          {
+//            peid: $scope.exerciseprogram.peid,
+//            title: $scope.exerciseprogram.title,
+//            comments: $scope.exerciseprogram.comments,
+//            code: $scope.exerciseprogram.code,
+//            reps: $scope.exerciseprogram.reps,
+//            sets: $scope.exerciseprogram.sets,
+//            rest: $scope.exerciseprogram.rest,
+//            daily: $scope.exerciseprogram.daily,
+//            today: $scope.exerciseprogram.today,
+//            alldays: $scope.exerciseprogram.alldays,
+//            weekly: {
+//              sun: $scope.exerciseprogram.weekly.sun,
+//              mon: $scope.exerciseprogram.weekly.mon,
+//              tue: $scope.exerciseprogram.weekly.tue,
+//              wed: $scope.exerciseprogram.weekly.wed,
+//              thu: $scope.exerciseprogram.weekly.thu,
+//              fri: $scope.exerciseprogram.weekly.fri,
+//              sat: $scope.exerciseprogram.weekly.sat
+//            },
+//            mp4: $scope.exerciseprogram.mp4,
+//            webm: $scope.exerciseprogram.webm,
+//            mov: $scope.exerciseprogram.mov,
+//            thumb1: $scope.exerciseprogram.thumb1,
+//            thumb2: $scope.exerciseprogram.thumb2
+//          }, { reload: false });
+
+      };
 
     //<!_________________________________________ This method is use to enable or disable the button _____________!>
     $scope.enableButtonMon = function () {
@@ -1290,8 +1294,23 @@ angular.module('geiaFitApp')
 
     }])
 
-  .controller('ExerciseLibraryCtrl', ['$rootScope', '$scope', 'sortedByList', '$ionicPopup', 'ExerciseLibraryService', '$state', '$q', '$cordovaCapture',
-    function ($rootScope, $scope, sortedByList, $ionicPopup, ExerciseLibraryService, $state, $q, $cordovaCapture) {
+ .controller('ExerciseLibraryCtrl', ['$rootScope', '$scope', '$stateParams', '$rootScope', '$ionicHistory', 'sortedByList', '$ionicPopup', 'ExerciseLibraryService','$state','$q','$cordovaCapture', 
+    function ($rootScope, $scope, $stateParams, $rootScope, $ionicHistory, sortedByList, $ionicPopup, ExerciseLibraryService,$state, $q, $cordovaCapture) {
+        
+    
+    $scope.isAdd = $stateParams.isAdd;
+    $scope.selectedIndex;
+    if($scope.isAdd){
+        $scope.config = {
+            title: 'Choose Excercise',
+            rightIcon: 'ion-checkmark',
+        }
+    }else{
+        $scope.config = {
+            title: 'Exercise Library',
+            rightIcon: 'ion-ios-plus-outline',
+        }
+    }
 
       var pageSize = 10;
       $scope.pages = [];
@@ -1339,6 +1358,13 @@ angular.module('geiaFitApp')
         }
       }
 
+    $scope.goBack = function(){
+        if($scope.isAdd){
+            $ionicHistory.goBack();
+        }else{
+            $state.transitionTo('main.dash', {}, { reload: false });
+        }
+    }
 
       var setExcpopup;
       function captureVideo() {
@@ -1767,6 +1793,37 @@ angular.module('geiaFitApp')
           { id: '11', name: 'Foot', classValue: '' }
         ]
       };
+
+    $scope.add = function (index) {
+        for(key in $scope.myExerciseList){
+            $scope.myExerciseList[key].selected = false;
+        }
+        $scope.myExerciseList[index].selected = true;
+        
+        $scope.selectedExercise = $scope.myExerciseList[index];
+        console.log($scope.selectedExercise);
+    }
+    
+    $scope.addFromLibrary = function(){
+        if(!$scope.selectedExercise){
+            return;
+        }
+        console.log("---add from library--")
+        var item = $scope.selectedExercise;
+        var params = {
+            peid: 0,
+            fromLibrary: true,
+            comments: item.comments,
+            mp4: item.mp4,
+            webm: item.webm,
+            mov: item.mov,
+            thumb1: item.image1,
+            thumb2: item.image2,
+            code: item.webexcode
+        }            
+        console.log(params);
+        $state.transitionTo('setExerciseProgram', params, { reload: true });
+    }
 
       $scope.delete = function (index) {
         console.log("Delete called")
@@ -3832,7 +3889,7 @@ angular.module('geiaFitApp')
     $scope.addss = function () {
 
       addPopup = $ionicPopup.show({
-        template: '<div style="font-weight:bold;"> <button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="captureVideoFromGallery()">My Mobile Device</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;">My Library</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="captureVideoFromCamera()">Create New</button></div>',
+        template: '<div style="font-weight:bold;"> <button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="captureVideoFromGallery()">My Mobile Device</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="addFromLibrary()">My Library</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="captureVideoFromCamera()">Create New</button></div>',
         // template: '<div style="background: #121516; color: #fff;"> <button class="button button-block btn-yellow" style="background: #121516; color: #fff;">My Mobile Device</button><button class="button button-block btn-yellow">My Library</button><button class="button button-block btn-yellow">Create New</button></div>',
         title: 'Add Exercise',
         subTitle: 'Choose a Source',
