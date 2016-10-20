@@ -9858,7 +9858,9 @@ ion-header-bar, .dashboardView ion-header-bar .button, .dashboardView ion-header
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%; }
+  height: 100%; 
+  z-index: 0
+  }
 
 ::-webkit-input-placeholder, .form-group label, input, textarea, .login-view .main .form-wrap .forgotPassword, .login-view .main .keepsignedin {
   color: #fff;
@@ -10356,8 +10358,12 @@ ion-header-bar {
   }
   .video-container .video-container-inner .video-container-text {
     color: #fff;
-    text-align:center;
+/*    text-align:center;*/
     padding-top:40px;
+    z-index: 9;
+    position: relative;
+    height: 100%;
+    width: 100%;
   }
 textarea {
   height: 76px !important;

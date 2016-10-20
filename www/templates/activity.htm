@@ -57,7 +57,7 @@
             <div ng-show="DayView">
                 <div class="group  totalActivity">
                     <div class="col-xs-4 col-xs-offset-2">
-                        <highchart id="container1" config="chartConfig"></highchart>
+                        <highchart id="d_container1" config="chartConfig"></highchart>
                         <div class="text-center chartbottomtitle small">Total Exercise<br><b>{{DayExeDone}}/{{DayExeGoal}}</b></div>
                         <!--<svg style="margin-left: 22.33%;">
 						<g>
@@ -70,7 +70,7 @@
 					</svg>-->
                     </div>
                     <div class="col-xs-4">
-                        <highchart id="container1" config="chartConfig1"></highchart>
+                        <highchart id="d_container2" config="chartConfig1"></highchart>
                         <div class="text-center chartbottomtitle small">Total Steps<br><b>{{DayStepsDone}}/{{DayStepsGoal}}</b></div>
                         <!--<svg style="margin-left: 5.33%;">
                         <g>
@@ -84,7 +84,7 @@
                 <br>
                 <div class="group  totalActivity">
                     <div class="col-xs-4">
-                        <highchart id="container1" config="chartConfig2"></highchart>
+                        <highchart id="d_container3" config="chartConfig2"></highchart>
                         <div class="text-center chartbottomtitle small">Light<br><b>{{DayLowDone}}/{{DayLowGoal}} min</b></div>
                         <!--<svg>
                         <g>
@@ -95,7 +95,7 @@
                     </svg>-->
                     </div>
                     <div class="col-xs-4">
-                        <highchart id="container1" config="chartConfig3"></highchart>
+                        <highchart id="d_container4" config="chartConfig3"></highchart>
                          <div class="text-center chartbottomtitle small">Moderate<br><b>{{DayMidDone}}/{{DayMidGoal}} min</b></div>
 
                         <!--<svg>
@@ -107,7 +107,7 @@
                     </svg>-->
                     </div>
                     <div class="col-xs-4">
-                        <highchart id="container1" config="chartConfig4"></highchart>
+                        <highchart id="d_container5" config="chartConfig4"></highchart>
                          <div class="text-center chartbottomtitle small">Vigorous<br><b>{{DayHighDone}}/{{DayHighGoal}} min</b></div>
                         <!--<svg>
                         <g>
@@ -132,7 +132,7 @@
                             </div>
                         </div>
                         <div class="chart_block">
-                            <highchart id="container" config="chartConfigWeekViewExercise"></highchart>
+                            <highchart id="w_container1" config="chartConfigWeekViewExercise"></highchart>
                         </div>
                     </li>
                     <li>
@@ -153,7 +153,7 @@
                             </div>
                         </div>
                         <div class="chart_block">
-                            <highchart id="container" config="chartConfigWeekViewSteps"></highchart>
+                            <highchart id="w_container2" config="chartConfigWeekViewSteps"></highchart>
                         </div>
                     </li>
                     <li>
@@ -171,7 +171,7 @@
                             </div>
                         </div>
                         <div class="chart_block">
-                            <highchart id="container" config="chartConfigWeekViewLow"></highchart>
+                            <highchart id="w_container3" config="chartConfigWeekViewLow"></highchart>
                         </div>
                     </li>
                     <li>
@@ -189,7 +189,7 @@
                             </div>
                         </div>
                         <div class="chart_block">
-                            <highchart id="container" config="chartConfigWeekViewMid"></highchart>
+                            <highchart id="w_container4" config="chartConfigWeekViewMid"></highchart>
                         </div>
                     </li>
                     <li>
@@ -207,7 +207,7 @@
                             </div>
                         </div>
                         <div class="chart_block">
-                            <highchart id="container" config="chartConfigWeekViewHigh"></highchart>
+                            <highchart id="w_container5" config="chartConfigWeekViewHigh"></highchart>
                         </div>
                     </li>
                     <li>
@@ -218,7 +218,7 @@
                             <div class="right_title"></div>
                         </div>
                         <div class="chart_block">
-                            <highchart id="container" config="chartConfigWeekViewComp"></highchart>
+                            <highchart id="w_container6" config="chartConfigWeekViewComp"></highchart>
                         </div>
                     </li>
 
@@ -244,7 +244,7 @@
                             </div>
                         </div>
                         <div class="chart_block">
-                            <highchart id="container" config="chartConfigMonthViewExercise"></highchart>
+                            <highchart id="m_container1" config="chartConfigMonthViewExercise"></highchart>
                         </div>
                     </li>
                     <li>
@@ -265,7 +265,7 @@
                             </div>
                         </div>
                         <div class="chart_block">
-                            <highchart id="container" config="chartConfigMonthViewSteps"></highchart>
+                            <highchart id="m_container2" config="chartConfigMonthViewSteps"></highchart>
                         </div>
                     </li>
                     <li>
@@ -283,7 +283,7 @@
                             </div>
                         </div>
                         <div class="chart_block">
-                            <highchart id="container" config="chartConfigMonthViewLow"></highchart>
+                            <highchart id="m_container3" config="chartConfigMonthViewLow"></highchart>
                         </div>
                     </li>
                     <li>
@@ -301,7 +301,7 @@
                             </div>
                         </div>
                         <div class="chart_block">
-                            <highchart id="container" config="chartConfigMonthViewMid"></highchart>
+                            <highchart id="m_container4" config="chartConfigMonthViewMid"></highchart>
                         </div>
                     </li>
                     <li>
@@ -319,7 +319,7 @@
                             </div>
                         </div>
                         <div class="chart_block">
-                            <highchart id="container" config="chartConfigMonthViewHigh"></highchart>
+                            <highchart id="m_container5" config="chartConfigMonthViewHigh"></highchart>
                         </div>
                     </li>
                     <li>
@@ -330,7 +330,7 @@
                             <div class="right_title"></div>
                         </div>
                         <div class="chart_block">
-                            <highchart id="container" config="chartConfigMonthViewComp"></highchart>
+                            <highchart id="m_container6" config="chartConfigMonthViewComp"></highchart>
                         </div>
                     </li>
 

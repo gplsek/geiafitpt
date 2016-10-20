@@ -40,20 +40,11 @@
 				</span>
 			</div>
 			<div class="video-container"  style="height: 250px;">
-				<iframe ng-hide="edit" frameborder="0" ng-src="{{exerciseprogram.mp4| trusted}}" scrolling="no" ng-init="resizeIframe(this)" ></iframe>
-				<iframe ng-hide="submit" frameborder="0" ng-src="{{videoURI| trusted}}" scrolling="no" ng-init="resizeIframe(this)"></iframe>
-
-				<button ng-hide="submit" class="button button-positive" ng-click="captureVideo()">
-						Add Video
-				</button>
-				<div ng-hide="submit" class="video-container-inner" style="height:100px;">
-					<div class="video-container-text" ng-click="captureVideo()"></div>
+				<div class="video-container-inner" style="height:100%;">
+					<div ng-if="videoURI" class="video-container-text" ng-click="captureVideo()"></div>
+				    <iframe ng-if="videoURI" frameborder="0" ng-src="{{videoURI| trusted}}" scrolling="yes" ng-init="resizeIframe(this)"></iframe>
+                    <iframe ng-if="!videoURI" frameborder="0" ng-src="{{exerciseprogram.mp4| trusted}}" scrolling="yes" ng-init="resizeIframe(this)" ></iframe>
 				</div>
-			<!--<div class="exerciseSchedule" ng-hide="submit" style="height:60%;">
-				<div ng-hide="submit" class="video-container-inner">
-					<div class="video-container-text" style="height:60%;"></div>
-				</div>
-			</div>-->
 			</div>
 			<div class="row">
 				<!--<div  class = "col col-30">
@@ -81,7 +72,7 @@
                      </div>-->
 
 				<div class="dailySteps col col-30">
-					<label class="expiry">TimesDaily</label>
+					<label class="expiry">Times Daily</label>
 					<select class="exerciseProgram_customSelect" ng-options="item for item in repsDaily" ng-model="selectedDaily" ng-change="setDaily(selectedDaily)"
 						ng-disabled="submit"></select>
 				</div>
