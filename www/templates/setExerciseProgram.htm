@@ -40,10 +40,10 @@
 				</span>
 			</div>
 			<div class="video-container"  style="height: 250px;">
-				<iframe ng-hide="edit" frameborder="0" ng-src="{{exerciseprogram.mp4| trusted}}" scrolling="no" ng-init="resizeIframe(this)" ></iframe>
-				<div ng-hide="submit" class="video-container-inner" style="height:100%;">
-					<div class="video-container-text" ng-click="captureVideo()">+ Add video</div>
-					<iframe ng-hide="submit" frameborder="0" ng-src="{{videoURI| trusted}}" scrolling="no" ng-init="resizeIframe(this)"></iframe>
+				<div class="video-container-inner" style="height:100%;">
+					<div ng-if="edit" class="video-container-text" ng-click="captureVideo()">+ Add video</div>
+				    <iframe ng-if="videoURI" frameborder="0" ng-src="{{videoURI| trusted}}" scrolling="yes" ng-init="resizeIframe(this)"></iframe>
+                    <iframe ng-if="!videoURI" frameborder="0" ng-src="{{exerciseprogram.mp4| trusted}}" scrolling="yes" ng-init="resizeIframe(this)" ></iframe>
 				</div>
 			</div>
 			<div class="row">
