@@ -2693,6 +2693,12 @@ angular.module('geiaFitApp')
         highPer = (achieved / goal) * 100;
       }
 
+      $scope.excPer = excPer;
+      $scope.stepsPer = stepsPer;
+      $scope.lowPer = lowPer;
+      $scope.mediumPer = mediumPer;
+      $scope.highPer = highPer;
+
       $scope.chartConfig = getChartConfigForDay(excPer, '#4299D1', '#1F60A4');
       $scope.chartConfig1 = getChartConfigForDay(stepsPer, '#4299D1', '#1F60A4');
       $scope.chartConfig2 = getChartConfigForDay(lowPer, '#DDF6BC', '#B8E986');
