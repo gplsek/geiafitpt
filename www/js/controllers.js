@@ -409,6 +409,7 @@ angular.module('geiaFitApp')
           "rest": "75",
           "daily": "" + $scope.exerciseprogram.daily,
           "code": $stateParams.code,
+          "thumb": $scope.exerciseprogram.thumb1,
           
           "week_days": [
             {
