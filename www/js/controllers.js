@@ -1484,7 +1484,7 @@ angular.module('geiaFitApp')
 
     }])
 
-  .controller('ExerciseLibraryCtrl', ['$rootScope', '$scope', '$stateParams', '$rootScope', '$ionicHistory', 'sortedByList', '$ionicPopup', 'ExerciseLibraryService', '$state', '$q', '$cordovaCapture',
+  .controller('ExerciseLibraryCtrl', ['$rootScope', '$scope', '$stateParams', '$ionicHistory', 'sortedByList', '$ionicPopup', 'ExerciseLibraryService', '$state', '$q', '$cordovaCapture',
     function ($rootScope, $scope, $stateParams, $ionicHistory, sortedByList, $ionicPopup, ExerciseLibraryService, $state, $q, $cordovaCapture) {
 
 
