@@ -2003,6 +2003,7 @@ angular.module('geiaFitApp')
         var params = {
           peid: 0,
           fromLibrary: true,
+          title : item.title,
           comments: item.comments,
           mp4: item.mp4,
           webm: item.webm,
