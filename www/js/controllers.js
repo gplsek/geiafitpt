@@ -3904,6 +3904,7 @@ angular.module('geiaFitApp')
     $scope.title = 'Exercise Program';
     $scope.subNavList = false;
     $scope.sortList = false;
+    $scope.blockPopup = false;
     var exerciseListBackup;
     getListOfExerciseProgramme();
 
@@ -3935,10 +3936,17 @@ angular.module('geiaFitApp')
     $scope.exerciseSortedByList = exerciseSortedByList;
     $scope.sortedBy = $scope.exerciseSortedByList[0].title;
 
-    $scope.showList = function () {
+
+    
+   $scope.showList = function () {
+     $scope.sortList =false;
       $scope.subNavList = !$scope.subNavList;
+
     }
+
+
     $scope.showListSortList = function () {
+      $scope.subNavList = false;
       $scope.sortList = !$scope.sortList;
     }
 
@@ -4039,13 +4047,6 @@ angular.module('geiaFitApp')
           console.log("cancel")
         }
       });
-
-
-    }
-
-
-    $scope.showList = function () {
-      $scope.subNavList = !$scope.subNavList;
     }
 
     $scope.sortedByList = sortedByList;
@@ -4085,6 +4086,7 @@ angular.module('geiaFitApp')
 
     $scope.addss = function () {
 
+      if(!$scope.blockPopup){
       addPopup = $ionicPopup.show({
         template: '<div style="font-weight:bold;"> <button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="captureVideoFromGallery()">My Mobile Device</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="addFromLibrary()">My Library</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="captureVideoFromCamera()">Create New</button></div>',
         // template: '<div style="background: #121516; color: #fff;"> <button class="button button-block btn-yellow" style="background: #121516; color: #fff;">My Mobile Device</button><button class="button button-block btn-yellow">My Library</button><button class="button button-block btn-yellow">Create New</button></div>',
@@ -4095,7 +4097,7 @@ angular.module('geiaFitApp')
           { text: 'Cancel' }
         ]
       });
-
+      }
     };
 
     //Pick video option
@@ -4281,6 +4283,7 @@ angular.module('geiaFitApp')
     }
 
     $scope.gotoHome = function () {
+      $scope.blockPopup = true;
       if (addPopup != undefined || addPopup != null) {
         addPopup.close();
       }
