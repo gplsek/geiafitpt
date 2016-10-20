@@ -346,3 +346,15 @@ progress[value]::-webkit-progress-bar {
     width: 30px;
     margin-top: 10px;
 }
+.day-chart-div {
+    position: relative;
+}
+.day-chart-badge {
+    width: 20px;
+    height: 20px;
+    background-color: #90ed7d;
+    border-radius: 50%;
+    right: 0;
+    position: absolute;
+    top: 20px;
+}
