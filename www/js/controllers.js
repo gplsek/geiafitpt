@@ -3769,11 +3769,12 @@ angular.module('geiaFitApp')
               var dataUrl = e.target.result;
               var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
               $rootScope.excVideoData = base64Data;
+              //Redirect
+              $state.transitionTo("setExerciseProgram", {}, { reload: true });
             };
           }
 
-          //Redirect
-          $state.transitionTo("setExerciseProgram", {}, { reload: true });
+          
 
         }, function () {
           //error
@@ -4148,11 +4149,12 @@ angular.module('geiaFitApp')
               var dataUrl = e.target.result;
               var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
               $rootScope.excVideoData = base64Data;
+               //Redirect
+              $state.transitionTo("setExerciseProgram", {}, { reload: true });
             };
           }
 
-          //Redirect
-          $state.transitionTo("setExerciseProgram", {}, { reload: true });
+         
 
         }, function () {
           //error
