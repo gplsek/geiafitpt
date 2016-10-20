@@ -715,11 +715,11 @@ angular.module('geiaFitApp')
     $scope.uploadVideo = function (videoURI) {
       $scope.videoURI = videoURI;
 
-      // var name = videoURI.slice(0, -4);
-      // window.PKVideoThumbnail.createThumbnail(videoURI, name + '.png', function (prevSucc) {
-      //   $rootScope.thumbnail = prevSucc;
-      //   return prevImageSuccess(prevSucc);
-      // }, fail);
+      var name = videoURI.slice(0, -4);
+      window.PKVideoThumbnail.createThumbnail(videoURI, name + '.png', function (prevSucc) {
+        $rootScope.thumbnail = prevSucc;
+        return prevImageSuccess(prevSucc);
+      }, fail);
 
       var newvideoURI = "file:///" + videoURI;
 
@@ -1251,6 +1251,13 @@ angular.module('geiaFitApp')
 
       $scope.uploadVideo = function (videoURI) {
         $rootScope.Video = videoURI;
+
+        var name = videoURI.slice(0, -4);
+        window.PKVideoThumbnail.createThumbnail(videoURI, name + '.png', function (prevSucc) {
+          $rootScope.thumbnail = prevSucc;
+          return prevImageSuccess(prevSucc);
+        }, fail);
+
         var newvideoURI = "file://" + videoURI;
         $rootScope.Video = newvideoURI;
         window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function () {
@@ -1536,7 +1543,7 @@ angular.module('geiaFitApp')
       $scope.selectedIndex;
       if ($scope.isAdd) {
         $scope.config = {
-          title: 'Choose Excercise',
+          title: 'Choose Exercise',
           rightIcon: 'ion-checkmark',
         }
       } else {
@@ -1645,6 +1652,12 @@ angular.module('geiaFitApp')
 
       $scope.uploadVideo = function (videoURI) {
         $rootScope.Video = videoURI;
+        var name = videoURI.slice(0, -4);
+        window.PKVideoThumbnail.createThumbnail(videoURI, name + '.png', function (prevSucc) {
+          $rootScope.thumbnail = prevSucc;
+          return prevImageSuccess(prevSucc);
+        }, fail);
+
         var newvideoURI = "file://" + videoURI;
         $rootScope.Video = newvideoURI;
         window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function () {
@@ -2247,6 +2260,13 @@ angular.module('geiaFitApp')
 
     $scope.uploadVideo = function (videoURI) {
       $scope.addExercise.video = videoURI;
+
+      var name = videoURI.slice(0, -4);
+      window.PKVideoThumbnail.createThumbnail(videoURI, name + '.png', function (prevSucc) {
+        $rootScope.thumbnail = prevSucc;
+        return prevImageSuccess(prevSucc);
+      }, fail);
+
       var newvideoURI = "file:///" + videoURI;
       window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function () {
         // alert('success requestFileSystem');
@@ -3830,6 +3850,13 @@ angular.module('geiaFitApp')
 
     $scope.uploadVideo = function (videoURI) {
       $rootScope.excVideo = videoURI;
+
+      var name = videoURI.slice(0, -4);
+      window.PKVideoThumbnail.createThumbnail(videoURI, name + '.png', function (prevSucc) {
+        $rootScope.thumbnail = prevSucc;
+        return prevImageSuccess(prevSucc);
+      }, fail);
+
       var newvideoURI = "file://" + videoURI;
       $rootScope.excVideo = newvideoURI;
       window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function () {
@@ -4213,6 +4240,12 @@ angular.module('geiaFitApp')
 
     $scope.uploadVideo = function (videoURI) {
       $rootScope.excVideo = videoURI;
+      var name = videoURI.slice(0, -4);
+      window.PKVideoThumbnail.createThumbnail(videoURI, name + '.png', function (prevSucc) {
+        $rootScope.thumbnail = prevSucc;
+        return prevImageSuccess(prevSucc);
+      }, fail);
+
       var newvideoURI = "file://" + videoURI;
       $rootScope.excVideo = newvideoURI;
       window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function () {
@@ -4951,6 +4984,13 @@ angular.module('geiaFitApp')
 
     $scope.uploadVideo = function (videoURI) {
       $rootScope.excVideo = videoURI;
+
+      var name = videoURI.slice(0, -4);
+      window.PKVideoThumbnail.createThumbnail(videoURI, name + '.png', function (prevSucc) {
+        $rootScope.thumbnail = prevSucc;
+        return prevImageSuccess(prevSucc);
+      }, fail);
+
       var newvideoURI = "file://" + videoURI;
       $rootScope.excVideo = newvideoURI;
       window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function () {
