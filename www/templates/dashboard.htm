@@ -33,8 +33,10 @@
             <li ng-repeat="item in filteredList = (patientList | filter: searchPatient | orderBy: sortType : sortOrder)">
                 <div class="group">
                     <div class="col-xs-1">
-                        <span class="activityDot" ng-show="isActiveToday(item.vitals_entered) || item.unread_messages > 0"></span>
-                        <span class="paddedEle" ng-hide="isActiveToday(item.vitals_entered) || item.unread_messages > 0"></span>
+                        <span class="activityDot" ng-show="isActiveToday(item.vitals_entered) && item.unread_messages > 0"></span>
+                        <!-- <span class="activityDot" ng-show="isActiveToday(item.vitals_entered) || item.unread_messages > 0"></span> -->
+                        <span class="paddedEle" ng-hide="isActiveToday(item.vitals_entered) && item.unread_messages > 0"></span>
+                        <!-- <span class="paddedEle" ng-hide="isActiveToday(item.vitals_entered) || item.unread_messages > 0"></span> -->
                     </div>
                     <div class="col-xs-5" ui-sref="activity(
                         {
