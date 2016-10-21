@@ -57,7 +57,8 @@
             <div ng-show="DayView">
                 <div class="group  totalActivity">
                     <div class="col-xs-4 col-xs-offset-2 day-chart-div">
-                        <span class="day-chart-badge" ng-show="excPer > 100"></span>
+                        <img src="img/badge.png" width="20" height="20" class="day-chart-badge-png" ng-show="excPer > 100">
+                        <!-- <span class="day-chart-badge" ng-show="excPer > 100"></span> -->
                         <highchart id="container1" config="chartConfig"></highchart>
                         <div class="text-center chartbottomtitle small">Total Exercise<br><b>{{DayExeDone}}/{{DayExeGoal}}</b></div>
                         <!--<svg style="margin-left: 22.33%;">
@@ -71,7 +72,8 @@
 					</svg>-->
                     </div>
                     <div class="col-xs-4 day-chart-div">
-                        <span class="day-chart-badge" ng-show="stepsPer > 100"></span>
+                        <img src="img/badge.png" width="20" height="20" class="day-chart-badge-png" ng-show="stepsPer > 100">
+                        <!-- <span class="day-chart-badge" ng-show="stepsPer > 100"></span> -->
                         <highchart id="d_container2" config="chartConfig1"></highchart>
                         <div class="text-center chartbottomtitle small">Total Steps<br><b>{{DayStepsDone}}/{{DayStepsGoal}}</b></div>
                         <!--<svg style="margin-left: 5.33%;">
@@ -86,7 +88,8 @@
                 <br>
                 <div class="group  totalActivity">
                     <div class="col-xs-4 day-chart-div">
-                        <span class="day-chart-badge" ng-show="lowPer > 100"></span>
+                        <img src="img/badge.png" width="20" height="20" class="day-chart-badge-png" ng-show="lowPer > 100">
+                        <!-- <span class="day-chart-badge" ng-show="lowPer > 100"></span> -->
                         <highchart id="d_container3" config="chartConfig2"></highchart>
                         <div class="text-center chartbottomtitle small">Light<br><b>{{DayLowDone}}/{{DayLowGoal}} min</b></div>
                         <!--<svg>
@@ -98,7 +101,8 @@
                     </svg>-->
                     </div>
                     <div class="col-xs-4 day-chart-div">
-                        <span class="day-chart-badge" ng-show="mediumPer > 100"></span>
+                        <img src="img/badge.png" width="20" height="20" class="day-chart-badge-png" ng-show="mediumPer > 100">
+                        <!-- <span class="day-chart-badge" ng-show="mediumPer > 100"></span> -->
                         <highchart id="d_container4" config="chartConfig3"></highchart>
                          <div class="text-center chartbottomtitle small">Moderate<br><b>{{DayMidDone}}/{{DayMidGoal}} min</b></div>
 
@@ -111,7 +115,8 @@
                     </svg>-->
                     </div>
                     <div class="col-xs-4 day-chart-div">
-                        <span class="day-chart-badge" ng-show="highPer > 100"></span>
+                        <img src="img/badge.png" width="20" height="20" class="day-chart-badge-png" ng-show="highPer > 100">
+                        <!-- <span class="day-chart-badge" ng-show="highPer > 100"></span> -->
                         <highchart id="d_container5" config="chartConfig4"></highchart>
                          <div class="text-center chartbottomtitle small">Vigorous<br><b>{{DayHighDone}}/{{DayHighGoal}} min</b></div>
                         <!--<svg>
