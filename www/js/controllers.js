@@ -1502,8 +1502,8 @@ angular.module('geiaFitApp')
 
     }])
 
- .controller('ExerciseLibraryCtrl', ['$rootScope', '$scope', '$stateParams', '$rootScope', '$ionicHistory', 'sortedByList', '$ionicPopup', 'ExerciseLibraryService','$state','$q','$cordovaCapture', 
-    function ($rootScope, $scope, $stateParams, $rootScope, $ionicHistory, sortedByList, $ionicPopup, ExerciseLibraryService,$state, $q, $cordovaCapture) {
+ .controller('ExerciseLibraryCtrl', ['$rootScope', '$scope', '$stateParams', '$ionicHistory', 'sortedByList', '$ionicPopup', 'ExerciseLibraryService','$state','$q','$cordovaCapture', 
+    function ($rootScope, $scope, $stateParams, $ionicHistory, sortedByList, $ionicPopup, ExerciseLibraryService,$state, $q, $cordovaCapture) {
 
 
       $scope.isAdd = $stateParams.isAdd;
@@ -5148,7 +5148,8 @@ angular.module('geiaFitApp')
     }
   ])
 
-  .controller('VitalsCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', '$ionicHistory', 'AppService', function ($scope, $state, $stateParams, sortedByList, $ionicHistory, AppService) {
+  .controller('VitalsCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', '$ionicHistory', 'AppService','$rootScope', 
+        function ($scope, $state, $stateParams, sortedByList, $ionicHistory, AppService, $rootScope) {
     $scope.sortedByList = sortedByList;
     //$scope.sortedBy = $scope.sortedByList[5].id;
     $scope.selectedView = 'Today';
@@ -5170,10 +5171,35 @@ angular.module('geiaFitApp')
     }
 
     init = function () {
-      console.log($stateParams.patientId)
-      AppService.getVitals($stateParams.patientId).then(function (success) {
+      console.log($rootScope.patientId)
+      AppService.getVitals($rootScope.patientId).then(function (success) {
         console.log("Vital Success")
         console.log(success)
+
+        var characteristics;
+        var tempData = success;
+        var Tdate = moment().utcOffset('-07:00').format('L');
+        var today = moment(Tdate)
+        for (var x in tempData) {
+          var unixDate = tempData[x].date_created
+          var newDate = moment.unix(unixDate).utcOffset('-07:00').format('L');
+          var NnewDate = moment(newDate)
+          if (NnewDate.diff(today) == 0) {
+            characteristics = tempData[x];
+            break;
+          }
+        }
+        console.log(characteristics)
+        
+        if(characteristics == null || characteristics == undefined){
+          setSmiley(2)
+          document.getElementById('smileSlide').value = 2;
+        }
+        else{
+          setSmiley(characteristics.emotion)
+        }
+        
+
       }, function (error) {
         console.log("error")
       })
@@ -5213,6 +5239,44 @@ angular.module('geiaFitApp')
       } else {
         var state = getStateTitle(id);
         $state.transitionTo(state, { name: $stateParams.name, patientId: $stateParams.uid }, { reload: true });
+      }
+    }
+
+    $scope.changeSmile = function () {
+      var slider = document.getElementById('smileSlide').value;
+      setSmiley(slider)
+    }
+    $scope.smileyClass = "smile1"
+    function setSmiley(value) {
+      if (value > 0 && value <=10) {
+        $scope.smileyClass = "smile1"
+      }
+      if (value > 10 && value <=20) {
+        $scope.smileyClass = "smile2"
+      }
+      if (value > 20 && value <=30) {
+        $scope.smileyClass = "smile3"
+      }
+      if (value > 30 && value <=40) {
+        $scope.smileyClass = "smile4"
+      }
+      if (value > 40 && value <=50) {
+        $scope.smileyClass = "smile5"
+      }
+      if (value > 50 && value <=60) {
+        $scope.smileyClass = "smile6"
+      }
+      if (value > 60 && value <=70) {
+        $scope.smileyClass = "smile7"
+      }
+      if (value > 70 && value <=80) {
+        $scope.smileyClass = "smile8"
+      }
+      if (value > 80 && value <=90) {
+        $scope.smileyClass = "smile9"
+      }
+      if (value > 90 && value <=100) {
+        $scope.smileyClass = "smile10"
       }
     }
 
