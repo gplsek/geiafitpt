@@ -11256,7 +11256,7 @@ input[type=range]::-webkit-slider-runnable-track {
     margin-top: -35px;
 }*/
 input[type=range].smile1::-webkit-slider-thumb {
-  background: url('../img/smile2.png');
+  background: url('../img/smile1.png');
   border: none;
     height: 62px;
     width: 62px;
@@ -11266,7 +11266,7 @@ input[type=range].smile1::-webkit-slider-thumb {
     margin-top: -35px;
 }
 input[type=range].smile2::-webkit-slider-thumb {
-  background: url('../img/smile1.png');
+  background: url('../img/smile2.png');
   border: none;
     height: 62px;
     width: 62px;
@@ -11276,7 +11276,7 @@ input[type=range].smile2::-webkit-slider-thumb {
     margin-top: -35px;
 }
 input[type=range].smile3::-webkit-slider-thumb {
-  background: url('../img/smile2.png');
+  background: url('../img/smile3.png');
   border: none;
     height: 62px;
     width: 62px;
@@ -11286,7 +11286,7 @@ input[type=range].smile3::-webkit-slider-thumb {
     margin-top: -35px;
 }
 input[type=range].smile4::-webkit-slider-thumb {
-  background: url('../img/smile1.png');
+  background: url('../img/smile4.png');
   border: none;
     height: 62px;
     width: 62px;
@@ -11296,7 +11296,7 @@ input[type=range].smile4::-webkit-slider-thumb {
     margin-top: -35px;
 }
 input[type=range].smile5::-webkit-slider-thumb {
-  background: url('../img/smile2.png');
+  background: url('../img/smile5.png');
   border: none;
     height: 62px;
     width: 62px;
@@ -11306,7 +11306,7 @@ input[type=range].smile5::-webkit-slider-thumb {
     margin-top: -35px;
 }
 input[type=range].smile6::-webkit-slider-thumb {
-  background: url('../img/smile1.png');
+  background: url('../img/smile6.png');
   border: none;
     height: 62px;
     width: 62px;
@@ -11316,7 +11316,7 @@ input[type=range].smile6::-webkit-slider-thumb {
     margin-top: -35px;
 }
 input[type=range].smile7::-webkit-slider-thumb {
-  background: url('../img/smile2.png');
+  background: url('../img/smile7.png');
   border: none;
     height: 62px;
     width: 62px;
@@ -11326,7 +11326,7 @@ input[type=range].smile7::-webkit-slider-thumb {
     margin-top: -35px;
 }
 input[type=range].smile8::-webkit-slider-thumb {
-  background: url('../img/smile1.png');
+  background: url('../img/smile8.png');
   border: none;
     height: 62px;
     width: 62px;
@@ -11336,7 +11336,7 @@ input[type=range].smile8::-webkit-slider-thumb {
     margin-top: -35px;
 }
 input[type=range].smile9::-webkit-slider-thumb {
-  background: url('../img/smile2.png');
+  background: url('../img/smile9.png');
   border: none;
     height: 62px;
     width: 62px;
@@ -11346,7 +11346,7 @@ input[type=range].smile9::-webkit-slider-thumb {
     margin-top: -35px;
 }
 input[type=range].smile10::-webkit-slider-thumb {
-  background: url('../img/smile1.png');
+  background: url('../img/smile10.png');
   border: none;
     height: 62px;
     width: 62px;
