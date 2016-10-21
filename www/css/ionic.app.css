@@ -10358,7 +10358,7 @@ ion-header-bar {
   }
   .video-container .video-container-inner .video-container-text {
     color: #fff;
-/*    text-align:center;*/
+    text-align:center;
     padding-top:40px;
     z-index: 9;
     position: relative;

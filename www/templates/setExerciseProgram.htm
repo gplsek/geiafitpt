@@ -1,4 +1,4 @@
-<ion-view class="setExerciseView" name="set-exercise-view">
+<ion-view class="setExerciseView" id="exercise-program-container" name="set-exercise-view">
 	<ion-nav-bar class="group">
 		<ion-nav-buttons side="left">
 			<span class="icon ion-close-round closePatient" ng-click="closePatient()"></span>
@@ -39,11 +39,22 @@
 				<span class="onoff off">OFF</span>
 				</span>
 			</div>
-			<div class="video-container"  style="height: 250px;">
+			<div class="video-container" >
 				<div class="video-container-inner" style="height:100%;">
-					<div ng-if="videoURI" class="video-container-text" ng-click="captureVideo()"></div>
-				    <iframe ng-if="videoURI" frameborder="0" ng-src="{{videoURI| trusted}}" scrolling="yes" ng-init="resizeIframe(this)"></iframe>
-                    <iframe ng-if="!videoURI" frameborder="0" ng-src="{{exerciseprogram.mp4| trusted}}" scrolling="yes" ng-init="resizeIframe(this)" ></iframe>
+                    <div ng-if="fromLibrary">
+                        <div ng-if="!exerciseprogram.mp4" class="video-container-text" ng-click="captureVideo()">+ Add video</div>
+                        <video ng-if="exerciseprogram.mp4" poster="{{exerciseprogram.thumb1}}" frameborder="0" ng-src="{{exerciseprogram.mp4| trusted}}" scrolling="yes" ng-init="resizeIframe(this)" ></video>
+                    </div>
+                    <div ng-if="!fromLibrary">
+                        <div ng-if="videoURI">
+                            <video ng-if="videoURI" poster="{{exerciseprogram.imageURI}}" frameborder="0" ng-src="{{videoURI| trusted}}" scrolling="yes" ng-init="resizeIframe(this)"></video>
+                        </div>
+                        <div ng-if="!videoURI">
+                            <div ng-if="edit" class="video-container-text" ng-click="captureVideo()">+ Add video</div>
+                            <video ng-if="!edit" poster="{{exerciseprogram.thumb1}}" ng-src="{{exerciseprogram.mp4| trusted}}" controls="controls" ></video>
+                        </div>
+                        
+                    </div>
 				</div>
 			</div>
 			<div class="row">
@@ -101,7 +112,7 @@
 				<textarea placeholder="Be Safe when doing this exercise" ng-model="exerciseprogram.comments" ng-disabled="submit"> </textarea>
 			</div>
 
-        <span ng-hide="submit"><button id="button1" class="button button-block btn-yellow submit_button" ng-click="saveExercise()">Submit</button></span>
+        <span ng-hide="submit"><button id="button1" class="button button-block btn-yellow submit_button" ng-disabled="!exerciseprogram.title || !exerciseprogram.comments" ng-click="saveExercise()">Submit</button></span>
          <span ng-hide="edit"><button id="button1" class="button button-block btn-yellow edit_button" ng-click="editExercise()">Edit</button></span>
 
 		</section>

@@ -363,6 +363,7 @@ angular.module('geiaFitApp')
       }, { reload: false });
     }
 
+    $scope.fromLibrary = $stateParams.fromLibrary;
     if ($stateParams.peid === 0) {
       //  alert("inside if");
       console.log("$stateParams", $stateParams);
@@ -399,11 +400,11 @@ angular.module('geiaFitApp')
 
         var exercise = {
           "fromLibrary": $stateParams.fromLibrary,
-          "name": $scope.exerciseprogram.title,
+          "video_title": $scope.exerciseprogram.title,
           "video_data": $scope.exerciseprogram.videodata,
           "video_name": $scope.exerciseprogram.videoname,
-          "video_image_name": $scope.exerciseprogram.videoimagename,
-          "video_image": $scope.exerciseprogram.thumb1,
+          "video_image_name": $scope.exerciseprogram.imagename,
+          "video_image": $scope.exerciseprogram.imagedata,
           "reps": "" + $scope.exerciseprogram.reps,
           "sets": "" + $scope.exerciseprogram.sets,
           "rest": "75",
@@ -444,6 +445,11 @@ angular.module('geiaFitApp')
           ],
           "comments": $scope.exerciseprogram.comments
         };
+        if($stateParams.exid && $stateParams.mp4){
+            exercise.exid = $stateParams.exid;
+        }
+        console.log(exercise);
+        
         SetExerciseProgramService.saveExercise(exercise).then(function (success) {
           Flash.showFlash({ type: 'success', message: "Success !" });
 
@@ -545,6 +551,8 @@ angular.module('geiaFitApp')
             }
 
           ],
+          "video_image_name": $scope.exerciseprogram.imagename,
+          "video_image": $scope.exerciseprogram.imagedata,
           "video_name": $scope.exerciseprogram.videoname,
           "video_data": $scope.exerciseprogram.videodata
         };
@@ -663,41 +671,14 @@ angular.module('geiaFitApp')
 
     };
 
-    if ($rootScope.thumbnail) {
-      $rootScope.thumbnail = "file://" + $rootScope.thumbnail;
-      window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function () {
-
-      }, function () {
-
-      });
-
-      window.resolveLocalFileSystemURL($rootScope.thumbnail, function (fileEntry) {
-        fileEntry.file(function (file) {
-          var type = file.type;
-          var nameoffile = file.name;
-          $scope.exerciseprogram.videoname = file.name;
-
-          if (file != null || file != undefined) {
-            var fileReader = new FileReader();
-            fileReader.readAsDataURL(file);
-            fileReader.onload = function (e) {
-              var dataUrl = e.target.result;
-              var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
-              $scope.exerciseprogram.thumb1 = base64Data;
-            };
-          }
-        }, function () {
-        });
-
-      }, function () {
-      });
-    }
-
-
     $scope.exerciseprogram.video = $rootScope.excVideo;
     $scope.videoURI = $rootScope.excVideo;
     $scope.exerciseprogram.videoname = $rootScope.excVideoFileName;
     $scope.exerciseprogram.videodata = $rootScope.excVideoData;
+
+    $scope.exerciseprogram.imageURI = $rootScope.excImage;
+    $scope.exerciseprogram.imagename = $rootScope.excImageFileName;
+    $scope.exerciseprogram.imagedata = $rootScope.excImageData;
 
     $scope.captureVideoFromGallery = function () {
       setExcpopup.close();
@@ -714,12 +695,6 @@ angular.module('geiaFitApp')
 
     $scope.uploadVideo = function (videoURI) {
       $scope.videoURI = videoURI;
-
-      // var name = videoURI.slice(0, -4);
-      // window.PKVideoThumbnail.createThumbnail(videoURI, name + '.png', function (prevSucc) {
-      //   $rootScope.thumbnail = prevSucc;
-      //   return prevImageSuccess(prevSucc);
-      // }, fail);
 
       var newvideoURI = "file:///" + videoURI;
 
@@ -740,7 +715,7 @@ angular.module('geiaFitApp')
           // alert(JSON.stringify(file)); //view full metadata
           var type = file.type;
           var nameoffile = file.name;
-          $scope.exerciseprogram.videoimagename = file.name;
+          $scope.exerciseprogram.videoname = file.name;
 
           if (file != null || file != undefined) {
             var fileReader = new FileReader();
@@ -887,7 +862,6 @@ angular.module('geiaFitApp')
 
       var name = entry.nativeURL.slice(0, -4);
       window.PKVideoThumbnail.createThumbnail(entry.nativeURL, name + '.png', function (prevSucc) {
-        $rootScope.thumbnail = prevSucc;
         return prevImageSuccess(prevSucc);
       }, fail);
     }
@@ -1528,8 +1502,8 @@ angular.module('geiaFitApp')
 
     }])
 
-  .controller('ExerciseLibraryCtrl', ['$rootScope', '$scope', '$stateParams', '$ionicHistory', 'sortedByList', '$ionicPopup', 'ExerciseLibraryService', '$state', '$q', '$cordovaCapture',
-    function ($rootScope, $scope, $stateParams, $ionicHistory, sortedByList, $ionicPopup, ExerciseLibraryService, $state, $q, $cordovaCapture) {
+ .controller('ExerciseLibraryCtrl', ['$rootScope', '$scope', '$stateParams', '$rootScope', '$ionicHistory', 'sortedByList', '$ionicPopup', 'ExerciseLibraryService','$state','$q','$cordovaCapture', 
+    function ($rootScope, $scope, $stateParams, $rootScope, $ionicHistory, sortedByList, $ionicPopup, ExerciseLibraryService,$state, $q, $cordovaCapture) {
 
 
       $scope.isAdd = $stateParams.isAdd;
@@ -2048,6 +2022,7 @@ angular.module('geiaFitApp')
         var params = {
           peid: 0,
           fromLibrary: true,
+            exid: item.id, 
           title: item.title,
           comments: item.comments,
           mp4: item.mp4,
@@ -3986,8 +3961,14 @@ angular.module('geiaFitApp')
 
 
   .controller('ExerciseProgramCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', '$rootScope', '$ionicPopup', 'SetExerciseProgramService', '$q', '$cordovaCapture', function ($scope, $stateParams, sortedByList, $state, $rootScope, $ionicPopup, SetExerciseProgramService, $q, $cordovaCapture) {
-    console.log($stateParams);
-    console.log($rootScope.UID)
+    $rootScope.excVideo = null;
+    $rootScope.excVideoFileName = null;
+    $rootScope.excVideoData = null;
+    
+    $rootScope.excImage = null;
+    $rootScope.excImageFileName = null;
+    $rootScope.excImageData = null;
+    
     $scope.searchExercise;
     $scope.title = 'Exercise Program';
     $scope.subNavList = false;
@@ -4217,16 +4198,16 @@ angular.module('geiaFitApp')
       );
     };
 
-    $scope.uploadVideo = function (videoURI) {
-      $rootScope.excVideo = videoURI;
-      var newvideoURI = "file://" + videoURI;
+    $scope.uploadVideo = function (newvideoURI) {
       $rootScope.excVideo = newvideoURI;
+      console.log(newvideoURI)
       window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function () {
         // alert('success requestFileSystem');
       }, function () {
         //error
       });
       window.resolveLocalFileSystemURL(newvideoURI, function (fileEntry) {
+          console.log("fileEntry", fileEntry)
         fileEntry.file(function (file) {
           // alert(JSON.stringify(file)); //view full metadata
           var type = file.type;
@@ -4240,12 +4221,46 @@ angular.module('geiaFitApp')
               var dataUrl = e.target.result;
               var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
               $rootScope.excVideoData = base64Data;
+                };
+            }
+            /***
+            * get thumbnail
+            * 
+            */
+            var name = $rootScope.excVideo.slice(0, -4);
+            $rootScope.excImage = name + '.png'
+            
+            window.PKVideoThumbnail.createThumbnail($rootScope.excVideo, $rootScope.excImage, function (prevSucc) {
+                window.resolveLocalFileSystemURL($rootScope.excImage, function (fileEntry) {
+                    fileEntry.file(function (file) {
+                        // alert(JSON.stringify(file)); //view full metadata
+                        var type = file.type;
+                        var nameoffile = file.name;
+                        $rootScope.excImageFileName = file.name;
+                        if (file != null || file != undefined) {
+                            var fileReader = new FileReader();
+                            fileReader.readAsDataURL(file);
+                            fileReader.onload = function (e) {
+                                var dataUrl = e.target.result;
+                                var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
+                                $rootScope.excImageData = base64Data;
               //Redirect
               $state.transitionTo("setExerciseProgram", {}, { reload: true });
             };
           }
+                    }, function () {
+                    //error
+                    });
+                }, function () {
+                // error
+                });          
+              
+            return prevImageSuccess(prevSucc);
+            }, fail);
 
 
+            //Redirect
+            $state.transitionTo("setExerciseProgram", {}, { reload: true });
 
         }, function () {
           //error
@@ -4341,8 +4356,32 @@ angular.module('geiaFitApp')
         // error
       });
       var name = entry.nativeURL.slice(0, -4);
-      window.PKVideoThumbnail.createThumbnail(entry.nativeURL, name + '.png', function (prevSucc) {
-        $rootScope.thumbnail = prevSucc;
+      $rootScope.excImage = name + '.png'
+      window.PKVideoThumbnail.createThumbnail(entry.nativeURL, $rootScope.excImage, function (prevSucc) {
+            window.resolveLocalFileSystemURL($rootScope.excImage, function (fileEntry) {
+                fileEntry.file(function (file) {
+                    // alert(JSON.stringify(file)); //view full metadata
+                    var type = file.type;
+                    var nameoffile = file.name;
+                    $rootScope.excImageFileName = file.name;
+                    if (file != null || file != undefined) {
+                        var fileReader = new FileReader();
+                        fileReader.readAsDataURL(file);
+                        fileReader.onload = function (e) {
+                            var dataUrl = e.target.result;
+                            var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
+                            $rootScope.excImageData = base64Data;
+                            //Redirect
+                            $state.transitionTo("setExerciseProgram", {}, { reload: true });
+                        };
+                    }
+                }, function () {
+                //error
+                });
+            }, function () {
+            // error
+            });          
+          
         return prevImageSuccess(prevSucc);
       }, fail);
     }
@@ -4708,7 +4747,7 @@ angular.module('geiaFitApp')
     // }
   }])
 
-  .controller('MessageCtrl', ['$scope', 'sortedByList', '$state', '$http', 'ChatApp', '$timeout', '$stateParams', '$rootScope', 'AppService', '$ionicScrollDelegate', '$q', '$cordovaCapture', '$ionicPopup', function ($scope, sortedByList, $state, $http, ChatApp, $timeout, $stateParams, $rootScope, AppService, $ionicScrollDelegate, $q, $cordovaCapture, $ionicPopup) {
+  .controller('MessageCtrl', ['$scope', 'sortedByList', '$state', '$http', '$ionicPopup', 'ChatApp', '$timeout', '$stateParams', '$rootScope', 'AppService', '$ionicScrollDelegate', function ($scope, sortedByList, $state, $http, $ionicPopup, ChatApp, $timeout, $stateParams, $rootScope, AppService, $ionicScrollDelegate) {
     var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
     var uid = $rootScope.loggedInUserUid;
     $scope.userImage = "img/profile_icon.png";

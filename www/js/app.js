@@ -68,6 +68,7 @@ angular.module('geiaFitApp', ['ionic', 'rzModule','ngCordova','highcharts-ng','n
 
 
   var exerciseprogram=  {
+exid: null, // ID of exercise library
 fromLibrary: false,
 peid: 0,
 title:null,
