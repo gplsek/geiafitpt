@@ -5136,7 +5136,7 @@ angular.module('geiaFitApp')
     
     $scope.sortedByList = sortedByList;
     $scope.title = 'Vitals';
-    $scope.WeekView = true;
+    $scope.DefaultView = true;
     $scope.subNavList = false;
     var VitalData;
     var vitalDataForWeek = [];
@@ -5171,6 +5171,7 @@ angular.module('geiaFitApp')
       AppService.getVitals($rootScope.patientId).then(function (success) {
         console.log("Vital Success")
         console.log(success)
+        $scope.changeView(1);
         VitalData = success;
 
         var tempData = success;
@@ -5213,7 +5214,6 @@ angular.module('geiaFitApp')
           }
           document.getElementById('smileSlide').value = (characteristics.emotion * 100)
         }
-        $scope.changeView(1);
         
       }, function (error) {
         console.log("error")
@@ -5658,6 +5658,11 @@ angular.module('geiaFitApp')
         xAxis: {
           categories: dateList,
         },
+         yAxis: {
+          title: {
+            text: ''
+          },
+        },
         series: [
           {
             data: data,
@@ -5711,6 +5716,11 @@ angular.module('geiaFitApp')
         //X axis data
         xAxis: {
           categories: dates,
+        },
+         yAxis: {
+          title: {
+            text: ''
+          },
         },
         series: [
           {
