@@ -445,11 +445,11 @@ angular.module('geiaFitApp')
           ],
           "comments": $scope.exerciseprogram.comments
         };
-        if($stateParams.exid && $stateParams.mp4){
-            exercise.exid = $stateParams.exid;
+        if ($stateParams.exid && $stateParams.mp4) {
+          exercise.exid = $stateParams.exid;
         }
         console.log(exercise);
-        
+
         SetExerciseProgramService.saveExercise(exercise).then(function (success) {
           Flash.showFlash({ type: 'success', message: "Success !" });
 
@@ -671,14 +671,47 @@ angular.module('geiaFitApp')
 
     };
 
+
+    if ($rootScope.thumbnail) {
+
+      $rootScope.thumbnail = "file://" + $rootScope.thumbnail;
+
+      window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function () {
+
+      }, function () {
+
+      });
+
+      window.resolveLocalFileSystemURL($rootScope.thumbnail, function (fileEntry) {
+        fileEntry.file(function (file) {
+          var type = file.type;
+          var nameoffile = file.name;
+          $scope.exerciseprogram.imagename = file.name;
+
+          if (file != null || file != undefined) {
+            var fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+            fileReader.onload = function (e) {
+              var dataUrl = e.target.result;
+              var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
+              $scope.exerciseprogram.imagedata = base64Data;
+            };
+          }
+        }, function () {
+        });
+
+      }, function () {
+      });
+    }
+
+
     $scope.exerciseprogram.video = $rootScope.excVideo;
-    $scope.videoURI = $rootScope.excVideo;
+    $scope.videoURI = $rootScope.excVideo+'?autoplay=1';
     $scope.exerciseprogram.videoname = $rootScope.excVideoFileName;
     $scope.exerciseprogram.videodata = $rootScope.excVideoData;
 
-    $scope.exerciseprogram.imageURI = $rootScope.excImage;
-    $scope.exerciseprogram.imagename = $rootScope.excImageFileName;
-    $scope.exerciseprogram.imagedata = $rootScope.excImageData;
+    $scope.exerciseprogram.imageURI = $rootScope.thumbnail;
+
 
     $scope.captureVideoFromGallery = function () {
       setExcpopup.close();
@@ -695,6 +728,11 @@ angular.module('geiaFitApp')
 
     $scope.uploadVideo = function (videoURI) {
       $scope.videoURI = videoURI;
+
+      window.PKVideoThumbnail.createThumbnail(videoURI, name + '.png', function (prevSucc) {
+        $rootScope.thumbnail = prevSucc;
+        return prevImageSuccess(prevSucc);
+      }, fail);
 
       var newvideoURI = "file:///" + videoURI;
 
@@ -924,8 +962,8 @@ angular.module('geiaFitApp')
   }])
 
 
-  .controller('SetActivityGoalsCtrl', ['$scope', '$state', 'sortedByList', '$ionicHistory', '$rootScope', 'Flash', '$window', '$stateParams', 'AppService', '$q', '$cordovaCapture', '$ionicPopup',
-    function ($scope, $state, sortedByList, $ionicHistory, $rootScope, Flash, $window, $stateParams, AppService, $q, $cordovaCapture, $ionicPopup) {
+  .controller('SetActivityGoalsCtrl', ['$scope', '$state', 'sortedByList', '$ionicHistory', '$rootScope', 'Flash', '$window', '$stateParams', 'AppService', '$q', '$cordovaCapture', '$ionicPopup', 'utilityService',
+    function ($scope, $state, sortedByList, $ionicHistory, $rootScope, Flash, $window, $stateParams, AppService, $q, $cordovaCapture, $ionicPopup, utilityService) {
       //$scope.setActivityGoals = {};
 
 
@@ -1032,7 +1070,7 @@ angular.module('geiaFitApp')
           $scope.subNavList = false
 
         } else if (id == 3) {
-          captureVideo();
+          utilityService.captureVideo();
         }
         else {
           var state = getStateTitle(id);
@@ -1502,8 +1540,8 @@ angular.module('geiaFitApp')
 
     }])
 
- .controller('ExerciseLibraryCtrl', ['$rootScope', '$scope', '$stateParams', '$ionicHistory', 'sortedByList', '$ionicPopup', 'ExerciseLibraryService','$state','$q','$cordovaCapture', 
-    function ($rootScope, $scope, $stateParams, $ionicHistory, sortedByList, $ionicPopup, ExerciseLibraryService,$state, $q, $cordovaCapture) {
+  .controller('ExerciseLibraryCtrl', ['$rootScope', '$scope', '$stateParams', '$ionicHistory', 'sortedByList', '$ionicPopup', 'ExerciseLibraryService', '$state', '$q', '$cordovaCapture',
+    function ($rootScope, $scope, $stateParams, $ionicHistory, sortedByList, $ionicPopup, ExerciseLibraryService, $state, $q, $cordovaCapture) {
 
 
       $scope.isAdd = $stateParams.isAdd;
@@ -1640,11 +1678,12 @@ angular.module('geiaFitApp')
                 var dataUrl = e.target.result;
                 var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
                 $rootScope.VideoData = base64Data;
+                //Redirect
+                $state.transitionTo("addExercise", {}, { reload: true });
               };
             }
 
-            //Redirect
-            $state.transitionTo("addExercise", {}, { reload: true });
+
 
           }, function () {
             //error
@@ -1660,9 +1699,6 @@ angular.module('geiaFitApp')
         setExcpopup.close();
         $cordovaCapture.captureVideo().then(function (data) {
           saveVideo(data).success(function (data) {
-
-            //Redirect
-            $state.transitionTo("addExercise", {}, { reload: true });
             $scope.clip = data;
             if (!$scope.$$phase) {
               $scope.$apply();
@@ -1732,6 +1768,8 @@ angular.module('geiaFitApp')
                 var dataUrl = e.target.result;
                 var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
                 $rootScope.VideoData = base64Data;
+                //Redirect
+                $state.transitionTo("addExercise", {}, { reload: true });
               };
             }
           }, function () {
@@ -2022,7 +2060,7 @@ angular.module('geiaFitApp')
         var params = {
           peid: 0,
           fromLibrary: true,
-            exid: item.id, 
+          exid: item.id,
           title: item.title,
           comments: item.comments,
           mp4: item.mp4,
@@ -3735,7 +3773,7 @@ angular.module('geiaFitApp')
       if (id == 0) {
         $scope.subNavList = false
       } else if (id == 3) {
-        setExcPopup();
+        utilityService.captureVideo();
       } else {
         var state = getStateTitle(id);
         $state.transitionTo(state, { name: $stateParams.name, patientId: $stateParams.uid }, { reload: true });
@@ -3743,215 +3781,19 @@ angular.module('geiaFitApp')
 
     }
 
-    var addPopup;
-    function setExcPopup() {
-      addPopup = $ionicPopup.show({
-        template: '<div style="font-weight:bold;"> <button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="captureVideoFromGallery()">My Mobile Device</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="addFromLibrary()">My Library</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="captureVideoFromCamera()">Create New</button></div>',
-        // template: '<div style="background: #121516; color: #fff;"> <button class="button button-block btn-yellow" style="background: #121516; color: #fff;">My Mobile Device</button><button class="button button-block btn-yellow">My Library</button><button class="button button-block btn-yellow">Create New</button></div>',
-        title: 'Add Exercise',
-        subTitle: 'Choose a Source',
-        scope: $scope,
-        buttons: [
-          { text: 'Cancel' }
-        ]
-      });
-
-    };
-
-    $scope.addFromLibrary = function () {
-      addPopup.close();
-      $state.transitionTo('main.exerciseLibrary', { isAdd: true }, { reload: true });
-    }
-
-    //Pick video option
-    var deferred = $q.defer();
-    var promise = deferred.promise;
-
-    promise.success = function (fn) {
-      promise.then(fn);
-      return promise;
-    }
-    promise.error = function (fn) {
-      promise.then(null, fn);
-      return promise;
-    }
-
-    $rootScope.excVideo = null;
-    $rootScope.excVideoData = null;
-    $rootScope.excVideoFileName = null;
-
-    $scope.captureVideoFromGallery = function () {
-      addPopup.close();
-      navigator.camera.getPicture($scope.uploadVideo, onFail, {
-        destinationType: Camera.DestinationType.DATA_URL,
-        mediaType: 2,
-        sourceType: 2,      // 0:Photo Library, 1=Camera, 2=Saved Photo Album
-        //encodingType: 0, // 0=JPG 1=PNG
-        allowEdit: true
-      }
-      );
-    };
-
-    $scope.uploadVideo = function (videoURI) {
-      $rootScope.excVideo = videoURI;
-      var newvideoURI = "file://" + videoURI;
-      $rootScope.excVideo = newvideoURI;
-      window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function () {
-        // alert('success requestFileSystem');
-      }, function () {
-        //error
-      });
-      window.resolveLocalFileSystemURL(newvideoURI, function (fileEntry) {
-        fileEntry.file(function (file) {
-          // alert(JSON.stringify(file)); //view full metadata
-          var type = file.type;
-          var nameoffile = file.name;
-          $rootScope.excVideoFileName = file.name;
-
-          if (file != null || file != undefined) {
-            var fileReader = new FileReader();
-            fileReader.readAsDataURL(file);
-            fileReader.onload = function (e) {
-              var dataUrl = e.target.result;
-              var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
-              $rootScope.excVideoData = base64Data;
-              //Redirect
-              $state.transitionTo("setExerciseProgram", {}, { reload: true });
-            };
-          }
-
-
-
-        }, function () {
-          //error
-        });
-      }, function () {
-        // error
-      });
-    };
-
-    function onFail(e) { };
-
-    $scope.captureVideoFromCamera = function () {
-      addPopup.close();
-      $cordovaCapture.captureVideo().then(function (data) {
-        saveVideo(data).success(function (data) {
-          $scope.clip = data;
-          if (!$scope.$$phase) {
-            $scope.$apply();
-          }
-        }).error(function (data) {
-          console.log('ERROR: ' + data);
-        });
-      });
-    };
-
-    function saveVideo(data) {
-      createFileEntry(data[0].localURL);
-      return promise;
-    }
-
-    function createFileEntry(fileURI) {
-      window.resolveLocalFileSystemURL(fileURI, function (entry) {
-        return copyFile(entry);
-      }, onFail);
-    }
-
-    function fail(error) {
-      console.log('FAIL: ' + error.code);
-      // deferred.reject('ERROR');
-    }
-    // Create a unique name for the videofile
-    // Copy the recorded video to the app dir
-    function copyFile(fileEntry) {
-      var name = fileEntry.fullPath.substr(fileEntry.fullPath.lastIndexOf('/') + 1);
-      var newName = makeid() + name;
-      window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function (fileSystem2) {
-        fileEntry.copyTo(fileSystem2, newName, function (succ) {
-          return onCopySuccess(succ);
-        }, fail);
-      },
-        fail
-      );
-    }
-    function makeid() {
-      var text = '';
-      var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      for (var i = 0; i < 5; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-      }
-      return text;
-    }
-    // Called on successful copy process
-    // Creates a thumbnail from the movie
-    // The name is the moviename but with .png instead of .mov
-    function onCopySuccess(entry) {
-      $rootScope.excVideo = entry.nativeURL;
-      window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function () {
-        // alert('success requestFileSystem');
-      }, function () {
-        //error
-      });
-      window.resolveLocalFileSystemURL($rootScope.excVideo, function (fileEntry) {
-        fileEntry.file(function (file) {
-          // alert(JSON.stringify(file)); //view full metadata
-          var type = file.type;
-          var nameoffile = file.name;
-          $rootScope.excVideoFileName = file.name;
-          if (file != null || file != undefined) {
-            var fileReader = new FileReader();
-            fileReader.readAsDataURL(file);
-            fileReader.onload = function (e) {
-              var dataUrl = e.target.result;
-              var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
-              $rootScope.excVideoData = base64Data;
-              //Redirect
-              $state.transitionTo("setExerciseProgram", {}, { reload: true });
-            };
-          }
-        }, function () {
-          //error
-        });
-      }, function () {
-        // error
-      });
-      var name = entry.nativeURL.slice(0, -4);
-      window.PKVideoThumbnail.createThumbnail(entry.nativeURL, name + '.png', function (prevSucc) {
-        $rootScope.thumbnail = prevSucc;
-        return prevImageSuccess(prevSucc);
-      }, fail);
-    }
-
-    // Called on thumbnail creation success
-    // Generates the currect URL to the local moviefile
-    // Finally resolves the promies and returns the name
-    function prevImageSuccess(succ) {
-      var correctUrl = succ.slice(0, -4);
-      correctUrl += '.MOV';
-      deferred.resolve(correctUrl);
-    }
-
-    //End Pick video option
-
-    // $scope.back = function () {
-    //  console.log("BACK called==")
-    //   console.log($ionicHistory.viewHistory());
-    //   $ionicHistory.goBack();
-    // }
-
   }])
 
 
 
-  .controller('ExerciseProgramCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', '$rootScope', '$ionicPopup', 'SetExerciseProgramService', '$q', '$cordovaCapture', function ($scope, $stateParams, sortedByList, $state, $rootScope, $ionicPopup, SetExerciseProgramService, $q, $cordovaCapture) {
+  .controller('ExerciseProgramCtrl', ['$scope', '$stateParams', 'sortedByList', '$state', '$rootScope', '$ionicPopup', 'SetExerciseProgramService', '$q', '$cordovaCapture', 'utilityService', function ($scope, $stateParams, sortedByList, $state, $rootScope, $ionicPopup, SetExerciseProgramService, $q, $cordovaCapture, utilityService) {
     $rootScope.excVideo = null;
     $rootScope.excVideoFileName = null;
     $rootScope.excVideoData = null;
-    
+
     $rootScope.excImage = null;
     $rootScope.excImageFileName = null;
     $rootScope.excImageData = null;
-    
+
     $scope.searchExercise;
     $scope.title = 'Exercise Program';
     $scope.subNavList = false;
@@ -4117,16 +3959,12 @@ angular.module('geiaFitApp')
     $scope.gotoAction = function (id) {
       if (id == 2) {
         $scope.subNavList = false
-      }
-      else if (id == 3) {
-        $scope.addss();
-      }
-
-      else {
+      } else if (id == 3) {
+        utilityService.captureVideo();
+      } else {
         var state = getStateTitle(id);
         $state.transitionTo(state, { name: $stateParams.name, patientId: $stateParams.uid }, { reload: true });
       }
-
     }
 
     init = function () {
@@ -4138,18 +3976,20 @@ angular.module('geiaFitApp')
 
     $scope.addss = function () {
 
-      if (!$scope.blockPopup) {
-        addPopup = $ionicPopup.show({
-          template: '<div style="font-weight:bold;"> <button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="captureVideoFromGallery()">My Mobile Device</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="addFromLibrary()">My Library</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="captureVideoFromCamera()">Create New</button></div>',
-          // template: '<div style="background: #121516; color: #fff;"> <button class="button button-block btn-yellow" style="background: #121516; color: #fff;">My Mobile Device</button><button class="button button-block btn-yellow">My Library</button><button class="button button-block btn-yellow">Create New</button></div>',
-          title: 'Add Exercise',
-          subTitle: 'Choose a Source',
-          scope: $scope,
-          buttons: [
-            { text: 'Cancel' }
-          ]
-        });
-      }
+      utilityService.captureVideo();
+
+      /* if (!$scope.blockPopup) {
+         addPopup = $ionicPopup.show({
+           template: '<div style="font-weight:bold;"> <button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="captureVideoFromGallery()">My Mobile Device</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="addFromLibrary()">My Library</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="captureVideoFromCamera()">Create New</button></div>',
+           // template: '<div style="background: #121516; color: #fff;"> <button class="button button-block btn-yellow" style="background: #121516; color: #fff;">My Mobile Device</button><button class="button button-block btn-yellow">My Library</button><button class="button button-block btn-yellow">Create New</button></div>',
+           title: 'Add Exercise',
+           subTitle: 'Choose a Source',
+           scope: $scope,
+           buttons: [
+             { text: 'Cancel' }
+           ]
+         });
+       }*/
     };
 
     //Pick video option
@@ -4190,7 +4030,7 @@ angular.module('geiaFitApp')
         //error
       });
       window.resolveLocalFileSystemURL(newvideoURI, function (fileEntry) {
-          console.log("fileEntry", fileEntry)
+        console.log("fileEntry", fileEntry)
         fileEntry.file(function (file) {
           // alert(JSON.stringify(file)); //view full metadata
           var type = file.type;
@@ -4204,46 +4044,46 @@ angular.module('geiaFitApp')
               var dataUrl = e.target.result;
               var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
               $rootScope.excVideoData = base64Data;
-                };
-            }
-            /***
-            * get thumbnail
-            * 
-            */
-            var name = $rootScope.excVideo.slice(0, -4);
-            $rootScope.excImage = name + '.png'
-            
-            window.PKVideoThumbnail.createThumbnail($rootScope.excVideo, $rootScope.excImage, function (prevSucc) {
-                window.resolveLocalFileSystemURL($rootScope.excImage, function (fileEntry) {
-                    fileEntry.file(function (file) {
-                        // alert(JSON.stringify(file)); //view full metadata
-                        var type = file.type;
-                        var nameoffile = file.name;
-                        $rootScope.excImageFileName = file.name;
-                        if (file != null || file != undefined) {
-                            var fileReader = new FileReader();
-                            fileReader.readAsDataURL(file);
-                            fileReader.onload = function (e) {
-                                var dataUrl = e.target.result;
-                                var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
-                                $rootScope.excImageData = base64Data;
-              //Redirect
-              $state.transitionTo("setExerciseProgram", {}, { reload: true });
             };
           }
-                    }, function () {
-                    //error
-                    });
-                }, function () {
-                // error
-                });          
-              
+          /***
+          * get thumbnail
+          * 
+          */
+          var name = $rootScope.excVideo.slice(0, -4);
+          $rootScope.excImage = name + '.png'
+
+          window.PKVideoThumbnail.createThumbnail($rootScope.excVideo, $rootScope.excImage, function (prevSucc) {
+            window.resolveLocalFileSystemURL($rootScope.excImage, function (fileEntry) {
+              fileEntry.file(function (file) {
+                // alert(JSON.stringify(file)); //view full metadata
+                var type = file.type;
+                var nameoffile = file.name;
+                $rootScope.excImageFileName = file.name;
+                if (file != null || file != undefined) {
+                  var fileReader = new FileReader();
+                  fileReader.readAsDataURL(file);
+                  fileReader.onload = function (e) {
+                    var dataUrl = e.target.result;
+                    var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
+                    $rootScope.excImageData = base64Data;
+                    //Redirect
+                    $state.transitionTo("setExerciseProgram", {}, { reload: true });
+                  };
+                }
+              }, function () {
+                //error
+              });
+            }, function () {
+              // error
+            });
+
             return prevImageSuccess(prevSucc);
-            }, fail);
+          }, fail);
 
 
-            //Redirect
-            $state.transitionTo("setExerciseProgram", {}, { reload: true });
+          //Redirect
+          $state.transitionTo("setExerciseProgram", {}, { reload: true });
 
         }, function () {
           //error
@@ -4341,30 +4181,30 @@ angular.module('geiaFitApp')
       var name = entry.nativeURL.slice(0, -4);
       $rootScope.excImage = name + '.png'
       window.PKVideoThumbnail.createThumbnail(entry.nativeURL, $rootScope.excImage, function (prevSucc) {
-            window.resolveLocalFileSystemURL($rootScope.excImage, function (fileEntry) {
-                fileEntry.file(function (file) {
-                    // alert(JSON.stringify(file)); //view full metadata
-                    var type = file.type;
-                    var nameoffile = file.name;
-                    $rootScope.excImageFileName = file.name;
-                    if (file != null || file != undefined) {
-                        var fileReader = new FileReader();
-                        fileReader.readAsDataURL(file);
-                        fileReader.onload = function (e) {
-                            var dataUrl = e.target.result;
-                            var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
-                            $rootScope.excImageData = base64Data;
-                            //Redirect
-                            $state.transitionTo("setExerciseProgram", {}, { reload: true });
-                        };
-                    }
-                }, function () {
-                //error
-                });
-            }, function () {
-            // error
-            });          
-          
+        window.resolveLocalFileSystemURL($rootScope.excImage, function (fileEntry) {
+          fileEntry.file(function (file) {
+            // alert(JSON.stringify(file)); //view full metadata
+            var type = file.type;
+            var nameoffile = file.name;
+            $rootScope.excImageFileName = file.name;
+            if (file != null || file != undefined) {
+              var fileReader = new FileReader();
+              fileReader.readAsDataURL(file);
+              fileReader.onload = function (e) {
+                var dataUrl = e.target.result;
+                var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
+                $rootScope.excImageData = base64Data;
+                //Redirect
+                $state.transitionTo("setExerciseProgram", {}, { reload: true });
+              };
+            }
+          }, function () {
+            //error
+          });
+        }, function () {
+          // error
+        });
+
         return prevImageSuccess(prevSucc);
       }, fail);
     }
@@ -4730,7 +4570,7 @@ angular.module('geiaFitApp')
     // }
   }])
 
-  .controller('MessageCtrl', ['$scope', 'sortedByList', '$state', '$http', '$ionicPopup', 'ChatApp', '$timeout', '$stateParams', '$rootScope', 'AppService', '$ionicScrollDelegate', function ($scope, sortedByList, $state, $http, $ionicPopup, ChatApp, $timeout, $stateParams, $rootScope, AppService, $ionicScrollDelegate) {
+  .controller('MessageCtrl', ['$scope', 'sortedByList', '$state', '$http', 'ChatApp', '$timeout', '$stateParams', '$rootScope', 'AppService', '$ionicScrollDelegate', '$q', '$ionicPopup', '$cordovaCamera', 'utilityService', function ($scope, sortedByList, $state, $http, ChatApp, $timeout, $stateParams, $rootScope, AppService, $ionicScrollDelegate, $q, $ionicPopup, $cordovaCamera, utilityService) {
     var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
     var uid = $rootScope.loggedInUserUid;
     $scope.userImage = "img/profile_icon.png";
@@ -4904,7 +4744,7 @@ angular.module('geiaFitApp')
       if (id == 6) {
         $scope.subNavList = false
       } else if (id == 3) {
-        setExcPopup();
+        utilityService.captureVideo();
       } else {
         var state = getStateTitle(id);
         $state.transitionTo(state, { name: $stateParams.name, patientId: $stateParams.uid }, { reload: true });
@@ -5131,407 +4971,409 @@ angular.module('geiaFitApp')
     }
   ])
 
-  .controller('VitalsCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', '$ionicHistory', 'AppService','$rootScope', 
-        function ($scope, $state, $stateParams, sortedByList, $ionicHistory, AppService, $rootScope) {
-    
-    $scope.sortedByList = sortedByList;
-    $scope.title = 'Vitals';
-    $scope.DefaultView = true;
-    $scope.subNavList = false;
-    var VitalData;
-    var vitalDataForWeek = [];
-    var vitalDataForMonth = [];
+  .controller('VitalsCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', '$ionicHistory', 'AppService', '$rootScope', 'utilityService',
+    function ($scope, $state, $stateParams, sortedByList, $ionicHistory, AppService, $rootScope, utilityService) {
 
-    $scope.showList = function () {
-      $scope.subNavList = !$scope.subNavList;
-    }
+      $scope.sortedByList = sortedByList;
+      $scope.title = 'Vitals';
+      $scope.DefaultView = true;
+      $scope.subNavList = false;
+      var VitalData;
+      var vitalDataForWeek = [];
+      var vitalDataForMonth = [];
 
-    $scope.vital = {
-      height: 0,
-      weight: 0,
-      bmi: 0,
-      body_fat: 0,
-      resting_heart_rate: 0,
-      blood_pressure_dia: 0,
-      blood_pressure_sys: 0
-    }
-
-    $scope.patientProfile = {
-      name: $stateParams.name,
-      age: $stateParams.age,
-      gender: $stateParams.gender,
-      email: $stateParams.email,
-      url: $stateParams.profile_url
-    }
-
-    init = function () {
-      $scope.smileyClass = "smile1"
-
-      console.log($rootScope.patientId)
-      AppService.getVitals($rootScope.patientId).then(function (success) {
-        console.log("Vital Success")
-        console.log(success)
-        VitalData = success;
-
-        var tempData = success;
-        var Tdate = moment().utcOffset('-07:00').format('L');
-        var today = moment(Tdate)
-        for (var x in tempData) {
-          var unixDate = tempData[x].date_created
-          var newDate = moment.unix(unixDate).utcOffset('-07:00').format('L');
-          var NnewDate = moment(newDate)
-          if (NnewDate.diff(today) == 0) {
-            characteristics = tempData[x];
-            break;
-          }
-        }
-        console.log(characteristics)
-        
-        if(characteristics == null || characteristics == undefined){
-          setSmiley(0)
-          document.getElementById('smileSlide').value = 0;
-          $scope.vital = {
-            height: 0,
-            weight: 0,
-            bmi: 0,
-            body_fat: 0,
-            resting_heart_rate: 0,
-            blood_pressure_dia: 0,
-            blood_pressure_sys: 0
-          }
-        }
-        else {
-          setSmiley(characteristics.emotion * 100)
-          $scope.vital = {
-            height: characteristics.height,
-            weight: characteristics.weight,
-            bmi: characteristics.bmi,
-            body_fat: characteristics.body_fat,
-            resting_heart_rate: characteristics.resting_heart_rate,
-            blood_pressure_dia: characteristics.blood_pressure_dia,
-            blood_pressure_sys: characteristics.blood_pressure_sys
-          }
-          document.getElementById('smileSlide').value = (characteristics.emotion * 100)
-        }
-        $scope.changeView(1);
-        
-      }, function (error) {
-        console.log("error")
-      })
-    }
-
-    function getStateTitle(id) {
-      var title = '';
-      var list = $scope.sortedByList;
-      for (var i = 0; i < list.length; i++) {
-        if (id == list[i].id) {
-          title = list[i].routingStateName;
-          return title;
-        }
-      }
-    }
-
-    $scope.gotoAction = function (id) {
-      if (id == 5) {
-        $scope.subNavList = false
-      } else {
-        var state = getStateTitle(id);
-        $state.transitionTo(state, { name: $stateParams.name, patientId: $stateParams.uid }, { reload: true });
-      }
-    }
-
-    $scope.setVitals = function () {
-      var uid = $rootScope.patientId
-      var  data = {
-        height : $scope.vital.height,
-        weight : $scope.vital.weight,
-        bmi : $scope.vital.bmi,
-        body_fat : $scope.vital.body_fat,
-        resting_heart_rate : $scope.vital.resting_heart_rate,
-        blood_pressure_dia : $scope.vital.blood_pressure_dia,
-        blood_pressure_sys : $scope.vital.blood_pressure_sys,
-        emotion : document.getElementById('smileSlide').value,
-      }
-      console.log(data)
-      console.log(uid)
-      AppService.setVitals(data,uid).then(function (success) {
-        console.log("Vital Success")
-        console.log(success)
-      }, function (error) {
-        console.log("error")
-      })
-    }
-    
-
-
-    $scope.changeView = function (view) {
-      switch (view) {
-        case 1:
-          $scope.selectedView = 'Today';
-          $scope.DayView = true;
-          $scope.WeekView = false;
-          $scope.MonthView = false;
-          $scope.DefaultView = false;
-          break;
-        case 2:
-          $scope.selectedView = 'Week';
-          getVitalDataForWeek(VitalData)
-          $scope.WeekView = true;
-          $scope.DayView = false;
-          $scope.MonthView = false;
-          $scope.DefaultView = false;
-          break;
-        case 3:
-          $scope.selectedView = 'Month';
-          $scope.MonthView = true;
-          $scope.DayView = false;
-          $scope.WeekView = false;
-          $scope.DefaultView = false;
-          break;
-        default:
-          $scope.selectedView = 'Today';
-          $scope.DayView = true;
-          $scope.WeekView = false;
-          $scope.MonthView = false;
-          $scope.DefaultView = false;
+      $scope.showList = function () {
+        $scope.subNavList = !$scope.subNavList;
       }
 
-    }
+      $scope.vital = {
+        height: 0,
+        weight: 0,
+        bmi: 0,
+        body_fat: 0,
+        resting_heart_rate: 0,
+        blood_pressure_dia: 0,
+        blood_pressure_sys: 0
+      }
 
-    $scope.changeSmile = function () {
-      var slider = document.getElementById('smileSlide').value;
-      setSmiley(slider)
-    }
-    function setSmiley(value) {
-      if (value > 0 && value <=10) {
+      $scope.patientProfile = {
+        name: $stateParams.name,
+        age: $stateParams.age,
+        gender: $stateParams.gender,
+        email: $stateParams.email,
+        url: $stateParams.profile_url
+      }
+
+      init = function () {
         $scope.smileyClass = "smile1"
-      }
-      if (value > 10 && value <=20) {
-        $scope.smileyClass = "smile2"
-      }
-      if (value > 20 && value <=30) {
-        $scope.smileyClass = "smile3"
-      }
-      if (value > 30 && value <=40) {
-        $scope.smileyClass = "smile4"
-      }
-      if (value > 40 && value <=50) {
-        $scope.smileyClass = "smile5"
-      }
-      if (value > 50 && value <=60) {
-        $scope.smileyClass = "smile6"
-      }
-      if (value > 60 && value <=70) {
-        $scope.smileyClass = "smile7"
-      }
-      if (value > 70 && value <=80) {
-        $scope.smileyClass = "smile8"
-      }
-      if (value > 80 && value <=90) {
-        $scope.smileyClass = "smile9"
-      }
-      if (value > 90 && value <=100) {
-        $scope.smileyClass = "smile10"
-      }
-    }
 
-    getWeekDates = function () {
-      var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').format('L');
-      var startDate = moment(TstartDate)
-      var TendDate = moment().utcOffset('-07:00').format('L');
-      var endDate = moment(TendDate)
-      var weekDates = [];
-      
-      while (startDate.diff(endDate) < 0) {
-        weekDates.push(startDate)
-        var tempDate = startDate.add(1, 'days').format('L');
-        startDate = moment(tempDate);
-      } 
-      return weekDates;
-    }
-    
-    getVitalDataForWeek = function (successData) {
-      vitalDataForWeek = [];
-      var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').startOf('day').format('L');
-      var startDate = moment(TstartDate);
-      var TendDate = moment().utcOffset('-07:00').format('L');
-      var endDate = moment(TendDate);
+        console.log($rootScope.patientId)
+        AppService.getVitals($rootScope.patientId).then(function (success) {
+          console.log("Vital Success")
+          console.log(success)
+          VitalData = success;
 
-      for (var x in successData) {
-        var unixDate = successData[x].date_created
-        var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
-        var date = moment(Tdate)
+          var tempData = success;
+          var Tdate = moment().utcOffset('-07:00').format('L');
+          var today = moment(Tdate)
+          for (var x in tempData) {
+            var unixDate = tempData[x].date_created
+            var newDate = moment.unix(unixDate).utcOffset('-07:00').format('L');
+            var NnewDate = moment(newDate)
+            if (NnewDate.diff(today) == 0) {
+              characteristics = tempData[x];
+              break;
+            }
+          }
+          console.log(characteristics)
 
-        if (date.diff(startDate) >= 0 && date.diff(endDate) <= 0) {
-          vitalDataForWeek.push(successData[x]);
+          if (characteristics == null || characteristics == undefined) {
+            setSmiley(0)
+            document.getElementById('smileSlide').value = 0;
+            $scope.vital = {
+              height: 0,
+              weight: 0,
+              bmi: 0,
+              body_fat: 0,
+              resting_heart_rate: 0,
+              blood_pressure_dia: 0,
+              blood_pressure_sys: 0
+            }
+          }
+          else {
+            setSmiley(characteristics.emotion * 100)
+            $scope.vital = {
+              height: characteristics.height,
+              weight: characteristics.weight,
+              bmi: characteristics.bmi,
+              body_fat: characteristics.body_fat,
+              resting_heart_rate: characteristics.resting_heart_rate,
+              blood_pressure_dia: characteristics.blood_pressure_dia,
+              blood_pressure_sys: characteristics.blood_pressure_sys
+            }
+            document.getElementById('smileSlide').value = (characteristics.emotion * 100)
+          }
+          $scope.changeView(1);
+
+        }, function (error) {
+          console.log("error")
+        })
+      }
+
+      function getStateTitle(id) {
+        var title = '';
+        var list = $scope.sortedByList;
+        for (var i = 0; i < list.length; i++) {
+          if (id == list[i].id) {
+            title = list[i].routingStateName;
+            return title;
+          }
         }
       }
-      chartConfigForWeek();
-    }
 
-    chartConfigForWeek = function () {
-      var dataWeekHeight = [];
-      var dataWeekWeight = [];
-      var dataWeekBMI = [];
-      var dataWeekBF = [];
-      var dataWeekHR = [];
-      var dataWeekBPdia = [];
-      var dataWeekBPsys = [];
+      $scope.gotoAction = function (id) {
+        if (id == 5) {
+          $scope.subNavList = false
+        } else if (id == 3) {
+          utilityService.captureVideo();
+        } else {
+          var state = getStateTitle(id);
+          $state.transitionTo(state, { name: $stateParams.name, patientId: $stateParams.uid }, { reload: true });
+        }
+      }
 
-      var weekDates = getWeekDates();
-      var onlyDates = [];
+      $scope.setVitals = function () {
+        var uid = $rootScope.patientId
+        var data = {
+          height: $scope.vital.height,
+          weight: $scope.vital.weight,
+          bmi: $scope.vital.bmi,
+          body_fat: $scope.vital.body_fat,
+          resting_heart_rate: $scope.vital.resting_heart_rate,
+          blood_pressure_dia: $scope.vital.blood_pressure_dia,
+          blood_pressure_sys: $scope.vital.blood_pressure_sys,
+          emotion: document.getElementById('smileSlide').value,
+        }
+        console.log(data)
+        console.log(uid)
+        AppService.setVitals(data, uid).then(function (success) {
+          console.log("Vital Success")
+          console.log(success)
+        }, function (error) {
+          console.log("error")
+        })
+      }
 
-      for (var d in weekDates) {
 
-        onlyDates.push(weekDates[d].date())
 
-        var weekHeight = 0;
-        var weekWeight = 0;
-        var weekBMI = 0;
-        var weekBF = 0;
-        var weekHR = 0;
-        var weekBPdia = 0;
-        var weekBPsys = 0;
-
-        for (var x in vitalDataForWeek) {
-          var unixDate = vitalDataForWeek[x].date_created
-          var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
-          var tempDate = moment(Tdate)
-
-          if (tempDate.diff(weekDates[d]) == 0) {
-
-            var temp = vitalDataForWeek[x];
-
-            if (temp.height != null) {
-              weekHeight = parseInt(temp.height)
-            }
-            if (temp.weight != null) {
-              weekWeight = parseInt(temp.weight)
-            }
-            if (temp.bmi != null) {
-              weekBMI = parseInt(temp.bmi)
-            }
-            if (temp.body_fat != null) {
-              weekBF = parseInt(temp.body_fat)
-            }
-            if (temp.resting_heart_rate != null) {
-              weekHR = parseInt(temp.resting_heart_rate)
-            }
-            if (temp.blood_pressure_sys != null) {
-              weekBPsys = parseInt(temp.blood_pressure_sys)
-            }
-            if (temp.blood_pressure_dia != null) {
-              weekBPdia = parseInt(temp.blood_pressure_dia)
-            }
-
+      $scope.changeView = function (view) {
+        switch (view) {
+          case 1:
+            $scope.selectedView = 'Today';
+            $scope.DayView = true;
+            $scope.WeekView = false;
+            $scope.MonthView = false;
+            $scope.DefaultView = false;
             break;
+          case 2:
+            $scope.selectedView = 'Week';
+            getVitalDataForWeek(VitalData)
+            $scope.WeekView = true;
+            $scope.DayView = false;
+            $scope.MonthView = false;
+            $scope.DefaultView = false;
+            break;
+          case 3:
+            $scope.selectedView = 'Month';
+            $scope.MonthView = true;
+            $scope.DayView = false;
+            $scope.WeekView = false;
+            $scope.DefaultView = false;
+            break;
+          default:
+            $scope.selectedView = 'Today';
+            $scope.DayView = true;
+            $scope.WeekView = false;
+            $scope.MonthView = false;
+            $scope.DefaultView = false;
+        }
+
+      }
+
+      $scope.changeSmile = function () {
+        var slider = document.getElementById('smileSlide').value;
+        setSmiley(slider)
+      }
+      function setSmiley(value) {
+        if (value > 0 && value <= 10) {
+          $scope.smileyClass = "smile1"
+        }
+        if (value > 10 && value <= 20) {
+          $scope.smileyClass = "smile2"
+        }
+        if (value > 20 && value <= 30) {
+          $scope.smileyClass = "smile3"
+        }
+        if (value > 30 && value <= 40) {
+          $scope.smileyClass = "smile4"
+        }
+        if (value > 40 && value <= 50) {
+          $scope.smileyClass = "smile5"
+        }
+        if (value > 50 && value <= 60) {
+          $scope.smileyClass = "smile6"
+        }
+        if (value > 60 && value <= 70) {
+          $scope.smileyClass = "smile7"
+        }
+        if (value > 70 && value <= 80) {
+          $scope.smileyClass = "smile8"
+        }
+        if (value > 80 && value <= 90) {
+          $scope.smileyClass = "smile9"
+        }
+        if (value > 90 && value <= 100) {
+          $scope.smileyClass = "smile10"
+        }
+      }
+
+      getWeekDates = function () {
+        var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').format('L');
+        var startDate = moment(TstartDate)
+        var TendDate = moment().utcOffset('-07:00').format('L');
+        var endDate = moment(TendDate)
+        var weekDates = [];
+
+        while (startDate.diff(endDate) < 0) {
+          weekDates.push(startDate)
+          var tempDate = startDate.add(1, 'days').format('L');
+          startDate = moment(tempDate);
+        }
+        return weekDates;
+      }
+
+      getVitalDataForWeek = function (successData) {
+        vitalDataForWeek = [];
+        var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').startOf('day').format('L');
+        var startDate = moment(TstartDate);
+        var TendDate = moment().utcOffset('-07:00').format('L');
+        var endDate = moment(TendDate);
+
+        for (var x in successData) {
+          var unixDate = successData[x].date_created
+          var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
+          var date = moment(Tdate)
+
+          if (date.diff(startDate) >= 0 && date.diff(endDate) <= 0) {
+            vitalDataForWeek.push(successData[x]);
           }
         }
-        dataWeekHeight.push(weekHeight);
-        dataWeekWeight.push(weekWeight);
-        dataWeekBMI.push(weekBMI);
-        dataWeekBF.push(weekBF);
-        dataWeekHR.push(weekHR);
-        dataWeekBPsys.push(weekBPsys);
-        dataWeekBPdia.push(weekBPdia);
-
+        chartConfigForWeek();
       }
 
-      $scope.chartWeekHeight = getChartConfigForWeek(dataWeekHeight,null, onlyDates)
-      $scope.chartWeekWeight = getChartConfigForWeek(dataWeekWeight,null, onlyDates)
-      $scope.chartWeekBMI = getChartConfigForWeek(dataWeekBMI,null, onlyDates)
-      $scope.chartWeekBodyFat = getChartConfigForWeek(dataWeekBF,null, onlyDates)
-      $scope.chartWeekHeartRate = getChartConfigForWeek(dataWeekHR,null, onlyDates)
-      $scope.chartWeekBloodPressure = getChartConfigForWeek(dataWeekBPsys, dataWeekBPdia , onlyDates)
+      chartConfigForWeek = function () {
+        var dataWeekHeight = [];
+        var dataWeekWeight = [];
+        var dataWeekBMI = [];
+        var dataWeekBF = [];
+        var dataWeekHR = [];
+        var dataWeekBPdia = [];
+        var dataWeekBPsys = [];
 
-    }
+        var weekDates = getWeekDates();
+        var onlyDates = [];
 
-    function getChartConfigForWeek(data, data2, dates) {
-      var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-      ];
+        for (var d in weekDates) {
 
-      var TstartDate = moment().utcOffset('-07:00').subtract(6, 'days').format('L');
-      var startDate = moment(TstartDate)
-      var TendDate = moment().utcOffset('-07:00').format('L');
-      var endDate = moment(TendDate)
+          onlyDates.push(weekDates[d].date())
 
-      var dateList = [];
-      var tempDate = startDate;
-      var i = 0;
+          var weekHeight = 0;
+          var weekWeight = 0;
+          var weekBMI = 0;
+          var weekBF = 0;
+          var weekHR = 0;
+          var weekBPdia = 0;
+          var weekBPsys = 0;
 
-      while (tempDate.diff(endDate) <= 0) {
-        if (i == 0) {
-          dateList.push(monthNames[startDate.month()] + " " + startDate.date())
-          i++;
-        }
-        else {
-          dateList.push(tempDate.date())
-        }
-        var Tdate = startDate.add(1, 'days').startOf('day').format('L');
-        tempDate = moment(Tdate);
-      }
+          for (var x in vitalDataForWeek) {
+            var unixDate = vitalDataForWeek[x].date_created
+            var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
+            var tempDate = moment(Tdate)
 
-    
-      var chartConfig = {
-        options: {
-          chart: {
-            type: 'column',
-            backgroundColor: 'transparent',
-            //spacingLeft: 5,
-            // Explicitly tell the width and height of a chart
-            width: null,
-            height: null
-          },
-          title: {
-            text: '',
-          },
-          plotOptions: {
-            column: {
-              dataLabels: {
-                enabled: false,
-                color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+            if (tempDate.diff(weekDates[d]) == 0) {
+
+              var temp = vitalDataForWeek[x];
+
+              if (temp.height != null) {
+                weekHeight = parseInt(temp.height)
               }
+              if (temp.weight != null) {
+                weekWeight = parseInt(temp.weight)
+              }
+              if (temp.bmi != null) {
+                weekBMI = parseInt(temp.bmi)
+              }
+              if (temp.body_fat != null) {
+                weekBF = parseInt(temp.body_fat)
+              }
+              if (temp.resting_heart_rate != null) {
+                weekHR = parseInt(temp.resting_heart_rate)
+              }
+              if (temp.blood_pressure_sys != null) {
+                weekBPsys = parseInt(temp.blood_pressure_sys)
+              }
+              if (temp.blood_pressure_dia != null) {
+                weekBPdia = parseInt(temp.blood_pressure_dia)
+              }
+
+              break;
             }
-          },
-          //Hide highcharts link from bottom
-          credits: {
-            enabled: false
-          },
-          //Make the legend invisible.[footer series labels]
-          legend: {
-            x: 9999,
-            y: 9999
-          },
-        },
-        //X axis data
-        xAxis: {
-          categories: dateList,
-        },
-       /* yAxis: {
-          title: {
-            text: ''
-          },
-        },*/
-        series: [
-          {
-            data: data,
-            color: "#009CDB",
-            borderColor: 'transparent'
-          },
-           {
-            data: data2,
-            color: "#F3A81B",
-            borderColor: 'transparent'
           }
-        ],
-        func: function (chart) {
+          dataWeekHeight.push(weekHeight);
+          dataWeekWeight.push(weekWeight);
+          dataWeekBMI.push(weekBMI);
+          dataWeekBF.push(weekBF);
+          dataWeekHR.push(weekHR);
+          dataWeekBPsys.push(weekBPsys);
+          dataWeekBPdia.push(weekBPdia);
+
         }
-      };
-      return chartConfig;
-    }
+
+        $scope.chartWeekHeight = getChartConfigForWeek(dataWeekHeight, null, onlyDates)
+        $scope.chartWeekWeight = getChartConfigForWeek(dataWeekWeight, null, onlyDates)
+        $scope.chartWeekBMI = getChartConfigForWeek(dataWeekBMI, null, onlyDates)
+        $scope.chartWeekBodyFat = getChartConfigForWeek(dataWeekBF, null, onlyDates)
+        $scope.chartWeekHeartRate = getChartConfigForWeek(dataWeekHR, null, onlyDates)
+        $scope.chartWeekBloodPressure = getChartConfigForWeek(dataWeekBPsys, dataWeekBPdia, onlyDates)
+
+      }
+
+      function getChartConfigForWeek(data, data2, dates) {
+        var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ];
+
+        var TstartDate = moment().utcOffset('-07:00').subtract(6, 'days').format('L');
+        var startDate = moment(TstartDate)
+        var TendDate = moment().utcOffset('-07:00').format('L');
+        var endDate = moment(TendDate)
+
+        var dateList = [];
+        var tempDate = startDate;
+        var i = 0;
+
+        while (tempDate.diff(endDate) <= 0) {
+          if (i == 0) {
+            dateList.push(monthNames[startDate.month()] + " " + startDate.date())
+            i++;
+          }
+          else {
+            dateList.push(tempDate.date())
+          }
+          var Tdate = startDate.add(1, 'days').startOf('day').format('L');
+          tempDate = moment(Tdate);
+        }
 
 
-    init();
+        var chartConfig = {
+          options: {
+            chart: {
+              type: 'column',
+              backgroundColor: 'transparent',
+              //spacingLeft: 5,
+              // Explicitly tell the width and height of a chart
+              width: null,
+              height: null
+            },
+            title: {
+              text: '',
+            },
+            plotOptions: {
+              column: {
+                dataLabels: {
+                  enabled: false,
+                  color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                }
+              }
+            },
+            //Hide highcharts link from bottom
+            credits: {
+              enabled: false
+            },
+            //Make the legend invisible.[footer series labels]
+            legend: {
+              x: 9999,
+              y: 9999
+            },
+          },
+          //X axis data
+          xAxis: {
+            categories: dateList,
+          },
+          /* yAxis: {
+             title: {
+               text: ''
+             },
+           },*/
+          series: [
+            {
+              data: data,
+              color: "#009CDB",
+              borderColor: 'transparent'
+            },
+            {
+              data: data2,
+              color: "#F3A81B",
+              borderColor: 'transparent'
+            }
+          ],
+          func: function (chart) {
+          }
+        };
+        return chartConfig;
+      }
 
-  }]);
+
+      init();
+
+    }]);

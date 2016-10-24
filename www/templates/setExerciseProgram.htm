@@ -39,7 +39,14 @@
 				<span class="onoff off">OFF</span>
 				</span>
 			</div>
-			<div class="video-container" >
+			<div class="video-container"  style="height: 250px;">
+				<div class="video-container-inner" style="height:100%;">
+					<div ng-if="videoURI" class="video-container-text" ng-click="captureVideo()"></div>
+				    <iframe ng-if="videoURI" frameborder="0" ng-src="{{videoURI| trusted}}" scrolling="yes" ng-init="resizeIframe(this)"></iframe>
+                    <iframe ng-if="!videoURI" frameborder="0" ng-src="{{exerciseprogram.mp4| trusted}}" scrolling="yes" ng-init="resizeIframe(this)" ></iframe>
+				</div>
+			</div>
+			<!--<div class="video-container" >
 				<div class="video-container-inner" style="height:100%;">
                     <div ng-if="fromLibrary">
                         <div ng-if="!exerciseprogram.mp4" class="video-container-text" ng-click="captureVideo()">+ Add video</div>
@@ -53,10 +60,9 @@
                             <div ng-if="edit" class="video-container-text" ng-click="captureVideo()">+ Add video</div>
                             <video ng-if="!edit" poster="{{exerciseprogram.thumb1}}" ng-src="{{exerciseprogram.mp4| trusted}}" controls="controls" ></video>
                         </div>
-                        
                     </div>
 				</div>
-			</div>
+			</div>-->
 			<div class="row">
 				<!--<div  class = "col col-30">
             	      <label class="expiry">Reps
