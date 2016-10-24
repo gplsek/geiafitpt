@@ -706,7 +706,7 @@ angular.module('geiaFitApp')
 
 
     $scope.exerciseprogram.video = $rootScope.excVideo;
-    $scope.videoURI = $rootScope.excVideo+'?autoplay=1';
+    $scope.videoURI = $rootScope.excVideo;
     $scope.exerciseprogram.videoname = $rootScope.excVideoFileName;
     $scope.exerciseprogram.videodata = $rootScope.excVideoData;
 
@@ -4971,8 +4971,8 @@ angular.module('geiaFitApp')
     }
   ])
 
-  .controller('VitalsCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', '$ionicHistory', 'AppService', '$rootScope', 'utilityService',
-    function ($scope, $state, $stateParams, sortedByList, $ionicHistory, AppService, $rootScope, utilityService) {
+  .controller('VitalsCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', '$ionicHistory', 'AppService', '$rootScope',
+    function ($scope, $state, $stateParams, sortedByList, $ionicHistory, AppService, $rootScope) {
 
       $scope.sortedByList = sortedByList;
       $scope.title = 'Vitals';
@@ -5011,6 +5011,7 @@ angular.module('geiaFitApp')
         AppService.getVitals($rootScope.patientId).then(function (success) {
           console.log("Vital Success")
           console.log(success)
+          $scope.changeView(1);
           VitalData = success;
 
           var tempData = success;
@@ -5053,7 +5054,6 @@ angular.module('geiaFitApp')
             }
             document.getElementById('smileSlide').value = (characteristics.emotion * 100)
           }
-          $scope.changeView(1);
 
         }, function (error) {
           console.log("error")
@@ -5074,9 +5074,10 @@ angular.module('geiaFitApp')
       $scope.gotoAction = function (id) {
         if (id == 5) {
           $scope.subNavList = false
-        } else if (id == 3) {
+        }
+       else if (id == 3) {
           utilityService.captureVideo();
-        } else {
+       }else {
           var state = getStateTitle(id);
           $state.transitionTo(state, { name: $stateParams.name, patientId: $stateParams.uid }, { reload: true });
         }
@@ -5125,6 +5126,9 @@ angular.module('geiaFitApp')
             break;
           case 3:
             $scope.selectedView = 'Month';
+            var Tdate = moment().utcOffset('-07:00').endOf("month").hours(0).minute(0).second(0).millisecond(0).format();
+            $scope.DATE = moment(Tdate).toDate();
+            getVitalDataForMonth(VitalData)
             $scope.MonthView = true;
             $scope.DayView = false;
             $scope.WeekView = false;
@@ -5175,6 +5179,26 @@ angular.module('geiaFitApp')
         if (value > 90 && value <= 100) {
           $scope.smileyClass = "smile10"
         }
+      }
+
+      $scope.prevDate = function () {
+        var Tdate = moment($scope.DATE);
+        var tempDate = Tdate.utcOffset('-07:00').subtract(1, 'month').format();
+        $scope.DATE = moment(tempDate).endOf('month').toDate();
+
+        console.log("Perv Selected " + $scope.DATE)
+
+        getVitalDataForMonth(VitalData)
+      }
+
+      $scope.nextDate = function () {
+
+        var Tdate = moment($scope.DATE);
+        var tempDate = Tdate.utcOffset('-07:00').add(1, 'month').format();
+        $scope.DATE = moment(tempDate).endOf('month').toDate();
+        console.log("Next Selected " + $scope.DATE)
+
+        getVitalDataForMonth(VitalData)
       }
 
       getWeekDates = function () {
@@ -5285,8 +5309,135 @@ angular.module('geiaFitApp')
         $scope.chartWeekBodyFat = getChartConfigForWeek(dataWeekBF, null, onlyDates)
         $scope.chartWeekHeartRate = getChartConfigForWeek(dataWeekHR, null, onlyDates)
         $scope.chartWeekBloodPressure = getChartConfigForWeek(dataWeekBPsys, dataWeekBPdia, onlyDates)
+      }
+
+      getMonthDates = function (date) {
+        date = moment(date);
+        var TstartDate = date.utcOffset('-07:00').startOf('month').format('L');
+        var startDate = moment(TstartDate);
+        var TendDate = date.utcOffset('-07:00').endOf('month').format('L');
+        var endDate = moment(TendDate);
+        var dateList = [];
+
+        while (startDate.diff(endDate) < 0) {
+          dateList.push(startDate)
+          var tempDate = startDate.add(1, 'days').format('L')
+          startDate = moment(tempDate)
+        }
+        return dateList;
+      }
+
+      getMonthFirstLastDates = function (date) {
+        date = moment(date);
+        var TstartDate = date.utcOffset('-07:00').startOf('month').format('L');
+        var startDate = moment(TstartDate);
+        var TendDate = date.utcOffset('-07:00').endOf('month').format('L');
+        var endDate = moment(TendDate);
+        var dateList = [];
+        dateList.push(startDate)
+        dateList.push(endDate)
+
+        return dateList;
+      }
+
+      getVitalDataForMonth = function (successData) {
+        vitalDataForMonth = [];
+        var dates;
+        dates = getMonthFirstLastDates($scope.DATE);
+        var startDate = dates[0]
+        var endDate = dates[1]
+
+        for (var x in successData) {
+          var unixDate = successData[x].date_created
+          var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
+          var date = moment(Tdate)
+          if (date.diff(startDate) > 0 && date.diff(endDate) < 0) {
+            vitalDataForMonth.push(successData[x]);
+          }
+        }
+        chartConfigForMonth()
+      }
+
+      chartConfigForMonth = function () {
+
+        var dataWeekHeight = [];
+        var dataWeekWeight = [];
+        var dataWeekBMI = [];
+        var dataWeekBF = [];
+        var dataWeekHR = [];
+        var dataWeekBPdia = [];
+        var dataWeekBPsys = [];
+
+        var dates = getMonthDates($scope.DATE);
+        var onlyDates = []
+
+        for (var d in dates) {
+          onlyDates.push(dates[d].date())
+
+          var weekHeight = 0;
+          var weekWeight = 0;
+          var weekBMI = 0;
+          var weekBF = 0;
+          var weekHR = 0;
+          var weekBPdia = 0;
+          var weekBPsys = 0;
+
+
+          for (var x in vitalDataForMonth) {
+            var unixDate = vitalDataForMonth[x].date_created
+            var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
+            var date = moment(Tdate)
+
+            if (date.diff(dates[d]) == 0) {
+
+              var temp = vitalDataForMonth[x];
+
+              if (temp.height != null) {
+                weekHeight = parseInt(temp.height)
+              }
+              if (temp.weight != null) {
+                weekWeight = parseInt(temp.weight)
+              }
+              if (temp.bmi != null) {
+                weekBMI = parseInt(temp.bmi)
+              }
+              if (temp.body_fat != null) {
+                weekBF = parseInt(temp.body_fat)
+              }
+              if (temp.resting_heart_rate != null) {
+                weekHR = parseInt(temp.resting_heart_rate)
+              }
+              if (temp.blood_pressure_sys != null) {
+                weekBPsys = parseInt(temp.blood_pressure_sys)
+              }
+              if (temp.blood_pressure_dia != null) {
+                weekBPdia = parseInt(temp.blood_pressure_dia)
+              }
+
+              break;
+            }
+          }
+
+          dataWeekHeight.push(weekHeight);
+          dataWeekWeight.push(weekWeight);
+          dataWeekBMI.push(weekBMI);
+          dataWeekBF.push(weekBF);
+          dataWeekHR.push(weekHR);
+          dataWeekBPsys.push(weekBPsys);
+          dataWeekBPdia.push(weekBPdia);
+
+        }
+
+
+        $scope.chartMonthHeight = getChartConfigForMonth(dataWeekHeight, null, onlyDates)
+        $scope.chartMonthWeight = getChartConfigForMonth(dataWeekWeight, null, onlyDates)
+        $scope.chartMonthBMI = getChartConfigForMonth(dataWeekBMI, null, onlyDates)
+        $scope.chartMonthBodyFat = getChartConfigForMonth(dataWeekBF, null, onlyDates)
+        $scope.chartMonthHeartRate = getChartConfigForMonth(dataWeekHR, null, onlyDates)
+        $scope.chartMonthBloodPressure = getChartConfigForMonth(dataWeekBPsys, dataWeekBPdia, onlyDates)
 
       }
+
 
       function getChartConfigForWeek(data, data2, dates) {
         var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -5350,11 +5501,70 @@ angular.module('geiaFitApp')
           xAxis: {
             categories: dateList,
           },
-          /* yAxis: {
-             title: {
-               text: ''
-             },
-           },*/
+          yAxis: {
+            title: {
+              text: ''
+            },
+          },
+          series: [
+            {
+              data: data,
+              color: "#009CDB",
+              borderColor: 'transparent'
+            },
+            {
+              data: data2,
+              color: "#F3A81B",
+              borderColor: 'transparent'
+            }
+          ],
+          func: function (chart) {
+          }
+        };
+        return chartConfig;
+      }
+
+      function getChartConfigForMonth(data, data2, dates) {
+        var chartConfig = {
+          options: {
+            chart: {
+              type: 'column',
+              backgroundColor: 'transparent',
+              //spacingLeft: 5,
+              // Explicitly tell the width and height of a chart
+              width: null,
+              height: null
+            },
+            title: {
+              text: '',
+            },
+            plotOptions: {
+              column: {
+                dataLabels: {
+                  enabled: false,
+                  color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                }
+              }
+            },
+            //Hide highcharts link from bottom
+            credits: {
+              enabled: false
+            },
+            //Make the legend invisible.[footer series labels]
+            legend: {
+              x: 9999,
+              y: 9999
+            },
+          },
+          //X axis data
+          xAxis: {
+            categories: dates,
+          },
+          yAxis: {
+            title: {
+              text: ''
+            },
+          },
           series: [
             {
               data: data,

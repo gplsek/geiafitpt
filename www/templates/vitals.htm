@@ -155,6 +155,11 @@
         </div>
 
         <div ng-show="MonthView">
+             <div class="navigationtitle">
+                    <button  ng-click="prevDate()">←</button>
+                        <span>{{DATE | date : "MMMM yyyy"}}</span>
+                    <button ng-click="nextDate()">→</button>
+            </div>
             <ul class="bar_chart_list">
                 <li>
                     <div class="title">
