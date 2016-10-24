@@ -2695,23 +2695,6 @@ angular.module('geiaFitApp')
         startDate = moment(tempDate);
       }
 
-
-
-      /*var TstartDate = moment().utcOffset('-07:00').subtract(6, 'days').format('L');
-      var startDate = moment(TstartDate)
-      var TendDate = moment().utcOffset('-07:00').format('L');
-      var endDate = moment(TendDate)
-
-      var dateList = [];
-      var tempDate = startDate;
-      var i = 0;
-
-      while (tempDate.diff(endDate) <= 0) {
-        dateList.push(tempDate)
-        var Tdate = startDate.add(1, 'days').startOf('day').format('L');
-        tempDate = moment(Tdate);
-      }*/
-
       return weekDates;
     }
 
@@ -5150,26 +5133,27 @@ angular.module('geiaFitApp')
 
   .controller('VitalsCtrl', ['$scope', '$state', '$stateParams', 'sortedByList', '$ionicHistory', 'AppService','$rootScope', 
         function ($scope, $state, $stateParams, sortedByList, $ionicHistory, AppService, $rootScope) {
+    
     $scope.sortedByList = sortedByList;
-    //$scope.sortedBy = $scope.sortedByList[5].id;
-    $scope.selectedView = 'Today';
-    $scope.DayView = true;
     $scope.title = 'Vitals';
-
+    $scope.DefaultView = true;
     $scope.subNavList = false;
+    var VitalData;
+    var vitalDataForWeek = [];
+    var vitalDataForMonth = [];
 
     $scope.showList = function () {
       $scope.subNavList = !$scope.subNavList;
     }
 
     $scope.vital = {
-      height : 0,
-      weight : 0,
-      BMI : 0,
-      fat : 0,
-      hr : 0,
-      BloodP : 0,
-      BloodPTotal : 0
+      height: 0,
+      weight: 0,
+      bmi: 0,
+      body_fat: 0,
+      resting_heart_rate: 0,
+      blood_pressure_dia: 0,
+      blood_pressure_sys: 0
     }
 
     $scope.patientProfile = {
@@ -5181,12 +5165,14 @@ angular.module('geiaFitApp')
     }
 
     init = function () {
+      $scope.smileyClass = "smile1"
+
       console.log($rootScope.patientId)
       AppService.getVitals($rootScope.patientId).then(function (success) {
         console.log("Vital Success")
         console.log(success)
+        VitalData = success;
 
-        var characteristics;
         var tempData = success;
         var Tdate = moment().utcOffset('-07:00').format('L');
         var today = moment(Tdate)
@@ -5202,17 +5188,56 @@ angular.module('geiaFitApp')
         console.log(characteristics)
         
         if(characteristics == null || characteristics == undefined){
-          setSmiley(2)
-          document.getElementById('smileSlide').value = 2;
+          setSmiley(0)
+          document.getElementById('smileSlide').value = 0;
+          $scope.vital = {
+            height: 0,
+            weight: 0,
+            bmi: 0,
+            body_fat: 0,
+            resting_heart_rate: 0,
+            blood_pressure_dia: 0,
+            blood_pressure_sys: 0
+          }
         }
-        else{
-          setSmiley(characteristics.emotion)
+        else {
+          setSmiley(characteristics.emotion * 100)
+          $scope.vital = {
+            height: characteristics.height,
+            weight: characteristics.weight,
+            bmi: characteristics.bmi,
+            body_fat: characteristics.body_fat,
+            resting_heart_rate: characteristics.resting_heart_rate,
+            blood_pressure_dia: characteristics.blood_pressure_dia,
+            blood_pressure_sys: characteristics.blood_pressure_sys
+          }
+          document.getElementById('smileSlide').value = (characteristics.emotion * 100)
         }
+        $scope.changeView(1);
         
-
       }, function (error) {
         console.log("error")
       })
+    }
+
+    function getStateTitle(id) {
+      var title = '';
+      var list = $scope.sortedByList;
+      for (var i = 0; i < list.length; i++) {
+        if (id == list[i].id) {
+          title = list[i].routingStateName;
+          return title;
+        }
+      }
+    }
+
+    $scope.gotoAction = function (id) {
+      if (id == 5) {
+        $scope.subNavList = false
+      } else {
+        var state = getStateTitle(id);
+        $state.transitionTo(state, { name: $stateParams.name, patientId: $stateParams.uid }, { reload: true });
+      }
     }
 
     $scope.setVitals = function () {
@@ -5243,44 +5268,40 @@ angular.module('geiaFitApp')
       switch (view) {
         case 1:
           $scope.selectedView = 'Today';
+          $scope.DayView = true;
+          $scope.WeekView = false;
+          $scope.MonthView = false;
+          $scope.DefaultView = false;
           break;
         case 2:
           $scope.selectedView = 'Week';
+          getVitalDataForWeek(VitalData)
+          $scope.WeekView = true;
+          $scope.DayView = false;
+          $scope.MonthView = false;
+          $scope.DefaultView = false;
           break;
         case 3:
           $scope.selectedView = 'Month';
+          $scope.MonthView = true;
+          $scope.DayView = false;
+          $scope.WeekView = false;
+          $scope.DefaultView = false;
           break;
         default:
           $scope.selectedView = 'Today';
+          $scope.DayView = true;
+          $scope.WeekView = false;
+          $scope.MonthView = false;
+          $scope.DefaultView = false;
       }
 
-    }
-
-    function getStateTitle(id) {
-      var title = '';
-      var list = $scope.sortedByList;
-      for (var i = 0; i < list.length; i++) {
-        if (id == list[i].id) {
-          title = list[i].routingStateName;
-          return title;
-        }
-      }
-    }
-
-    $scope.gotoAction = function (id) {
-      if (id == 5) {
-        $scope.subNavList = false
-      } else {
-        var state = getStateTitle(id);
-        $state.transitionTo(state, { name: $stateParams.name, patientId: $stateParams.uid }, { reload: true });
-      }
     }
 
     $scope.changeSmile = function () {
       var slider = document.getElementById('smileSlide').value;
       setSmiley(slider)
     }
-    $scope.smileyClass = "smile1"
     function setSmiley(value) {
       if (value > 0 && value <=10) {
         $scope.smileyClass = "smile1"
@@ -5313,6 +5334,203 @@ angular.module('geiaFitApp')
         $scope.smileyClass = "smile10"
       }
     }
+
+    getWeekDates = function () {
+      var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').format('L');
+      var startDate = moment(TstartDate)
+      var TendDate = moment().utcOffset('-07:00').format('L');
+      var endDate = moment(TendDate)
+      var weekDates = [];
+      
+      while (startDate.diff(endDate) < 0) {
+        weekDates.push(startDate)
+        var tempDate = startDate.add(1, 'days').format('L');
+        startDate = moment(tempDate);
+      } 
+      return weekDates;
+    }
+    
+    getVitalDataForWeek = function (successData) {
+      vitalDataForWeek = [];
+      var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').startOf('day').format('L');
+      var startDate = moment(TstartDate);
+      var TendDate = moment().utcOffset('-07:00').format('L');
+      var endDate = moment(TendDate);
+
+      for (var x in successData) {
+        var unixDate = successData[x].date_created
+        var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
+        var date = moment(Tdate)
+
+        if (date.diff(startDate) >= 0 && date.diff(endDate) <= 0) {
+          vitalDataForWeek.push(successData[x]);
+        }
+      }
+      chartConfigForWeek();
+    }
+
+    chartConfigForWeek = function () {
+      var dataWeekHeight = [];
+      var dataWeekWeight = [];
+      var dataWeekBMI = [];
+      var dataWeekBF = [];
+      var dataWeekHR = [];
+      var dataWeekBPdia = [];
+      var dataWeekBPsys = [];
+
+      var weekDates = getWeekDates();
+      var onlyDates = [];
+
+      for (var d in weekDates) {
+
+        onlyDates.push(weekDates[d].date())
+
+        var weekHeight = 0;
+        var weekWeight = 0;
+        var weekBMI = 0;
+        var weekBF = 0;
+        var weekHR = 0;
+        var weekBPdia = 0;
+        var weekBPsys = 0;
+
+        for (var x in vitalDataForWeek) {
+          var unixDate = vitalDataForWeek[x].date_created
+          var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
+          var tempDate = moment(Tdate)
+
+          if (tempDate.diff(weekDates[d]) == 0) {
+
+            var temp = vitalDataForWeek[x];
+
+            if (temp.height != null) {
+              weekHeight = parseInt(temp.height)
+            }
+            if (temp.weight != null) {
+              weekWeight = parseInt(temp.weight)
+            }
+            if (temp.bmi != null) {
+              weekBMI = parseInt(temp.bmi)
+            }
+            if (temp.body_fat != null) {
+              weekBF = parseInt(temp.body_fat)
+            }
+            if (temp.resting_heart_rate != null) {
+              weekHR = parseInt(temp.resting_heart_rate)
+            }
+            if (temp.blood_pressure_sys != null) {
+              weekBPsys = parseInt(temp.blood_pressure_sys)
+            }
+            if (temp.blood_pressure_dia != null) {
+              weekBPdia = parseInt(temp.blood_pressure_dia)
+            }
+
+            break;
+          }
+        }
+        dataWeekHeight.push(weekHeight);
+        dataWeekWeight.push(weekWeight);
+        dataWeekBMI.push(weekBMI);
+        dataWeekBF.push(weekBF);
+        dataWeekHR.push(weekHR);
+        dataWeekBPsys.push(weekBPsys);
+        dataWeekBPdia.push(weekBPdia);
+
+      }
+
+      $scope.chartWeekHeight = getChartConfigForWeek(dataWeekHeight,null, onlyDates)
+      $scope.chartWeekWeight = getChartConfigForWeek(dataWeekWeight,null, onlyDates)
+      $scope.chartWeekBMI = getChartConfigForWeek(dataWeekBMI,null, onlyDates)
+      $scope.chartWeekBodyFat = getChartConfigForWeek(dataWeekBF,null, onlyDates)
+      $scope.chartWeekHeartRate = getChartConfigForWeek(dataWeekHR,null, onlyDates)
+      $scope.chartWeekBloodPressure = getChartConfigForWeek(dataWeekBPsys, dataWeekBPdia , onlyDates)
+
+    }
+
+    function getChartConfigForWeek(data, data2, dates) {
+      var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+      ];
+
+      var TstartDate = moment().utcOffset('-07:00').subtract(6, 'days').format('L');
+      var startDate = moment(TstartDate)
+      var TendDate = moment().utcOffset('-07:00').format('L');
+      var endDate = moment(TendDate)
+
+      var dateList = [];
+      var tempDate = startDate;
+      var i = 0;
+
+      while (tempDate.diff(endDate) <= 0) {
+        if (i == 0) {
+          dateList.push(monthNames[startDate.month()] + " " + startDate.date())
+          i++;
+        }
+        else {
+          dateList.push(tempDate.date())
+        }
+        var Tdate = startDate.add(1, 'days').startOf('day').format('L');
+        tempDate = moment(Tdate);
+      }
+
+    
+      var chartConfig = {
+        options: {
+          chart: {
+            type: 'column',
+            backgroundColor: 'transparent',
+            //spacingLeft: 5,
+            // Explicitly tell the width and height of a chart
+            width: null,
+            height: null
+          },
+          title: {
+            text: '',
+          },
+          plotOptions: {
+            column: {
+              dataLabels: {
+                enabled: false,
+                color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+              }
+            }
+          },
+          //Hide highcharts link from bottom
+          credits: {
+            enabled: false
+          },
+          //Make the legend invisible.[footer series labels]
+          legend: {
+            x: 9999,
+            y: 9999
+          },
+        },
+        //X axis data
+        xAxis: {
+          categories: dateList,
+        },
+       /* yAxis: {
+          title: {
+            text: ''
+          },
+        },*/
+        series: [
+          {
+            data: data,
+            color: "#009CDB",
+            borderColor: 'transparent'
+          },
+           {
+            data: data2,
+            color: "#F3A81B",
+            borderColor: 'transparent'
+          }
+        ],
+        func: function (chart) {
+        }
+      };
+      return chartConfig;
+    }
+
 
     init();
 

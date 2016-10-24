@@ -11075,6 +11075,11 @@ border:1.5px solid grey !important;
     display:inline-block;
 }
 .vitals div img {
+    height:30px;
+}
+
+.vitals {}
+.vitalsDay div img {
     height:80px;
 }
 

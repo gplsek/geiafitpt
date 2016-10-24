@@ -20,65 +20,216 @@
             <!--temp code-->
         </div>
     
-    <section class="main">
-      <ul class="selectionTab">
-        <li ng-class="{'active': selectedView == 'Today'}" ng-click="changeView(1)">Today</li>
-        <li ng-class="{'active': selectedView == 'Week'}" ng-click="changeView(2)">Week</li>
-        <li ng-class="{'active': selectedView == 'Month'}" ng-click="changeView(3)">Month</li>
-      </ul>
+        <section class="main">
+            <ul class="selectionTab">
+                <li ng-class="{'active': selectedView == 'Today'}" ng-click="changeView(1)">Today</li>
+                <li ng-class="{'active': selectedView == 'Week'}" ng-click="changeView(2)">Week</li>
+                <li ng-class="{'active': selectedView == 'Month'}" ng-click="changeView(3)">Month</li>
+            </ul>
         </section>
 
-   
-       <center>
-          <h4 style="text-content:center;">Emotion</h4>
-       </center>
-       <br>
-        
-        <div class="row">
-            <input type="range" on-drag="changeSmile()" class={{smileyClass}}  min="0" max="100" value="" step="1" id="smileSlide" >
+        <div ng-show="DefaultView"></div>
+
+        <div class ="vitalsDay" ng-show="DayView">
+            <center>
+                <h4 style="text-content:center;">Emotion</h4>
+            </center>
+            <br>
+            <div class="row">
+                <input type="range" on-drag="changeSmile()" class={{smileyClass}} min="0" max="100" value="" step="1" id="smileSlide">
+            </div>
+            <center>
+                <h4>Feeling <strong>Great</strong>
+                    <!--Update this code to change with each increment of 10 (Ex: Terrible(0-10), Bad(10-20), Not Bad(20-30), So-So(30-40), OK(40-50), Alright(50-60), Good(60-70), Great (70-80), Awesome (80-90), Terrific (90-100) -->
+                </h4>
+            </center>
+            <div class="row" align="center">
+                <div class="col col-50 vitalBox">
+                    Height<br><br><img src="img/Height.png"><br><br>
+                    <input type="text" editable="false" placeholder="6'2''" style="text-align:center;" ng-model="vital.height">
+                </div>
+                <div class="col col-50 vitalBoxAlt">
+                    Weight<br><br><img src="img/Weight.png"><br><br>
+                    <input type="text" placeholder="154 LBS" style="text-align:center;" ng-model="vital.weight">
+                </div>
+            </div>
+            <div class="row" align="center">
+                <div class="col col-50 vitalBox">
+                    BMI<br><br><img src="img/Weight.png"><br><br>
+                    <input type="text" placeholder="18" style="text-align:center;" ng-model="vital.bmi">
+                </div>
+                <div class="col col-50 vitalBoxAlt">
+                    Body Fat %<br><br><img src="img/Body-Fat.png"><br><br>
+                    <input type="text" placeholder="22%" style="text-align:center;" ng-model="vital.body_fat">
+                </div>
+            </div>
+            <div class="row" align="center">
+                <div class="col col-50 vitalBox">
+                    Heart Rate<br><br><img src="img/Heart-Rate.png"><br><br>
+                    <input type="text" placeholder="60 BPM" style="text-align:center;" ng-model="vital.resting_heart_rate">
+                </div>
+                <div class="col col-50 vitalBoxAlt">
+                    Blood Pressure<br><br><img src="img/Blood-Pressure.png"><br><br>
+                    <input type="text" placeholder="120" class="vitalsBP" ng-model="vital.blood_pressure_sys"> /
+                    <input type="text" placeholder="80" class="vitalsBP" ng-model="vital.blood_pressure_dia">
+                </div>
+            </div>
+            <button class="button button-block btn-yellow" ng-click="setVitals()">Submit</button>
         </div>
-        
-       <center>
-            <h4>Feeling <strong>Great</strong><!--Update this code to change with each increment of 10 (Ex: Terrible(0-10), Bad(10-20), Not Bad(20-30), So-So(30-40), OK(40-50), Alright(50-60), Good(60-70), Great (70-80), Awesome (80-90), Terrific (90-100) --> </h4>
-       </center>
-       
-       <div class="row" align="center">
-            <div class="col col-50 vitalBox">
-                Height<br><br><img src="img/Height.png"><br><br>
-                <input type="text" editable="false" placeholder="6'2''" style="text-align:center;" ng-model="vital.height">
-                </div>
-        
-        <div class="col col-50 vitalBoxAlt">
-                Weight<br><br><img src="img/Weight.png"><br><br>
-                <input type="text" placeholder="154 LBS" style="text-align:center;" ng-model="vital.weight">
-                </div>
+
+        <div ng-show="WeekView">
+            <ul class="bar_chart_list">
+                <li>
+                    <div class="title">
+                        <div class="left_title">
+                            <img src="img/location_icon.png" alt="">
+                            <span> Height </span> 
+                        </div>
+                        <div class="right_title">
+                    </div>
+                    <div class="chart_block">
+                        <highchart id="w_container1" config="chartWeekHeight"></highchart>
+                    </div>
+                </li>
+                <li>
+                    <div class="title">
+                        <div class="left_title">
+                            <img src="img/location_icon.png" alt="">
+                            <span> Weight </span> 
+                        </div>
+                        <div class="right_title">
+                    </div>
+                    <div class="chart_block">
+                        <highchart id="w_container2" config="chartWeekWeight"></highchart>
+                    </div>
+                </li>
+                <li>
+                    <div class="title">
+                        <div class="left_title">
+                            <div><img src="img/location_icon.png" alt=""></div>
+                            <span> BMI </span> 
+                        </div>
+                        <div class="right_title">
+                    </div>
+                    <div class="chart_block">
+                        <highchart id="w_container3" config="chartWeekBMI"></highchart>
+                    </div>
+                </li>
+                <li>
+                    <div class="title">
+                        <div class="left_title">
+                            <div><img src="img/location_icon.png" alt=""></div>
+                            <span> Body Fat % </span> 
+                        </div>
+                        <div class="right_title">
+                    </div>
+                    <div class="chart_block">
+                        <highchart id="w_container4" config="chartWeekBodyFat"></highchart>
+                    </div>
+                </li>
+                <li>
+                    <div class="title">
+                        <div class="left_title">
+                            <div><img src="img/location_icon.png" alt=""></div>
+                            <span> Heart Rate </span> 
+                        </div>
+                        <div class="right_title">
+                    </div>
+                    <div class="chart_block">
+                        <highchart id="w_container5" config="chartWeekHeartRate"></highchart>
+                    </div>
+                </li>
+                <li>
+                    <div class="title">
+                        <div class="left_title">
+                            <div><img src="img/location_icon.png" alt=""></div>
+                            <span> Blood Pressure </span> 
+                        </div>
+                        <div class="right_title">
+                    </div>
+                    <div class="chart_block">
+                        <highchart id="w_container6" config="chartWeekBloodPressure"></highchart>
+]                    </div>
+                </li>
+            </ul>
         </div>
-     
-       <div class="row" align="center">
-            <div class="col col-50 vitalBox">
-                BMI<br><br><img src="img/Weight.png"><br><br>
-                <input type="text" placeholder="18" style="text-align:center;" ng-model="vital.bmi">
-                </div>
-               
-        <div class="col col-50 vitalBoxAlt">
-                Body Fat %<br><br><img src="img/Body-Fat.png"><br><br>
-                <input type="text" placeholder="22%" style="text-align:center;" ng-model="vital.body_fat">
-                </div>
+
+        <div ng-show="MonthView">
+            <ul class="bar_chart_list">
+                <li>
+                    <div class="title">
+                        <div class="left_title">
+                            <img src="img/location_icon.png" alt="">
+                            <span> Height </span> 
+                        </div>
+                        <div class="right_title">
+                    </div>
+                    <div class="chart_block">
+                        <highchart id="w_container1" config="chartMonthHeight"></highchart>
+                    </div>
+                </li>
+                <li>
+                    <div class="title">
+                        <div class="left_title">
+                            <img src="img/location_icon.png" alt="">
+                            <span> Weight </span> 
+                        </div>
+                        <div class="right_title">
+                    </div>
+                    <div class="chart_block">
+                        <highchart id="w_container2" config="chartMonthWeight"></highchart>
+                    </div>
+                </li>
+                <li>
+                    <div class="title">
+                        <div class="left_title">
+                            <div><img src="img/location_icon.png" alt=""></div>
+                            <span> BMI </span> 
+                        </div>
+                        <div class="right_title">
+                    </div>
+                    <div class="chart_block">
+                        <highchart id="w_container3" config="chartMonthBMI"></highchart>
+                    </div>
+                </li>
+                <li>
+                    <div class="title">
+                        <div class="left_title">
+                            <div><img src="img/location_icon.png" alt=""></div>
+                            <span> Body Fat % </span> 
+                        </div>
+                        <div class="right_title">
+                    </div>
+                    <div class="chart_block">
+                        <highchart id="w_container4" config="chartMonthBodyFat"></highchart>
+                    </div>
+                </li>
+                <li>
+                    <div class="title">
+                        <div class="left_title">
+                            <div><img src="img/location_icon.png" alt=""></div>
+                            <span> Heart Rate </span> 
+                        </div>
+                        <div class="right_title">
+                    </div>
+                    <div class="chart_block">
+                        <highchart id="w_container5" config="chartMonthHeartRate"></highchart>
+                    </div>
+                </li>
+                <li>
+                    <div class="title">
+                        <div class="left_title">
+                            <div><img src="img/location_icon.png" alt=""></div>
+                            <span> Blood Pressure </span> 
+                        </div>
+                        <div class="right_title">
+                    </div>
+                    <div class="chart_block">
+                        <highchart id="w_container6" config="chartMonthBloodPressure"></highchart>
+                    </div>
+                </li>
+            </ul>
         </div>
-        
-       
-        <div class="row" align="center">
-            <div class="col col-50 vitalBox">
-                Heart Rate<br><br><img src="img/Heart-Rate.png"><br><br>
-                <input type="text" placeholder="60 BPM" style="text-align:center;" ng-model="vital.resting_heart_rate">
-                </div>
-        <div class="col col-50 vitalBoxAlt">
-                Blood Pressure<br><br><img src="img/Blood-Pressure.png"><br><br>
-                <input type="text" placeholder="120" class="vitalsBP" ng-model="vital.blood_pressure_dia">
-                /
-                <input type="text" placeholder="80" class="vitalsBP" ng-model="vital.blood_pressure_sys">
-                </div>
-        </div>
-                <button class="button button-block btn-yellow" ng-click="setVitals()">Submit</button>
+
     </ion-content>
 </ion-view>
