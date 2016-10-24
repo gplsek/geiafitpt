@@ -5162,6 +5162,16 @@ angular.module('geiaFitApp')
       $scope.subNavList = !$scope.subNavList;
     }
 
+    $scope.vital = {
+      height : 0,
+      weight : 0,
+      BMI : 0,
+      fat : 0,
+      hr : 0,
+      BloodP : 0,
+      BloodPTotal : 0
+    }
+
     $scope.patientProfile = {
       name: $stateParams.name,
       age: $stateParams.age,
@@ -5204,6 +5214,30 @@ angular.module('geiaFitApp')
         console.log("error")
       })
     }
+
+    $scope.setVitals = function () {
+      var uid = $rootScope.patientId
+      var  data = {
+        height : $scope.vital.height,
+        weight : $scope.vital.weight,
+        bmi : $scope.vital.bmi,
+        body_fat : $scope.vital.body_fat,
+        resting_heart_rate : $scope.vital.resting_heart_rate,
+        blood_pressure_dia : $scope.vital.blood_pressure_dia,
+        blood_pressure_sys : $scope.vital.blood_pressure_sys,
+        emotion : document.getElementById('smileSlide').value,
+      }
+      console.log(data)
+      console.log(uid)
+      AppService.setVitals(data,uid).then(function (success) {
+        console.log("Vital Success")
+        console.log(success)
+      }, function (error) {
+        console.log("error")
+      })
+    }
+    
+
 
     $scope.changeView = function (view) {
       switch (view) {

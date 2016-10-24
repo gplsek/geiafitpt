@@ -238,6 +238,24 @@ angular.module('geiaFitApp')
       return prom;
     }
 
+
+    var setVitals = function (request_params, uid) {
+      console.log(uid)
+
+      var prom = $http({
+        headers: {
+          'X-CSRF-Token': $rootScope.token,
+          'Access-Control-Allow-Origin': '*'
+        },
+        method: 'POST',
+        url: ApiEndpoint.url + '/characteristics/' + uid,
+        data: request_params
+      }).then(function (response) {
+        console.log(response);
+      });
+      return prom;
+    }
+
  
     var getProfile = function (uid) {
       $rootScope.patientId = uid;
@@ -385,6 +403,7 @@ angular.module('geiaFitApp')
       getActivityGoal: getActivityGoal,
       getHealthPoint : getHealthPoint,
       getVitals: getVitals,
+      setVitals:setVitals,
       addPatient: addPatient,
       profile: getProfile,
       sortedByList: getSortedList,
