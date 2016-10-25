@@ -5031,6 +5031,7 @@ angular.module('geiaFitApp')
           if (characteristics == null || characteristics == undefined) {
             setSmiley(0)
             document.getElementById('smileSlide').value = 0;
+            $scope.emotion = "Terrible"
             $scope.vital = {
               height: 0,
               weight: 0,
@@ -5151,33 +5152,43 @@ angular.module('geiaFitApp')
       function setSmiley(value) {
         if (value > 0 && value <= 10) {
           $scope.smileyClass = "smile1"
+          $scope.emotion = "Terrible"
         }
         if (value > 10 && value <= 20) {
           $scope.smileyClass = "smile2"
+          $scope.emotion = "Bad"
         }
         if (value > 20 && value <= 30) {
           $scope.smileyClass = "smile3"
+          $scope.emotion = "Not Bad"
         }
         if (value > 30 && value <= 40) {
           $scope.smileyClass = "smile4"
+          $scope.emotion = "So-So"
         }
         if (value > 40 && value <= 50) {
           $scope.smileyClass = "smile5"
+          $scope.emotion = "OK"
         }
         if (value > 50 && value <= 60) {
           $scope.smileyClass = "smile6"
+          $scope.emotion = "Alright"
         }
         if (value > 60 && value <= 70) {
           $scope.smileyClass = "smile7"
+          $scope.emotion = "Good"
         }
         if (value > 70 && value <= 80) {
           $scope.smileyClass = "smile8"
+          $scope.emotion = "Great"
         }
         if (value > 80 && value <= 90) {
           $scope.smileyClass = "smile9"
+          $scope.emotion = "Awesome"
         }
         if (value > 90 && value <= 100) {
           $scope.smileyClass = "smile10"
+          $scope.emotion = "Terrific"
         }
       }
 
