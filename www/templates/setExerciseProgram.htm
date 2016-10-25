@@ -39,11 +39,14 @@
 				<span class="onoff off">OFF</span>
 				</span>
 			</div>
-			<div class="video-container"  style="height: 250px;">
-				<div class="video-container-inner" style="height:100%;">
-					<div ng-if="videoURI" class="video-container-text" ng-click="captureVideo()"></div>
-				    <iframe ng-if="videoURI" frameborder="0" ng-src="{{videoURI| trusted}}" scrolling="yes" ng-init="resizeIframe(this)"></iframe>
-                    <iframe ng-if="!videoURI" frameborder="0" ng-src="{{exerciseprogram.mp4| trusted}}" scrolling="yes" ng-init="resizeIframe(this)" ></iframe>
+			<div class="video-container">
+				<div class="video-container-inner">
+					<div ng-hide="edit" class="video-container-text" ng-click="captureVideo()"></div>
+				    <!--<iframe ng-if="videoURI" frameborder="0" ng-src="{{videoURI| trusted}}" scrolling="yes" ng-init="resizeIframe(this)"></iframe>
+                    <iframe ng-if="!videoURI" frameborder="0" ng-src="{{exerciseprogram.mp4| trusted}}" scrolling="yes" ng-init="resizeIframe(this)" ></iframe>-->
+                    <video ng-if="videoURI" poster="{{exerciseprogram.imageURI}}" frameborder="0" ng-src="{{videoURI| trusted}}" scrolling="yes" ng-init="resizeIframe(this)" controls></video>
+                    <video ng-if="!videoURI" ng-hide="submit" poster="{{exerciseprogram.imageURI}}" frameborder="0" ng-src="{{exerciseprogram.mp4| trusted}}" scrolling="yes" ng-init="resizeIframe(this)" controls></video>
+
 				</div>
 			</div>
 			<!--<div class="video-container" >

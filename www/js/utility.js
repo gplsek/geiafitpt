@@ -26,7 +26,7 @@ angular.module('geiaFitApp').service('utilityService', ['$rootScope', '$log', '$
         captureVideo: function () {
             var addPopup;
             addPopup = $ionicPopup.show({
-                template: '<div style="font-weight:bold;"> <button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="captureVideoFromGallery()">My Mobile Device</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;">My Library</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="captureVideoFromCamera()">Create New</button></div>',
+                template: '<div style="font-weight:bold;"> <button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="captureVideoFromGallery()">My Mobile Device</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="addFromLibrary()">My Library</button><button class="button button-block btn-yellow" style="color: #fff;font-weight:bold;" ng-click="captureVideoFromCamera()">Create New</button></div>',
                 // template: '<div style="background: #121516; color: #fff;"> <button class="button button-block btn-yellow" style="background: #121516; color: #fff;">My Mobile Device</button><button class="button button-block btn-yellow">My Library</button><button class="button button-block btn-yellow">Create New</button></div>',
                 title: 'Add Exercise',
                 subTitle: 'Choose a Source',
@@ -63,10 +63,8 @@ angular.module('geiaFitApp').service('utilityService', ['$rootScope', '$log', '$
                 addPopup.close();
                 navigator.camera.getPicture($rootScope.uploadVideo, onFail, {
                     destinationType: Camera.DestinationType.DATA_URL,
-                    mediaType: 2,
-                    sourceType: 2,      // 0:Photo Library, 1=Camera, 2=Saved Photo Album
-                    //encodingType: 0, // 0=JPG 1=PNG
-                    allowEdit: true
+                    mediaType: 1,
+                    sourceType: 0
                 }
                 );
             };
@@ -78,8 +76,11 @@ angular.module('geiaFitApp').service('utilityService', ['$rootScope', '$log', '$
                     $rootScope.thumbnail = prevSucc;
                     return prevImageSuccess(prevSucc);
                 }, fail);
-
-                var newvideoURI = "file://" + videoURI;
+                var isAvail = videoURI.includes("file://");
+                var newvideoURI = videoURI;
+                if (!isAvail) {
+                    newvideoURI = "file://" + videoURI;
+                }
                 $rootScope.excVideo = newvideoURI;
                 window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function () {
                     // alert('success requestFileSystem');
@@ -100,8 +101,8 @@ angular.module('geiaFitApp').service('utilityService', ['$rootScope', '$log', '$
                                 var dataUrl = e.target.result;
                                 var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
                                 $rootScope.excVideoData = base64Data;
-                                 //Redirect
-                                 $state.transitionTo("setExerciseProgram", {}, { reload: true });
+                                //Redirect
+                                $state.transitionTo("setExerciseProgram", {}, { reload: true });
                             };
                         }
                     }, function () {
@@ -167,6 +168,11 @@ angular.module('geiaFitApp').service('utilityService', ['$rootScope', '$log', '$
             // Creates a thumbnail from the movie
             // The name is the moviename but with .png instead of .mov
             function onCopySuccess(entry) {
+                var name = entry.nativeURL.slice(0, -4);
+                window.PKVideoThumbnail.createThumbnail(entry.nativeURL, name + '.png', function (prevSucc) {
+                    $rootScope.thumbnail = prevSucc;
+                    return prevImageSuccess(prevSucc);
+                }, fail);
                 $rootScope.excVideo = entry.nativeURL;
                 window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function () {
                     // alert('success requestFileSystem');
@@ -187,7 +193,7 @@ angular.module('geiaFitApp').service('utilityService', ['$rootScope', '$log', '$
                                 var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
                                 $rootScope.excVideoData = base64Data;
                                 //Redirect
-                                 $state.transitionTo("setExerciseProgram", {}, { reload: true });
+                                $state.transitionTo("setExerciseProgram", {}, { reload: true });
                             };
                         }
                     }, function () {
@@ -196,11 +202,7 @@ angular.module('geiaFitApp').service('utilityService', ['$rootScope', '$log', '$
                 }, function () {
                     // error
                 });
-                var name = entry.nativeURL.slice(0, -4);
-                window.PKVideoThumbnail.createThumbnail(entry.nativeURL, name + '.png', function (prevSucc) {
-                    $rootScope.thumbnail = prevSucc;
-                    return prevImageSuccess(prevSucc);
-                }, fail);
+
             }
 
             // Called on thumbnail creation success
