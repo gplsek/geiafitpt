@@ -362,6 +362,7 @@ progress[value]::-webkit-progress-bar {
     right: 2px;
     top: 18px;
     position: absolute;
+    z-index: 9;
 }
 #exercise-program-container div.video-container{
     padding-top: 0px;
