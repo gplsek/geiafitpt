@@ -391,6 +391,61 @@ angular.module('geiaFitApp')
           thumb1: $stateParams.thumb1,
           thumb2: $stateParams.thumb2
         };
+
+      if ($scope.fromLibrary) {
+
+        $rootScope.thumbnail = $stateParams.thumb1;
+        $rootScope.excVideo = $stateParams.mp4;
+        // $rootScope.excVideoData = $stateParams.mp4;
+        $scope.videoURI = $stateParams.mp4;
+
+        var filename = "LibVideo.mp4";
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSystem) {
+
+          var ft = new FileTransfer();
+          ft.download($stateParams.mp4, fileSystem.root.toURL() + "/" + filename, function (entry) {
+            var videoElement = document.createElement('video');
+            videoElement.controls = 'controls';
+            videoElement.src = entry.toNativeURL();
+
+            var isAvail = videoElement.src.includes("file://");
+            var newvideoURI = videoElement.src;
+            if (!isAvail) {
+              newvideoURI = "file://" + videoElement.src;
+            }
+            $rootScope.excVideo = newvideoURI;
+            window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function () {
+              // alert('success requestFileSystem');
+            }, function () {
+              //error
+            });
+            window.resolveLocalFileSystemURL(newvideoURI, function (fileEntry) {
+              fileEntry.file(function (file) {
+                // alert(JSON.stringify(file)); //view full metadata
+                var type = file.type;
+                var nameoffile = file.name;
+                $scope.exerciseprogram.videoname = file.name;
+
+                if (file != null || file != undefined) {
+                  var fileReader = new FileReader();
+                  fileReader.readAsDataURL(file);
+                  fileReader.onload = function (e) {
+                    var dataUrl = e.target.result;
+                    var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
+                    $scope.exerciseprogram.videodata = base64Data;
+                  };
+                }
+              }, function () {
+                //error
+              });
+            }, function () {
+              // error
+            });
+
+          });
+        });
+
+      }
       $scope.selectedReps = $scope.stepsList[1];
       $scope.selectedSet = $scope.repsSet[1];
       $scope.selectedDaily = $scope.repsDaily[1];
@@ -399,7 +454,8 @@ angular.module('geiaFitApp')
 
         var exercise = {
           "fromLibrary": $stateParams.fromLibrary,
-          "video_title": $scope.exerciseprogram.title,
+          "name": $scope.exerciseprogram.title,
+          // "video_title": $scope.exerciseprogram.title,
           "video_data": $scope.exerciseprogram.videodata,
           "video_name": $scope.exerciseprogram.videoname,
           "video_image_name": $scope.exerciseprogram.imagename,
@@ -2262,10 +2318,10 @@ angular.module('geiaFitApp')
     }
 
     if ($rootScope.thumbnail) {
-      var isAvail = videoURI.includes("file://");
-      var newvideoURI = videoURI;
+      var isAvail = $rootScope.thumbnail.includes("file://");
+      var newvideoURI = $rootScope.thumbnail;
       if (!isAvail) {
-        newvideoURI = "file://" + videoURI;
+        newvideoURI = "file://" + $rootScope.thumbnail;
       }
       window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function () {
 
@@ -2788,9 +2844,9 @@ angular.module('geiaFitApp')
     getActivityDataForWeek = function (successData) {
       activityDataForWeek = [];
       var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').format('L');
-        var startDate = moment(TstartDate)
-        var TendDate = moment().utcOffset('-07:00').format('L');
-        var endDate = moment(TendDate)
+      var startDate = moment(TstartDate)
+      var TendDate = moment().utcOffset('-07:00').format('L');
+      var endDate = moment(TendDate)
 
       for (var x in successData) {
         var unixDate = successData[x].created
@@ -2980,9 +3036,9 @@ angular.module('geiaFitApp')
       $scope.totalWeekHigh = (totalWeekHigh == null) ? 0 : totalWeekHigh;
 
       var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
       ];
-      onlyDates[0] = monthNames[weekDates[0].month()]+" "+onlyDates[0] 
+      onlyDates[0] = monthNames[weekDates[0].month()] + " " + onlyDates[0]
 
       $scope.chartConfigWeekViewExercise = getChartConfigForWeek(dataWeekExerciseGoal, dataWeekExerciseComp, dataWeekExerciseExce, "#009CDB", onlyDates)
       $scope.chartConfigWeekViewSteps = getChartConfigForWeek(dataWeekStepsGoal, dataWeekStepsComp, dataWeekStepsExce, "#009CDB", onlyDates)
@@ -2993,10 +3049,10 @@ angular.module('geiaFitApp')
 
     getComplianceDataForWeek = function (successData) {
       complianceDataForWeek = [];
-        var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').format('L');
-        var startDate = moment(TstartDate)
-        var TendDate = moment().utcOffset('-07:00').format('L');
-        var endDate = moment(TendDate)
+      var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').format('L');
+      var startDate = moment(TstartDate)
+      var TendDate = moment().utcOffset('-07:00').format('L');
+      var endDate = moment(TendDate)
 
       for (var x in successData) {
         var unixDate = successData[x].created
@@ -3058,10 +3114,10 @@ angular.module('geiaFitApp')
         dataWeekComplianceExce.push(total_compliance_exce)
       }
       var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
       ];
-      onlyDates[0] = monthNames[weekDates[0].month()]+" "+onlyDates[0] 
-      
+      onlyDates[0] = monthNames[weekDates[0].month()] + " " + onlyDates[0]
+
       $scope.chartConfigWeekViewComp = getChartConfigForWeek(dataWeekComplianceGoal, dataWeekCompliance, dataWeekComplianceExce, "#009CDB", onlyDates)
     }
 
@@ -5046,6 +5102,8 @@ angular.module('geiaFitApp')
       }
 
       $scope.vital = {
+        id: null,
+        record_date: null,
         height: 0,
         weight: 0,
         bmi: 0,
@@ -5105,6 +5163,8 @@ angular.module('geiaFitApp')
           else {
             setSmiley(characteristics.emotion * 100)
             $scope.vital = {
+              id: characteristics.id,
+              record_date: characteristics.record_date,
               height: characteristics.height,
               weight: characteristics.weight,
               bmi: characteristics.bmi,
@@ -5113,6 +5173,7 @@ angular.module('geiaFitApp')
               blood_pressure_dia: characteristics.blood_pressure_dia,
               blood_pressure_sys: characteristics.blood_pressure_sys
             }
+            console.log("Vitals" + $scope.vital);
             document.getElementById('smileSlide').value = (characteristics.emotion * 100)
           }
 
@@ -5146,16 +5207,34 @@ angular.module('geiaFitApp')
 
       $scope.setVitals = function () {
         var uid = $rootScope.patientId
-        var data = {
-          height: $scope.vital.height,
-          weight: $scope.vital.weight,
-          bmi: $scope.vital.bmi,
-          body_fat: $scope.vital.body_fat,
-          resting_heart_rate: $scope.vital.resting_heart_rate,
-          blood_pressure_dia: $scope.vital.blood_pressure_dia,
-          blood_pressure_sys: $scope.vital.blood_pressure_sys,
-          emotion: document.getElementById('smileSlide').value,
+        var data = null;
+        if ($scope.vital.id) {
+          data = {
+            height: $scope.vital.height,
+            weight: $scope.vital.weight,
+            bmi: $scope.vital.bmi,
+            body_fat: $scope.vital.body_fat,
+            resting_heart_rate: $scope.vital.resting_heart_rate,
+            blood_pressure_dia: $scope.vital.blood_pressure_dia,
+            blood_pressure_sys: $scope.vital.blood_pressure_sys,
+            emotion: document.getElementById('smileSlide').value,
+            id: $scope.vital.id,
+            record_date: $scope.vital.record_date
+          }
+        } else {
+          data = {
+            height: $scope.vital.height,
+            weight: $scope.vital.weight,
+            bmi: $scope.vital.bmi,
+            body_fat: $scope.vital.body_fat,
+            resting_heart_rate: $scope.vital.resting_heart_rate,
+            blood_pressure_dia: $scope.vital.blood_pressure_dia,
+            blood_pressure_sys: $scope.vital.blood_pressure_sys,
+            emotion: document.getElementById('smileSlide').value,
+            record_date: moment().unix()
+          }
         }
+
         console.log(data)
         console.log(uid)
         AppService.setVitals(data, uid).then(function (success) {
@@ -5376,7 +5455,7 @@ angular.module('geiaFitApp')
         var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
           "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
         ];
-        onlyDates[0] = monthNames[weekDates[0].month()]+" "+onlyDates[0] 
+        onlyDates[0] = monthNames[weekDates[0].month()] + " " + onlyDates[0]
 
         $scope.chartWeekHeight = getChartConfigForWeek(dataWeekHeight, null, onlyDates)
         $scope.chartWeekWeight = getChartConfigForWeek(dataWeekWeight, null, onlyDates)

@@ -10347,8 +10347,12 @@ ion-header-bar {
   padding-bottom: 56.25%;
   width: 100%;
   padding-top: 30px;
-  height: 0;
+  height: auto;
   overflow: hidden; }
+  .video-container video{
+height: auto;
+ width: 100%;
+  }
   .video-container .video-container-inner {
     border:1px solid #979797;
     padding:50px;

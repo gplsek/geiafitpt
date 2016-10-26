@@ -247,7 +247,7 @@ angular.module('geiaFitApp')
           'X-CSRF-Token': $rootScope.token,
           'Access-Control-Allow-Origin': '*'
         },
-        method: 'POST',
+        method: 'PUT',
         url: ApiEndpoint.url + '/characteristics/' + uid,
         data: request_params
       }).then(function (response) {

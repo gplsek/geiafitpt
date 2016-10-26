@@ -7,7 +7,22 @@
         "files": {}
     },
     "installed_plugins": {
+        "cordova-plugin-camera": {
+            "PACKAGE_NAME": "com.ionicframework.geiafit309210"
+        },
         "cordova-plugin-console": {
+            "PACKAGE_NAME": "com.ionicframework.geiafit309210"
+        },
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "com.ionicframework.geiafit309210"
+        },
+        "cordova-plugin-file-transfer": {
+            "PACKAGE_NAME": "com.ionicframework.geiafit309210"
+        },
+        "cordova-plugin-media-capture": {
+            "PACKAGE_NAME": "com.ionicframework.geiafit309210"
+        },
+        "cordova-plugin-photokandy-video-thumbnail": {
             "PACKAGE_NAME": "com.ionicframework.geiafit309210"
         },
         "cordova-plugin-splashscreen": {
@@ -20,18 +35,6 @@
             "PACKAGE_NAME": "com.ionicframework.geiafit309210"
         },
         "ionic-plugin-keyboard": {
-            "PACKAGE_NAME": "com.ionicframework.geiafit309210"
-        },
-        "cordova-plugin-device": {
-            "PACKAGE_NAME": "com.ionicframework.geiafit309210"
-        },
-        "cordova-plugin-photokandy-video-thumbnail": {
-            "PACKAGE_NAME": "com.ionicframework.geiafit309210"
-        },
-        "cordova-plugin-media-capture": {
-            "PACKAGE_NAME": "com.ionicframework.geiafit309210"
-        },
-        "cordova-plugin-camera": {
             "PACKAGE_NAME": "com.ionicframework.geiafit309210"
         }
     },
