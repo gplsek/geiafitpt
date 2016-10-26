@@ -5065,6 +5065,7 @@ angular.module('geiaFitApp')
           $scope.changeView(1);
           VitalData = success;
 
+          var characteristics;
           var tempData = success;
           var Tdate = moment().utcOffset('-07:00').format('L');
           var today = moment(Tdate)
