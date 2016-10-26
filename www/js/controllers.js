@@ -2771,28 +2771,26 @@ angular.module('geiaFitApp')
     }
 
     getWeekDates = function () {
-      var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').format('L');
+      var TstartDate = moment().utcOffset('-07:00').subtract(6, 'days').format('L');
       var startDate = moment(TstartDate)
       var TendDate = moment().utcOffset('-07:00').format('L');
       var endDate = moment(TendDate)
-
       var weekDates = [];
-      //var date = startDate;
-      while (startDate.diff(endDate) < 0) {
+
+      while (startDate.diff(endDate) <= 0) {
         weekDates.push(startDate)
         var tempDate = startDate.add(1, 'days').format('L');
         startDate = moment(tempDate);
       }
-
       return weekDates;
     }
 
     getActivityDataForWeek = function (successData) {
       activityDataForWeek = [];
-      var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').startOf('day').format('L');
-      var startDate = moment(TstartDate);
-      var TendDate = moment().utcOffset('-07:00').format('L');
-      var endDate = moment(TendDate);
+      var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').format('L');
+        var startDate = moment(TstartDate)
+        var TendDate = moment().utcOffset('-07:00').format('L');
+        var endDate = moment(TendDate)
 
       for (var x in successData) {
         var unixDate = successData[x].created
@@ -2981,6 +2979,11 @@ angular.module('geiaFitApp')
       $scope.totalWeekMid = (totalWeekMid == null) ? 0 : totalWeekMid;
       $scope.totalWeekHigh = (totalWeekHigh == null) ? 0 : totalWeekHigh;
 
+      var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+      ];
+      onlyDates[0] = monthNames[weekDates[0].month()]+" "+onlyDates[0] 
+
       $scope.chartConfigWeekViewExercise = getChartConfigForWeek(dataWeekExerciseGoal, dataWeekExerciseComp, dataWeekExerciseExce, "#009CDB", onlyDates)
       $scope.chartConfigWeekViewSteps = getChartConfigForWeek(dataWeekStepsGoal, dataWeekStepsComp, dataWeekStepsExce, "#009CDB", onlyDates)
       $scope.chartConfigWeekViewLow = getChartConfigForWeek(dataWeekLightGoal, dataWeekLightComp, dataWeekLightExce, "#E0FBC6", onlyDates)
@@ -2990,10 +2993,10 @@ angular.module('geiaFitApp')
 
     getComplianceDataForWeek = function (successData) {
       complianceDataForWeek = [];
-      var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').startOf('day').format('L');
-      var startDate = moment(TstartDate);
-      var TendDate = moment().utcOffset('-07:00').format('L');
-      var endDate = moment(TendDate);
+        var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').format('L');
+        var startDate = moment(TstartDate)
+        var TendDate = moment().utcOffset('-07:00').format('L');
+        var endDate = moment(TendDate)
 
       for (var x in successData) {
         var unixDate = successData[x].created
@@ -3054,6 +3057,11 @@ angular.module('geiaFitApp')
         dataWeekCompliance.push(total_compliance);
         dataWeekComplianceExce.push(total_compliance_exce)
       }
+      var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+      ];
+      onlyDates[0] = monthNames[weekDates[0].month()]+" "+onlyDates[0] 
+      
       $scope.chartConfigWeekViewComp = getChartConfigForWeek(dataWeekComplianceGoal, dataWeekCompliance, dataWeekComplianceExce, "#009CDB", onlyDates)
     }
 
@@ -3653,7 +3661,7 @@ angular.module('geiaFitApp')
 
 
     function getChartConfigForWeek(dataGoal, dataAchived, dataExceed, colorcode, dates) {
-      var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      /*var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
       ];
 
@@ -3676,7 +3684,7 @@ angular.module('geiaFitApp')
         }
         var Tdate = startDate.add(1, 'days').startOf('day').format('L');
         tempDate = moment(Tdate);
-      }
+      }*/
 
 
       var chartConfig = {
@@ -3713,7 +3721,7 @@ angular.module('geiaFitApp')
         },
         //X axis data
         xAxis: {
-          categories: dateList,
+          categories: dates,
         },
         yAxis: {
           min: 0,
@@ -5265,13 +5273,13 @@ angular.module('geiaFitApp')
       }
 
       getWeekDates = function () {
-        var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').format('L');
+        var TstartDate = moment().utcOffset('-07:00').subtract(6, 'days').format('L');
         var startDate = moment(TstartDate)
         var TendDate = moment().utcOffset('-07:00').format('L');
         var endDate = moment(TendDate)
         var weekDates = [];
 
-        while (startDate.diff(endDate) < 0) {
+        while (startDate.diff(endDate) <= 0) {
           weekDates.push(startDate)
           var tempDate = startDate.add(1, 'days').format('L');
           startDate = moment(tempDate);
@@ -5281,16 +5289,15 @@ angular.module('geiaFitApp')
 
       getVitalDataForWeek = function (successData) {
         vitalDataForWeek = [];
-        var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').startOf('day').format('L');
-        var startDate = moment(TstartDate);
+        var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').format('L');
+        var startDate = moment(TstartDate)
         var TendDate = moment().utcOffset('-07:00').format('L');
-        var endDate = moment(TendDate);
+        var endDate = moment(TendDate)
 
         for (var x in successData) {
           var unixDate = successData[x].date_created
           var Tdate = moment.unix(unixDate).utcOffset('-07:00').format('L');
           var date = moment(Tdate)
-
           if (date.diff(startDate) >= 0 && date.diff(endDate) <= 0) {
             vitalDataForWeek.push(successData[x]);
           }
@@ -5365,6 +5372,11 @@ angular.module('geiaFitApp')
           dataWeekBPdia.push(weekBPdia);
 
         }
+
+        var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ];
+        onlyDates[0] = monthNames[weekDates[0].month()]+" "+onlyDates[0] 
 
         $scope.chartWeekHeight = getChartConfigForWeek(dataWeekHeight, null, onlyDates)
         $scope.chartWeekWeight = getChartConfigForWeek(dataWeekWeight, null, onlyDates)
@@ -5503,31 +5515,29 @@ angular.module('geiaFitApp')
 
 
       function getChartConfigForWeek(data, data2, dates) {
-        var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        /*var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
           "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
         ];
 
-        var TstartDate = moment().utcOffset('-07:00').subtract(6, 'days').format('L');
+        var TstartDate = moment().utcOffset('-07:00').subtract(7, 'days').format('L');
         var startDate = moment(TstartDate)
         var TendDate = moment().utcOffset('-07:00').format('L');
         var endDate = moment(TendDate)
-
         var dateList = [];
-        var tempDate = startDate;
         var i = 0;
 
-        while (tempDate.diff(endDate) <= 0) {
+        while (startDate.diff(endDate) <= 0) {
           if (i == 0) {
             dateList.push(monthNames[startDate.month()] + " " + startDate.date())
             i++;
           }
           else {
-            dateList.push(tempDate.date())
+            dateList.push(startDate.date())
           }
-          var Tdate = startDate.add(1, 'days').startOf('day').format('L');
-          tempDate = moment(Tdate);
+          var tempDate = startDate.add(1, 'days').format('L');
+          startDate = moment(tempDate);
         }
-
+        dates[0] = monthNames[startDate.month()]+" "+dates[0] */
 
         var chartConfig = {
           options: {
@@ -5562,7 +5572,7 @@ angular.module('geiaFitApp')
           },
           //X axis data
           xAxis: {
-            categories: dateList,
+            categories: dates,
           },
           yAxis: {
             title: {
