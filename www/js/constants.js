@@ -10,5 +10,6 @@ angular.module('geiaFitApp')
 })
 .constant('ApiEndpoint', {
   // url:'http://172.16.3.186/geia_api-master/api'
+  // url: 'http://172.16.3.169/geiafit/api'
  url: 'https://api.geiafit.com/api'
 });

@@ -392,60 +392,7 @@ angular.module('geiaFitApp')
           thumb2: $stateParams.thumb2
         };
 
-      if ($scope.fromLibrary) {
-
-        $rootScope.thumbnail = $stateParams.thumb1;
-        $rootScope.excVideo = $stateParams.mp4;
-        // $rootScope.excVideoData = $stateParams.mp4;
-        $scope.videoURI = $stateParams.mp4;
-
-        var filename = "LibVideo.mp4";
-        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSystem) {
-
-          var ft = new FileTransfer();
-          ft.download($stateParams.mp4, fileSystem.root.toURL() + "/" + filename, function (entry) {
-            var videoElement = document.createElement('video');
-            videoElement.controls = 'controls';
-            videoElement.src = entry.toNativeURL();
-
-            var isAvail = videoElement.src.includes("file://");
-            var newvideoURI = videoElement.src;
-            if (!isAvail) {
-              newvideoURI = "file://" + videoElement.src;
-            }
-            $rootScope.excVideo = newvideoURI;
-            window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function () {
-              // alert('success requestFileSystem');
-            }, function () {
-              //error
-            });
-            window.resolveLocalFileSystemURL(newvideoURI, function (fileEntry) {
-              fileEntry.file(function (file) {
-                // alert(JSON.stringify(file)); //view full metadata
-                var type = file.type;
-                var nameoffile = file.name;
-                $scope.exerciseprogram.videoname = file.name;
-
-                if (file != null || file != undefined) {
-                  var fileReader = new FileReader();
-                  fileReader.readAsDataURL(file);
-                  fileReader.onload = function (e) {
-                    var dataUrl = e.target.result;
-                    var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
-                    $scope.exerciseprogram.videodata = base64Data;
-                  };
-                }
-              }, function () {
-                //error
-              });
-            }, function () {
-              // error
-            });
-
-          });
-        });
-
-      }
+      
       $scope.selectedReps = $scope.stepsList[1];
       $scope.selectedSet = $scope.repsSet[1];
       $scope.selectedDaily = $scope.repsDaily[1];
@@ -454,10 +401,11 @@ angular.module('geiaFitApp')
 
         var exercise = {
           "fromLibrary": $stateParams.fromLibrary,
-          "name": $scope.exerciseprogram.title,
-          // "video_title": $scope.exerciseprogram.title,
+          // "name": $scope.exerciseprogram.title,
+          // "video_title: $scope.exerciseprogram.title,
+          "video_name": $scope.exerciseprogram.title,
           "video_data": $scope.exerciseprogram.videodata,
-          "video_name": $scope.exerciseprogram.videoname,
+          // "video_name": $scope.exerciseprogram.videoname,
           "video_image_name": $scope.exerciseprogram.imagename,
           "video_image": $scope.exerciseprogram.imagedata,
           "reps": "" + $scope.exerciseprogram.reps,
@@ -546,6 +494,113 @@ angular.module('geiaFitApp')
 
         }, function () {
         });
+      }
+
+      if ($scope.fromLibrary) {
+
+        $rootScope.thumbnail = $stateParams.thumb1;
+        $rootScope.excVideo = $stateParams.mp4;
+        $scope.videoURI = $stateParams.mp4;
+
+        // Download Video
+
+        var filename = "LibVideo.mp4";
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSystem) {
+
+          var ftVideo = new FileTransfer();
+          ftVideo.download($stateParams.mp4, fileSystem.root.toURL() + "/" + filename, function (entry) {
+            var videoElement = document.createElement('video');
+            videoElement.controls = 'controls';
+            videoElement.src = entry.toNativeURL();
+
+            var isAvail = videoElement.src.includes("file://");
+            var newvideoURI = videoElement.src;
+            if (!isAvail) {
+              newvideoURI = "file://" + videoElement.src;
+            }
+            // $rootScope.excVideo = newvideoURI;
+            window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function () {
+              // alert('success requestFileSystem');
+            }, function () {
+              //error
+            });
+            window.resolveLocalFileSystemURL(newvideoURI, function (fileEntry) {
+              fileEntry.file(function (file) {
+                // alert(JSON.stringify(file)); //view full metadata
+                var type = file.type;
+                var nameoffile = file.name;
+                $scope.exerciseprogram.videoname = file.name;
+
+                if (file != null || file != undefined) {
+                  var fileReader = new FileReader();
+                  fileReader.readAsDataURL(file);
+                  fileReader.onload = function (e) {
+                    var dataUrl = e.target.result;
+                    var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
+                    $scope.exerciseprogram.videodata = base64Data;
+                  };
+                }
+              }, function () {
+                //error
+              });
+            }, function () {
+              // error
+            });
+          });
+        });
+
+        //Complete video download
+
+
+
+        //Thumbnail image download.
+
+        var filename = "ThumbnailImg.png";
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSystem) {
+
+          var ft = new FileTransfer();
+          ft.download($stateParams.thumb1, fileSystem.root.toURL() + "/" + filename, function (entry) {
+            var imgElement = document.createElement('img');
+            imgElement.controls = 'controls';
+            imgElement.src = entry.toNativeURL();
+
+            var isAvail = imgElement.src.includes("file://");
+            var newImgURI = imgElement.src;
+            if (!isAvail) {
+              newImgURI = "file://" + imgElement.src;
+            }
+
+            window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function () {
+            }, function () {
+            });
+
+            window.resolveLocalFileSystemURL(newImgURI, function (fileEntry) {
+              fileEntry.file(function (file) {
+                var type = file.type;
+                var nameoffile = file.name;
+                $scope.exerciseprogram.imagename = file.name;
+
+                if (file != null || file != undefined) {
+                  var fileReader = new FileReader();
+                  fileReader.readAsDataURL(file);
+                  fileReader.onload = function (e) {
+                    var dataUrl = e.target.result;
+                    var base64Data = dataUrl.substr(dataUrl.indexOf('base64,') + 'base64,'.length);
+                    $scope.exerciseprogram.imagedata = base64Data;
+                  };
+                }
+              }, function () {
+                //error
+              });
+            }, function () {
+              // error
+            });
+          });
+        });
+
+        //Complete image download
+
+
       }
 
     }
@@ -1975,8 +2030,51 @@ angular.module('geiaFitApp')
             $scope.subNavList = false;
             break;
           case "11":
+            $scope.title = 'Ankle'
+            $scope.sortByGroup("Ankle", service)
+            $scope.subNavList = false;
+            break;
+          case "12":
             $scope.title = 'Foot'
             $scope.sortByGroup("foot", service)
+            $scope.subNavList = false;
+            break;
+          case "13":
+            $scope.title = 'Core'
+            $scope.sortByGroup("Core", service)
+            $scope.subNavList = false;
+            break;
+          case "14":
+            $scope.title = 'Beginner'
+            $scope.sortByGroup("Beginner", service)
+            $scope.subNavList = false;
+            break;
+          case "15":
+            $scope.title = 'Intermediate'
+            $scope.sortByGroup("Intermediate", service)
+            $scope.subNavList = false;
+            break;
+          case "16":
+            $scope.title = 'Advanced'
+            $scope.sortByGroup("Advanced", service)
+            $scope.subNavList = false;
+            break;
+          case "17":
+            //$scope.title = 'back'
+            break;
+          case "18":
+            $scope.title = 'Cervical'
+            $scope.sortByGroup("Cervical", service)
+            $scope.subNavList = false;
+            break;
+          case "19":
+            $scope.title = 'Thoracic'
+            $scope.sortByGroup("Thoracic", service)
+            $scope.subNavList = false;
+            break;
+          case "20":
+            $scope.title = 'Lumbar'
+            $scope.sortByGroup("Lumbar", service)
             $scope.subNavList = false;
             break;
           default:
@@ -2093,7 +2191,6 @@ angular.module('geiaFitApp')
       $scope.data = {
         model: null,
         availableOptions: [
-
           { id: '1', name: 'Exercise Name', classValue: '' },
           { id: '2', name: 'Category', classValue: 'disabledClass' },
           { id: '3', name: 'Upper Extremity', classValue: 'disabledClass' },
@@ -2104,7 +2201,16 @@ angular.module('geiaFitApp')
           { id: '8', name: 'Lower Extremity', classValue: 'disabledClass' },
           { id: '9', name: 'Hip', classValue: '' },
           { id: '10', name: 'Knee', classValue: '' },
-          { id: '11', name: 'Foot', classValue: '' }
+          { id: '11', name: 'Ankle', classValue: '' },
+          { id: '12', name: 'Foot', classValue: '' },
+          { id: '13', name: 'Core', classValue: '' },
+          { id: '14', name: 'Beginner', classValue: '' },
+          { id: '15', name: 'Intermediate', classValue: '' },
+          { id: '16', name: 'Advanced', classValue: '' },
+          { id: '17', name: 'Back', classValue: 'disabledClass' },
+          { id: '18', name: 'Cervical', classValue: '' },
+          { id: '19', name: 'Thoracic', classValue: '' },
+          { id: '20', name: 'Lumbar', classValue: '' },
         ]
       };
 
@@ -2188,7 +2294,15 @@ angular.module('geiaFitApp')
       { id: '4', name: 'Hand', show: 'true' },
       { id: '5', name: 'Hip', show: 'true' },
       { id: '6', name: 'Knee', show: 'true' },
-      { id: '7', name: 'Foot', show: 'true' }
+      { id: '7', name: 'Ankle', show: 'true' },
+      { id: '8', name: 'Foot', show: 'true' },
+      { id: '9', name: 'Core', show: 'true' },
+      { id: '10', name: 'Beginner', show: 'true' },
+      { id: '11', name: 'Intermediate', show: 'true' },
+      { id: '12', name: 'Advanced', show: 'true' },
+      { id: '13', name: 'Cervical', show: 'true' },
+      { id: '14', name: 'Thoracic', show: 'true' },
+      { id: '15', name: 'Lumbar', show: 'true' }
     ]
 
 
