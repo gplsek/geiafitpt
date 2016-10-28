@@ -38,6 +38,14 @@ module.exports.run = function (runOptions) {
         return Q.reject('Only one of "device"/"emulator" options should be specified');
     }
 
+    // validate target device for ios-sim
+    // Valid values for "--target" (case sensitive):
+    var validTargets = ['iPhone-4s', 'iPhone-5', 'iPhone-5s', 'iPhone-6-Plus', 'iPhone-6',
+        'iPad-2', 'iPad-Retina', 'iPad-Air', 'Resizable-iPhone', 'Resizable-iPad'];
+    if (!(runOptions.device) && runOptions.target && validTargets.indexOf(runOptions.target.split(',')[0]) < 0 ) {
+        return Q.reject(runOptions.target + ' is not a valid target for emulator');
+    }
+
     // support for CB-8168 `cordova/run --list`
     if (runOptions.list) {
         if (runOptions.device) return listDevices();
@@ -88,14 +96,14 @@ module.exports.run = function (runOptions) {
 
 /**
  * Filters the args array and removes supported args for the 'run' command.
- *
+ * 
  * @return {Array} array with unsupported args for the 'run' command
  */
 function filterSupportedArgs(args) {
         var filtered = [];
         var sargs = ['--device', '--emulator', '--nobuild', '--list', '--target', '--debug', '--release'];
         var re = new RegExp(sargs.join('|'));
-
+        
         args.forEach(function(element) {
             // supported args not found, we add
             // we do a regex search because --target can be "--target=XXX"
@@ -103,7 +111,7 @@ function filterSupportedArgs(args) {
                 filtered.push(element);
             }
         }, this);
-
+        
         return filtered;
 }
 
@@ -126,7 +134,7 @@ function deployToDevice(appPath, target, extraArgs) {
     if (target) {
         return spawn('ios-deploy', ['--justlaunch', '-d', '-b', appPath, '-i', target].concat(extraArgs));
     } else {
-        return spawn('ios-deploy', ['--justlaunch', '--no-wifi', '-d', '-b', appPath].concat(extraArgs));
+        return spawn('ios-deploy', ['--justlaunch', '-d', '-b', appPath].concat(extraArgs));
     }
 }
 
@@ -137,7 +145,7 @@ function deployToDevice(appPath, target, extraArgs) {
  * @return {Promise}        Resolves when deploy succeeds otherwise rejects
  */
 function deployToSim(appPath, target) {
-    // Select target device for emulator. Default is 'iPhone-6'
+    // Select target device for emulator. Default is 'iPhone-6' 
     if (!target) {
         return require('./list-emulator-images').run()
         .then(function (emulators) {
@@ -176,7 +184,7 @@ function listDevices() {
 function listEmulators() {
     return require('./list-emulator-images').run()
     .then(function (emulators) {
-        events.emit('log','Available iOS Simulators:');
+        events.emit('log','Available iOS Virtual Devices:');
         emulators.forEach(function (emulator) {
             events.emit('log','\t' + emulator);
         });

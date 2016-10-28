@@ -4,7 +4,7 @@
 		<ion-nav-buttons side="left">
 			<span class="icon ion-ios-arrow-back" ng-click="back()"></span>
 			<div class="title title-center header-item" style="z-index: -200" ng-click="gotoHome()">{{patientName}}</div>
-		</ion-nav-buttons>-->
+		</ion-nav-buttons>
 		
 	</ion-nav-bar>
 	<ion-content>
@@ -21,10 +21,11 @@
 		<section class="main">
 			<div class="dailySteps">
 				<h3>Set Total Daily Steps</h3>
-				<select class="customSelect" ng-options="item.id as item.steps for item in stepsList" ng-model="setActivityGoals.selectedSteps"></select>
+				<!--<select class="customSelect" ng-options="item.id as item.steps for item in stepsList" ng-model="setActivityGoals.selectedSteps"></select>-->
+				<select class="customSelect" ng-options="item for item in stepsList" ng-model="setActivityGoals.selectedSteps"></select>
 			</div>
 			<div class="stepspermin group">
-				<h3>Set Steps per minute</h3>
+				<h3>Set Steps Per Minute</h3>
 				<p>Select steps per minute, between the ranges is moderate, anything to the left is considered light activity, anything to the right is vigorous activity</p>
 
 			
@@ -71,7 +72,7 @@
 				</div>
 			</div>
 			<div class="heartrateperhour group">
-				<h3>Set heart rate per min</h3>
+				<h3>Set Heart Rate Per Min</h3>
 				<p>Select heart rate per minute, between the ranges is moderate, left of the range is light, and more than the right range is vigorous.</p>
 				<div class="pos-rel rangeBar">
 					<!-- <input type="range" ng-model="heartRatePerminVal" min="0" max="300" /> -->

@@ -1,5 +1,17 @@
 angular.module('geiaFitApp')
 
+  .service('loadingActivity', function () {
+    return {
+      show: function () {
+        var options = { dimBackground: true };
+        SpinnerPlugin.activityStart("Please wait...", options);
+      },
+      hide: function () {
+        SpinnerPlugin.activityStop();
+      }
+    }
+  })
+
   .service('AuthService', ['$q', '$http', 'USER_ROLES', 'ApiEndpoint', 'Flash', '$rootScope', function ($q, $http, USER_ROLES, ApiEndpoint, Flash, $rootScope) {
     console.log('ApiEndpoint', ApiEndpoint)
     var LOCAL_TOKEN_KEY = 'yourTokenKey';
@@ -22,8 +34,8 @@ angular.module('geiaFitApp')
 
     function storeUserCredentials(token, isChecked) {
 
-       localStorage.setItem('LOCAL_TOKEN_KEY', token);
-       localStorage.setItem('KEEP_SIGNED_IN', isChecked);
+      localStorage.setItem('LOCAL_TOKEN_KEY', token);
+      localStorage.setItem('KEEP_SIGNED_IN', isChecked);
       useCredentials(token);
     }
 
@@ -62,7 +74,7 @@ angular.module('geiaFitApp')
       }
       form = JSON.stringify(form);
       //$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-      if(localStorage.getItem('LOCAL_TOKEN_KEY') != null){
+      if (localStorage.getItem('LOCAL_TOKEN_KEY') != null) {
         logout();
       }
       var promise = $http({
@@ -70,7 +82,7 @@ angular.module('geiaFitApp')
         url: ApiEndpoint.url + '/user/login',
         data: form
       }).then(function (response) {
-        $rootScope.cookieValue = response.data.session_name+"="+response.data.sessid;
+        $rootScope.cookieValue = response.data.session_name + "=" + response.data.sessid;
         var token = response.data.token
         storeUserCredentials(token, isChecked);
         $rootScope.token = token;
@@ -114,14 +126,14 @@ angular.module('geiaFitApp')
       return (isAuthenticated && authorizedRoles.indexOf(role) !== -1);
     };
 
-    var resetPassword = function(email){
+    var resetPassword = function (email) {
 
-     var params = {
-       "email" : email
-     }
-     return $http({
+      var params = {
+        "email": email
+      }
+      return $http({
         method: 'POST',
-        data:params,
+        data: params,
         url: ApiEndpoint.url + "/profile/pwdreset "
       }).then(function (response) {
         return response;
@@ -142,7 +154,7 @@ angular.module('geiaFitApp')
       isAuthenticated: function () { return isAuthenticated; },
       username: function () { return username; },
       role: function () { return role; },
-      forgetPassword : resetPassword
+      forgetPassword: resetPassword
     };
   }])
 
@@ -200,7 +212,7 @@ angular.module('geiaFitApp')
 
     var getActivity = function (uid) {
       console.log(uid)
-      $rootScope.UID = uid ;
+      $rootScope.UID = uid;
       var prom = $http({
         method: "GET",
         url: ApiEndpoint.url + '/log/activity/' + uid
@@ -238,7 +250,25 @@ angular.module('geiaFitApp')
       return prom;
     }
 
- 
+
+    var setVitals = function (request_params, uid) {
+      console.log(uid)
+
+      var prom = $http({
+        headers: {
+          'X-CSRF-Token': $rootScope.token,
+          'Access-Control-Allow-Origin': '*'
+        },
+        method: 'PUT',
+        url: ApiEndpoint.url + '/characteristics/' + uid,
+        data: request_params
+      }).then(function (response) {
+        console.log(response);
+      });
+      return prom;
+    }
+
+
     var getProfile = function (uid) {
       $rootScope.patientId = uid;
       var prom = $http({
@@ -280,11 +310,11 @@ angular.module('geiaFitApp')
           //   title: "Review Snapshots",
           //   routingStateName: "reviewSnapshots"
           // },
-          // {
-          //   id: 5,
-          //   title: "Vitals",
-          //   routingStateName: "vitals"
-          // },
+          {
+            id: 5,
+            title: "Vitals",
+            routingStateName: "vitals"
+          },
           {
             id: 6,
             title: "Messages",
@@ -300,12 +330,12 @@ angular.module('geiaFitApp')
 
     var getThreshold = function (uid) {
       var promise = $http({
-         headers: {
+        headers: {
           'X-CSRF-Token': $rootScope.token,
           'Access-Control-Allow-Origin': '*'
         },
         method: "GET",
-        url: ApiEndpoint.url + "/goals/tresholds/"+ uid // Hardcoded needs to be replaced
+        url: ApiEndpoint.url + "/goals/tresholds/" + uid // Hardcoded needs to be replaced
       }).then(function (response) {
         return response.data;
       }, function (err) {
@@ -314,15 +344,15 @@ angular.module('geiaFitApp')
       return promise;
     }
 
-    var setThreshold = function (request_params,uid) {
+    var setThreshold = function (request_params, uid) {
       var promise = $http({
-         headers: {
+        headers: {
           'X-CSRF-Token': $rootScope.token,
           'Access-Control-Allow-Origin': '*'
         },
         method: "PUT",
         data: request_params,
-        url: ApiEndpoint.url + "/goals/tresholds/"+ uid // Hardcoded needs to be replaced
+        url: ApiEndpoint.url + "/goals/tresholds/" + uid // Hardcoded needs to be replaced
       }).then(function (response) {
         return response.data;
       }, function (err) {
@@ -344,9 +374,9 @@ angular.module('geiaFitApp')
       return prom;
     }
 
-    var setActivityGoal = function (request_params,uid) {
+    var setActivityGoal = function (request_params, uid) {
       var prom = $http({
-         headers: {
+        headers: {
           'X-CSRF-Token': $rootScope.token,
           'Access-Control-Allow-Origin': '*'
         },
@@ -361,15 +391,15 @@ angular.module('geiaFitApp')
       return prom;
     }
 
-    var onMessageHold = function (request_params,uid) {
+    var onMessageHold = function (request_params, uid) {
       var promise = $http({
-         headers: {
+        headers: {
           'X-CSRF-Token': $rootScope.token,
           'Access-Control-Allow-Origin': '*'
         },
         method: "POST",
         data: request_params,
-        url: ApiEndpoint.url + "/ptmessages/read/"+ uid // Hardcoded needs to be replaced
+        url: ApiEndpoint.url + "/ptmessages/read/" + uid // Hardcoded needs to be replaced
       }).then(function (response) {
         return response.data;
       }, function (err) {
@@ -381,10 +411,11 @@ angular.module('geiaFitApp')
     return {
       patientsData: getPatientsData,
       getActivity: getActivity,
-      setActivityGoal:setActivityGoal,
+      setActivityGoal: setActivityGoal,
       getActivityGoal: getActivityGoal,
-      getHealthPoint : getHealthPoint,
+      getHealthPoint: getHealthPoint,
       getVitals: getVitals,
+      setVitals: setVitals,
       addPatient: addPatient,
       profile: getProfile,
       sortedByList: getSortedList,
@@ -415,9 +446,9 @@ angular.module('geiaFitApp')
     var uploadProfileImage = function (params) {
       var ProfileImage = $http({
         headers: {
-                'X-CSRF-Token': $rootScope.token,
-                //'cookie': $rootScope.cookieValue
-              },
+          'X-CSRF-Token': $rootScope.token,
+          //'cookie': $rootScope.cookieValue
+        },
         method: "POST",
         url: ApiEndpoint.url + "/profile/profileimage/" + $rootScope.loggedInUserUid,
         data: params
@@ -431,21 +462,21 @@ angular.module('geiaFitApp')
       return ProfileImage;
     }
 
-    var saveProfile = function(params){
-        var profileData = $http({
-            headers: {
-                    'X-CSRF-Token': $rootScope.token,
-                    //'cookie': $rootScope.cookieValue
-                  },
-            method: "PUT",
-            data:params,
-            url: ApiEndpoint.url + "/profile/" + $rootScope.loggedInUserUid
-        }).then(function (response) {
-            return response.data;
-        }, function (err) {
-            console.log(err);
-        });
-        return profileData;
+    var saveProfile = function (params) {
+      var profileData = $http({
+        headers: {
+          'X-CSRF-Token': $rootScope.token,
+          //'cookie': $rootScope.cookieValue
+        },
+        method: "PUT",
+        data: params,
+        url: ApiEndpoint.url + "/profile/" + $rootScope.loggedInUserUid
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
+      });
+      return profileData;
     }
 
     return {
@@ -458,36 +489,36 @@ angular.module('geiaFitApp')
   .service('ChatApp', ['$rootScope', '$http', 'ApiEndpoint', function ($rootScope, $http, ApiEndpoint) {
 
 
- var uid = $rootScope.loggedInUserUid;
-   var getUserMessages = function(userId,ptid){
+    var uid = $rootScope.loggedInUserUid;
+    var getUserMessages = function (userId, ptid) {
 
       var messageData = $http({
-        method: "GET", 
-        url: ApiEndpoint.url +"/ptmessages/"+ptid+"/"+userId+"/000000"
-      }).then(function(response){
-         return response.data;
-      }, function(err){
-          console.log(err);
+        method: "GET",
+        url: ApiEndpoint.url + "/ptmessages/" + ptid + "/" + userId + "/000000"
+      }).then(function (response) {
+        return response.data;
+      }, function (err) {
+        console.log(err);
       });
       return messageData;
 
     }
 
 
-   var sendPatientMessage = function(message,userId,ptid){
-  //   alert("sendPatientMessage");
+    var sendPatientMessage = function (message, userId, ptid) {
+      //   alert("sendPatientMessage");
 
-    var messageData = $http({
-      headers: {
-                'X-CSRF-Token': $rootScope.token,
-                'Access-Control-Allow-Origin': '*'
-              },
-        method: "POST", 
-        url: ApiEndpoint.url + "/ptmessages/"+ptid+"/"+userId,
+      var messageData = $http({
+        headers: {
+          'X-CSRF-Token': $rootScope.token,
+          'Access-Control-Allow-Origin': '*'
+        },
+        method: "POST",
+        url: ApiEndpoint.url + "/ptmessages/" + ptid + "/" + userId,
 
         data: message,
       }).then(function (response) {
-       // alert("SERVICE SUCCESS" + JSON.stringify(response.data));
+        // alert("SERVICE SUCCESS" + JSON.stringify(response.data));
         return response.data;
       }, function (err) {
         alert("SERVICE ERROR" + JSON.stringify(err.data));
@@ -505,13 +536,13 @@ angular.module('geiaFitApp')
 
   }])
 
-.service('SetExerciseProgramService', ['$rootScope', '$http', 'ApiEndpoint', function ($rootScope, $http, ApiEndpoint) {
- console.log("SetExerciseProgramService"+$rootScope.patientId);
+  .service('SetExerciseProgramService', ['$rootScope', '$http', 'ApiEndpoint', 'loadingActivity', function ($rootScope, $http, ApiEndpoint, loadingActivity) {
+    console.log("SetExerciseProgramService" + $rootScope.patientId);
     var getExerciseList = function (pid) {
 
       var exerciseData = $http({
         method: "GET",
-        url:  ApiEndpoint.url +"/webex/"+pid
+        url: ApiEndpoint.url + "/webex/" + pid
       }).then(function (response) {
         return response.data;
       }, function (err) {
@@ -520,14 +551,14 @@ angular.module('geiaFitApp')
       return exerciseData;
     }
 
- var deleteExercise = function (ptId,exId) {
+    var deleteExercise = function (ptId, exId) {
       var deleteExercise = $http({
-          headers: {
-                'X-CSRF-Token': $rootScope.token,
-                'Access-Control-Allow-Origin': '*'
-              },
+        headers: {
+          'X-CSRF-Token': $rootScope.token,
+          'Access-Control-Allow-Origin': '*'
+        },
         method: "DELETE",
-        url:  ApiEndpoint.url +"/webex/"+ptId+"/"+exId
+        url: ApiEndpoint.url + "/webex/" + ptId + "/" + exId
       }).then(function (response) {
         return response.data;
       }, function (err) {
@@ -537,40 +568,42 @@ angular.module('geiaFitApp')
     }
 
 
-    var editExercise = function(exercise,ptId)
-    {
-       var exerciseData = $http({
-      headers: {
-                'X-CSRF-Token': $rootScope.token,
-                'Access-Control-Allow-Origin': '*'
-              },
-        method: "PUT", 
-        url: ApiEndpoint.url +"/webex/"+$rootScope.patientId,
-    data: exercise,
+    var editExercise = function (exercise, ptId) {
+      loadingActivity.show();
+      var exerciseData = $http({
+        headers: {
+          'X-CSRF-Token': $rootScope.token,
+          'Access-Control-Allow-Origin': '*'
+        },
+        method: "PUT",
+        url: ApiEndpoint.url + "/webex/" + $rootScope.patientId,
+        data: exercise,
       }).then(function (response) {
-      //  alert("SERVICE SUCCESS" + JSON.stringify(response.data));
+        loadingActivity.hide();
         return response.data;
       }, function (err) {
+        loadingActivity.hide();
         alert("SERVICE ERROR" + JSON.stringify(err.data));
         console.log(err);
       });
       return exerciseData;
     }
 
-     var saveExercise = function(exercise)
-    {
-       var exerciseData = $http({
-      headers: {
-                'X-CSRF-Token': $rootScope.token,
-                'Access-Control-Allow-Origin': '*'
-              },
-        method: "POST", 
-        url: ApiEndpoint.url +"/webex/"+$rootScope.patientId,
-    data: exercise,
+    var saveExercise = function (exercise) {
+      loadingActivity.show();
+      var exerciseData = $http({
+        headers: {
+          'X-CSRF-Token': $rootScope.token,
+          'Access-Control-Allow-Origin': '*'
+        },
+        method: "POST",
+        url: ApiEndpoint.url + "/webex/" + $rootScope.patientId,
+        data: exercise,
       }).then(function (response) {
-      //  alert("SERVICE SUCCESS" + JSON.stringify(response.data));
+        loadingActivity.hide();
         return response.data;
       }, function (err) {
+        loadingActivity.hide();
         alert("SERVICE ERROR" + JSON.stringify(err.data));
         console.log(err);
       });
@@ -579,16 +612,16 @@ angular.module('geiaFitApp')
 
     return {
       listOfExercise: getExerciseList,
-      saveExercise : saveExercise,
-      editExercise : editExercise,
-      deleteExercise : deleteExercise
+      saveExercise: saveExercise,
+      editExercise: editExercise,
+      deleteExercise: deleteExercise
 
     }
 
   }])
 
 
- .service('ExerciseProgramService', ['$rootScope', '$http', 'ApiEndpoint', function ($rootScope, $http, ApiEndpoint) {
+  .service('ExerciseProgramService', ['$rootScope', '$http', 'ApiEndpoint', function ($rootScope, $http, ApiEndpoint) {
 
     var getExerciseList = function () {
 
@@ -624,37 +657,59 @@ angular.module('geiaFitApp')
       return exerciseData;
     }
 
-    return {
-      exerciseData: getExerciseList
-    }
-
-  }])
-
-  .service('AddExerciseService', ['$rootScope', '$http', 'ApiEndpoint', function ($rootScope, $http, ApiEndpoint) {
-
-    var addExercise = function(params){
-      var methodType = "";
-      if(params.exid == null){
-        methodType = "POST";
-      }else{
-        methodType = "PUT";
-      }
-        var exerciseData = $http({
-          headers: {
-            'X-CSRF-Token': $rootScope.token,
-            //'cookie': $rootScope.cookieValue
-          },
-        method: methodType,
-        data:params,
-        url: ApiEndpoint.url + "/ptexlib/" + $rootScope.loggedInUserUid
+    var deleteExercise = function (ptId, exId) {
+      console.log(ptId + " : " + exId)
+      var deleteExercise = $http({
+        headers: {
+          'X-CSRF-Token': $rootScope.token,
+          'Access-Control-Allow-Origin': '*'
+        },
+        method: "DELETE",
+        url: ApiEndpoint.url + "/ptexlib/" + ptId + "/" + exId
       }).then(function (response) {
         return response.data;
       }, function (err) {
         console.log(err);
       });
+      return deleteExercise;
+    }
+
+
+    return {
+      exerciseData: getExerciseList,
+      deleteExercise: deleteExercise
+    }
+
+  }])
+
+  .service('AddExerciseService', ['$rootScope', '$http', 'ApiEndpoint', 'loadingActivity', function ($rootScope, $http, ApiEndpoint, loadingActivity) {
+
+    var addExercise = function (params) {
+      loadingActivity.show();
+      var methodType = "";
+      if (params.exid == null) {
+        methodType = "POST";
+      } else {
+        methodType = "PUT";
+      }
+      var exerciseData = $http({
+        headers: {
+          'X-CSRF-Token': $rootScope.token,
+          //'cookie': $rootScope.cookieValue
+        },
+        method: methodType,
+        data: params,
+        url: ApiEndpoint.url + "/ptexlib/" + $rootScope.loggedInUserUid
+      }).then(function (response) {
+        loadingActivity.hide();
+        return response.data;
+      }, function (err) {
+        loadingActivity.hide();
+        console.log(err);
+      });
       return exerciseData;
     }
-    
+
     return {
       addExercise: addExercise
     }

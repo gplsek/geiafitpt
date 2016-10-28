@@ -323,22 +323,34 @@ module.exports = [
         "clobbers": [
             "window.PKVideoThumbnail"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-file-transfer/www/FileTransferError.js",
+        "id": "cordova-plugin-file-transfer.FileTransferError",
+        "pluginId": "cordova-plugin-file-transfer",
+        "clobbers": [
+            "window.FileTransferError"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-file-transfer/www/FileTransfer.js",
+        "id": "cordova-plugin-file-transfer.FileTransfer",
+        "pluginId": "cordova-plugin-file-transfer",
+        "clobbers": [
+            "window.FileTransfer"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-spinner/www/spinner-plugin.js",
+        "id": "cordova-plugin-spinner.SpinnerPlugin",
+        "pluginId": "cordova-plugin-spinner",
+        "clobbers": [
+            "SpinnerPlugin"
+        ]
     }
 ];
 module.exports.metadata = 
 // TOP OF METADATA
-{
-    "cordova-plugin-whitelist": "1.3.0",
-    "cordova-plugin-console": "1.0.4",
-    "cordova-plugin-statusbar": "2.2.0",
-    "cordova-plugin-splashscreen": "4.0.0",
-    "ionic-plugin-keyboard": "2.2.1",
-    "cordova-plugin-device": "1.1.3",
-    "cordova-plugin-compat": "1.0.0",
-    "cordova-plugin-camera": "2.3.0",
-    "cordova-plugin-file": "4.3.0",
-    "cordova-plugin-media-capture": "1.4.0",
-    "cordova-plugin-photokandy-video-thumbnail": "2.1.0"
-};
+{}
 // BOTTOM OF METADATA
 });

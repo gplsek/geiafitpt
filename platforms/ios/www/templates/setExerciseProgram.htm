@@ -1,8 +1,8 @@
-<ion-view class="setExerciseView" name="set-exercise-view">
+<ion-view class="setExerciseView" id="exercise-program-container" name="set-exercise-view">
 	<ion-nav-bar class="group">
 		<ion-nav-buttons side="left">
 			<span class="icon ion-close-round closePatient" ng-click="closePatient()"></span>
-			<div class="title title-center header-item" ng-click="gotoExerciseProgram()">{{patientData}}</div>
+			<div class="title title-center header-item" ng-click="gotoHome()">{{patientData}}</div>
 		</ion-nav-buttons>
 		<ion-nav-buttons side="right">
 			<span class="icon ion-ios-trash-outline deletePatient" ng-click="deleteExercise()"></span>
@@ -39,22 +39,33 @@
 				<span class="onoff off">OFF</span>
 				</span>
 			</div>
-			<div class="video-container"  style="height: 250px;">
-				<iframe ng-hide="edit" frameborder="0" ng-src="{{exerciseprogram.mp4| trusted}}" scrolling="no" ng-init="resizeIframe(this)" ></iframe>
-				<iframe ng-hide="submit" frameborder="0" ng-src="{{videoURI| trusted}}" scrolling="no" ng-init="resizeIframe(this)"></iframe>
+			<div class="video-container">
+				<div class="video-container-inner">
+					<div ng-hide="submit" class="video-container-text" ng-click="captureVideo()"></div>
+				    <!--<iframe ng-if="videoURI" frameborder="0" ng-src="{{videoURI| trusted}}" scrolling="yes" ng-init="resizeIframe(this)"></iframe>
+                    <iframe ng-if="!videoURI" frameborder="0" ng-src="{{exerciseprogram.mp4| trusted}}" scrolling="yes" ng-init="resizeIframe(this)" ></iframe>-->
+                    <video ng-if="videoURI" poster="{{exerciseprogram.imageURI}}" frameborder="0" ng-src="{{videoURI| trusted}}" scrolling="yes" ng-init="resizeIframe(this)" controls></video>
+                    <video ng-if="!videoURI" ng-hide="edit" poster="{{exerciseprogram.imageURI}}" frameborder="0" ng-src="{{exerciseprogram.mp4| trusted}}" scrolling="yes" ng-init="resizeIframe(this)" controls></video>
 
-				<button ng-hide="submit" class="button button-positive" ng-click="captureVideo()">
-						Add Video
-				</button>
-				<div ng-hide="submit" class="video-container-inner" style="height:100px;">
-					<div class="video-container-text" ng-click="captureVideo()"></div>
 				</div>
-			<!--<div class="exerciseSchedule" ng-hide="submit" style="height:60%;">
-				<div ng-hide="submit" class="video-container-inner">
-					<div class="video-container-text" style="height:60%;"></div>
+			</div>
+			<!--<div class="video-container" >
+				<div class="video-container-inner" style="height:100%;">
+                    <div ng-if="fromLibrary">
+                        <div ng-if="!exerciseprogram.mp4" class="video-container-text" ng-click="captureVideo()">+ Add video</div>
+                        <video ng-if="exerciseprogram.mp4" poster="{{exerciseprogram.thumb1}}" frameborder="0" ng-src="{{exerciseprogram.mp4| trusted}}" scrolling="yes" ng-init="resizeIframe(this)" ></video>
+                    </div>
+                    <div ng-if="!fromLibrary">
+                        <div ng-if="videoURI">
+                            <video ng-if="videoURI" poster="{{exerciseprogram.imageURI}}" frameborder="0" ng-src="{{videoURI| trusted}}" scrolling="yes" ng-init="resizeIframe(this)"></video>
+                        </div>
+                        <div ng-if="!videoURI">
+                            <div ng-if="edit" class="video-container-text" ng-click="captureVideo()">+ Add video</div>
+                            <video ng-if="!edit" poster="{{exerciseprogram.thumb1}}" ng-src="{{exerciseprogram.mp4| trusted}}" controls="controls" ></video>
+                        </div>
+                    </div>
 				</div>
 			</div>-->
-			</div>
 			<div class="row">
 				<!--<div  class = "col col-30">
             	      <label class="expiry">Reps
@@ -81,7 +92,7 @@
                      </div>-->
 
 				<div class="dailySteps col col-30">
-					<label class="expiry">TimesDaily</label>
+					<label class="expiry">Times Daily</label>
 					<select class="exerciseProgram_customSelect" ng-options="item for item in repsDaily" ng-model="selectedDaily" ng-change="setDaily(selectedDaily)"
 						ng-disabled="submit"></select>
 				</div>
@@ -110,7 +121,7 @@
 				<textarea placeholder="Be Safe when doing this exercise" ng-model="exerciseprogram.comments" ng-disabled="submit"> </textarea>
 			</div>
 
-        <span ng-hide="submit"><button id="button1" class="button button-block btn-yellow submit_button" ng-click="saveExercise()">Submit</button></span>
+        <span ng-hide="submit"><button id="button1" class="button button-block btn-yellow submit_button" ng-disabled="!exerciseprogram.title || !exerciseprogram.comments" ng-click="saveExercise()">Submit</button></span>
          <span ng-hide="edit"><button id="button1" class="button button-block btn-yellow edit_button" ng-click="editExercise()">Edit</button></span>
 
 		</section>

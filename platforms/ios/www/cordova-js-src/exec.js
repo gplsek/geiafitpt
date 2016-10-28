@@ -134,18 +134,9 @@ function iOSExec() {
     }
 }
 
-// CB-10530
-function proxyChanged() {
-    var cexec = cordovaExec();
-       
-    return (execProxy !== cexec && // proxy objects are different
-            iOSExec !== cexec      // proxy object is not the current iOSExec
-            );
-}
-
 // CB-10106
 function handleBridgeChange() {
-    if (proxyChanged()) {
+    if (execProxy !== cordovaExec()) {
         var commandString = commandQueue.shift();
         while(commandString) {
             var command = JSON.parse(commandString);
