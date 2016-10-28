@@ -10758,6 +10758,14 @@ textarea {
     font-size: 20px;
     line-height: 20px; }
 
+.setExerciseView .main .btn-yellow {
+    background: #F8A938;
+    color: #fff;
+    height: 20px;
+    border-radius: 25px;
+    font-size: 20px;
+    line-height: 20px; }
+
 .addPatient .main {
   padding: 40px 25px; }
 
@@ -10871,6 +10879,7 @@ textarea {
     height: 150px !important; }
   .addExercise .main .btn-yellow {
     margin-top: 30px; }
+
 
 .addAccount section {
   padding: 20px 30px; }

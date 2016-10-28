@@ -1,4 +1,3 @@
-
 <ion-view view-title="{{config.title}}" class="exerciseLibrary activity">
 	<ion-nav-bar class="group">
 		<!--<div  ng-show="MyExerciseIcon">
@@ -7,43 +6,44 @@
 		</ion-nav-buttons>
 		</div>-->
 		<!--for Web Exercise-->
-		<ion-nav-buttons side="left" >
+		<ion-nav-buttons side="left">
 			<span class="icon ion-close-round" ng-click="goBack()"></span>
 		</ion-nav-buttons>
 		<ion-nav-buttons side="right">
-            <span ng-if="!isAdd" class="icon {{config.rightIcon}}" ng-click="showWebexMessage()">&nbsp;</span>
+			<span ng-if="!isAdd" class="icon {{config.rightIcon}}" ng-click="showWebexMessage()">&nbsp;</span>
 			<span ng-if="isAdd" class="icon {{config.rightIcon}}" ng-click="addFromLibrary()">&nbsp;</span>
 		</ion-nav-buttons>
 	</ion-nav-bar>
 	<ion-content>
 		<div class="search">
-	      <input type="text" placeholder="Search" ng-model="filterPatient" ng-change="getFilteredData();"/>
-	      <span class="icon ion-ios-search-strong pull-right"></span>
-	    </div>
-		
+			<input type="text" placeholder="Search" ng-model="filterPatient" ng-change="getFilteredData();" />
+			<span class="icon ion-ios-search-strong pull-right"></span>
+		</div>
+
 		<div class="sortedBy1 text-center">
-<div class="main">
-<ul class="selectionTab group">
-	<li ng-class="{'active': selectedTab == 'My Exercises'}" ng-click="changeView(1)">My Exercises</li>
-	<li ng-class="{'active': selectedTab == 'WebEx Exercises'}" ng-click="changeView(2)">WebEx Exercises</li>
-</ul>
-</div>
-</div>
-<div ng-show="exerciseView">
-<p class="text-center">
-<small >Sorted By:</small>
-</p>
-<div class="sortedBy text-center">
-<input type="button" class="itemdropdown" ng-click="showList();" value="{{title}}"/>
-<ion-list ng-show="subNavList" class="ddlistitems">
-  <ion-item ng-repeat="option in data.availableOptions" ng-click="doSort(option.id,'myE')" ng-disabled="{{option.show}}" ng-class={{option.classValue}} /> 
-    <h2>{{option.name}}</h2>
-  </ion-item>
-</ion-list>
-</div>
-		
-		
-	   <!-- <div class="sortedBy text-center">
+			<div class="main">
+				<ul class="selectionTab group">
+					<li ng-class="{'active': selectedTab == 'My Exercises'}" ng-click="changeView(1)">My Exercises</li>
+					<li ng-class="{'active': selectedTab == 'WebEx Exercises'}" ng-click="changeView(2)">WebEx Exercises</li>
+				</ul>
+			</div>
+		</div>
+		<div ng-show="exerciseView">
+			<p class="text-center">
+				<small>Sorted By:</small>
+			</p>
+			<div class="sortedBy text-center">
+				<input type="button" class="itemdropdown" ng-click="showList();" value="{{title}}" />
+				<ion-list ng-show="subNavList" class="ddlistitems">
+					<ion-item ng-repeat="option in data.availableOptions" ng-click="doSort(option.id,'myE')" ng-disabled="{{option.show}}" ng-class={{option.classValue}}
+					/>
+					<h2>{{option.name}}</h2>
+					</ion-item>
+				</ion-list>
+			</div>
+
+
+			<!-- <div class="sortedBy text-center">
 	      <p><small>Sorted By:</small></p>
 	     
 	      <select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select>
@@ -51,14 +51,14 @@
 	    </div>-->
 			<ul class="exerciseList">
 				<!--<li ng-repeat="item in filteredExerciseList = (myExerciseList | filter:{title : filterPatient} ) | filter: filterbyType | orderBy: {title: true} )" class="gieafitListItem group">-->
-					<li ng-repeat="item in filteredExerciseList = (myExerciseList | filter:{title : filterPatient} )" class="gieafitListItem group">
+				<li ng-repeat="item in filteredExerciseList = (myExerciseList | filter:{title : filterPatient} )" class="gieafitListItem group">
 					<span ui-sref="addExercise({exerciseObject : item})">
 						<span class="">{{item.id}}</span>
-						<span style="width:40%">{{item.title}} :</span>
-						<span style="margin-left:15px"> {{item.tags[0]}}&nbsp;{{item.tags[1]}}&nbsp;{{item.tags[2]}}</span>
+					<span style="width:40%">{{item.title}} :</span>
+					<span style="margin-left:15px"> {{item.tags[0]}}&nbsp;{{item.tags[1]}}&nbsp;{{item.tags[2]}}</span>
 					<!--<span class="limitSpan">{{item.tags[0]}}</span><span class="limitSpan">{{item.tags[1]}}</span><span class="limitSpan">{{item.tags[2]}}</span>-->
 					</span>
-                    <span ng-if="isAdd" class="pull-right trash-icon" ng-click="add($index)">
+					<span ng-if="isAdd" class="pull-right trash-icon" ng-click="add($index)">
                         <img class="icon check-mark" src="img/check.png" ng-if="item.selected" alt="">
                         <i  class="icon ion-ios-plus-outline" ng-if="!item.selected"></i>
                     </span>
@@ -68,61 +68,65 @@
 					</span>
 				</li>
 			</ul>
-		
-		<!--<section class="pagination">
+
+			<!--<section class="pagination">
 			<select ng-model="selectedPage" ng-options="page.id as page.title for page in pages" class="customSelect" ng-change="showNext(selectedPage + 1)"></select>
 			<span class="pull-right next" ng-click="showNext(selectedPage + 2)">Next <i class="icon ion-chevron-right"></i></span>
 		</section>-->
-		<p ng-hide="filteredExerciseList.length" class="noResult text-center">No Matching Records!</p>
-</div>
-<!--WebExercise view-->
+			<p ng-hide="filteredExerciseList.length" class="noResult text-center">No Matching Records!</p>
+		</div>
+		<!--WebExercise view-->
 
-<div ng-show="webExView">
+		<div ng-show="webExView">
 
-<p class="text-center">
-<small for="repeatSelect">Sorted By:</small>
-</p>
-<div class="sortedBy text-center">
-<!--<select name="repeatSelect" id="repeatSelect" ng-model="data.model">
+			<p class="text-center">
+				<small for="repeatSelect">Sorted By:</small>
+			</p>
+			<div class="sortedBy text-center">
+				<!--<select name="repeatSelect" id="repeatSelect" ng-model="data.model">
 <option ng-repeat="option in data.availableOptions" align="center" value="{{option.id}}">{{option.name}}</option>
 </select>-->
 
-<input type="button" class="itemdropdown" ng-click="showList();" value="{{title}}"/>
-<ion-list ng-show="subNavList" class="ddlistitems">
-  <ion-item ng-repeat="option in data.availableOptions" ng-click="doSort(option.id,'webE')"/> 
-	  <!--ng-click="gotoAction(item.id)-->
-    <h2>{{option.name}}</h2>
-  </ion-item>
-</ion-list>
-</div>
-		
-		
-	   <!-- <div class="sortedBy text-center">
+				<input type="button" class="itemdropdown" ng-click="showList();" value="{{title}}" />
+				<ion-list ng-show="subNavList" class="ddlistitems">
+					<ion-item ng-repeat="option in data.availableOptions" ng-click="doSort(option.id,'webE')" />
+					<!--ng-click="gotoAction(item.id)-->
+					<h2>{{option.name}}</h2>
+					</ion-item>
+				</ion-list>
+			</div>
+
+
+			<!-- <div class="sortedBy text-center">
 	      <p><small>Sorted By:</small></p>
 	     
 	      <select ng-options="item.id as item.title for item in sortedByList" ng-model="sortedBy" ng-change="gotoAction(sortedBy)"></select>
 	       
 	    </div>-->
-		<ul class="exerciseList">
-			<!--<li ng-repeat="item in webExercise" class="gieafitListItem group">-->
+			<ul class="exerciseList">
+				<!--<li ng-repeat="item in webExercise" class="gieafitListItem group">-->
 				<!--<li ng-repeat="item in filteredWebExList = ( webExercise | filter: filterPatient | orderBy: sortType : sortOrder)" class="gieafitListItem group">-->
 				<li ng-repeat="item in filteredWebExList = (webExercise | filter:{title : filterPatient} )" class="gieafitListItem group">
-					<span class="" >{{item.id}}</span>
+					<span class="">{{item.id}}</span>
 					<span style="width:40%" ui-sref="addExercise({exerciseObject : item})">{{item.title}} :</span>
 					<span style="margin-left:15px">{{item.tags[0]}}&nbsp;{{item.tags[1]}}&nbsp;{{item.tags[2]}}</span>
-					<span class="pull-right trash-icon" ng-click="delete($index)">
+					<span ng-if="isAdd" class="pull-right trash-icon" ng-click="add($index)">
+                        <img class="icon check-mark" src="img/check.png" ng-if="item.selected" alt="">
+                        <i  class="icon ion-ios-plus-outline" ng-if="!item.selected"></i>
+                    </span>
+					<span ng-if="!isAdd" class="pull-right trash-icon" ng-click="delete($index)">
 						<i class="icon ion-ios-trash-outline" ></i>
-						<!-- <i class="icon ion-ios-close-outline"></i> -->
+									<!-- <i class="icon ion-ios-close-outline"></i> -->
 					</span>
-				</li>	
-		</ul>
-		
-		<!--<section class="pagination">
+				</li>
+			</ul>
+
+			<!--<section class="pagination">
 			<select ng-model="selectedPage" ng-options="page.id as page.title for page in webExPages" class="customSelect" ng-change="showNext(selectedPage,1)"></select>
 			<span class="pull-right next" ng-click="showNext(selectedPage + 1,2)" ng-show="selectedPage != webExercisePages">Next <i class="icon ion-chevron-right"></i></span>
 		</section>-->
 
-</div>	
+		</div>
 
 	</ion-content>
 </ion-view>

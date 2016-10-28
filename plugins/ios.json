@@ -41,6 +41,9 @@
         },
         "cordova-plugin-file-transfer": {
             "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
+        },
+        "cordova-plugin-spinner": {
+            "PACKAGE_NAME": "com.ionicframework.geiafit309210"
         }
     },
     "dependent_plugins": {

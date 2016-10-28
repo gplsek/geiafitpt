@@ -25,6 +25,9 @@
         "cordova-plugin-photokandy-video-thumbnail": {
             "PACKAGE_NAME": "com.ionicframework.geiafit309210"
         },
+        "cordova-plugin-spinner": {
+            "PACKAGE_NAME": "com.ionicframework.geiafit309210"
+        },
         "cordova-plugin-splashscreen": {
             "PACKAGE_NAME": "com.ionicframework.geiafit309210"
         },

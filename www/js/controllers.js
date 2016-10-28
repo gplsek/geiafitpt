@@ -392,7 +392,7 @@ angular.module('geiaFitApp')
           thumb2: $stateParams.thumb2
         };
 
-      
+
       $scope.selectedReps = $scope.stepsList[1];
       $scope.selectedSet = $scope.repsSet[1];
       $scope.selectedDaily = $scope.repsDaily[1];
@@ -454,6 +454,7 @@ angular.module('geiaFitApp')
         console.log(exercise);
 
         SetExerciseProgramService.saveExercise(exercise).then(function (success) {
+          $state.transitionTo("exerciseProgram", {}, { reload: true });
           Flash.showFlash({ type: 'success', message: "Success !" });
 
         }, function (error) {
@@ -739,6 +740,7 @@ angular.module('geiaFitApp')
         console.log("editEx" + JSON.stringify(exercise));
 
         SetExerciseProgramService.editExercise(exercise, $scope.uid).then(function (success) {
+          $state.transitionTo("exerciseProgram", {}, { reload: true });
           Flash.showFlash({ type: 'success', message: "Success !" });
         }, function (error) {
           Flash.showFlash({ type: 'error', message: "Failed !" });
@@ -1087,12 +1089,13 @@ angular.module('geiaFitApp')
         $scope.subNavList = !$scope.subNavList;
       }
 
-      // $scope.gotoHome = function () {
-      //   console.log("-------------------")
-      //   console.log("Activity =Go TO HOME")
-      //   console.log("-------------------")
-      //   $state.transitionTo('main.dash', {}, { reload: false });
-      // }
+      $scope.gotoHome = function () {
+        console.log("-------------------")
+        console.log("Activity =Go TO HOME")
+        console.log("-------------------")
+        $state.transitionTo('main.dash', {}, { reload: false });
+      }
+      
 
       $scope.$on("slideEnded", function () {
         console.log($scope.slider.min + 'slider max: ' + $scope.slider.max);
@@ -2351,9 +2354,8 @@ angular.module('geiaFitApp')
       }
       console.log(data)
       var editExerciseList = AddExerciseService.addExercise(data).then(function (success) {
-        console.log("Success")
+         $scope.gotoExerciseLibrary();
         Flash.showFlash({ type: 'success', message: "Success!" });
-        $scope.gotoExerciseProgram();
       }, function (error) {
         console.log("Error")
         Flash.showFlash({ type: 'error', message: "Failure!" });
@@ -2395,7 +2397,7 @@ angular.module('geiaFitApp')
     }
 
     //console.log($scope.addExercise.tags);
-    $scope.gotoExerciseProgram = function () {
+    $scope.gotoExerciseLibrary = function () {
       $state.transitionTo("main.exerciseLibrary", {}, { reload: true });
     }
 
